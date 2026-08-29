@@ -1,0 +1,12 @@
+# Config minimale pour `supabase start` en local.
+# Le CLI applique ses défauts pour tout ce qui n'est pas listé ici.
+
+project_id = "minah-portal"
+
+[auth]
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/auth/callback"]
+
+[auth.email]
+enable_signup = true
+enable_confirmations = true
