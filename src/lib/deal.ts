@@ -9,7 +9,7 @@ export const deal = {
   matchingFund: "600 K€ en discussion",
   engagedLabel: "700 K€+ engagés",
   progressPct: 47,
-  tranches: ["100 K€", "250 K€", "500 K€ (lead)", "Autre montant"],
+  tranches: ["< 100 K€", "< 250 K€", "< 500 K€", "500 K€+ (lead)"],
   // Lien de prise de RDV (Calendly / Cal.com) — placeholder à remplacer.
   meetingUrl: "https://cal.com/minah/30min",
 } as const;
