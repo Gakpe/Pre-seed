@@ -75,12 +75,12 @@ export default async function InvestorHomePage() {
   const docs = (documents ?? []) as DocumentRow[];
   const level1 = docs.filter((d) => d.access_level === 1);
   const level2 = docs.filter((d) => d.access_level === 2);
-  const interestDone = Boolean(investor.interest_expressed_at);
+  const level2Unlocked = investor.level2_access;
 
-  // Avant manifestation d'intérêt, RLS cache le niveau 2 : on récupère
+  // Tant que le niveau 2 n'est pas débloqué, RLS le cache : on récupère
   // titres et catégories (rien d'autre) pour l'afficher verrouillé.
   let lockedTitles: { title: string; category: string }[] = [];
-  if (!interestDone && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  if (!level2Unlocked && process.env.SUPABASE_SERVICE_ROLE_KEY) {
     const { data: locked } = await createAdminClient()
       .from("documents")
       .select("title, category, sort_order")
@@ -162,7 +162,7 @@ export default async function InvestorHomePage() {
           <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-400">
             Data room · Niveau 1
           </h2>
-          {!interestDone && (
+          {!level2Unlocked && (
             <span className="text-xs text-neutral-400">
               votre niveau d&apos;accès actuel
             </span>
@@ -175,12 +175,14 @@ export default async function InvestorHomePage() {
 
       {/* Niveau 2 */}
       <section className="mt-12 rounded-lg border border-neutral-200 p-6 dark:border-neutral-800">
-        {interestDone ? (
+        {level2Unlocked ? (
           <>
             <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-400">
               Data room · Niveau 2
               <span className="ml-2 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-normal normal-case tracking-normal text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-                débloqué — intérêt : {investor.interest_tranche}
+                {investor.interest_tranche
+                  ? `débloqué — intérêt : ${investor.interest_tranche}`
+                  : "débloqué par l'équipe"}
               </span>
             </h2>
             <div className="mt-4">
@@ -221,7 +223,18 @@ export default async function InvestorHomePage() {
                 ))}
               </ul>
             )}
-            <InterestForm />
+            {investor.interest_expressed_at ? (
+              <p className="mt-4 text-sm text-neutral-500">
+                Intérêt enregistré ({investor.interest_tranche}). L&apos;accès
+                au niveau 2 n&apos;est pas actif — contactez{" "}
+                <a href="mailto:contact@minah.io" className="underline">
+                  contact@minah.io
+                </a>
+                .
+              </p>
+            ) : (
+              <InterestForm />
+            )}
           </>
         )}
       </section>

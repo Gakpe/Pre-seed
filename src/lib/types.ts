@@ -13,6 +13,15 @@ export type Investor = {
   last_seen_at: string | null;
   interest_expressed_at: string | null;
   interest_tranche: string | null;
+  level2_access: boolean;
+};
+
+export type InvestorStats = {
+  investor_id: string;
+  sessions: number;
+  total_duration_ms: number;
+  docsend_clicks: number;
+  page_views: number;
 };
 
 export type DocumentRow = {

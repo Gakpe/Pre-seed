@@ -18,3 +18,16 @@ export async function setInvestorStatus(
   revalidatePath("/admin");
   revalidatePath(`/admin/investors/${investorId}`);
 }
+
+export async function setLevel2Access(investorId: string, granted: boolean) {
+  await requireAdmin();
+
+  const admin = createAdminClient();
+  await admin
+    .from("investors")
+    .update({ level2_access: granted })
+    .eq("id", investorId);
+
+  revalidatePath("/admin");
+  revalidatePath(`/admin/investors/${investorId}`);
+}

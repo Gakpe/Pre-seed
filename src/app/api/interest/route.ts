@@ -22,7 +22,11 @@ export async function POST(request: Request) {
   const admin = createAdminClient();
   const { error } = await admin
     .from("investors")
-    .update({ interest_expressed_at: new Date().toISOString(), interest_tranche: tranche })
+    .update({
+      interest_expressed_at: new Date().toISOString(),
+      interest_tranche: tranche,
+      level2_access: true,
+    })
     .eq("id", user.id);
   if (error) return new Response(null, { status: 500 });
 
