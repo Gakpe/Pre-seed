@@ -11,12 +11,24 @@ export type Investor = {
   ref: string | null;
   created_at: string;
   last_seen_at: string | null;
+  interest_expressed_at: string | null;
+  interest_tranche: string | null;
 };
 
 export type DocumentRow = {
   slug: string;
   title: string;
-  docsend_url: string;
+  docsend_url: string | null;
   visible_to_pending: boolean;
+  category: string;
   sort_order: number;
+  access_level: number;
+  content: string | null;
 };
+
+export type EventType =
+  | "login"
+  | "page_view"
+  | "page_leave"
+  | "docsend_click"
+  | "cta_click";

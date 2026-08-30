@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { RequestAccessForm } from "./request-access-form";
 
 export const metadata = { title: "Espace investisseurs — Minah" };
@@ -17,6 +18,14 @@ export default async function InvestorsPage({
       data: { user },
     } = await supabase.auth.getUser();
     if (user) redirect("/investors/home");
+
+    // Lien personnalisé : trace l'arrivée même sans inscription (event anonyme).
+    if (ref && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      await createAdminClient()
+        .from("events")
+        .insert({ type: "page_view", path: "/investors", ref })
+        .then(() => {});
+    }
   }
 
   return (
