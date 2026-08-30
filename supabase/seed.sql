@@ -52,6 +52,20 @@ Trajectoire : 15 M€ de volume en phase 1 (MVP, 2 stratégies live), 100 M€ f
 
 Partenaires bancaires et écosystème : Orabank Togo · SIB · Stellar · 50 Partners.'),
 
+  ('risk-deck-kupanda', 'Deck risk Kupanda', 'https://docsend.com/view/placeholder-risk-kupanda', false, 'Gestion des risques', 75, 2, null),
+
+  ('scenarios-risques', 'Scénarios de risque et protections', null, false, 'Gestion des risques', 76, 2, 'Chaque scénario a une réponse pré-câblée. Impact investisseur dans chaque cas identifié : coupons inchangés, principal protégé.
+
+Gouvernement en retard de paiement (≤ 6 semaines) — absorbé par le buffer de calendrier. Aucun impact.
+
+Gouvernement en retard (> 6 semaines) — la Credit Default Insurance s''active. Coupons inchangés.
+
+PME sous-performante sur son contrat — Performance Bond, couvre jusqu''aux 20 % engagés. Coupons inchangés.
+
+Défaut de la PME — CDI + paiement direct du ministère (lettres d''engagement). Principal protégé.
+
+Dépréciation du ZMW face à l''EUR — swap de change avec Zanaco.'),
+
   ('cap-table', 'Table de capitalisation', 'https://docsend.com/view/placeholder-cap-table', false, 'Documents clés', 80, 2, null),
 
   ('contrat-cadre-zambie', 'Contrat cadre — République de Zambie', 'https://docsend.com/view/placeholder-contrat-zambie', false, 'Documents clés', 81, 2, null),

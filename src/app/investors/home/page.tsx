@@ -1,10 +1,12 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { ensureInvestor } from "@/lib/investors";
 import { deal } from "@/lib/deal";
 import type { DocumentRow, Investor } from "@/lib/types";
 import { DataRoom } from "./data-room";
 import { InterestForm } from "./interest-form";
+import { MeetingButton } from "./meeting-button";
 
 export const metadata = { title: "Espace investisseurs — Minah" };
 
@@ -75,6 +77,18 @@ export default async function InvestorHomePage() {
   const level2 = docs.filter((d) => d.access_level === 2);
   const interestDone = Boolean(investor.interest_expressed_at);
 
+  // Avant manifestation d'intérêt, RLS cache le niveau 2 : on récupère
+  // titres et catégories (rien d'autre) pour l'afficher verrouillé.
+  let lockedTitles: { title: string; category: string }[] = [];
+  if (!interestDone && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    const { data: locked } = await createAdminClient()
+      .from("documents")
+      .select("title, category, sort_order")
+      .eq("access_level", 2)
+      .order("sort_order");
+    lockedTitles = locked ?? [];
+  }
+
   if (investor.status === "pending") {
     return (
       <Main>
@@ -144,9 +158,16 @@ export default async function InvestorHomePage() {
 
       {/* Data room niveau 1 */}
       <section className="mt-12">
-        <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-400">
-          Data room
-        </h2>
+        <div className="flex items-baseline justify-between">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-400">
+            Data room · Niveau 1
+          </h2>
+          {!interestDone && (
+            <span className="text-xs text-neutral-400">
+              votre niveau d&apos;accès actuel
+            </span>
+          )}
+        </div>
         <div className="mt-4">
           <DataRoom docs={level1} />
         </div>
@@ -156,15 +177,15 @@ export default async function InvestorHomePage() {
       <section className="mt-12 rounded-lg border border-neutral-200 p-6 dark:border-neutral-800">
         {interestDone ? (
           <>
-            <h2 className="text-sm font-semibold">
-              Documents clés{" "}
-              <span className="ml-2 rounded-full bg-neutral-100 px-2 py-0.5 text-xs font-normal text-neutral-500 dark:bg-neutral-900">
-                intérêt manifesté : {investor.interest_tranche}
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-400">
+              Data room · Niveau 2
+              <span className="ml-2 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-normal normal-case tracking-normal text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
+                débloqué — intérêt : {investor.interest_tranche}
               </span>
             </h2>
             <div className="mt-4">
               {level2.length > 0 ? (
-                <DataRoom docs={level2} startIndex={7} />
+                <DataRoom docs={level2} startIndex={8} />
               ) : (
                 <p className="text-sm text-neutral-500">
                   Documents en cours d&apos;ajout.
@@ -174,17 +195,47 @@ export default async function InvestorHomePage() {
           </>
         ) : (
           <>
-            <h2 className="text-sm font-semibold">
-              🔒 Deuxième niveau de la data room
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-400">
+              Data room · Niveau 2 🔒
             </h2>
             <p className="mt-2 text-sm leading-6 text-neutral-600 dark:text-neutral-400">
-              Table de capitalisation, contrats cadres et documents clés sont
-              accessibles aux investisseurs ayant manifesté un intérêt pour une
-              tranche. Cette manifestation est indicative et non engageante.
+              Gestion des risques, table de capitalisation, contrats cadres :
+              ce niveau se débloque en manifestant un intérêt pour une tranche
+              — indicatif et non engageant.
             </p>
+            {lockedTitles.length > 0 && (
+              <ul className="mt-4 divide-y divide-neutral-200 rounded-md border border-dashed border-neutral-300 dark:divide-neutral-800 dark:border-neutral-700">
+                {lockedTitles.map((doc) => (
+                  <li
+                    key={doc.title}
+                    className="flex items-center justify-between px-4 py-3 text-sm text-neutral-400"
+                  >
+                    <span>
+                      <span className="mr-2 text-xs uppercase tracking-wide text-neutral-300 dark:text-neutral-600">
+                        {doc.category}
+                      </span>
+                      {doc.title}
+                    </span>
+                    <span>🔒</span>
+                  </li>
+                ))}
+              </ul>
+            )}
             <InterestForm />
           </>
         )}
+      </section>
+
+      {/* RDV équipe */}
+      <section className="mt-12 rounded-lg border border-neutral-200 p-6 text-center dark:border-neutral-800">
+        <h2 className="text-sm font-semibold">Échanger avec l&apos;équipe</h2>
+        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-neutral-600 dark:text-neutral-400">
+          Une question sur le deal, la structuration ou Kupanda ? Prenez 30
+          minutes avec les fondateurs.
+        </p>
+        <div className="mt-4">
+          <MeetingButton />
+        </div>
       </section>
     </Main>
   );
