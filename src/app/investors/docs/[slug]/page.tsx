@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { DocumentRow } from "@/lib/types";
+import { CapTableInteractive } from "./captable";
 
 export default async function DocPage({
   params,
@@ -38,6 +39,7 @@ export default async function DocPage({
       <div className="mt-6 whitespace-pre-line text-sm leading-7 text-neutral-700 dark:text-neutral-300">
         {doc.content}
       </div>
+      {doc.slug === "cap-table" && <CapTableInteractive />}
     </main>
   );
 }

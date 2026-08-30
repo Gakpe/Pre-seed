@@ -66,7 +66,20 @@ Défaut de la PME — CDI + paiement direct du ministère (lettres d''engagement
 
 Dépréciation du ZMW face à l''EUR — swap de change avec Zanaco.'),
 
-  ('cap-table', 'Table de capitalisation', 'https://docsend.com/view/placeholder-cap-table', false, 'Documents clés', 80, 2, null),
+  ('cap-table', 'Table de capitalisation interactive', null, false, 'Documents clés', 80, 2, 'Répartition du capital avant et après le tour pre-seed. Ajustez la valorisation et votre ticket pour visualiser la dilution — chiffres illustratifs, à confirmer avec l''équipe.'),
+
+  ('scenarios-sortie', 'Scénarios de sortie', null, false, 'Documents clés', 83, 2, 'Deux familles de sorties identifiées — brouillon de travail, à affiner avec l''équipe.
+
+Sorties industrielles :
+1. Banques panafricaines cherchant une plateforme de crédit digitale clé en main (distribution + infrastructure).
+2. Gestionnaires d''actifs globaux (private credit, ~2 000 Md$ d''AUM) voulant une porte d''entrée structurée sur les rendements africains.
+3. Fintechs Gen 1 (paiement — rails déjà déployés) intégrant la brique investissement pour monétiser leur base.
+
+Sorties financières :
+1. Cession secondaire partielle lors de la série A/B.
+2. Rachat par un fonds de private equity une fois la licence d''établissement de crédit obtenue (phase 2 de la roadmap).
+3. Le modèle générant du cash (marge sur encours), une politique de distribution est envisageable sans sortie.
+4. À long terme, introduction en bourse portée par la liquidité on-chain.'),
 
   ('contrat-cadre-zambie', 'Contrat cadre — République de Zambie', 'https://docsend.com/view/placeholder-contrat-zambie', false, 'Documents clés', 81, 2, null),
 
