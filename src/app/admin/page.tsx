@@ -3,8 +3,10 @@ import { requireAdmin } from "@/lib/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Investor, InvestorStats } from "@/lib/types";
 import { formatDuration } from "@/lib/format";
+import { buildDailyBuckets } from "@/lib/activity";
 import { setInvestorStatus, setLevel2Access } from "./actions";
 import { StatusBadge } from "./status-badge";
+import { ActivityHistogram } from "./activity-histogram";
 
 export const metadata = { title: "Admin — Minah" };
 
@@ -19,17 +21,39 @@ export default async function AdminPage() {
   await requireAdmin();
 
   const admin = createAdminClient();
-  const [{ data }, { data: statsData }] = await Promise.all([
-    admin
-      .from("investors")
-      .select("*")
-      .order("last_seen_at", { ascending: false, nullsFirst: false }),
-    admin.from("investor_stats").select("*"),
-  ]);
+  const since = new Date(Date.now() - 13 * 86_400_000).toISOString().slice(0, 10);
+  const [{ data }, { data: statsData }, { data: leavesData }] =
+    await Promise.all([
+      admin
+        .from("investors")
+        .select("*")
+        .order("last_seen_at", { ascending: false, nullsFirst: false }),
+      admin.from("investor_stats").select("*"),
+      admin
+        .from("events")
+        .select("investor_id, duration_ms, created_at")
+        .eq("type", "page_leave")
+        .gte("created_at", since),
+    ]);
   const investors = (data ?? []) as Investor[];
   const stats = new Map(
     ((statsData ?? []) as InvestorStats[]).map((s) => [s.investor_id, s])
   );
+
+  // Minutes par jour (14 j) par investisseur, pour les mini-histogrammes
+  const leavesByInvestor = new Map<
+    string,
+    { created_at: string; duration_ms: number | null }[]
+  >();
+  for (const l of (leavesData ?? []) as {
+    investor_id: string;
+    created_at: string;
+    duration_ms: number | null;
+  }[]) {
+    const list = leavesByInvestor.get(l.investor_id) ?? [];
+    list.push(l);
+    leavesByInvestor.set(l.investor_id, list);
+  }
 
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10">
@@ -114,6 +138,14 @@ export default async function AdminPage() {
                     {inv.last_seen_at
                       ? dateFmt.format(new Date(inv.last_seen_at))
                       : "jamais"}
+                    <div className="mt-1.5">
+                      <ActivityHistogram
+                        buckets={buildDailyBuckets(
+                          leavesByInvestor.get(inv.id) ?? [],
+                          14
+                        )}
+                      />
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-right">
                     {inv.status === "blocked" ? (

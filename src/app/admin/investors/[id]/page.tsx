@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatDuration } from "@/lib/format";
+import { buildDailyBuckets } from "@/lib/activity";
 import type { Investor, InvestorStats } from "@/lib/types";
 import { setInvestorStatus, setLevel2Access } from "../../actions";
 import { StatusBadge } from "../../status-badge";
+import { ActivityHistogram } from "../../activity-histogram";
 
 type EventRow = {
   id: number;
@@ -67,7 +69,7 @@ export default async function InvestorDetailPage({
         .limit(200),
       admin
         .from("events")
-        .select("path, duration_ms")
+        .select("path, duration_ms, created_at")
         .eq("investor_id", id)
         .eq("type", "page_leave"),
     ]);
@@ -77,12 +79,19 @@ export default async function InvestorDetailPage({
   const stats = statsData as InvestorStats | null;
   const events = (eventsData ?? []) as EventRow[];
 
+  const leaveRows = (leaves ?? []) as {
+    path: string | null;
+    duration_ms: number | null;
+    created_at: string;
+  }[];
+
   // Temps cumulé par page, trié décroissant
   const byPage = new Map<string, number>();
-  for (const l of (leaves ?? []) as { path: string | null; duration_ms: number | null }[]) {
+  for (const l of leaveRows) {
     const key = l.path ?? "?";
     byPage.set(key, (byPage.get(key) ?? 0) + (l.duration_ms ?? 0));
   }
+  const dailyBuckets = buildDailyBuckets(leaveRows, 30);
   const topPages = [...byPage.entries()].sort((a, b) => b[1] - a[1]);
   const maxPageMs = topPages[0]?.[1] ?? 0;
 
@@ -155,6 +164,13 @@ export default async function InvestorDetailPage({
         <Stat label="Sessions" value={String(stats?.sessions ?? 0)} />
         <Stat label="Pages vues" value={String(stats?.page_views ?? 0)} />
         <Stat label="Docs ouverts" value={String(stats?.docsend_clicks ?? 0)} />
+      </div>
+
+      <h2 className="mt-10 text-sm font-semibold">
+        Temps passé par jour (30 derniers jours)
+      </h2>
+      <div className="mt-3 rounded-md border border-foreground/10 p-4">
+        <ActivityHistogram buckets={dailyBuckets} size="large" />
       </div>
 
       {topPages.length > 0 && (
