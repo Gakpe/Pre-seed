@@ -39,7 +39,7 @@ export default async function InvestorsLayout({
         <Link href="/" className="text-sm font-semibold tracking-tight">
           Minah
         </Link>
-        {investor && (
+        {investor ? (
           <form action="/auth/signout" method="post">
             <button
               type="submit"
@@ -48,6 +48,13 @@ export default async function InvestorsLayout({
               Se déconnecter
             </button>
           </form>
+        ) : (
+          <Link
+            href="/admin"
+            className="rounded-md border border-neutral-200 px-2.5 py-1 text-xs text-neutral-500 transition-colors hover:border-neutral-400 hover:text-foreground dark:border-neutral-800 dark:hover:border-neutral-600"
+          >
+            Admin
+          </Link>
         )}
       </header>
       {children}

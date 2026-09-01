@@ -38,7 +38,8 @@ export async function updateSession(request: NextRequest) {
   if (!user && needsAuth) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/investors";
-    redirectUrl.search = "";
+    // Mémorise la destination pour y revenir après la saisie du code.
+    redirectUrl.search = `?next=${encodeURIComponent(path)}`;
     return NextResponse.redirect(redirectUrl);
   }
 

@@ -10,7 +10,15 @@ const inputClass =
 type Mode = "new" | "returning";
 type Step = "form" | "code";
 
-export function RequestAccessForm({ refCode }: { refCode: string | null }) {
+export function RequestAccessForm({
+  refCode,
+  nextPath,
+}: {
+  refCode: string | null;
+  nextPath?: string | null;
+}) {
+  const destination =
+    nextPath && nextPath.startsWith("/") ? nextPath : "/investors/home";
   const [mode, setMode] = useState<Mode>("new");
   const [step, setStep] = useState<Step>("form");
   const [firstName, setFirstName] = useState("");
@@ -22,7 +30,7 @@ export function RequestAccessForm({ refCode }: { refCode: string | null }) {
   const [error, setError] = useState<string | null>(null);
 
   const callbackUrl = () =>
-    `${window.location.origin}/auth/callback?next=/investors/home`;
+    `${window.location.origin}/auth/callback?next=${encodeURIComponent(destination)}`;
 
   async function sendCode(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -83,7 +91,7 @@ export function RequestAccessForm({ refCode }: { refCode: string | null }) {
     }
 
     track({ type: "login", path: "/investors" });
-    window.location.href = "/investors/home";
+    window.location.href = destination;
   }
 
   if (step === "code") {

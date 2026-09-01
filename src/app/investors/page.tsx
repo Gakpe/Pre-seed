@@ -11,13 +11,15 @@ export default async function InvestorsPage({
   const params = await searchParams;
   const ref = typeof params.ref === "string" ? params.ref : null;
   const error = typeof params.error === "string" ? params.error : null;
+  const rawNext = typeof params.next === "string" ? params.next : null;
+  const next = rawNext?.startsWith("/") ? rawNext : null;
 
   if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
     const supabase = await createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (user) redirect("/investors/home");
+    if (user) redirect(next ?? "/investors/home");
 
     // Lien personnalisé : trace l'arrivée même sans inscription (event anonyme).
     if (ref && process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -44,7 +46,7 @@ export default async function InvestorsPage({
           ci-dessous.
         </p>
       )}
-      <RequestAccessForm refCode={ref} />
+      <RequestAccessForm refCode={ref} nextPath={next} />
     </main>
   );
 }
