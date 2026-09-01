@@ -34,8 +34,9 @@ export default async function InvestorsPage({
         Espace investisseurs
       </h1>
       <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
-        Accès sur invitation. Renseignez vos coordonnées pour recevoir un lien
-        d&apos;accès par email.
+        Accès sur invitation. Première visite : renseignez vos coordonnées.
+        Déjà connecté : votre email suffit. Vous recevez un code d&apos;accès à
+        usage unique par email.
       </p>
       {error === "lien-invalide" && (
         <p className="mt-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">

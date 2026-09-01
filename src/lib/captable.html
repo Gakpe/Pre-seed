@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minah · Cap table — trajectoire de dilution</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EDEFEA; --ink:#16211D; --ink2:#3F4944; --mut:#6B746E; --mut2:#8A928C;
+    --card:#F7F8F5; --card2:#F1F3EE; --line:#D3D7CF; --line2:#E2E5DE; --chip:#E6E9E3;
+    --up:#3F7A5A; --down:#8E3B2F; --aside:380px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:'IBM Plex Sans',system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.45}
+  .wrap{max-width:1080px;margin:0 auto;padding:24px 20px 64px;transition:padding .28s ease}
+  body.open .wrap{padding-right:calc(var(--aside) + 28px);max-width:none}
+  .mono{font-family:'IBM Plex Mono',ui-monospace,monospace}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;
+           text-transform:uppercase;color:var(--mut)}
+  h1{font-family:'Fraunces',Georgia,serif;font-size:28px;font-weight:600;line-height:1.15;margin:4px 0 0}
+
+  .head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+  .seg{display:flex;background:#DDE1D9;border-radius:999px;padding:3px;flex-shrink:0}
+  .seg button{border:0;background:transparent;color:var(--ink);font:inherit;font-size:13px;
+              padding:6px 14px;border-radius:999px;cursor:pointer;transition:background .18s,color .18s}
+  .seg button.on{background:var(--ink);color:var(--bg)}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px}
+  .pad{padding:16px}
+
+  .moment{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+  .moment .big{font-family:'Fraunces',Georgia,serif;font-size:38px;font-weight:300;line-height:1}
+  .moment .lab{font-weight:500}
+  .moment .sub{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mut)}
+  .lede{font-size:14px;color:var(--ink2);margin:6px 0 18px;max-width:72ch}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:1px;
+         background:var(--line2);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:18px}
+  .stat{background:var(--card);padding:11px 13px}
+  .stat .k{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;
+           text-transform:uppercase;color:var(--mut2)}
+  .stat .v{font-family:'Fraunces',Georgia,serif;font-size:19px;margin-top:3px;line-height:1.1}
+
+  /* le graphique défile avec la page — pas d'épinglage */
+  .sticky{background:var(--bg);padding:2px 0 10px}
+  svg{display:block;width:100%;height:auto}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+  .chips button{border:0;font:inherit;font-size:12px;padding:5px 11px;border-radius:999px;
+                background:var(--chip);color:var(--ink2);cursor:pointer;border-left:2px solid transparent;
+                transition:background .18s,color .18s}
+  .chips button.future{border-left:2px dashed #9AA39C}
+  .chips button.on{background:var(--ink);color:var(--bg)}
+  .cats{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:16px;padding-top:14px;
+        border-top:1px solid var(--line2)}
+  .cat{display:flex;align-items:center;gap:7px;font-size:13px}
+  .cat b{font-weight:500}
+  .cat i{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mut)}
+  .legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:14px;
+          font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--mut)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:9px;height:9px;border-radius:2px;display:inline-block;flex-shrink:0}
+
+  .fbar{display:flex;height:38px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+  .fbar div{display:flex;align-items:center;justify-content:center;color:#F7F8F5;overflow:hidden;
+            font-family:'IBM Plex Mono',monospace;font-size:12px;white-space:nowrap;transition:width .3s ease}
+
+  .rows{border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  .row{display:flex;align-items:center;gap:12px;padding:10px 14px}
+  .row+.row{border-top:1px solid var(--line2)}
+  .row.alt{background:var(--card2)}
+  .row.plain{background:var(--card)}
+  .row .nm{flex:1;min-width:0}
+  .row .nm b{font-weight:400;font-size:14px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row .nm i{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--mut2)}
+  .row .pc{text-align:right}
+  .row .pc b{font-family:'Fraunces',Georgia,serif;font-size:19px;font-weight:400;display:block;line-height:1}
+  .row .pc i{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--mut2)}
+  .row .dl{font-family:'IBM Plex Mono',monospace;font-size:12px;width:62px;text-align:right;flex-shrink:0}
+  .row.tot{background:#E9ECE6;font-weight:500}
+
+  .sec{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+       color:var(--mut);margin:0 0 10px}
+  .bsa{display:grid;grid-template-columns:repeat(auto-fit,minmax(124px,1fr));gap:1px;background:var(--line2);
+       border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .note{font-size:11px;color:var(--mut2);line-height:1.6;margin-top:12px}
+  footer{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--mut2);margin-top:26px;line-height:1.6}
+
+  /* ---------------- panneau latéral droit ---------------- */
+  .fab{position:fixed;top:18px;right:18px;z-index:40;border:1px solid var(--line);
+       background:var(--ink);color:var(--bg);font:inherit;font-size:13px;padding:9px 16px;
+       border-radius:999px;cursor:pointer;box-shadow:0 2px 10px rgba(22,33,29,.18)}
+  .aside{position:fixed;top:0;right:0;width:var(--aside);height:100vh;z-index:35;
+         background:var(--card);border-left:1px solid var(--line);overflow-y:auto;
+         transform:translateX(100%);transition:transform .28s ease;padding:64px 20px 40px}
+  body.open .aside{transform:none}
+  .aside h2{font-family:'Fraunces',Georgia,serif;font-size:20px;font-weight:600;margin:0 0 4px}
+  .grp{border-top:1px solid var(--line2);padding-top:16px;margin-top:20px}
+  .grp:first-of-type{border-top:0;margin-top:14px;padding-top:0}
+  .sl{margin-bottom:13px}
+  .sl .t{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;gap:8px}
+  .sl .t span:last-child{font-family:'IBM Plex Mono',monospace;flex-shrink:0}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:2px;background:#C9CEC5;
+                    border-radius:2px;outline:none;margin:0}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;
+    background:var(--ink);border:3px solid var(--card);box-shadow:0 0 0 1px var(--ink);cursor:pointer}
+  input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 3px #B8772A}
+  .toggle{display:flex;background:#DDE1D9;border-radius:12px;padding:3px;margin-bottom:14px}
+  .toggle button{flex:1;border:0;background:transparent;font:inherit;text-align:left;padding:8px 10px;
+                 border-radius:9px;cursor:pointer}
+  .toggle button.on{background:var(--card);box-shadow:0 1px 2px rgba(22,33,29,.12)}
+  .toggle .l{font-size:13px;font-weight:500;display:block}
+  .toggle .d{font-size:11px;color:var(--mut);display:block}
+  /* bloc figé : ce qui est déjà signé ne se règle pas au curseur */
+  .fixed{background:var(--card2);border:1px solid var(--line2);border-radius:12px;padding:12px 13px}
+  .fixed .fr{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:3px 0}
+  .fixed .fr span:last-child{font-family:'IBM Plex Mono',monospace;color:var(--ink2)}
+  .lock{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--mut2);margin-bottom:8px}
+
+  @media (max-width:1100px){
+    body.open .wrap{padding-right:20px}
+    .aside{width:min(var(--aside),92vw);box-shadow:-8px 0 30px rgba(22,33,29,.14)}
+  }
+</style>
+</head>
+<body>
+
+<button class="fab" id="fab">Paramètres</button>
+
+<div class="wrap">
+
+  <div class="head">
+    <div>
+      <div class="eyebrow">Minah · cap table</div>
+      <h1>De 50 / 50 à la Série A — qui détient quoi, et quand</h1>
+    </div>
+    <div class="seg" id="mode">
+      <button data-m="interne" class="on">interne</button>
+      <button data-m="investisseurs">investisseurs</button>
+    </div>
+  </div>
+
+  <div class="moment">
+    <div class="big" id="m-idx">—</div>
+    <div>
+      <div class="lab" id="m-label">—</div>
+      <div class="sub" id="m-sub">—</div>
+    </div>
+  </div>
+  <p class="lede" id="m-text"></p>
+
+  <div class="sticky">
+    <div class="stats" id="stats"></div>
+    <div class="card pad">
+      <svg id="chart" viewBox="0 0 1200 320" role="img" aria-label="Évolution de la cap table par événement"></svg>
+      <div class="chips" id="chips"></div>
+      <div class="cats" id="cats"></div>
+    </div>
+  </div>
+  <div class="legend" id="legend"></div>
+
+  <p class="sec" style="margin-top:22px">Entre fondateurs · hors tiers</p>
+  <div class="fbar" id="fbar"></div>
+
+  <p class="sec" style="margin-top:22px" id="tbl-title">Cap table</p>
+  <div class="rows" id="rows"></div>
+
+  <p class="sec" style="margin-top:22px">BSA2 · advisor Coralie — acquisition</p>
+  <div class="bsa" id="vest"></div>
+
+  <p class="sec" style="margin-top:22px">Performance BSA1 · conversion au pré-seed → sortie Série A</p>
+  <div class="bsa" id="bsa"></div>
+  <p class="note" id="bsa-note"></p>
+
+  <p class="note" id="note"></p>
+
+  <footer>
+    Source : <b>Model BSA 1er Invest.xlsx</b> · onglet « Estimation - return BSA Air » (12 févr. 2026),
+    restructuré : deux tours de BSA distincts, cession Hervé → Coralie, aucun pool BSPCE.<br>
+    Conversion BSA1 selon la formule de marché — min(plafond ; max(plancher ; pré-money × (1 − décote))) —
+    et non le triple SI du tableur, qui applique la décote sous le plancher et bascule sur le plafond trop tôt.<br>
+    Post-money = actions × prix par action, et non « pré-money + montant levé » : au pré-seed la conversion
+    décotée du BSA1 crée de la valeur que l'addition manquait.
+  </footer>
+</div>
+
+<!-- ------------------------------ panneau latéral ------------------------------ -->
+<aside class="aside" id="aside" aria-label="Paramètres du modèle">
+  <h2>Paramètres</h2>
+  <p class="note" style="margin:0 0 4px">Le graphique se recalcule à chaque mouvement.</p>
+
+  <div class="grp">
+    <p class="sec">Cession de parts · re-scope Hervé</p>
+    <div id="sl-cess"></div>
+    <p class="note" style="margin-top:2px">Hervé cède directement à Coralie. Aucune action nouvelle :
+      les tiers ne bougent pas. Hervé n'a aucune cible — après cette cession il ne fait que se diluer
+      au rythme des tours.</p>
+  </div>
+
+  <div class="grp">
+    <p class="sec">BSA2 · advisor Coralie</p>
+    <div class="toggle" id="rythme">
+      <button data-v="trimestriel" class="on"><span class="l">Trimestriel</span><span class="d">acquisition par quarts</span></button>
+      <button data-v="mensuel"><span class="l">Mensuel</span><span class="d">acquisition lissée</span></button>
+    </div>
+    <div id="sl-bsa2"></div>
+    <p class="note" style="margin-top:2px">Rémunération de prestation, sans investissement ni valorisation
+      d'entrée. Le nombre de BSA est figé à l'attribution, sur le capital constaté juste après la cession ;
+      seule la fraction acquise compte dans la cap table à chaque date.</p>
+  </div>
+
+  <div class="grp">
+    <p class="sec">BSA1 · investisseurs</p>
+    <p class="lock">Figé — déjà négocié</p>
+    <div class="fixed">
+      <div class="fr"><span>Bijon</span><span>30 000 €</span></div>
+      <div class="fr"><span>Serge</span><span>10 000 €</span></div>
+      <div class="fr"><span>Total souscrit</span><span>40 000 €</span></div>
+      <div class="fr"><span>Décote</span><span>20 %</span></div>
+      <div class="fr"><span>Plancher</span><span>4 000 000 €</span></div>
+      <div class="fr"><span>Plafond</span><span>6 000 000 €</span></div>
+    </div>
+  </div>
+
+  <div class="grp">
+    <p class="sec">Amorçage</p>
+    <p class="lock">Figé — déjà réalisé</p>
+    <div class="fixed">
+      <div class="fr"><span>Fondation</span><span>2 × 65 000 actions</span></div>
+      <div class="fr"><span>Family &amp; Friends</span><span>22 500 € @ 10 €</span></div>
+      <div class="fr"><span>50 Partners</span><span>7 %</span></div>
+    </div>
+  </div>
+
+  <div class="grp">
+    <p class="sec">Tours d'equity</p>
+    <div class="toggle" id="airin">
+      <button data-v="out" class="on"><span class="l">BSA1 hors pré-money</span><span class="d">les entrants absorbent la décote</span></button>
+      <button data-v="in"><span class="l">BSA1 dans le pré-money</span><span class="d">ce que demandent les VC</span></button>
+    </div>
+    <div id="sl-rounds"></div>
+  </div>
+  <button id="save-params" style="margin-top:18px;width:100%;padding:10px;border-radius:8px;border:1px solid #B8772A;background:#B8772A;color:#fff;font-weight:600;cursor:pointer">Enregistrer les paramètres</button>
+</aside>
+
+<script>
+/* ============================================================================
+   MINAH — moteur de cap table, v3
+
+   Chronologie modélisée :
+     Fondation → Initial takeoff → BSA1 (Bijon + Serge)
+     → Cession / re-scope Hervé → Coralie → BSA2 advisor Coralie (vesting)
+     → Pré-seed (conversion du BSA1) → Seed → Série A
+
+   Les événements portent une date réelle et sont TRIÉS par date : déplacer un
+   curseur de date réordonne la frise. Aucun pool BSPCE.
+   ========================================================================== */
+
+const FOUND_SHARES = 130000;   // 65 000 x 2 à la fondation
+const TAKEOFF_PRE  = 1300000;  // pré-money du takeoff -> PPS 10 €
+const FF_AMOUNT    = 22500;    // Family & Friends
+const P50_PCT      = 0.07;     // 50 Partners
+
+/* BSA1 — conditions figées, non exposées au panneau. */
+const BSA1 = {bijon:30000, serge:10000, discount:0.20, floor:4e6, cap:6e6, date:2026.5};
+
+/* Ordre = ordre d'empilement dans le graphique (du bas vers le haut).
+   Les acteurs d'une même catégorie sont contigus : c'est ce qui permet de tracer
+   une accolade continue par catégorie. */
+const HOLDERS = [
+  {id:'j',   name:'Julien · fondateur',           short:'Julien',  color:'#B8772A', founder:true},
+  {id:'h',   name:'Hervé · fondateur',            short:'Hervé',   color:'#8E3B2F', founder:true},
+  {id:'c',   name:'Coralie · cession + BSA2',     short:'Coralie', color:'#4E3A62', founder:true},
+  {id:'fff', name:'Family & Friends',             short:'F&F',     color:'#D9B98A'},
+  {id:'b1a', name:'BSA1 · Bijon',                 short:'Bijon',   color:'#86B2BA'},
+  {id:'b1b', name:'BSA1 · Serge',                 short:'Serge',   color:'#6A9CA6'},
+  {id:'ba1', name:'BA 1',                         short:'BA 1',    color:'#52868F'},
+  {id:'ba2', name:'BA 2',                         short:'BA 2',    color:'#3E7079'},
+  {id:'p50', name:'50 Partners',                  short:'50P',     color:'#3B6E8C'},
+  {id:'vca', name:'VC A',                         short:'VC A',    color:'#27556F'},
+  {id:'vcb', name:'VC B',                         short:'VC B',    color:'#163B50'},
+];
+
+const CATS = [
+  {id:'fond', label:'Fondateurs & management', color:'#8E3B2F', ids:['j','h','c']},
+  {id:'fff',  label:'FFF',                     color:'#D9B98A', ids:['fff']},
+  {id:'ba',   label:'Business angels',         color:'#52868F', ids:['b1a','b1b','ba1','ba2']},
+  {id:'vc',   label:'VC & accélérateur',       color:'#27556F', ids:['p50','vca','vcb']},
+];
+
+const P = {
+  cessionPct:0.10,  cessionDate:2026 + 11/12,     // Hervé -> Coralie, fin 2026
+  bsa2Pct:0.05,     bsa2Start:2027, bsa2Months:12, rythme:'trimestriel',
+  airInside:false,                                 // BSA1 dans ou hors le pré-money
+  preseedPre:5e6,   preseedAmt:1.5e6, preseedDate:2028 + 3/12,
+  seedPre:30e6,     seedAmt:3e6,      seedDate:2029,
+  serieaPre:120e6,  serieaAmt:10e6,   serieaDate:2029 + 9/12,
+};
+
+/* Intégration portail Minah : paramètres sauvegardés côté serveur + mode. */
+if (window.__MINAH_PARAMS) Object.assign(P, window.__MINAH_PARAMS);
+const EMBED = window.__MINAH_EMBED || 'admin';
+
+let stage = null;   // null = pas encore choisi : on ouvrira sur la cession
+let mode  = 'interne';
+
+const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+
+/* Fraction du BSA2 acquise à la date d. Le vesting démarre au plus tôt à la
+   cession : Coralie ne peut pas acquérir avant d'être entrée. */
+function vested(p, d){
+  const start  = Math.max(p.bsa2Start, p.cessionDate);
+  const step   = p.rythme === 'mensuel' ? 1 : 3;
+  const months = Math.max(step, p.bsa2Months);
+  if(d <= start) return 0;
+  return clamp(Math.floor((d-start)*12 / step) * step / months, 0, 1);
+}
+
+function model(p){
+  const s = {j:FOUND_SHARES/2, h:FOUND_SHARES/2, c:0, fff:0,
+             b1a:0, b1b:0, ba1:0, ba2:0, p50:0, vca:0, vcb:0};
+  let n2 = 0, cCess = 0, vFrac = 0;              // BSA2 attribués, cession, % acquis
+  const tot = ()=>HOLDERS.reduce((a,x)=>a+s[x.id],0);
+  /* Recale la part acquise du BSA2 sur la date de l'événement traité. */
+  const sync = d => { vFrac = vested(p,d); s.c = cCess + n2*vFrac; };
+
+  const out = [];
+  const snap = o => out.push(Object.assign(
+    {shares:Object.assign({},s), total:tot(), n2, vFrac, cCess}, o));
+
+  const air1Amt = BSA1.bijon + BSA1.serge;
+
+  /* --- les événements, avec leurs dates, triés chronologiquement ----------- */
+  const EV = [
+    {id:'found',   d:2023,           order:0},
+    {id:'takeoff', d:2025,           order:1},
+    {id:'bsa1',    d:BSA1.date,      order:2},
+    {id:'cession', d:p.cessionDate,  order:3},
+    {id:'bsa2',    d:Math.max(p.bsa2Start,p.cessionDate)+p.bsa2Months/12, order:4},
+    {id:'preseed', d:p.preseedDate,  order:5},
+    {id:'seed',    d:p.seedDate,     order:6},
+    {id:'seriea',  d:p.serieaDate,   order:7},
+  ].sort((a,b)=> (a.d-b.d) || (a.order-b.order));
+
+  const done = d => d <= 2026.67;   // repère « réalisé / projection »
+
+  for(const e of EV){
+    sync(e.d);
+
+    if(e.id==='found'){
+      snap({id:e.id, d:e.d, short:'Fondation', label:'Fondation', done:true,
+            pre:null, raised:0, pps:null,
+            text:"Deux frères, même engagement : 65 000 actions chacun, 130 000 au total. Aucun tiers au capital."});
+
+    } else if(e.id==='takeoff'){
+      const pps0 = TAKEOFF_PRE / FOUND_SHARES;              // 10 € / action
+      s.fff = FF_AMOUNT / pps0;
+      s.p50 = P50_PCT * FOUND_SHARES;
+      const rest = FOUND_SHARES - s.fff - s.p50;
+      s.j = rest/2; s.h = rest/2;
+      snap({id:e.id, d:e.d, short:'Takeoff', label:'Initial takeoff', done:true,
+            pre:TAKEOFF_PRE, raised:FF_AMOUNT, pps:pps0,
+            text:"Love money et accélérateur entrent au capital : "+fEur(FF_AMOUNT)+" de Family & Friends à "
+                 +fNum(pps0,2)+" € l'action, et 7 % pour 50 Partners. Le nombre d'actions ne bouge pas — "
+                 +"les deux fondateurs cèdent à parts égales et passent de 50 % à "+fPct(s.j/FOUND_SHARES*100)+" chacun."});
+
+    } else if(e.id==='bsa1'){
+      /* Aucune action émise : le BSA1 ne crée ni titre ni valorisation. */
+      snap({id:e.id, d:e.d, short:'BSA1', label:'BSA1 · Bijon + Serge', done:true,
+            pre:null, raised:air1Amt, pps:null, pending:air1Amt,
+            text:fEur(air1Amt)+" souscrits en BSA1 — "+fEur(BSA1.bijon)+" par Bijon et "+fEur(BSA1.serge)
+                 +" par Serge. Décote "+fPct(BSA1.discount*100)+", tunnel de valorisation "
+                 +fEur(BSA1.floor)+" – "+fEur(BSA1.cap)+". Aucune action émise à ce stade : "
+                 +"la conversion a lieu au pré-seed."});
+
+    } else if(e.id==='cession'){
+      /* Cession directe d'Hervé à Coralie : capital constant, tiers intacts. */
+      const toC = clamp(p.cessionPct*tot(), 0, s.h);
+      cCess += toC; s.h -= toC; s.c = cCess + n2*vFrac;
+      // Les BSA2 sont dimensionnés ici, sur le capital constaté juste après la cession.
+      n2 = p.bsa2Pct>0 ? p.bsa2Pct/(1-p.bsa2Pct)*tot() : 0;
+      snap({id:e.id, d:e.d, short:'Cession', label:'Cession de parts · re-scope Hervé', done:done(e.d),
+            pre:null, raised:0, pps:null,
+            text:"Re-scope du rôle d'Hervé : il cède directement "+fPct(p.cessionPct*100)
+                 +" du capital à Coralie, soit "+fInt(toC)+" actions. Aucune action nouvelle — "
+                 +"Family & Friends et 50 Partners ne bougent pas. À partir d'ici Hervé n'a plus de cible : "
+                 +"il se dilue simplement au rythme des tours."});
+
+    } else if(e.id==='bsa2'){
+      snap({id:e.id, d:e.d, short:'BSA2', label:'BSA2 · advisor Coralie', done:done(e.d),
+            pre:null, raised:0, pps:null,
+            text:"Fin du vesting du BSA2 : "+fInt(n2)+" actions acquises par Coralie sur "
+                 +fNum(p.bsa2Months,0)+" mois en rythme "+p.rythme+", soit "+fPct(p.bsa2Pct*100)
+                 +" du capital constaté à l'attribution. Rémunération de prestation — aucun prix d'entrée, "
+                 +"aucune valorisation associée."});
+
+    } else if(e.id==='preseed'){
+      const before = tot();
+      /* Conversion BSA1, formule de marché : la valorisation de conversion est
+         min(plafond, max(plancher, pré-money x (1 − décote))). Le tunnel borne
+         la VALORISATION ; la décote s'applique avant le bornage. */
+      const vc    = clamp(p.preseedPre*(1-BSA1.discount), BSA1.floor, BSA1.cap);
+      const aPPS  = vc / before;
+      const airSh = air1Amt / aPPS;
+      // « dans le pré-money » : les actions de conversion entrent au dénominateur
+      // du prix payé par les nouveaux — ce sont les fondateurs qui en portent le coût.
+      const pps   = p.airInside ? p.preseedPre/(before+airSh) : p.preseedPre/before;
+      s.b1a = BSA1.bijon/aPPS; s.b1b = BSA1.serge/aPPS;
+      const third = p.preseedAmt/3;
+      s.ba1 = third/pps; s.ba2 = third/pps; s.vca = third/pps;
+      snap({id:e.id, d:e.d, short:'Pré-seed', label:'Pré-seed', done:done(e.d),
+            pre:p.preseedPre, raised:p.preseedAmt, pps, airPPS:aPPS, airVc:vc,
+            text:"Pré-money "+fEur(p.preseedPre)+" soit "+fNum(pps,2)+" € l'action ("
+                 +(p.airInside?"BSA1 converti DANS le pré-money":"BSA1 converti HORS pré-money")
+                 +"). Le BSA1 convertit à "+fNum(aPPS,2)+" € — valorisation de conversion "+fEur(vc)+" ("
+                 +(vc>=BSA1.cap-1 ? "plafond atteint" : vc<=BSA1.floor+1 ? "plancher atteint"
+                   : fPct(BSA1.discount*100)+" de décote")+"), puis "+fEur(p.preseedAmt)
+                 +" entrent en trois tickets égaux (BA 1, BA 2, VC A)."});
+
+    } else if(e.id==='seed'){
+      const pps = p.seedPre / tot();
+      s.vca += (p.seedAmt/2)/pps; s.vcb += (p.seedAmt/2)/pps;
+      snap({id:e.id, d:e.d, short:'Seed', label:'Seed', done:done(e.d),
+            pre:p.seedPre, raised:p.seedAmt, pps,
+            text:"Pré-money "+fEur(p.seedPre)+" soit "+fNum(pps,2)+" € l'action. "+fEur(p.seedAmt)
+                 +" apportés à parité par VC A et VC B."});
+
+    } else if(e.id==='seriea'){
+      const pps = p.serieaPre / tot();
+      s.vca += (p.serieaAmt/2)/pps; s.vcb += (p.serieaAmt/2)/pps;
+      snap({id:e.id, d:e.d, short:'Série A', label:'Série A', done:done(e.d),
+            pre:p.serieaPre, raised:p.serieaAmt, pps,
+            text:"Pré-money "+fEur(p.serieaPre)+" soit "+fNum(pps,2)+" € l'action. "+fEur(p.serieaAmt)
+                 +" levés à parité. C'est l'événement de sortie retenu pour mesurer la performance du BSA1."});
+    }
+  }
+
+  // enrichissement : %, valeur, dilution, part entre fondateurs
+  let ref = null;                       // dernier prix connu, pour valoriser les étapes sans tour
+  out.forEach((st,i) => {
+    if(st.pps != null) ref = st.pps;
+    st.vpps = st.pps != null ? st.pps : ref;   // prix d'affichage
+    st.est  = st.pps == null && ref != null;   // valeur estimée au dernier prix connu
+    /* Post-money = actions APRÈS le tour x prix par action, et non
+       « pré-money + montant levé » : la conversion décotée du BSA1 crée de la
+       valeur qui manque à l'addition. */
+    st.post = st.pps == null ? null : st.total*st.pps;
+    st.dil  = i>0 && out[i-1].total>0 ? (st.total - out[i-1].total)/st.total : null;
+    st.rows = HOLDERS.map(h => ({
+      id:h.id, name:h.name, short:h.short, color:h.color, founder:h.founder,
+      shares:st.shares[h.id],
+      pct:st.shares[h.id]/st.total*100,
+      value:st.vpps == null ? null : st.shares[h.id]*st.vpps,
+    }));
+    const f = st.rows.filter(r=>r.founder).reduce((a,r)=>a+r.shares,0);
+    st.rows.forEach(r => r.fpct = r.founder && f>0 ? r.shares/f*100 : null);
+  });
+
+  const ps = out.find(o=>o.id==='preseed'), sa = out.find(o=>o.id==='seriea');
+  /* edge = avantage réel du BSA1 sur le prix payé par les entrants du tour.
+     Avec un tunnel 4–6 M€ et 20 % de décote, la décote ne « mord » qu'entre
+     5 M€ et 7,5 M€ de pré-money : en dessous c'est le plancher qui fixe le prix,
+     et sous 4 M€ le souscripteur du BSA1 paie PLUS CHER qu'un nouvel entrant. */
+  out.bsa = {entry:ps.airPPS, exit:sa.pps, multiple:sa.pps/ps.airPPS, invested:air1Amt,
+             vc:ps.airVc, growth:p.serieaPre/p.preseedPre, roundPps:ps.pps,
+             edge: ps.pps/ps.airPPS - 1,
+             bind: ps.airVc>=BSA1.cap-1 ? 'plafond' : ps.airVc<=BSA1.floor+1 ? 'plancher' : 'décote'};
+  return out;
+}
+
+/* ---------------------------- formats ----------------------------------- */
+// « Family & Friends », « Fondateurs & management » : le & doit être échappé,
+// sinon le fragment SVG injecté est invalide.
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const fNum = (v,d)=> (v==null?'—':v.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}));
+const fInt = v => Math.round(v).toLocaleString('fr-FR');
+const fPct = v => fNum(v,1)+' %';
+const fEur = v => v==null ? '—'
+  : Math.abs(v) >= 1e6 ? fNum(v/1e6, v>=1e7?0:2)+' M€'
+  : Math.abs(v) >= 1e3 ? fNum(v/1e3,0)+' k€'
+  : fNum(v,0)+' €';
+const MOIS = ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+const fDate = t => { const y=Math.floor(t+1e-9), m=Math.round((t-y)*12);
+                     return m>=12 ? MOIS[0]+' '+(y+1) : MOIS[m]+' '+y; };
+
+/* ---------------------------- rendu ------------------------------------- */
+const $ = id => document.getElementById(id);
+let S = [];
+
+function render(){
+  S = model(P);
+  // au premier rendu on se pose sur la cession : c'est l'événement en discussion
+  if(stage == null) stage = Math.max(0, S.findIndex(s=>s.id==='cession'));
+  stage = clamp(stage, 0, S.length-1);
+  const st = S[stage], prev = stage>0 ? S[stage-1] : null;
+
+  /* -- lecture du moment -- */
+  $('m-idx').textContent   = String(stage+1).padStart(2,'0');
+  $('m-label').textContent = st.label;
+  $('m-sub').textContent   = fDate(st.d) + ' · ' + (st.done ? 'réalisé' : 'projection')
+                           + ' · ' + fInt(st.total) + ' actions';
+  $('m-text').textContent  = st.text;
+
+  /* -- bandeau de stats -- */
+  const fNow  = st.rows.filter(r=>r.founder).reduce((a,r)=>a+r.pct,0);
+  const fPrev = prev ? prev.rows.filter(r=>r.founder).reduce((a,r)=>a+r.pct,0) : null;
+  const stats = [
+    ['Pré-money',   fEur(st.pre)],
+    ['Montant',     st.raised ? fEur(st.raised) : '—'],
+    ['Post-money',  fEur(st.post)],
+    ['Prix / action', st.pps==null ? '—' : fNum(st.pps,2)+' €'],
+    ['Actions',     fInt(st.total)],
+    // dilution = actions nouvelles / actions post-événement. Vaut 0 sur les
+    // opérations par cession (takeoff, cession Hervé) : seuls les % bougent.
+    ['Dilution', st.dil==null ? '—' : fPct(st.dil*100),
+       st.dil!=null && st.dil>0.20 ? 'var(--down)' : null],
+    ['Fondateurs',  fPct(fNow) + (fPrev==null?'' : ' <span style="font-family:IBM Plex Mono;font-size:11px;color:var(--mut2)">'
+                     +(fNow-fPrev>=0?'+':'−')+fNum(Math.abs(fNow-fPrev),1)+' pt</span>')],
+  ];
+  $('stats').innerHTML = stats.map(([k,v,c])=>
+    `<div class="stat"><div class="k">${k}</div><div class="v"${c?` style="color:${c}"`:''}>${v}</div></div>`).join('');
+
+  drawChart();
+
+  /* -- chips -- */
+  $('chips').innerHTML = S.map((s,i)=>
+    `<button data-i="${i}" class="${i===stage?'on':''} ${s.done?'':'future'}">${s.short}</button>`).join('');
+  $('chips').querySelectorAll('button').forEach(b =>
+    b.onclick = ()=>{ stage = +b.dataset.i; render(); });
+
+  /* -- catégories au tour sélectionné (les accolades, elles, montrent la Série A) -- */
+  $('cats').innerHTML = CATS
+    .map(cat => ({cat, v:cat.ids.reduce((a,id)=>a + st.shares[id]/st.total*100, 0)}))
+    .filter(o => o.v > 0.05)
+    .map(o => `<div class="cat"><i class="sw" style="background:${o.cat.color}"></i>
+                 <b>${esc(o.cat.label)}</b><i>${fPct(o.v)}</i></div>`).join('');
+
+  /* -- légende -- */
+  $('legend').innerHTML = HOLDERS.filter(h=>st.shares[h.id]>0.5).map(h=>
+    `<span><i class="sw" style="background:${h.color}"></i>${esc(h.name)}</span>`).join('');
+
+  /* -- barre fondateurs -- */
+  const F = st.rows.filter(r=>r.founder && r.shares>0.5);
+  $('fbar').innerHTML = F.map(r=>
+    `<div style="width:${r.fpct}%;background:${r.color}">${r.fpct>=12?r.short+' '+fNum(r.fpct,0)+' %':''}</div>`).join('');
+
+  /* -- cap table -- */
+  $('tbl-title').textContent = 'Cap table · ' + st.label + (prev ? ' — écart depuis ' + prev.short : '');
+  const visible = st.rows.filter(r=>r.shares>0.5);
+  $('rows').innerHTML = visible.map((r,i)=>{
+    const pr = prev && prev.rows.find(x=>x.id===r.id);
+    const had = pr && pr.shares > 0.5;
+    const d = had ? r.pct - pr.pct : null;
+    const flat = d==null || Math.abs(d) < 0.05;
+    const col = flat ? '#B4BAB2' : (d<0 ? 'var(--down)' : 'var(--up)');
+    const txt = !had ? 'entrée' : flat ? '·' : (d>0?'+':'−')+fNum(Math.abs(d),1)+' pt';
+    // Coralie : on détaille ce qui vient de la cession et ce qui vient du BSA2
+    const sub = r.id==='c' && st.n2>0
+      ? fInt(r.shares)+' actions · cession '+fInt(st.cCess)+' + BSA2 '+fInt(st.n2*st.vFrac)
+      : fInt(r.shares)+' actions';
+    return `<div class="row ${i%2?'alt':'plain'}">
+      <i class="sw" style="background:${r.color}"></i>
+      <div class="nm"><b>${esc(r.name)}</b><i>${sub}</i></div>
+      <div class="pc"><b>${fPct(r.pct)}</b><i>${fEur(r.value)}</i></div>
+      <div class="dl" style="color:${col}">${txt}</div></div>`;
+  }).join('')
+   // le total en euros est la SOMME des lignes, pas « pré-money + montant levé »
+   + `<div class="row tot"><i class="sw" style="background:transparent"></i>
+        <div class="nm"><b>Total</b><i>${visible.length} lignes · ${fInt(st.total)} actions${
+          st.est ? ' · valeurs au dernier prix connu' : ''}</i></div>
+        <div class="pc"><b>100,0 %</b><i>${st.vpps==null?'—':fEur(visible.reduce((a,r)=>a+r.value,0))}</i></div>
+        <div class="dl"></div></div>`;
+
+  /* -- BSA2 : état d'acquisition au moment sélectionné -- */
+  const vEnd = Math.max(P.bsa2Start,P.cessionDate) + P.bsa2Months/12;
+  $('vest').innerHTML = [
+    ['Cible totale',   fPct(P.bsa2Pct*100)],
+    ['BSA attribués',  fInt(st.n2)+' <span style="font-family:IBM Plex Mono;font-size:11px;color:var(--mut2)">actions</span>'],
+    ['Acquis à date',  fPct(st.vFrac*100)],
+    ['Dont acquis',    fInt(st.n2*st.vFrac)+' <span style="font-family:IBM Plex Mono;font-size:11px;color:var(--mut2)">actions</span>'],
+    ['Période',        fDate(Math.max(P.bsa2Start,P.cessionDate))+' → '+fDate(vEnd)],
+    ['Rythme',         P.rythme],
+  ].map(([k,v])=>`<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+
+  /* -- performance BSA1 -- */
+  const b = S.bsa;
+  $('bsa').innerHTML = [
+    ['Valo de conversion', fEur(b.vc)+' <span style="font-family:IBM Plex Mono;font-size:11px;color:var(--mut2)">'+b.bind+'</span>'],
+    ['PPS de conversion', fNum(b.entry,2)+' €'],
+    ['PPS Série A',       fNum(b.exit,2)+' €'],
+    ['Multiple',          fNum(b.multiple,2)+' x'],
+    // le multiple n'existe que parce que la valo est multipliée par autant :
+    // à afficher côte à côte, c'est la première question que posera l'investisseur.
+    ['Croissance de valo', fNum(b.growth,1)+' x <span style="font-family:IBM Plex Mono;font-size:11px;color:var(--mut2)">pré-seed → A</span>'],
+    // avantage réel sur le prix du tour : négatif = le BSA1 paie plus cher qu'un entrant
+    ['Avantage vs tour', (b.edge>=0?'+':'−')+fPct(Math.abs(b.edge)*100),
+       b.edge < 0.005 ? 'var(--down)' : null],
+    ['Bijon · 30 k€',     fEur(BSA1.bijon*b.multiple)],
+    ['Serge · 10 k€',     fEur(BSA1.serge*b.multiple)],
+  ].map(([k,v,c])=>`<div class="stat"><div class="k">${k}</div><div class="v"${c?` style="color:${c}"`:''}>${v}</div></div>`).join('');
+
+  /* -- lecture du tunnel BSA1 -- */
+  /* Le tunnel 4–6 M€ et la décote de 20 % se recouvrent : la décote ne devient
+     effective qu'au-dessus de floor/(1−décote) = 5 M€, et le plafond prend le
+     relais au-dessus de cap/(1−décote) = 7,5 M€. Hors de cette fenêtre le
+     souscripteur ne gagne rien — voire paie plus cher que les entrants du tour. */
+  const wLo = BSA1.floor/(1-BSA1.discount), wHi = BSA1.cap/(1-BSA1.discount);
+  $('bsa-note').innerHTML =
+      'Tunnel '+fEur(BSA1.floor)+' – '+fEur(BSA1.cap)+' avec '+fPct(BSA1.discount*100)
+    + ' de décote : la décote n\'est réellement active qu\'entre <b>'+fEur(wLo)+'</b> et <b>'+fEur(wHi)
+    + '</b> de pré-money. En dessous de '+fEur(wLo)+' c\'est le plancher qui fixe le prix, et sous '
+    + fEur(BSA1.floor)+' Bijon et Serge paieraient l\'action <b>plus cher</b> que les entrants du pré-seed. '
+    + (b.edge < 0.005
+        ? '<b style="color:var(--down)">Au pré-money actuel ('+fEur(P.preseedPre)+'), le BSA1 n\'a aucun avantage de prix sur le tour.</b>'
+        : 'Au pré-money actuel ('+fEur(P.preseedPre)+'), l\'avantage est de '+fPct(b.edge*100)+' sur le prix du tour.');
+
+  /* -- note de lecture -- */
+  const A = S[S.length-1];
+  const g = id => A.rows.find(r=>r.id===id);
+  $('note').innerHTML =
+      '<b>En '+A.short+' · Julien '+fPct(g('j').pct)+' — Hervé '+fPct(g('h').pct)
+    + ' — Coralie '+fPct(g('c').pct)+'.</b><br>'
+    + 'Hervé n\'a aucune cible de détention : il cède '+fPct(P.cessionPct*100)
+    + ' à Coralie lors du re-scope, puis se dilue au même rythme que les autres actionnaires en place. '
+    + 'Coralie combine cette cession et '+fPct(P.bsa2Pct*100)+' de BSA2 advisor acquis sur '
+    + fNum(P.bsa2Months,0)+' mois. Aucun pool BSPCE n\'est modélisé.<br>'
+    + (P.airInside
+        ? 'BSA1 converti DANS le pré-money : les actions de conversion sont au dénominateur du prix payé par les entrants — les fondateurs en supportent le coût.'
+        : 'BSA1 converti HORS pré-money : les entrants du pré-seed paient un prix calculé avant conversion — ce sont eux qui absorbent la décote. À valider avec le lead.');
+}
+
+/* ---------------------------- graphique --------------------------------- */
+
+/* Accolade « } » verticale : les deux extrémités touchent le graphique en x,
+   la pointe centrale ressort en x+w, du côté du libellé. */
+function bracePath(x, y0, y1, w){
+  const ym = (y0+y1)/2, r = Math.max(1.5, Math.min(w*0.7, (y1-y0)/4)), m = x + w*0.5;
+  return `M ${x} ${y0} Q ${m} ${y0} ${m} ${y0+r} L ${m} ${ym-r} Q ${m} ${ym} ${x+w} ${ym}`
+       + ` Q ${m} ${ym} ${m} ${ym+r} L ${m} ${y1-r} Q ${m} ${y1} ${x} ${y1}`;
+}
+
+function drawChart(){
+  const W=1200, H=320, L=44, R=230, T=16, B=38;
+  const step = (W-L-R)/(S.length-1);
+  const x = i => L + i*step;
+  const y = pct => H-B - pct*(H-T-B)/100;
+  const last = S.length-1;
+  let out = '';
+
+  for(let g=0; g<=100; g+=25){
+    out += `<line x1="${L}" x2="${W-R}" y1="${y(g)}" y2="${y(g)}" stroke="#E2E5DE"/>`
+        +  `<text x="${L-8}" y="${y(g)+4}" text-anchor="end" font-family="IBM Plex Mono"
+              font-size="10" fill="#9AA39C">${g}</text>`;
+  }
+
+  /* Bandes empilées, catégorie par catégorie : fondateurs en bas, VC en haut.
+     On mémorise au passage l'emprise verticale de chaque catégorie au dernier
+     tour, pour y accrocher l'accolade. */
+  const cum = S.map(()=>0);
+  const spans = {};
+  CATS.forEach(cat=>{
+    const catLo = cum[last];
+    cat.ids.forEach(id=>{
+      const h = HOLDERS.find(k=>k.id===id);
+      const lo = cum.slice();
+      S.forEach((s,i)=> cum[i] += s.shares[id]/s.total*100);
+      if(cum.every((v,i)=> v-lo[i] < 0.02)) return;
+      const top = S.map((_,i)=>`${x(i)},${y(cum[i])}`).join(' ');
+      const bot = S.map((_,i)=>`${x(i)},${y(lo[i])}`).reverse().join(' ');
+      out += `<polygon points="${top} ${bot}" fill="${h.color}" stroke="#F7F8F5" stroke-width="1"/>`;
+    });
+    spans[cat.id] = [catLo, cum[last]];
+    // frontière de catégorie, épaissie sur toute la largeur
+    if(cum[last] < 99.9){
+      out += `<polyline points="${S.map((_,i)=>`${x(i)},${y(cum[i])}`).join(' ')}"
+                fill="none" stroke="#F7F8F5" stroke-width="3"/>`;
+    }
+  });
+
+  S.forEach((s,i)=>{
+    out += `<line x1="${x(i)}" x2="${x(i)}" y1="${T}" y2="${H-B}" stroke="#16211D"
+              stroke-opacity="${i===stage?0.75:0.18}" stroke-width="${i===stage?2:1}"
+              stroke-dasharray="${i===stage?'':'3 3'}"/>`
+         +  `<text x="${x(i)}" y="${H-B+16}" text-anchor="middle" font-family="IBM Plex Mono"
+              font-size="11" fill="${i===stage?'#16211D':'#6B746E'}">${s.short}</text>`
+         +  `<text x="${x(i)}" y="${H-B+28}" text-anchor="middle" font-family="IBM Plex Mono"
+              font-size="9" fill="#9AA39C">${s.done?'':'· '}${fDate(s.d)}</text>`;
+  });
+
+  /* Accolades des catégories, au bord droit = composition au dernier événement */
+  const bx = x(last) + 9, bw = 13, tx = bx + bw + 8;
+  const lab = [];
+  CATS.forEach(cat=>{
+    const [lo,hi] = spans[cat.id];
+    if(hi - lo < 0.3) return;
+    const y0 = y(hi), y1 = y(lo);
+    out += `<path d="${bracePath(bx,y0,y1,bw)}" fill="none" stroke="#6B746E"
+              stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>`;
+    lab.push({cat, ym:(y0+y1)/2, pct:hi-lo});
+  });
+  // décalage vertical minimal pour que les libellés ne se chevauchent pas
+  lab.sort((a,b)=>a.ym-b.ym);
+  let prev = -1e9;
+  lab.forEach(l => { l.ly = Math.max(l.ym, prev + 28); prev = l.ly; });
+  const over = lab.length ? lab[lab.length-1].ly - (H-B-4) : 0;
+  if(over > 0) lab.forEach(l => l.ly -= over);
+  lab.forEach(l=>{
+    out += `<path d="M ${bx+bw} ${l.ym} C ${tx-5} ${l.ym} ${tx-5} ${l.ly} ${tx} ${l.ly}"
+              fill="none" stroke="#C9CEC5" stroke-width="1"/>`
+        +  `<text x="${tx+5}" y="${l.ly-1}" font-family="IBM Plex Sans" font-size="12"
+              fill="#16211D">${esc(l.cat.label)}</text>`
+        +  `<text x="${tx+5}" y="${l.ly+12}" font-family="IBM Plex Mono" font-size="10.5"
+              fill="#8A928C">${fNum(l.pct,1)} % en ${esc(S[last].short)}</text>`;
+  });
+
+  // zones cliquables par événement, posées en dernier pour rester au-dessus
+  S.forEach((_,i)=>{
+    out += `<rect x="${x(i)-step/2}" y="${T}" width="${step}" height="${H-B-T}"
+              fill="transparent" style="cursor:pointer" data-i="${i}"/>`;
+  });
+
+  $('chart').innerHTML = out;
+  $('chart').querySelectorAll('rect[data-i]').forEach(r =>
+    r.onclick = ()=>{ stage = +r.dataset.i; render(); });
+}
+
+/* ---------------------------- contrôles --------------------------------- */
+const SLIDERS = {
+  'sl-cess':[
+    {k:'cessionPct',  l:'Part cédée à Coralie', min:0,    max:.25,  step:.005, f:v=>fPct(v*100)},
+    {k:'cessionDate', l:'Date de la cession',   min:2026, max:2028, step:1/12, f:fDate},
+  ],
+  'sl-bsa2':[
+    {k:'bsa2Pct',    l:'Cible totale BSA2',   min:0,     max:.15,  step:.005, f:v=>fPct(v*100)},
+    {k:'bsa2Start',  l:'Début du vesting',    min:2026,  max:2029, step:1/12, f:fDate},
+    {k:'bsa2Months', l:'Durée du vesting',    min:3,     max:48,   step:3,    f:v=>fNum(v,0)+' mois'},
+  ],
+  'sl-rounds':[
+    {k:'preseedPre',  l:'Pré-seed · pré-money', min:3e6,  max:12e6, step:25e4, f:fEur},
+    {k:'preseedAmt',  l:'Pré-seed · montant',   min:5e5,  max:3e6,  step:1e5,  f:fEur},
+    {k:'preseedDate', l:'Pré-seed · date',      min:2027, max:2030, step:1/12, f:fDate},
+    {k:'seedPre',     l:'Seed · pré-money',     min:1e7,  max:6e7,  step:1e6,  f:fEur},
+    {k:'seedAmt',     l:'Seed · montant',       min:1e6,  max:8e6,  step:25e4, f:fEur},
+    {k:'seedDate',    l:'Seed · date',          min:2027, max:2031, step:1/12, f:fDate},
+    {k:'serieaPre',   l:'Série A · pré-money',  min:6e7,  max:2e8,  step:5e6,  f:fEur},
+    {k:'serieaAmt',   l:'Série A · montant',    min:5e6,  max:3e7,  step:1e6,  f:fEur},
+    {k:'serieaDate',  l:'Série A · date',       min:2028, max:2032, step:1/12, f:fDate},
+  ],
+};
+
+Object.entries(SLIDERS).forEach(([host,list])=>{
+  $(host).innerHTML = list.map(s=>
+    `<div class="sl"><div class="t"><span>${s.l}</span><span id="v-${s.k}">${s.f(P[s.k])}</span></div>
+     <input type="range" id="i-${s.k}" min="${s.min}" max="${s.max}" step="${s.step}"
+            value="${P[s.k]}" aria-label="${s.l}"></div>`).join('');
+  list.forEach(s => $('i-'+s.k).oninput = e => {
+    P[s.k] = +e.target.value;
+    $('v-'+s.k).textContent = s.f(P[s.k]);
+    render();
+  });
+});
+
+$('rythme').querySelectorAll('button').forEach(b => b.onclick = ()=>{
+  P.rythme = b.dataset.v;
+  $('rythme').querySelectorAll('button').forEach(o=>o.classList.toggle('on', o===b));
+  render();
+});
+
+$('airin').querySelectorAll('button').forEach(b => b.onclick = ()=>{
+  P.airInside = b.dataset.v === 'in';
+  $('airin').querySelectorAll('button').forEach(o=>o.classList.toggle('on', o===b));
+  render();
+});
+
+/* -- ouverture / fermeture du panneau -- */
+function setPanel(open){
+  document.body.classList.toggle('open', open);
+  $('fab').textContent = open ? 'Fermer' : 'Paramètres';
+  $('aside').setAttribute('aria-hidden', open ? 'false' : 'true');
+}
+$('fab').onclick = ()=> setPanel(!document.body.classList.contains('open'));
+
+$('mode').querySelectorAll('button').forEach(b => b.onclick = ()=>{
+  mode = b.dataset.m;
+  $('mode').querySelectorAll('button').forEach(o=>o.classList.toggle('on', o===b));
+  // en mode investisseurs, les hypothèses ne sont ni visibles ni atteignables
+  $('fab').style.display = mode==='interne' ? '' : 'none';
+  if(mode!=='interne') setPanel(false);
+});
+
+document.addEventListener('keydown', e=>{
+  if(e.target && e.target.tagName === 'INPUT') return;
+  if(e.key==='ArrowRight' && stage<S.length-1){ stage++; render(); }
+  if(e.key==='ArrowLeft'  && stage>0){ stage--; render(); }
+  if(e.key==='Escape') setPanel(false);
+});
+
+const saveBtn = $('save-params');
+if (EMBED === 'investor') {
+  /* Vue investisseur : hypothèses invisibles et inatteignables. */
+  mode = 'investisseurs';
+  $('mode').style.display = 'none';
+  $('fab').style.display = 'none';
+  saveBtn.style.display = 'none';
+} else {
+  saveBtn.onclick = async () => {
+    saveBtn.textContent = 'Enregistrement…';
+    try {
+      const r = await fetch('/api/captable/params', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(P),
+      });
+      saveBtn.textContent = r.ok ? 'Enregistré ✓' : 'Échec — réessayer';
+    } catch (e) { saveBtn.textContent = 'Échec — réessayer'; }
+    setTimeout(() => { saveBtn.textContent = 'Enregistrer les paramètres'; }, 2500);
+  };
+}
+
+setPanel(false);
+render();
+</script>
+</body>
+</html>

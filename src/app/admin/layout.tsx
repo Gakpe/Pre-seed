@@ -9,7 +9,13 @@ export default function AdminLayout({ children }: LayoutProps<"/admin">) {
             Minah
           </Link>
           <Link href="/admin" className="text-xs text-neutral-500 hover:underline">
-            Admin
+            Investisseurs
+          </Link>
+          <Link
+            href="/admin/captable"
+            className="text-xs text-neutral-500 hover:underline"
+          >
+            Cap table
           </Link>
         </div>
         <form action="/auth/signout" method="post">
