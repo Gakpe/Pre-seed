@@ -3,11 +3,12 @@
 
 export const deal = {
   round: "Pre-seed 2026",
+  period: "Q3–Q4 2026",
   target: "1,5 M€",
   minTicket: "100 K€",
   leadWanted: "500 K€",
   matchingFund: "600 K€ en discussion",
-  engagedLabel: "700 K€+ engagés",
+  engagedLabel: "700 K€ matching fund — soft commit",
   progressPct: 47,
   tranches: ["< 100 K€", "< 250 K€", "< 500 K€", "500 K€+ (lead)"],
   // Lien de prise de RDV (Calendly / Cal.com) — placeholder à remplacer.

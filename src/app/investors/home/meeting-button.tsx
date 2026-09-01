@@ -12,7 +12,7 @@ export function MeetingButton() {
       onClick={() =>
         track({ type: "cta_click", path: "/investors/home", label: "rdv-equipe" })
       }
-      className="inline-block rounded-md bg-brand px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-80"
+      className="rounded-md border border-foreground/20 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-foreground/50"
     >
       Prendre rendez-vous
     </a>

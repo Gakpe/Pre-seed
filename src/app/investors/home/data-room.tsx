@@ -9,9 +9,11 @@ import type { DocumentRow } from "@/lib/types";
 export function DataRoom({
   docs,
   startIndex = 1,
+  columns = 1,
 }: {
   docs: DocumentRow[];
   startIndex?: number;
+  columns?: 1 | 2;
 }) {
   const pathname = usePathname();
 
@@ -23,7 +25,11 @@ export function DataRoom({
   }
 
   return (
-    <div className="space-y-8">
+    <div
+      className={
+        columns === 2 ? "grid gap-x-8 gap-y-7 md:grid-cols-2" : "space-y-8"
+      }
+    >
       {categories.map((cat, i) => (
         <section key={cat.name}>
           <h3 className="flex items-baseline gap-3 text-sm font-semibold">

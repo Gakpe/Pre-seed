@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { TrackingProvider } from "./tracking-provider";
 import { Splash } from "./splash";
+import { QuestionWidget } from "./question-widget";
 
 export default async function InvestorsLayout({
   children,
@@ -38,14 +39,18 @@ export default async function InvestorsLayout({
       {investor && <TrackingProvider investor={investor} />}
       {investor && <Splash />}
 
-      {/* Touche de marque : halo orange + icône, discrets, bas droite */}
+      {/* Touche de marque : halo orange discret, bas droite */}
       <div className="pointer-events-none fixed -right-28 -bottom-28 z-0 h-80 w-80 rounded-full bg-brand/10 blur-3xl" />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/brand/icon.png"
-        alt=""
-        className="pointer-events-none fixed right-5 bottom-5 z-0 h-9 w-9 rounded-full opacity-80 shadow-sm"
-      />
+      {investor ? (
+        <QuestionWidget />
+      ) : (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src="/brand/icon.png"
+          alt=""
+          className="pointer-events-none fixed right-5 bottom-5 z-0 h-9 w-9 rounded-full opacity-80 shadow-sm"
+        />
+      )}
 
       <header className="z-10 flex items-center justify-between border-b border-foreground/10 px-6 py-4">
         <Link href="/" aria-label="Minah">

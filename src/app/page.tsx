@@ -27,7 +27,7 @@ export default function Home() {
       </div>
       <Link
         href="/investors"
-        className="rounded-full bg-brand px-6 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-80"
+        className="rounded-full bg-marsala px-6 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-80"
       >
         Espace investisseurs
       </Link>

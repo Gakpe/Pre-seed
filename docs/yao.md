@@ -30,9 +30,11 @@ toujours). Yao n'a qu'à :
 
 Types d'alertes (`kind`) : `signup` (nouvelle inscription — nom, entité,
 domaine email, ref), `interest` (manifestation d'intérêt pour une tranche →
-débloque le niveau 2 de la data room), `first_login`, `docsend_click`,
-`long_session` (session > 5 min, une alerte par session), `return_visit`
-(retour après plus de 7 jours). `payload` (jsonb) contient le détail brut.
+débloque le niveau 2 de la data room), `question` (question posée via le
+widget — texte complet dans la table `questions`), `first_login`,
+`docsend_click`, `long_session` (session > 5 min, une alerte par session),
+`return_visit` (retour après plus de 7 jours). `payload` (jsonb) contient le
+détail brut.
 
 ## 2. Actions — bloquer / rétablir un accès
 
