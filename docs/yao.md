@@ -36,7 +36,7 @@ widget — texte complet dans la table `questions`), `first_login`,
 `return_visit` (retour après plus de 7 jours). `payload` (jsonb) contient le
 détail brut.
 
-## 2. Actions — bloquer / rétablir un accès
+## 2. Actions — bloquer un accès, ouvrir le niveau 2
 
 Les inscriptions sont **auto-approuvées**. Si Julien répond « bloquer » à une
 alerte :
@@ -44,6 +44,14 @@ alerte :
 ```
 PATCH /rest/v1/investors?id=eq.<investor_id>
 body: {"status": "blocked"}          # rétablir : {"status": "approved"}
+```
+
+L'ouverture du **niveau 2** de la data room est validée manuellement : sur une
+alerte `interest`, si Julien répond « ok » (ou « ouvre ») :
+
+```
+PATCH /rest/v1/investors?id=eq.<investor_id>
+body: {"level2_access": true}        # retirer : {"level2_access": false}
 ```
 
 L'`investor_id` est dans chaque notification.

@@ -17,15 +17,14 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
   if (!user) return new Response(null, { status: 401 });
 
-  // Pas de politique RLS d'update sur investors : passage par le service role,
-  // limité aux deux champs d'intérêt de l'utilisateur connecté.
+  // Enregistre l'intention seulement : l'ouverture du niveau 2 est validée
+  // manuellement par l'équipe (depuis /admin ou en répondant à Yao).
   const admin = createAdminClient();
   const { error } = await admin
     .from("investors")
     .update({
       interest_expressed_at: new Date().toISOString(),
       interest_tranche: tranche,
-      level2_access: true,
     })
     .eq("id", user.id);
   if (error) return new Response(null, { status: 500 });

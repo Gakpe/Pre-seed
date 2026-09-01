@@ -4,21 +4,26 @@ import { useState } from "react";
 import { deal } from "@/lib/deal";
 import { track } from "@/lib/tracking";
 
+const MAX_QUESTIONS = 8;
+
 // Pastille Minah en bas à droite : au survol « Posez-nous vos questions »,
-// au clic un pop-up permet d'envoyer ses questions en amont du RDV.
+// au clic un pop-up permet d'envoyer plusieurs questions distinctes (bouton +),
+// chacune avec son contexte, en amont du RDV.
 export function QuestionWidget() {
   const [open, setOpen] = useState(false);
-  const [body, setBody] = useState("");
+  const [questions, setQuestions] = useState<string[]>([""]);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
+
+  const filled = questions.map((q) => q.trim()).filter(Boolean);
 
   async function submit() {
     setStatus("sending");
     const res = await fetch("/api/questions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ body }),
+      body: JSON.stringify({ questions: filled }),
     }).catch(() => null);
     if (res?.ok) {
       setStatus("sent");
@@ -31,9 +36,13 @@ export function QuestionWidget() {
   function close() {
     setOpen(false);
     if (status === "sent") {
-      setBody("");
+      setQuestions([""]);
       setStatus("idle");
     }
+  }
+
+  function setQuestion(i: number, value: string) {
+    setQuestions((qs) => qs.map((q, j) => (j === i ? value : q)));
   }
 
   return (
@@ -48,11 +57,7 @@ export function QuestionWidget() {
           className="rounded-full shadow-md transition-transform hover:scale-105"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/brand/icon.png"
-            alt=""
-            className="h-11 w-11 rounded-full"
-          />
+          <img src="/brand/icon.png" alt="" className="h-11 w-11 rounded-full" />
         </button>
       </div>
 
@@ -62,7 +67,7 @@ export function QuestionWidget() {
           onClick={close}
         >
           <div
-            className="w-full max-w-md rounded-xl border border-foreground/10 bg-background p-6 shadow-2xl"
+            className="max-h-[85vh] w-full max-w-md overflow-y-auto rounded-xl border border-foreground/10 bg-background p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {status === "sent" ? (
@@ -105,29 +110,53 @@ export function QuestionWidget() {
                   Posez-nous vos questions
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-neutral-600">
-                  Envoyez toutes vos questions en amont de notre échange —
-                  l&apos;équipe les prépare pour le rendez-vous ou y répond par
-                  écrit.
+                  Une question par champ, avec le contexte utile — l&apos;équipe
+                  les prépare pour le rendez-vous ou y répond par écrit.
                 </p>
-                <textarea
-                  value={body}
-                  onChange={(e) => setBody(e.target.value)}
-                  rows={5}
-                  placeholder="Vos questions…"
-                  className="mt-4 w-full rounded-md border border-neutral-300 bg-transparent px-3 py-2 text-sm outline-none focus:border-neutral-500"
-                />
+
+                <div className="mt-4 space-y-3">
+                  {questions.map((q, i) => (
+                    <div key={i}>
+                      <label className="mb-1 block text-xs font-medium text-neutral-500">
+                        Question {i + 1}
+                      </label>
+                      <textarea
+                        value={q}
+                        onChange={(e) => setQuestion(i, e.target.value)}
+                        rows={2}
+                        placeholder="Votre question et son contexte…"
+                        className="w-full rounded-md border border-neutral-300 bg-transparent px-3 py-2 text-sm outline-none focus:border-neutral-500"
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                {questions.length < MAX_QUESTIONS && (
+                  <button
+                    onClick={() => setQuestions((qs) => [...qs, ""])}
+                    className="mt-2 flex items-center gap-1.5 text-sm text-neutral-500 hover:text-foreground"
+                  >
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full border border-neutral-400 text-xs leading-none">
+                      +
+                    </span>
+                    Ajouter une question
+                  </button>
+                )}
+
                 {status === "error" && (
                   <p className="mt-2 text-sm text-red-600">
                     Échec de l&apos;envoi, réessayez.
                   </p>
                 )}
-                <div className="mt-4 flex gap-3">
+                <div className="mt-5 flex gap-3">
                   <button
                     onClick={submit}
-                    disabled={status === "sending" || !body.trim()}
+                    disabled={status === "sending" || filled.length === 0}
                     className="flex-1 rounded-md bg-marsala py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
                   >
-                    {status === "sending" ? "Envoi…" : "Envoyer"}
+                    {status === "sending"
+                      ? "Envoi…"
+                      : `Envoyer ${filled.length > 1 ? `mes ${filled.length} questions` : "ma question"}`}
                   </button>
                   <button
                     onClick={close}

@@ -53,10 +53,21 @@ export default async function InvestorsLayout({
       )}
 
       <header className="z-10 flex items-center justify-between border-b border-foreground/10 px-6 py-4">
-        <Link href="/" aria-label="Minah">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo.png" alt="Minah" className="h-5 w-auto" />
-        </Link>
+        <div className="flex min-w-0 items-center gap-3">
+          <Link href="/" aria-label="Minah" className="shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/brand/logo.png" alt="Minah" className="h-5 w-auto" />
+          </Link>
+          {investor && (
+            <>
+              <span aria-hidden className="h-4 w-px shrink-0 bg-foreground/20" />
+              <span className="truncate text-xs text-neutral-500">
+                {investor.full_name ?? investor.email}
+                {investor.entity ? ` · ${investor.entity}` : ""}
+              </span>
+            </>
+          )}
+        </div>
         {investor ? (
           <form action="/auth/signout" method="post">
             <button
@@ -68,7 +79,7 @@ export default async function InvestorsLayout({
           </form>
         ) : (
           <Link
-            href="/admin"
+            href="/admin/login"
             className="rounded-md border border-foreground/15 px-2.5 py-1 text-xs text-neutral-500 transition-colors hover:border-foreground/40 hover:text-foreground"
           >
             Admin
@@ -76,6 +87,18 @@ export default async function InvestorsLayout({
         )}
       </header>
       <div className="z-10 flex flex-1 flex-col">{children}</div>
+
+      {/* Badge confidentiel, bas gauche */}
+      <div className="group fixed bottom-5 left-5 z-40">
+        <span className="pointer-events-none absolute bottom-full left-0 mb-2 w-72 rounded-md bg-foreground px-3 py-2 text-xs leading-5 text-background opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+          Espace confidentiel — merci de ne pas le partager, sauf aux personnes
+          explicitement concernées ou sur demande de l&apos;équipe Minah.
+        </span>
+        <span className="flex cursor-default items-center gap-2 rounded-full border border-marsala/25 bg-white/60 px-3 py-1.5 text-[11px] font-medium tracking-wide text-marsala shadow-sm">
+          <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+          Espace confidentiel
+        </span>
+      </div>
     </div>
   );
 }

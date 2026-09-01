@@ -145,6 +145,10 @@ export default async function InvestorHomePage() {
               <span className="rounded-full bg-salvia px-3 py-1 font-medium text-foreground">
                 Niveau 2 — débloqué ✓
               </span>
+            ) : investor.interest_expressed_at ? (
+              <span className="rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-foreground">
+                Niveau 2 — ouverture en cours…
+              </span>
             ) : (
               <span className="rounded-full border border-dashed border-neutral-400 px-3 py-1 text-neutral-500">
                 Niveau 2 — verrouillé 🔒
@@ -192,16 +196,18 @@ export default async function InvestorHomePage() {
               <span>{deal.engagedLabel}</span>
               <span>objectif {deal.target}</span>
             </div>
-            {/* Pointillés : montants identifiés en soft commit, pas encore signés */}
-            <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-neutral-200">
+            {/* Tirets fins : montants identifiés en soft commit, pas encore signés */}
+            <div className="mt-2 h-1 rounded-full bg-neutral-200/80">
               <div
-                className="h-full rounded-full"
+                className="relative h-full"
                 style={{
                   width: `${deal.progressPct}%`,
                   backgroundImage:
-                    "repeating-linear-gradient(-45deg, var(--brand) 0 7px, transparent 7px 12px)",
+                    "repeating-linear-gradient(90deg, var(--brand) 0 10px, transparent 10px 17px)",
                 }}
-              />
+              >
+                <span className="absolute -top-[3px] right-0 h-2.5 w-2.5 rounded-full bg-brand" />
+              </div>
             </div>
           </div>
         </section>
@@ -268,13 +274,10 @@ export default async function InvestorHomePage() {
               )}
               <div className="mt-5">
                 {investor.interest_expressed_at ? (
-                  <p className="text-sm text-neutral-500">
-                    Intérêt enregistré ({investor.interest_tranche}).
-                    L&apos;accès au niveau 2 n&apos;est pas actif — contactez{" "}
-                    <a href="mailto:contact@minah.io" className="underline">
-                      contact@minah.io
-                    </a>
-                    .
+                  <p className="text-sm text-neutral-600">
+                    Intérêt enregistré ({investor.interest_tranche}) ✓ —
+                    l&apos;équipe est prévenue et vous ouvre le niveau 2 très
+                    rapidement.
                   </p>
                 ) : (
                   <InterestModal />

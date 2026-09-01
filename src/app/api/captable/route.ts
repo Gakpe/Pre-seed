@@ -2,29 +2,29 @@ import { readFile } from "fs/promises";
 import path from "path";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { isAdminEmail } from "@/lib/admin";
+import { getAdminEmail } from "@/lib/admin";
 import type { Investor } from "@/lib/types";
 
 // Sert la cap table interactive (HTML autonome) avec les paramètres
 // sauvegardés injectés. ?embed=admin : paramètres modifiables (admins).
 // Sinon : vue investisseur (niveau 2 requis), hypothèses masquées.
 export async function GET(request: Request) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return new Response("Non autorisé", { status: 401 });
-
   const embed =
     new URL(request.url).searchParams.get("embed") === "admin"
       ? "admin"
       : "investor";
 
   if (embed === "admin") {
-    if (!isAdminEmail(user.email)) {
+    if (!(await getAdminEmail())) {
       return new Response("Réservé aux admins", { status: 403 });
     }
   } else {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return new Response("Non autorisé", { status: 401 });
+
     const { data } = await supabase
       .from("investors")
       .select("*")

@@ -1,14 +1,9 @@
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { isAdminEmail } from "@/lib/admin";
+import { getAdminEmail } from "@/lib/admin";
 
 // Sauvegarde des paramètres de la cap table (admins uniquement).
 export async function POST(request: Request) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user || !isAdminEmail(user.email)) {
+  if (!(await getAdminEmail())) {
     return new Response(null, { status: 403 });
   }
 

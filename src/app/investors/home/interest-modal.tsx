@@ -48,8 +48,8 @@ export function InterestModal() {
             <h3 className="text-base font-semibold">Manifester mon intérêt</h3>
             <p className="mt-2 text-sm leading-6 text-neutral-600">
               Indiquez la tranche envisagée — indicatif et non engageant.
-              L&apos;équipe est prévenue et le niveau 2 de la data room
-              s&apos;ouvre immédiatement.
+              L&apos;équipe est prévenue et vous ouvre rapidement le niveau 2
+              de la data room.
             </p>
             <label htmlFor="tranche" className="mt-5 block text-sm font-medium">
               Tranche envisagée

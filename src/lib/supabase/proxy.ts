@@ -31,9 +31,9 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
-  const needsAuth =
-    (path.startsWith("/investors/") && path !== "/investors") ||
-    path.startsWith("/admin");
+  // /admin gère sa propre connexion (email whitelisté + mot de passe),
+  // voir requireAdmin() qui renvoie vers /admin/login.
+  const needsAuth = path.startsWith("/investors/") && path !== "/investors";
 
   if (!user && needsAuth) {
     const redirectUrl = request.nextUrl.clone();

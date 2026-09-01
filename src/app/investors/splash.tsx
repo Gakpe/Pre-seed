@@ -1,48 +1,58 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
-// Cinématique du logo à l'arrivée dans l'espace connecté.
-// Jouée une fois par session (sessionStorage), fondu de sortie, filet de
-// sécurité à 6 s si la vidéo ne se lance pas.
+// Cinématique d'entrée : l'icône Minah surgit (spring), puis le wordmark se
+// révèle par balayage, halo orange en fond. Une fois par session.
 export function Splash() {
   const [show, setShow] = useState(false);
-  const [fading, setFading] = useState(false);
-  const doneRef = useRef(false);
+  const [phase, setPhase] = useState<"icon" | "logo" | "out">("icon");
 
   useEffect(() => {
     if (window.sessionStorage.getItem("minah_splash_seen")) return;
     window.sessionStorage.setItem("minah_splash_seen", "1");
     setShow(true);
-    const failsafe = setTimeout(() => end(), 6000);
-    return () => clearTimeout(failsafe);
+    const t1 = setTimeout(() => setPhase("logo"), 850);
+    const t2 = setTimeout(() => setPhase("out"), 2500);
+    const t3 = setTimeout(() => setShow(false), 3300);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
   }, []);
-
-  function end() {
-    if (doneRef.current) return;
-    doneRef.current = true;
-    setFading(true);
-    setTimeout(() => setShow(false), 700);
-  }
 
   if (!show) return null;
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex items-center justify-center bg-background transition-opacity duration-700 ${
-        fading ? "pointer-events-none opacity-0" : "opacity-100"
+      className={`fixed inset-0 z-[100] flex items-center justify-center bg-background transition-opacity duration-700 ease-out ${
+        phase === "out" ? "pointer-events-none opacity-0" : "opacity-100"
       }`}
       aria-hidden="true"
     >
-      <video
-        src="/brand/logo-anim.mp4"
-        autoPlay
-        muted
-        playsInline
-        onEnded={end}
-        onError={end}
-        className="w-56 md:w-72"
-      />
+      {/* halo */}
+      <div className="absolute h-64 w-64 rounded-full bg-brand/15 blur-3xl splash-halo" />
+
+      {/* 1. l'icône surgit */}
+      {phase === "icon" && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src="/brand/icon.png"
+          alt=""
+          className="splash-pop h-16 w-16 rounded-full shadow-lg"
+        />
+      )}
+
+      {/* 2. le wordmark se révèle */}
+      {phase !== "icon" && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src="/brand/logo.png"
+          alt="Minah"
+          className="splash-reveal h-10 w-auto md:h-12"
+        />
+      )}
     </div>
   );
 }
