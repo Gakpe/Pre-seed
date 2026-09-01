@@ -125,7 +125,7 @@ export function RequestAccessForm({
         <button
           type="submit"
           disabled={busy || code.trim().length < 6}
-          className="w-full rounded-md bg-foreground py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-80 disabled:opacity-50"
+          className="w-full rounded-md bg-brand py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-80 disabled:opacity-50"
         >
           {busy ? "Vérification…" : "Accéder à l'espace investisseurs"}
         </button>
@@ -241,7 +241,7 @@ export function RequestAccessForm({
         <button
           type="submit"
           disabled={busy}
-          className="w-full rounded-md bg-foreground py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-80 disabled:opacity-50"
+          className="w-full rounded-md bg-brand py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-80 disabled:opacity-50"
         >
           {busy ? "Envoi…" : "Recevoir mon code d'accès"}
         </button>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { TrackingProvider } from "./tracking-provider";
+import { Splash } from "./splash";
 
 export default async function InvestorsLayout({
   children,
@@ -33,11 +34,23 @@ export default async function InvestorsLayout({
   }
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="relative flex flex-1 flex-col">
       {investor && <TrackingProvider investor={investor} />}
-      <header className="flex items-center justify-between border-b border-neutral-200 px-6 py-4 dark:border-neutral-800">
-        <Link href="/" className="text-sm font-semibold tracking-tight">
-          Minah
+      {investor && <Splash />}
+
+      {/* Touche de marque : halo orange + icône, discrets, bas droite */}
+      <div className="pointer-events-none fixed -right-28 -bottom-28 z-0 h-80 w-80 rounded-full bg-brand/10 blur-3xl" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/brand/icon.png"
+        alt=""
+        className="pointer-events-none fixed right-5 bottom-5 z-0 h-9 w-9 rounded-full opacity-80 shadow-sm"
+      />
+
+      <header className="z-10 flex items-center justify-between border-b border-foreground/10 px-6 py-4">
+        <Link href="/" aria-label="Minah">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/logo.png" alt="Minah" className="h-5 w-auto" />
         </Link>
         {investor ? (
           <form action="/auth/signout" method="post">
@@ -51,13 +64,13 @@ export default async function InvestorsLayout({
         ) : (
           <Link
             href="/admin"
-            className="rounded-md border border-neutral-200 px-2.5 py-1 text-xs text-neutral-500 transition-colors hover:border-neutral-400 hover:text-foreground dark:border-neutral-800 dark:hover:border-neutral-600"
+            className="rounded-md border border-foreground/15 px-2.5 py-1 text-xs text-neutral-500 transition-colors hover:border-foreground/40 hover:text-foreground"
           >
             Admin
           </Link>
         )}
       </header>
-      {children}
+      <div className="z-10 flex flex-1 flex-col">{children}</div>
     </div>
   );
 }

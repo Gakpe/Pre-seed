@@ -110,6 +110,19 @@ export default async function InvestorHomePage() {
 
   return (
     <Main>
+      {/* Bandeau de marque */}
+      <div className="relative mb-10 h-36 w-full overflow-hidden rounded-xl md:h-48">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/brand/cover.png"
+          alt=""
+          className="h-full w-full object-cover"
+        />
+        <p className="absolute bottom-4 left-5 text-xs font-medium uppercase tracking-widest text-white/90">
+          Espace investisseurs
+        </p>
+      </div>
+
       {/* Présentation */}
       <section className="grid gap-8 md:grid-cols-[1fr_220px] md:items-center">
         <div>
@@ -149,7 +162,7 @@ export default async function InvestorHomePage() {
           </div>
           <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-800">
             <div
-              className="h-full rounded-full bg-foreground"
+              className="h-full rounded-full bg-brand"
               style={{ width: `${deal.progressPct}%` }}
             />
           </div>
