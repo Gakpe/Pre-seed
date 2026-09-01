@@ -286,6 +286,24 @@ export default async function InvestorHomePage() {
             </>
           )}
         </section>
+
+        {/* Clôture : contexte + invitation au rendez-vous */}
+        <section className="mt-12 rounded-lg border border-marsala/20 bg-white/60 p-8 text-center">
+          <h2 className="text-base font-semibold tracking-tight">
+            Parlons-en de vive voix
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-neutral-600">
+            Ces documents méritent mieux qu&apos;une lecture seule :
+            l&apos;équipe vous les présente volontiers en amont pour donner le
+            contexte de chacun. Et une fois votre deep dive terminé,
+            n&apos;hésitez pas à prendre rendez-vous — que vous envisagiez
+            d&apos;investir ou non, vos retours et vos insights nous sont
+            précieux pour nous améliorer.
+          </p>
+          <div className="mt-5 flex justify-center">
+            <MeetingButton />
+          </div>
+        </section>
       </Main>
     </>
   );
