@@ -93,10 +93,39 @@ function DocContent({ text }: { text: string }) {
           </h2>
         ) : (
           <p key={i} className="mt-4 whitespace-pre-line first:mt-0">
-            {block}
+            {renderInline(block)}
           </p>
         )
       )}
     </div>
   );
+}
+
+// Seule syntaxe inline supportée : les liens markdown [texte](url). Les liens
+// externes s'ouvrent dans un nouvel onglet. Le reste du bloc reste du texte brut.
+function renderInline(block: string): React.ReactNode[] {
+  const pattern = /\[([^\]]+)\]\(([^)\s]+)\)/g;
+  const nodes: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(block)) !== null) {
+    if (match.index > lastIndex) nodes.push(block.slice(lastIndex, match.index));
+    const [, label, href] = match;
+    const external = /^https?:\/\//.test(href);
+    nodes.push(
+      <a
+        key={match.index}
+        href={href}
+        className="font-medium text-marsala underline underline-offset-2 hover:opacity-80"
+        {...(external
+          ? { target: "_blank", rel: "noopener noreferrer" }
+          : {})}
+      >
+        {label}
+      </a>
+    );
+    lastIndex = pattern.lastIndex;
+  }
+  if (lastIndex < block.length) nodes.push(block.slice(lastIndex));
+  return nodes;
 }

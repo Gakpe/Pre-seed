@@ -7,7 +7,7 @@ insert into public.documents (slug, title, docsend_url, visible_to_pending, cate
 
   ('pourquoi-minah', 'Pourquoi Minah', null, true, 'Overview', 10, 1, 'La première génération de la fintech africaine a gagné la bataille des paiements : M-Pesa, Wave, Flutterwave, Paystack. Les rails sont construits — wallets, KYC, argent mobile-first. La prochaine génération se joue sur l''investissement : comment l''argent travaille, pas seulement comment il circule.
 
-L''opportunité est massive. Les taux bancaires moyens dépassent 20 % sur le continent (Zambie 28 %, Ghana 20–30 %, Angola 22 %, Égypte 21 %), pendant que le crédit privé mondial pèse environ 2 000 milliards de dollars (Blackstone, Apollo, Ares) et que les pionniers africains — TLG Capital, Cauris, Enko, AfricInvest — prouvent le modèle.
+L''opportunité est massive. Les taux bancaires moyens dépassent 20 % sur le continent (Zambie 28 %, Ghana 20–30 %, Angola 22 %, Égypte 21 %), pendant que le crédit privé mondial pèse environ 2 000 milliards de dollars ([Blackstone](https://www.blackstone.com), [Apollo](https://www.apollo.com), [Ares](https://www.aresmgmt.com)) et que les pionniers africains — [TLG Capital](https://www.tlgcapital.com), [Cauris](https://www.caurisfinance.com), [Enko](https://enkocapital.com), [AfricInvest](https://www.africinvest.com) — prouvent le modèle.
 
 Minah construit la plateforme de dette privée pour l''Afrique : dette senior sécurisée, coupons fixes, maturités courtes, protection par construction (assurance, couverture de change, collatéral) — sur une infrastructure de ce siècle : registre digital, règlement on-chain, opérations pilotées par l''IA.'),
 
@@ -118,7 +118,7 @@ update public.documents set title_en = 'Shareholders'' agreement (draft)' where 
 
 update public.documents set content_en = 'African fintech''s first generation won the payments battle: M-Pesa, Wave, Flutterwave, Paystack. The rails are built — wallets, KYC, mobile-first money. The next generation is about investment: how money works, not just how it moves.
 
-The opportunity is massive. Average bank lending rates exceed 20% across the continent (Zambia 28%, Ghana 20–30%, Angola 22%, Egypt 21%), while global private credit weighs about $2 trillion (Blackstone, Apollo, Ares) and African pioneers — TLG Capital, Cauris, Enko, AfricInvest — are proving the model.
+The opportunity is massive. Average bank lending rates exceed 20% across the continent (Zambia 28%, Ghana 20–30%, Angola 22%, Egypt 21%), while global private credit weighs about $2 trillion ([Blackstone](https://www.blackstone.com), [Apollo](https://www.apollo.com), [Ares](https://www.aresmgmt.com)) and African pioneers — [TLG Capital](https://www.tlgcapital.com), [Cauris](https://www.caurisfinance.com), [Enko](https://enkocapital.com), [AfricInvest](https://www.africinvest.com) — are proving the model.
 
 Minah is building the private debt platform for Africa: senior secured debt, fixed coupons, short maturities, protection by design (insurance, currency hedging, collateral) — on infrastructure built for this century: digital registry, on-chain settlement, AI-driven operations.' where slug = 'pourquoi-minah';
 
