@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-// Entrée en démo : pas de code, pas d'email — juste de quoi personnaliser
+// Entrée en démo : pas de code, pas d'email, juste de quoi personnaliser
 // l'en-tête devant l'investisseur, puis on entre avec la cinématique.
 export function DemoStartForm() {
   const [firstName, setFirstName] = useState("");
@@ -30,7 +30,7 @@ export function DemoStartForm() {
 
     if (!res?.ok) {
       setBusy(false);
-      setError("Session admin expirée — reconnectez-vous sur /admin/login.");
+      setError("Session admin expirée, reconnectez-vous sur /admin/login.");
       return;
     }
 

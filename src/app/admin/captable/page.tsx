@@ -1,6 +1,6 @@
 import { requireAdmin } from "@/lib/admin";
 
-export const metadata = { title: "Cap table — Admin Minah" };
+export const metadata = { title: "Cap table, Admin Minah" };
 
 export default async function AdminCapTablePage() {
   await requireAdmin();
@@ -16,7 +16,7 @@ export default async function AdminCapTablePage() {
       </p>
       <iframe
         src="/api/captable?embed=admin"
-        title="Cap table interactive — admin"
+        title="Cap table interactive, admin"
         className="mt-6 h-[1700px] w-full rounded-md border border-neutral-200 dark:border-neutral-800"
       />
     </main>

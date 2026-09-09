@@ -170,12 +170,12 @@ body {
   }
 }
 
-/* --- Portraits d'équipe : flou dissipé + fondu-enchaîné de visage ---
-   Deux images superposées par carte : `tp-rest` (découpe de la photo
-   d'équipe — même prise de vue, même lumière, même fond pour les trois)
-   et `tp-sharp` (le portrait studio individuel). L'ouverture est portée
-   par la classe `tp-open` posée sur la carte : survol au clavier/souris,
-   appui au doigt. */
+/* --- Portraits d'équipe : le visage net, puis le repli des deux autres ---
+   Deux images superposées par carte : `tp-rest` (découpe de la photo d'équipe,
+   même prise de vue, même lumière et même fond pour les trois) et `tp-sharp`
+   (le portrait studio individuel). Au repos les trois visages sont nets. Au
+   survol de l'un, `tp-open` porte le fondu-enchaîné, et `tp-dim` fait fondre
+   les deux autres : flou d'abord, effacement ensuite. */
 
 .tp-layer {
   position: absolute;
@@ -183,41 +183,33 @@ body {
   height: 100%;
   width: 100%;
   object-fit: cover;
-  transform-origin: 50% 32%;
+  object-position: 50% 16%;
   transition:
     opacity 620ms cubic-bezier(0.22, 0.61, 0.36, 1),
-    filter 760ms cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 980ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    object-position 760ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 900ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .tp-rest {
   opacity: 1;
-  filter: blur(8px) saturate(0.34) brightness(0.62);
-  transform: scale(1.06);
 }
 
 .tp-sharp {
   opacity: 0;
-  filter: blur(9px) saturate(0.62) brightness(0.78);
-  transform: scale(1.07);
+  transform: scale(1.03);
 }
 
-/* Les deux couches se croisent : le flou se dissipe pendant que le visage
-   net monte, elles restent superposées toute la transition. */
 .tp-open .tp-rest {
   opacity: 0;
-  filter: blur(2px) saturate(0.5) brightness(0.74);
-  transform: scale(1.015);
 }
 
 .tp-open .tp-sharp {
   opacity: 1;
-  filter: blur(0) saturate(1) brightness(1);
-  transform: scale(1);
+  transform: none;
 }
 
-/* Voile de lecture : un fond permanent pour l'identité, un second qui
-   monte à l'ouverture pour porter le texte. */
+/* Voile de lecture : un fond permanent pour l'identité, un second qui monte à
+   l'ouverture pour porter le texte. */
 .tp-scrim {
   transition: opacity 620ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
@@ -230,8 +222,28 @@ body {
   opacity: 1;
 }
 
-/* Les données arrivent après le crossfade, dans l'ordre : formation,
-   parcours, goûts. */
+/* Les deux autres portraits : ils se floutent, puis s'effacent et se replient. */
+@media (min-width: 768px) {
+  .tp-item {
+    flex-grow: var(--tp-grow, 1);
+    flex-basis: 0;
+    min-width: 0;
+    transition:
+      flex-grow 700ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      filter 380ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      opacity 380ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  .tp-dim {
+    opacity: 0;
+    filter: blur(12px);
+    /* l'ordre suit la liste des propriétés : l'effacement attend le flou */
+    transition-delay: 0ms, 0ms, 220ms;
+  }
+}
+
+/* Les données arrivent après le fondu, dans l'ordre : formation, parcours,
+   goûts. */
 .tp-field {
   opacity: 0;
   transform: translateY(7px);
@@ -257,7 +269,7 @@ body {
   transition-delay: 400ms;
 }
 
-/* Signe + / − : la barre verticale s'efface à l'ouverture. */
+/* Signe + / moins : la barre verticale s'efface à l'ouverture. */
 .tp-plus-v {
   transition: transform 520ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
@@ -271,21 +283,22 @@ body {
   .tp-rest,
   .tp-sharp,
   .tp-open .tp-rest,
-  .tp-open .tp-sharp {
+  .tp-open .tp-sharp,
+  .tp-open .tp-layer {
     transform: none;
+    object-position: 50% 16%;
     transition: opacity 260ms linear;
   }
 
-  /* Plus de crossfade travaillé : un simple fondu entre les deux images.
-     Le flou de l'état de repos reste, il n'est simplement plus animé. */
-  .tp-rest,
-  .tp-open .tp-rest {
-    filter: blur(8px) saturate(0.34) brightness(0.62);
+  .tp-item {
+    transition:
+      flex-grow 260ms linear,
+      opacity 200ms linear;
   }
 
-  .tp-sharp,
-  .tp-open .tp-sharp {
+  .tp-dim {
     filter: none;
+    transition-delay: 0ms, 0ms;
   }
 
   .tp-field {
@@ -437,5 +450,40 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .flow-dash {
     animation: none;
+  }
+}
+
+/* --- Entrée par la droite au défilement (fiche « Pourquoi Minah ») ---
+   La classe `sr-in` est posée par ScrollReveal une fois le bloc entré dans le
+   cadre. L'animation vit ici pour que prefers-reduced-motion la neutralise
+   sans passer par le JavaScript. */
+
+.sr {
+  opacity: 0;
+  transform: translateX(44px);
+  transition:
+    opacity 620ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 720ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.sr-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sr {
+    transform: none;
+    transition: opacity 240ms linear;
+    transition-delay: 0ms !important;
+  }
+}
+
+/* Sans JavaScript, aucune classe n'est posée : le texte doit rester lisible. */
+@media (scripting: none) {
+  .sr {
+    opacity: 1;
+    transform: none;
   }
 }

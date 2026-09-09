@@ -15,6 +15,8 @@ import { BusinessModelBlocks } from "./business-model-blocks";
 import { TeamProfiles } from "./team-profiles";
 import { TrackRecord } from "./track-record";
 import { Fundraise } from "./fundraise";
+import { GenerationsStrip } from "./generations-strip";
+import { ScrollReveal } from "./scroll-reveal";
 import { RiskCascade } from "./risk-cascade";
 import { ResilienceBar } from "./resilience-bar";
 import { RiskClosing } from "./risk-closing";
@@ -69,14 +71,14 @@ export default async function DocPage({
     doc.slug === "la-levee";
 
   // Ces fiches débordent en largeur, mais leur chapô reste dans une colonne
-  // de lecture normale — sinon le texte court sur toute la page.
+  // de lecture normale, sinon le texte court sur toute la page.
   const proseWidth =
     team || doc.slug === "track-record" || doc.slug === "la-levee"
       ? "max-w-2xl"
       : "";
 
   // Deux fiches sont entièrement portées par leur composant : le texte de la
-  // base ferait doublon avec — et par endroits contredirait — les chiffres
+  // base ferait doublon avec, et par endroits contredirait, les chiffres
   // qu'elles détaillent. Il reste en base, simplement plus affiché ici.
   const richOnly = doc.slug === "track-record" || doc.slug === "la-levee";
 
@@ -84,7 +86,7 @@ export default async function DocPage({
     <main
       className={`mx-auto w-full flex-1 px-6 py-12 ${
         note
-          ? "max-w-[748px]"
+          ? "max-w-[880px]"
           : team
             ? "max-w-6xl"
             : extraWide
@@ -103,9 +105,12 @@ export default async function DocPage({
           {category}
         </p>
         <h1 className="mt-1 text-2xl font-semibold tracking-tight">{title}</h1>
-        {!richOnly && <DocContent text={content ?? ""} />}
+        {!richOnly && (
+          <DocContent text={content ?? ""} reveal={doc.slug === "pourquoi-minah"} />
+        )}
       </div>
       {/* Certaines fiches portent un contenu riche en plus de leur texte. */}
+      {doc.slug === "pourquoi-minah" && <GenerationsStrip />}
       {doc.slug === "note-marche" && (
         <>
           <MarketNote />
@@ -154,34 +159,52 @@ function inline(text: string) {
     );
 }
 
-function DocContent({ text }: { text: string }) {
+function DocContent({
+  text,
+  reveal = false,
+}: {
+  text: string;
+  /** Fiches à traitement animé : chaque bloc entre par la droite au scroll. */
+  reveal?: boolean;
+}) {
+  const wrap = (node: React.ReactNode, key: number) =>
+    reveal ? (
+      <ScrollReveal key={key} delay={(key % 3) * 60}>
+        {node}
+      </ScrollReveal>
+    ) : (
+      node
+    );
+
   return (
     <div className="mt-6 text-sm leading-7 text-neutral-700 dark:text-neutral-300">
       {text.split("\n\n").map((block, i) => {
         const b = block.trim();
 
         if (b === "---") {
-          return (
+          return wrap(
             <hr
               key={i}
               className="mt-10 mb-2 border-0 border-t border-neutral-200 dark:border-neutral-800"
-            />
+            />,
+            i
           );
         }
 
         if (b.startsWith("## ")) {
-          return (
+          return wrap(
             <h2
               key={i}
               className="mt-9 mb-1 text-base font-semibold tracking-tight text-foreground"
             >
               {b.slice(3)}
-            </h2>
+            </h2>,
+            i
           );
         }
 
         if (b.startsWith("- ")) {
-          return (
+          return wrap(
             <ul key={i} className="mt-4 space-y-2.5">
               {b
                 .split("\n")
@@ -193,14 +216,19 @@ function DocContent({ text }: { text: string }) {
                     <span>{inline(item)}</span>
                   </li>
                 ))}
-            </ul>
+            </ul>,
+            i
           );
         }
 
-        return (
-          <p key={i} className="mt-4 whitespace-pre-line first:mt-0">
+        return wrap(
+          <p
+            key={i}
+            className={`whitespace-pre-line ${i === 0 ? "" : "mt-4"}`}
+          >
             {inline(b)}
-          </p>
+          </p>,
+          i
         );
       })}
     </div>

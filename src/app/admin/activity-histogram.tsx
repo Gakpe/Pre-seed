@@ -9,7 +9,7 @@ function Tooltip({ bucket, below }: { bucket: DayBucket; below?: boolean }) {
       }`}
     >
       <p className="font-semibold">
-        {bucket.label} — {bucket.minutes} min
+        {bucket.label}, {bucket.minutes} min
       </p>
       {bucket.lines.map((line) => (
         <p key={line} className="truncate text-background/80">
@@ -20,7 +20,7 @@ function Tooltip({ bucket, below }: { bucket: DayBucket; below?: boolean }) {
   );
 }
 
-// Histogramme minutes/jour — n'affiche QUE les jours avec de l'activité.
+// Histogramme minutes/jour, n'affiche QUE les jours avec de l'activité.
 export function ActivityHistogram({
   buckets,
   size = "mini",

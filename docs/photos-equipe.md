@@ -23,8 +23,9 @@ Découpes faites avec un utilitaire CoreGraphics : `crop <source> x y w h largeu
 ### État de repos — `public/brand/team/<id>-rest.jpg`
 
 Tirés de `Team.jpg` (3428 × 2228) : même prise de vue, même lumière, même fond
-noir pour les trois. C'est ce qui fait tenir l'effet comme un système. Le flou
-CSS masque leur définition plus faible.
+noir pour les trois. C'est ce qui fait tenir l'effet comme un système. Au repos
+les trois visages sont nets ; le flou ne s'applique qu'aux deux portraits non
+survolés, avant qu'ils ne s'effacent.
 
 | Personne | x | y | w | h |
 | --- | --- | --- | --- | --- |

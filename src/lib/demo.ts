@@ -11,7 +11,7 @@ export const DEMO_COOKIE = "minah_demo";
 export type DemoSession = {
   name: string;
   entity: string | null;
-  // Intérêt manifesté pendant la démo, puis ouverture du niveau 2 —
+  // Intérêt manifesté pendant la démo, puis ouverture du niveau 2 :
   // les deux étapes restent distinctes, comme pour un vrai investisseur.
   tranche: string | null;
   level2: boolean;

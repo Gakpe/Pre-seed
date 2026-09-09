@@ -12,7 +12,7 @@ export function Splash() {
     "fadein"
   );
   // Le déclencheur est à usage unique : on l'efface dès qu'on l'a lu. Or en
-  // développement React monte l'effet deux fois — sans cette mémoire, le
+  // développement React monte l'effet deux fois, sans cette mémoire, le
   // second passage ne retrouverait rien, n'armerait plus les minuteries, et
   // le voile resterait affiché pour toujours.
   const playRef = useRef<boolean | null>(null);

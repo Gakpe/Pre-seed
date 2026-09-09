@@ -1,12 +1,10 @@
 // Contenu du schéma de flux de la fiche « business model ».
 //
-// Les taux de commission ne sont pas arrêtés : ils sont affichés en clair
-// comme des trous à combler, plutôt que d'être devinés. Remplacer les deux
-// valeurs ci-dessous suffit à les mettre à jour partout — schéma, panneau de
-// détail et légendes.
+// Ordres de grandeur des deux commissions. Les modifier ici suffit à les
+// mettre à jour partout : schéma, panneau de détail et légendes.
 export const FEES = {
-  transaction: "[xx] %",
-  performance: "[xx] %",
+  transaction: "3,5 %",
+  performance: "15 à 40 %",
 } as const;
 
 export type FlowNode = {
@@ -53,7 +51,7 @@ export const FLOW_NODES: FlowNode[] = [
     title: "Institutionnels",
     tag: "Assureurs, mutuelles · Europe",
     items: [
-      "Souscrivent à une stratégie identifiée, adossée à des contrats déjà signés — pas à un fonds aveugle.",
+      "Souscrivent à une stratégie identifiée, adossée à des contrats déjà signés, pas à un fonds aveugle.",
       "Exigent un reporting standardisé et une traçabilité vérifiable en continu.",
       "Maturité et coupon connus à l'entrée, ticket à partir de 100 K€.",
     ],

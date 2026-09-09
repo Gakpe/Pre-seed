@@ -31,8 +31,8 @@ const REPORTS: Report[] = [
     year: "2025",
     url: "https://www.avca.africa/data-intelligence/research-publications/q3-2025-private-capital-activity-in-africa",
     title: {
-      fr: "Private Capital Activity in Africa — Q3 2025",
-      en: "Private Capital Activity in Africa — Q3 2025",
+      fr: "Private Capital Activity in Africa, Q3 2025",
+      en: "Private Capital Activity in Africa, Q3 2025",
     },
     takeaway: {
       fr: "Le suivi trimestriel : la dette privée atteint dès le troisième trimestre le volume d'opérations de toute l'année précédente.",
@@ -44,8 +44,8 @@ const REPORTS: Report[] = [
     year: "2025",
     url: "https://www.avca.africa/news-insights/afri-spective-blog/private-credit-funds-the-opportunity-for-africa/",
     title: {
-      fr: "Private Credit Funds — the opportunity for Africa",
-      en: "Private Credit Funds — the opportunity for Africa",
+      fr: "Private Credit Funds, the opportunity for Africa",
+      en: "Private Credit Funds, the opportunity for Africa",
     },
     takeaway: {
       fr: "Pourquoi la structure de dette, et pas l'equity, correspond au profil de risque et à l'horizon des PME africaines.",
@@ -57,12 +57,12 @@ const REPORTS: Report[] = [
     year: "Référence",
     url: "https://documents1.worldbank.org/curated/en/653831510568517947/pdf/121264-WP-PUBLIC-MSMEReportFINAL.pdf",
     title: {
-      fr: "MSME Finance Gap — l'étude fondatrice (PDF)",
-      en: "MSME Finance Gap — the founding study (PDF)",
+      fr: "MSME Finance Gap, l'étude fondatrice (PDF)",
+      en: "MSME Finance Gap, the founding study (PDF)",
     },
     takeaway: {
       fr: "La méthodologie qui fait autorité pour chiffrer le déficit de financement des PME en marchés émergents. C'est la source de tous les chiffres qui suivent.",
-      en: "The authoritative methodology for sizing the SME financing shortfall in emerging markets — the source behind every figure that follows.",
+      en: "The authoritative methodology for sizing the SME financing shortfall in emerging markets, the source behind every figure that follows.",
     },
   },
   {
@@ -75,7 +75,7 @@ const REPORTS: Report[] = [
     },
     takeaway: {
       fr: "Le chiffre clé : l'IFC estime à 331 Md$ le besoin de financement non couvert des PME d'Afrique subsaharienne. C'est le marché que la dette privée adresse.",
-      en: "The headline number: the IFC puts unmet Sub-Saharan African SME financing needs at US$331bn — the market private debt addresses.",
+      en: "The headline number: the IFC puts unmet Sub-Saharan African SME financing needs at US$331bn, the market private debt addresses.",
     },
   },
   {
@@ -83,8 +83,8 @@ const REPORTS: Report[] = [
     year: "En continu",
     url: "https://www.ifc.org/en/what-we-do/sector-expertise/financial-institutions/msme-finance",
     title: {
-      fr: "MSME Finance — le programme IFC",
-      en: "MSME Finance — the IFC programme",
+      fr: "MSME Finance, le programme IFC",
+      en: "MSME Finance, the IFC programme",
     },
     takeaway: {
       fr: "Comment l'institution la plus active du secteur déploie concrètement ses financements PME, et par quels canaux.",
@@ -96,8 +96,8 @@ const REPORTS: Report[] = [
     year: "Fiche",
     url: "https://www.ifc.org/content/dam/ifc/doclink/latest/msme-s-factsheet-ifc-financial-institutions-group.pdf",
     title: {
-      fr: "MSME Factsheet — Financial Institutions Group (PDF)",
-      en: "MSME Factsheet — Financial Institutions Group (PDF)",
+      fr: "MSME Factsheet, Financial Institutions Group (PDF)",
+      en: "MSME Factsheet, Financial Institutions Group (PDF)",
     },
     takeaway: {
       fr: "Deux pages de chiffres bruts : nombre de PME formelles, part contrainte par l'accès au crédit, ventilation par région.",
@@ -135,8 +135,8 @@ const REPORTS: Report[] = [
     year: "2025",
     url: "https://informaconnect.com/private-credit-in-africa-opportunities-challenges-and-lp-views/",
     title: {
-      fr: "Private credit in Africa — le point de vue des LPs",
-      en: "Private credit in Africa — the LP view",
+      fr: "Private credit in Africa, le point de vue des LPs",
+      en: "Private credit in Africa, the LP view",
     },
     takeaway: {
       fr: "Ce que les investisseurs institutionnels regardent réellement avant d'allouer : liquidité, devise, qualité de la structuration.",

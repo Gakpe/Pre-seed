@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export const metadata = { title: "Confidentialité — Minah" };
+export const metadata = { title: "Confidentialité, Minah" };
 
 export default function PrivacyPage() {
   return (

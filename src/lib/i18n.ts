@@ -10,7 +10,7 @@ const dict = {
     "layout.admin": "Admin",
     "layout.confidential": "Espace confidentiel",
     "layout.confidential.tooltip":
-      "Espace confidentiel — merci de ne pas le partager, sauf aux personnes explicitement concernées ou sur demande de l'équipe Minah.",
+      "Espace confidentiel. Merci de ne pas le partager, sauf aux personnes explicitement concernées ou sur demande de l'équipe Minah.",
 
     // data room fermée ou en maintenance (état piloté depuis l'admin)
     "dataroom.closed.title": "Data room fermée",
@@ -19,7 +19,7 @@ const dict = {
     "dataroom.maintenance.body":
       "La data room est en cours de mise à jour. Vous recevrez un email dès que les changements seront disponibles.",
 
-    "meta.title": "Espace investisseurs — Minah",
+    "meta.title": "Espace investisseurs · Minah",
 
     // page /investors (connexion)
     "auth.title": "Espace investisseurs",
@@ -36,7 +36,7 @@ const dict = {
     "auth.submit": "Recevoir mon code d'accès",
     "auth.submitting": "Envoi…",
     "auth.unknownEmail":
-      "Cet email ne nous est pas connu — passez par « Nouvel investisseur ».",
+      "Cet email ne nous est pas connu. Passez par « Nouvel investisseur ».",
     "auth.sendFailed": "L'envoi a échoué :",
     "auth.codeSent": "Code envoyé ✓",
     "auth.codeSentDetail":
@@ -51,17 +51,17 @@ const dict = {
 
     // home
     "home.banner.overline": "Espace investisseurs · Confidentiel",
-    "home.banner.title": "Opportunité d'investissement — Pre-seed",
+    "home.banner.title": "Opportunité d'investissement en pre-seed",
     "home.banner.subtitle": "Tour de {target} · {period} · L'investissement africain, next gen.",
-    "home.level1.badge": "Niveau 1 — vous êtes ici",
-    "home.level2.unlocked": "Niveau 2 — débloqué ✓",
-    "home.level2.pending": "Niveau 2 — ouverture en cours…",
-    "home.level2.locked": "Niveau 2 — verrouillé 🔒",
+    "home.level1.badge": "Niveau 1 · vous êtes ici",
+    "home.level2.unlocked": "Niveau 2 débloqué ✓",
+    "home.level2.pending": "Niveau 2 · ouverture en cours…",
+    "home.level2.locked": "Niveau 2 verrouillé 🔒",
     "home.pitch.title": "La plateforme de dette privée pour l'Afrique.",
     "home.pitch.body":
-      "La première génération de la fintech africaine a gagné les paiements. La prochaine gagnera l'investissement. Minah en construit les rails — dette senior sécurisée, coupons fixes, infrastructure on-chain — et ouvre son pre-seed.",
+      "La première génération de la fintech africaine a gagné les paiements. La prochaine gagnera l'investissement. Minah en construit les rails : dette senior sécurisée, coupons fixes, infrastructure on-chain. Le tour de pre-seed est ouvert.",
     "home.photo.alt":
-      "L'équipe fondatrice de Minah — Julien Gakpé, Coralie Lolliot et Hervé Gakpé.",
+      "L'équipe fondatrice de Minah : Julien Gakpé, Coralie Lolliot et Hervé Gakpé.",
     "home.photo.caption": "Julien Gakpé · Coralie Lolliot · Hervé Gakpé",
     "home.deal.title": "La levée en cours",
     "home.deal.target": "Objectif",
@@ -73,21 +73,21 @@ const dict = {
     "home.dataroom.currentLevel": "votre niveau d'accès actuel",
     "home.dataroom.level2": "Data room · Niveau 2",
     "home.dataroom.level2.locked": "Data room · Niveau 2 🔒",
-    "home.dataroom.unlockedInterest": "débloqué — intérêt : {tranche}",
+    "home.dataroom.unlockedInterest": "débloqué · intérêt {tranche}",
     "home.dataroom.unlockedTeam": "débloqué par l'équipe",
     "home.dataroom.lockedIntro":
-      "Gestion des risques, table de capitalisation, contrats cadres : ce niveau se débloque en manifestant un intérêt pour une tranche — indicatif et non engageant.",
+      "Gestion des risques, table de capitalisation, contrats cadres : ce niveau se débloque en manifestant un intérêt pour une tranche. La démarche est indicative et non engageante.",
     "home.dataroom.interestRecorded":
-      "Intérêt enregistré ({tranche}) ✓ — l'équipe est prévenue et vous ouvre le niveau 2 très rapidement.",
+      "Intérêt enregistré ({tranche}) ✓. L'équipe est prévenue et vous ouvre le niveau 2 très rapidement.",
     "home.dataroom.adding": "Documents en cours d'ajout.",
     "home.docs.empty": "Aucun document disponible pour le moment.",
     "home.docs.read": "Lire →",
     "home.closing.title": "Parlons-en de vive voix",
     "home.closing.body":
-      "Ces documents méritent mieux qu'une lecture seule : l'équipe vous les présente volontiers en amont pour donner le contexte de chacun. Et une fois votre deep dive terminé, n'hésitez pas à prendre rendez-vous — que vous envisagiez d'investir ou non, vos retours et vos insights nous sont précieux pour nous améliorer.",
+      "Ces documents méritent mieux qu'une lecture seule : l'équipe vous les présente volontiers en amont pour donner le contexte de chacun. Et une fois votre deep dive terminé, n'hésitez pas à prendre rendez-vous. Que vous envisagiez d'investir ou non, vos retours nous sont précieux.",
     "home.pending.title": "Accès en cours de validation",
     "home.pending.body":
-      "Merci {name} — votre email est confirmé. Nous validons votre accès et vous préviendrons rapidement.",
+      "Merci {name}, votre email est confirmé. Nous validons votre accès et vous préviendrons rapidement.",
     "home.blocked.title": "Accès indisponible",
     "home.blocked.body":
       "Votre accès à l'espace investisseurs n'est pas actif. Pour toute question :",
@@ -98,7 +98,7 @@ const dict = {
     "interest.cta": "Manifester mon intérêt",
     "interest.title": "Manifester mon intérêt",
     "interest.body":
-      "Indiquez la tranche envisagée — indicatif et non engageant. L'équipe est prévenue et vous ouvre rapidement le niveau 2 de la data room.",
+      "Indiquez la tranche envisagée. La démarche est indicative et non engageante. L'équipe est prévenue et vous ouvre rapidement le niveau 2 de la data room.",
     "interest.tranche": "Tranche envisagée",
     "interest.submit": "Valider mon intérêt",
     "interest.sending": "Envoi…",
@@ -110,7 +110,7 @@ const dict = {
     "widget.hover": "Posez-nous vos questions",
     "widget.title": "Posez-nous vos questions",
     "widget.intro":
-      "Une question par champ, avec le contexte utile — l'équipe les prépare pour le rendez-vous ou y répond par écrit.",
+      "Une question par champ, avec le contexte utile. L'équipe les prépare pour le rendez-vous ou y répond par écrit.",
     "widget.questionLabel": "Question {n}",
     "widget.placeholder": "Votre question et son contexte…",
     "widget.add": "Ajouter une question",
@@ -132,14 +132,14 @@ const dict = {
     "layout.admin": "Admin",
     "layout.confidential": "Confidential space",
     "layout.confidential.tooltip":
-      "Confidential space — please do not share it, except with people explicitly involved or upon request from the Minah team.",
+      "Confidential space. Please do not share it, except with people explicitly involved or upon request from the Minah team.",
     "dataroom.closed.title": "Data room closed",
     "dataroom.closed.body": "Come back soon.",
     "dataroom.maintenance.title": "Update in progress",
     "dataroom.maintenance.body":
       "The data room is being updated. You will receive an email as soon as the changes are available.",
 
-    "meta.title": "Investor space — Minah",
+    "meta.title": "Investor space · Minah",
 
     "auth.title": "Investor space",
     "auth.subtitle":
@@ -154,7 +154,7 @@ const dict = {
     "auth.email": "Email",
     "auth.submit": "Receive my access code",
     "auth.submitting": "Sending…",
-    "auth.unknownEmail": "We don't know this email — please use “New investor”.",
+    "auth.unknownEmail": "We do not know this email. Please use “New investor”.",
     "auth.sendFailed": "Sending failed:",
     "auth.codeSent": "Code sent ✓",
     "auth.codeSentDetail":
@@ -168,17 +168,17 @@ const dict = {
       "By requesting access to the investor space, you agree that Minah SAS records your contact information and your activity in this space (pages viewed, documents opened, time spent) for investor-relations purposes. You can request access to or deletion of this data at",
 
     "home.banner.overline": "Investor space · Confidential",
-    "home.banner.title": "Investment opportunity — Pre-seed",
+    "home.banner.title": "Pre-seed investment opportunity",
     "home.banner.subtitle": "{target} round · {period} · African investment, next gen.",
-    "home.level1.badge": "Level 1 — you are here",
-    "home.level2.unlocked": "Level 2 — unlocked ✓",
-    "home.level2.pending": "Level 2 — opening in progress…",
-    "home.level2.locked": "Level 2 — locked 🔒",
+    "home.level1.badge": "Level 1 · you are here",
+    "home.level2.unlocked": "Level 2 unlocked ✓",
+    "home.level2.pending": "Level 2 · opening in progress…",
+    "home.level2.locked": "Level 2 locked 🔒",
     "home.pitch.title": "The private debt platform for Africa.",
     "home.pitch.body":
-      "African fintech's first generation won payments. The next one wins investment. Minah is building its rails — senior secured debt, fixed coupons, on-chain infrastructure — and is opening its pre-seed round.",
+      "African fintech's first generation won payments. The next one wins investment. Minah is building its rails: senior secured debt, fixed coupons, on-chain infrastructure. The pre-seed round is now open.",
     "home.photo.alt":
-      "Minah's founding team — Julien Gakpé, Coralie Lolliot and Hervé Gakpé.",
+      "Minah's founding team: Julien Gakpé, Coralie Lolliot and Hervé Gakpé.",
     "home.photo.caption": "Julien Gakpé · Coralie Lolliot · Hervé Gakpé",
     "home.deal.title": "The current round",
     "home.deal.target": "Target",
@@ -190,21 +190,21 @@ const dict = {
     "home.dataroom.currentLevel": "your current access level",
     "home.dataroom.level2": "Data room · Level 2",
     "home.dataroom.level2.locked": "Data room · Level 2 🔒",
-    "home.dataroom.unlockedInterest": "unlocked — interest: {tranche}",
+    "home.dataroom.unlockedInterest": "unlocked · interest {tranche}",
     "home.dataroom.unlockedTeam": "unlocked by the team",
     "home.dataroom.lockedIntro":
-      "Risk management, cap table, framework agreements: this level unlocks once you express interest in a tranche — indicative and non-binding.",
+      "Risk management, cap table, framework agreements: this level unlocks once you express interest in a tranche. The step is indicative and non-binding.",
     "home.dataroom.interestRecorded":
-      "Interest recorded ({tranche}) ✓ — the team has been notified and will open level 2 for you very soon.",
+      "Interest recorded ({tranche}) ✓. The team has been notified and will open level 2 for you very soon.",
     "home.dataroom.adding": "Documents being added.",
     "home.docs.empty": "No documents available yet.",
     "home.docs.read": "Read →",
     "home.closing.title": "Let's talk it through",
     "home.closing.body":
-      "These documents deserve more than a solo read: the team is happy to walk you through each of them upfront. And once your deep dive is done, don't hesitate to book a meeting — whether you plan to invest or not, your feedback and insights are precious to help us improve.",
+      "These documents deserve more than a solo read: the team is happy to walk you through each of them upfront. And once your deep dive is done, do not hesitate to book a meeting. Whether you plan to invest or not, your feedback is valuable to us.",
     "home.pending.title": "Access being validated",
     "home.pending.body":
-      "Thank you {name} — your email is confirmed. We are validating your access and will let you know shortly.",
+      "Thank you {name}, your email is confirmed. We are validating your access and will let you know shortly.",
     "home.blocked.title": "Access unavailable",
     "home.blocked.body":
       "Your access to the investor space is not active. For any question:",
@@ -214,7 +214,7 @@ const dict = {
     "interest.cta": "Express my interest",
     "interest.title": "Express my interest",
     "interest.body":
-      "Indicate the tranche you have in mind — indicative and non-binding. The team is notified and will quickly open level 2 of the data room for you.",
+      "Indicate the tranche you have in mind. The step is indicative and non-binding. The team is notified and will quickly open level 2 of the data room for you.",
     "interest.tranche": "Tranche in mind",
     "interest.submit": "Confirm my interest",
     "interest.sending": "Sending…",
@@ -225,7 +225,7 @@ const dict = {
     "widget.hover": "Ask us your questions",
     "widget.title": "Ask us your questions",
     "widget.intro":
-      "One question per field, with any useful context — the team prepares them for the meeting or answers in writing.",
+      "One question per field, with any useful context. The team prepares them for the meeting or answers in writing.",
     "widget.questionLabel": "Question {n}",
     "widget.placeholder": "Your question and its context…",
     "widget.add": "Add a question",
@@ -269,7 +269,7 @@ export function docFields(doc: DocFields, locale: Locale) {
   };
 }
 
-// t("home.deal.of", locale, {target: "1,5 M€"}) — {slots} interpolés.
+// t("home.deal.of", locale, {target: "1,5 M€"}), {slots} interpolés.
 export function t(
   locale: Locale,
   key: TranslationKey,

@@ -1,7 +1,7 @@
 import { listAdmins, requireAdmin } from "@/lib/admin";
 import { AdminsPanel } from "./admins-panel";
 
-export const metadata = { title: "Accès admin — Minah" };
+export const metadata = { title: "Accès admin, Minah" };
 
 export default async function AdminAccessPage() {
   const me = await requireAdmin();

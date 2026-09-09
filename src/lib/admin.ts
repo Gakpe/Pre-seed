@@ -55,7 +55,7 @@ async function dbAdmins(): Promise<string[]> {
   }
 }
 
-// Whitelist complète, dédoublonnée, triée — l'env d'abord.
+// Whitelist complète, dédoublonnée, triée, l'env d'abord.
 export async function listAdmins(): Promise<AdminEntry[]> {
   const env = envAdmins();
   const extra = (await dbAdmins()).filter((e) => !env.includes(e));
@@ -106,7 +106,7 @@ export function signAdminToken(email: string): string {
   return `${payload}.${sig}`;
 }
 
-// Vérifie uniquement la signature — l'appartenance à la whitelist est
+// Vérifie uniquement la signature, l'appartenance à la whitelist est
 // contrôlée séparément, pour qu'un retrait d'accès prenne effet aussitôt
 // même si la personne a encore son cookie.
 function readAdminToken(token: string | undefined): string | null {

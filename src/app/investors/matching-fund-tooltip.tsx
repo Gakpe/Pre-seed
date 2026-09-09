@@ -8,21 +8,23 @@ import type { Locale } from "@/lib/i18n";
 // nombre sorti de nulle part : l'infobulle donne les trois lignes et, pour
 // celles qui ne sont pas confirmées, le brut et le pondéré côte à côte.
 //
-// Survol sur pointeur fin, appui ailleurs — même arbitrage que les portraits
+// Survol sur pointeur fin, appui ailleurs, même arbitrage que les portraits
 // de la fiche équipe : sur tactile un tap émet aussi un mouseenter.
 
 const copy = {
   fr: {
-    title: "Détail du matching fund",
+    title: "Engagements à date",
     weighted: "pondéré",
+    soft: "soft commitment",
     total: "Total pondéré",
-    open: "Voir le détail du matching fund",
+    open: "Voir le détail des engagements à date",
   },
   en: {
-    title: "Matching fund breakdown",
+    title: "Commitments to date",
     weighted: "weighted",
+    soft: "soft commitment",
     total: "Weighted total",
-    open: "See the matching fund breakdown",
+    open: "See the breakdown of commitments to date",
   },
 };
 
@@ -119,11 +121,16 @@ export function MatchingFundTooltip({
               </span>
               <span className="shrink-0 tabular-nums text-foreground">
                 {euros(line.gross, locale)}
-                {line.weight < 1 && (
+                {line.weight < 1 ? (
                   <span className="text-[10.5px] text-neutral-400">
                     {" "}
-                    ({c.weighted} {Math.round(line.weight * 100)} % →{" "}
+                    ({c.weighted} {Math.round(line.weight * 100)} % :{" "}
                     {euros(line.gross * line.weight, locale)})
+                  </span>
+                ) : (
+                  <span className="text-[10.5px] text-neutral-400">
+                    {" "}
+                    ({c.soft})
                   </span>
                 )}
               </span>

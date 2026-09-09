@@ -140,7 +140,7 @@ export default async function InvestorHomePage() {
 
   return (
     <>
-      {/* Bandeau pleine largeur — le message doit être explicite */}
+      {/* Bandeau pleine largeur, le message doit être explicite */}
       <section className="relative h-56 w-full overflow-hidden md:h-64">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -199,8 +199,8 @@ export default async function InvestorHomePage() {
         </div>
 
         {/* Présentation */}
-        <section className="mt-10">
-          <div className="max-w-2xl">
+        <section className="mt-10 grid gap-8 md:grid-cols-[1fr_300px] md:items-start">
+          <div>
             <h2 className="text-2xl font-semibold leading-tight tracking-tight">
               {t(locale, "home.pitch.title")}
             </h2>
@@ -208,16 +208,16 @@ export default async function InvestorHomePage() {
               {t(locale, "home.pitch.body")}
             </p>
           </div>
-          {/* Photo des fondateurs — bande large : les trois sont de front, un
-              cadre 4/3 les rognerait. Fond noir de la prise de vue conservé. */}
-          <figure className="mt-6 overflow-hidden rounded-lg bg-[#050505]">
+          {/* Photo des fondateurs, en vignette : les trois sont de front, la
+              bande large de la prise de vue est conservée telle quelle. */}
+          <figure className="overflow-hidden rounded-lg bg-[#050505]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/brand/team.jpg"
               alt={t(locale, "home.photo.alt")}
-              className="h-full w-full object-cover"
+              className="w-full object-cover"
             />
-            <figcaption className="px-4 py-2.5 text-[11px] tracking-wide text-white/45">
+            <figcaption className="px-3 py-2 text-[10px] tracking-wide text-white/45">
               {t(locale, "home.photo.caption")}
             </figcaption>
           </figure>
@@ -263,7 +263,7 @@ export default async function InvestorHomePage() {
           </div>
         </section>
 
-        {/* Data room niveau 1 — deux colonnes */}
+        {/* Data room niveau 1, deux colonnes */}
         <section className="mt-10">
           <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-400">
             {t(locale, "home.dataroom.level1")}

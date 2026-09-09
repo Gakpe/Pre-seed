@@ -128,23 +128,23 @@ export type Source = { text: string; toVerify?: string };
 
 export const SOURCES: Source[] = [
   {
-    text: "Crédit intérieur au secteur privé (% du PIB) — Banque mondiale, indicateur FS.AST.PRVT.GD.ZS.",
+    text: "Crédit intérieur au secteur privé (% du PIB), Banque mondiale, indicateur FS.AST.PRVT.GD.ZS.",
     toVerify:
       "confirmer la valeur exacte pour l'Afrique subsaharienne sur le dernier millésime disponible, ainsi que les comparatifs monde et Asie de l'Est, avant publication.",
   },
   {
-    text: "Nombre d'exits, durée de détention, part des acheteurs industriels, introductions en bourse, intentions des LPs — AVCA, 2025 African Private Capital Activity Report et couverture associée.",
+    text: "Nombre d'exits, durée de détention, part des acheteurs industriels, introductions en bourse, intentions des LPs, AVCA, 2025 African Private Capital Activity Report et couverture associée.",
   },
   {
-    text: "Croissance du volume d'opérations de dette privée (+57 %), venture debt (1,8 Md $), capital privé total (5,1 Md $ sur 530 opérations) — AVCA, mêmes sources.",
+    text: "Croissance du volume d'opérations de dette privée (+57 %), venture debt (1,8 Md $), capital privé total (5,1 Md $ sur 530 opérations), AVCA, mêmes sources.",
   },
   {
-    text: "Taux d'intérêt PME par région et par ville — compilation interne Minah.",
+    text: "Taux d'intérêt PME par région et par ville, compilation interne Minah.",
     toVerify:
       "préciser la méthodologie et la date de collecte, sans quoi ces chiffres seront contestés en due diligence.",
   },
   {
-    text: "Fourchettes de rendement par classe d'instrument et positionnement des acteurs — issu d'une cartographie de marché de type AGIF II.",
+    text: "Fourchettes de rendement par classe d'instrument et positionnement des acteurs, issu d'une cartographie de marché de type AGIF II.",
     toVerify:
       "confirmer les droits de reproduction, ou reconstruire nos propres fourchettes à partir de sources publiques.",
   },

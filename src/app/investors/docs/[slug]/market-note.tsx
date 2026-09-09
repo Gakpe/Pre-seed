@@ -31,7 +31,7 @@ function Chapter({
 
 function P({ children }: { children: React.ReactNode }) {
   return (
-    <p className={`${serif} mt-6 text-[18px] leading-[1.75] text-note-ink`}>
+    <p className={`${serif} mt-6 text-[17px] leading-[1.75] text-note-ink`}>
       {children}
     </p>
   );
@@ -58,14 +58,14 @@ function BigStat({
       >
         {value}
       </p>
-      <p className={`${serif} mt-3 text-[18px] leading-[1.75] text-note-ink`}>
+      <p className={`${serif} mt-3 text-[17px] leading-[1.75] text-note-ink`}>
         {children}
       </p>
     </div>
   );
 }
 
-// Notre thèse sortie du flux — ni guillemets ni italique : ce n'est pas une
+// Notre thèse sortie du flux, ni guillemets ni italique : ce n'est pas une
 // citation d'un tiers.
 function PullQuote({ children }: { children: React.ReactNode }) {
   return (
@@ -121,7 +121,7 @@ export function MarketNote() {
 
       <Chapter num="01" title="Le continent où le crédit n'existe presque pas">
         <BigStat
-          label="Crédit au secteur privé, en % du PIB — Afrique subsaharienne"
+          label="Crédit au secteur privé, en % du PIB, Afrique subsaharienne"
           value="~28 %"
         >
           Contre plus de 140 % en moyenne mondiale et près de 180 % en Asie de
@@ -136,7 +136,7 @@ export function MarketNote() {
         </P>
         <P>
           Pour un investisseur, la conséquence est souvent mal comprise. Le
-          manque de liquidité ne se voit pas à l&apos;entrée — il se voit à la
+          manque de liquidité ne se voit pas à l&apos;entrée, il se voit à la
           sortie.
         </P>
 
@@ -156,7 +156,7 @@ export function MarketNote() {
           Le marché des sorties s&apos;améliore, mais il reste étroit et
           concentré : fenêtre boursière fermée hors d&apos;Afrique du Sud,
           acheteurs industriels dominants, et 27 % des LPs qui déclarent vouloir
-          ralentir leurs engagements — par doute sur la plomberie des sorties,
+          ralentir leurs engagements, par doute sur la plomberie des sorties,
           non sur la classe d&apos;actifs.
         </P>
 
@@ -200,12 +200,12 @@ export function MarketNote() {
           de distinguer un bon dossier d&apos;un mauvais : historiques
           fragmentaires, aucun reporting standardisé, aucun suivi à distance,
           aucune contrepartie locale à qui déléguer le recouvrement. Face à cette
-          asymétrie, il ne tarife pas le risque — il l&apos;évite, ou le
+          asymétrie, il ne tarife pas le risque, il l&apos;évite, ou le
           surtarife massivement.
         </P>
         <P>
           C&apos;est un problème de confiance, pas de rendement. Et un problème
-          de confiance se résout par de l&apos;infrastructure — de la donnée, de
+          de confiance se résout par de l&apos;infrastructure, de la donnée, de
           la structuration contractuelle, du suivi. Pas par de la patience.
         </P>
       </Chapter>
@@ -216,8 +216,7 @@ export function MarketNote() {
       >
         <div className="grid gap-8 min-[780px]:grid-cols-3">
           <SmallStat label="Dette privée · 2025" value="+57 %">
-            de croissance du nombre d&apos;opérations de dette privée en Afrique
-            — un record.
+            de croissance du nombre d&apos;opérations de dette privée en Afrique, un record.
           </SmallStat>
           <SmallStat label="Venture debt · 2025" value="1,8 Md $">
             levés sur l&apos;année, un quasi-doublement en douze mois.
@@ -236,7 +235,7 @@ export function MarketNote() {
           d&apos;appoint à composante centrale du financement, en particulier
           pour les entreprises en croissance qui cherchent à allonger leur
           horizon sans se diluer. Et pour 2026, les investisseurs déclarent
-          augmenter leurs allocations à la dette privée — pour la visibilité de
+          augmenter leurs allocations à la dette privée, pour la visibilité de
           revenu, la protection à la baisse, et l&apos;alignement avec des
           horizons de sortie qui s&apos;allongent.
         </P>
@@ -253,13 +252,13 @@ export function MarketNote() {
         </P>
         <P>
           C&apos;est dans cette dernière poche que se trouvent les acteurs qui
-          nous ressemblent le plus — TLG Capital, Enko Capital, Cauris Finance.
+          nous ressemblent le plus, TLG Capital, Enko Capital, Cauris Finance.
           Elle est encore peu peuplée, et c&apos;est précisément ce qui la rend
           intéressante.
         </P>
       </Chapter>
 
-      <Chapter num="—" title="Ce que nous en concluons">
+      <Chapter num=", " title="Ce que nous en concluons">
         <P>
           La place d&apos;un acteur de référence est ouverte, et elle a une forme
           précise.
@@ -269,7 +268,7 @@ export function MarketNote() {
           Un acteur mono-pays reste otage d&apos;une banque centrale, d&apos;une
           devise et d&apos;un cycle politique. La diversification régionale
           n&apos;est pas une ambition de croissance, c&apos;est une condition de
-          gestion du risque — et elle se décide à la structuration, pas trois ans
+          gestion du risque, et elle se décide à la structuration, pas trois ans
           plus tard.
         </Point>
         <Point title="Elle est connectée aux marchés globaux.">
@@ -292,7 +291,7 @@ export function MarketNote() {
           sérieux, la plupart sous-dimensionnés par rapport à leur marché
           adressable. Dans un secteur où la sortie en bourse est fermée et où les
           acheteurs industriels dominent, la consolidation entre gestionnaires
-          est la trajectoire naturelle — et elle offre aux LPs la liquidité que
+          est la trajectoire naturelle, et elle offre aux LPs la liquidité que
           l&apos;equity peine à leur fournir.
         </P>
         <P>
@@ -364,7 +363,7 @@ function Point({
       <h3 className={`${serif} text-[19px] font-semibold leading-snug`}>
         {title}
       </h3>
-      <p className={`${serif} mt-2 text-[18px] leading-[1.75] text-note-ink`}>
+      <p className={`${serif} mt-2 text-[17px] leading-[1.75] text-note-ink`}>
         {children}
       </p>
     </div>

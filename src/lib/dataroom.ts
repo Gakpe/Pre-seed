@@ -3,10 +3,10 @@ import { getDemoSession } from "@/lib/demo";
 import { getAdminEmail } from "@/lib/admin";
 
 // État de la data room, piloté depuis l'espace admin.
-//   open        — accès normal
-//   maintenance — fermée le temps d'une mise à jour ; les investisseurs sont
+//   open, accès normal
+//   maintenance, fermée le temps d'une mise à jour ; les investisseurs sont
 //                 prévenus par email à la réouverture
-//   closed      — fermée, sans promesse de date
+//   closed, fermée, sans promesse de date
 export type DataRoomStatus = "open" | "maintenance" | "closed";
 
 export const DATAROOM_STATUSES: DataRoomStatus[] = [
@@ -21,7 +21,7 @@ export const DATAROOM_STATUSES: DataRoomStatus[] = [
 //
 // Le discriminant n'est pas NODE_ENV : `next build` le passe à "production"
 // en local, si bien qu'une instance locale pouvait encore écrire sur la clé
-// de production — c'est ce qui a fermé la data room le 8 septembre. VERCEL_ENV
+// de production, c'est ce qui a fermé la data room le 8 septembre. VERCEL_ENV
 // n'est renseigné que par Vercel, et vaut "production" pour le seul
 // déploiement de production : les prévisualisations et le local retombent
 // donc sur la clé de développement.

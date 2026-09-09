@@ -37,7 +37,7 @@ export async function updateSession(request: NextRequest) {
 
   // Session de démonstration : on se contente ici de constater la présence du
   // cookie (pas de crypto dans le proxy). La signature est vérifiée par
-  // getDemoSession() dans chaque page — un cookie forgé passe le proxy mais
+  // getDemoSession() dans chaque page, un cookie forgé passe le proxy mais
   // n'ouvre rien et retombe sur la redirection côté page.
   const hasDemoCookie = request.cookies.has("minah_demo");
 

@@ -17,10 +17,10 @@ function reopenMail(to: string, origin: string): Mail {
     subject:
       "La data room Minah est à jour · The Minah data room has been updated",
     html:
-      "<h2>Minah — Espace investisseurs / Investor space</h2>" +
-      "<p><strong>FR</strong> — La mise à jour est terminée : la data room est de nouveau accessible. " +
+      "<h2>Minah, Espace investisseurs / Investor space</h2>" +
+      "<p><strong>FR</strong>, La mise à jour est terminée : la data room est de nouveau accessible. " +
       `<a href="${url}">Reprendre votre lecture</a>.</p>` +
-      "<p><strong>EN</strong> — The update is complete: the data room is accessible again. " +
+      "<p><strong>EN</strong>, The update is complete: the data room is accessible again. " +
       `<a href="${url}">Pick up where you left off</a>.</p>` +
       '<hr style="border:none;border-top:1px solid #eee;margin:20px 0">' +
       '<p style="color:#888;font-size:12px">Vous recevez cet email parce que vous avez accès à l\'espace investisseurs de Minah.<br>' +

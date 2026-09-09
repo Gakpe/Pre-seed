@@ -8,7 +8,7 @@ import { setInvestorStatus, setLevel2Access } from "./actions";
 import { StatusBadge } from "./status-badge";
 import { ActivityHistogram } from "./activity-histogram";
 
-export const metadata = { title: "Admin — Minah" };
+export const metadata = { title: "Admin, Minah" };
 
 const dateFmt = new Intl.DateTimeFormat("fr-FR", {
   day: "2-digit",
@@ -91,7 +91,7 @@ export default async function AdminPage() {
                     </Link>
                     <div className="text-xs text-neutral-500">{inv.email}</div>
                   </td>
-                  <td className="px-4 py-3">{inv.entity ?? "—"}</td>
+                  <td className="px-4 py-3">{inv.entity ?? ", "}</td>
                   <td className="px-4 py-3">
                     <StatusBadge status={inv.status} />
                   </td>
@@ -106,12 +106,12 @@ export default async function AdminPage() {
                         )}
                       </>
                     ) : (
-                      "—"
+                      ", "
                     )}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <span>{inv.level2_access ? "✓" : "—"}</span>
+                      <span>{inv.level2_access ? "✓" : ", "}</span>
                       <form
                         action={setLevel2Access.bind(
                           null,

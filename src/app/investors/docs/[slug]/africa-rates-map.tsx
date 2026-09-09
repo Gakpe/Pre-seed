@@ -9,7 +9,7 @@ import {
 } from "@/lib/market-note";
 
 // Carte des taux PME et fourchettes par région. Survol croisé : la carte et le
-// graphique se répondent. Au repos la synthèse reste affichée — la
+// graphique se répondent. Au repos la synthèse reste affichée, la
 // visualisation doit tenir sur une capture d'écran, sans interaction.
 const X0 = 130;
 const X1 = 530;
@@ -217,7 +217,7 @@ export function AfricaRatesMap() {
             ))}
           </svg>
           <p className="mt-2 text-xs text-note-dark-muted">
-            Survolez une région — ou une barre — pour la détailler. Fourchettes
+            Survolez une région ou une barre pour la détailler. Fourchettes
             observées sur le crédit aux petites et moyennes entreprises.
           </p>
         </div>

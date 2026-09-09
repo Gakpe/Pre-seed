@@ -1,5 +1,5 @@
 // Envoi d'emails applicatifs via l'API Resend. Les codes d'accès, eux, partent
-// de Supabase Auth qui utilise Resend en SMTP — voir docs/emails-auth.md.
+// de Supabase Auth qui utilise Resend en SMTP, voir docs/emails-auth.md.
 const ENDPOINT = "https://api.resend.com/emails/batch";
 const FROM = "Minah <access@minah.io>";
 const BATCH = 100;

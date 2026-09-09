@@ -14,7 +14,7 @@ export type RiskLevel = {
 };
 
 export const AXIS_CAPTION =
-  "Du sous-jacent (haut) vers l'émetteur (bas) — chaque niveau non absorbé descend au suivant.";
+  "Du sous-jacent (haut) vers l'émetteur (bas), chaque niveau non absorbé descend au suivant.";
 
 export const RISK_LEVELS: RiskLevel[] = [
   {
@@ -27,7 +27,7 @@ export const RISK_LEVELS: RiskLevel[] = [
     },
     protection: {
       name: "Performance bond",
-      body: "Le performance bond couvre la sous-performance de l'actif sous-jacent, en deçà du défaut avéré — par exemple une mauvaise gestion du besoin en fonds de roulement qui dégrade la trésorerie de l'opérateur.",
+      body: "Le performance bond couvre la sous-performance de l'actif sous-jacent, en deçà du défaut avéré, par exemple une mauvaise gestion du besoin en fonds de roulement qui dégrade la trésorerie de l'opérateur.",
     },
     status: "Aucune occurrence sur le portefeuille actuel.",
     footnote: "Termes et conditions du performance bond disponibles sur demande.",
@@ -87,7 +87,7 @@ export const RESILIENCE = {
   ],
 } as const;
 
-// Section de clôture — « Ce que cet exemple démontre ».
+// Section de clôture, « Ce que cet exemple démontre ».
 export const RISK_CLOSING = {
   title: "Ce que cet exemple démontre",
   intro:

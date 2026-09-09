@@ -37,7 +37,7 @@ function eventLine(e: EventRow): string {
     case "page_leave": {
       const secs = Math.round((e.duration_ms ?? 0) / 1000);
       const dur = secs >= 60 ? `${Math.round(secs / 60)} min` : `${secs} s`;
-      return `⏱ ${e.path ?? "?"} — ${dur}, scroll ${e.scroll_depth ?? 0}%`;
+      return `⏱ ${e.path ?? "?"}, ${dur}, scroll ${e.scroll_depth ?? 0}%`;
     }
     case "docsend_click":
       return `📄 A ouvert « ${e.label ?? "document"} »`;

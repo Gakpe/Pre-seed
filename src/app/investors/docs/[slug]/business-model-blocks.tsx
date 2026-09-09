@@ -1,3 +1,4 @@
+import { FEES } from "@/lib/flow-nodes";
 // Les deux blocs de bas de page de la fiche « business model » : où se place
 // notre risque, et l'ambition de traçabilité de bout en bout.
 // Aucun état, aucune interaction.
@@ -5,7 +6,7 @@
 const TRACEABILITY_STAGES = [
   {
     title: "Votre position",
-    body: "Souscription, échéancier, coupons versés — tenus au registre et consultables à tout moment.",
+    body: "Souscription, échéancier et coupons versés : tenus au registre et consultables à tout moment.",
   },
   {
     title: "La stratégie",
@@ -31,8 +32,8 @@ export function BusinessModelBlocks() {
         </h2>
         <p className="mt-3 text-sm leading-[1.6] text-neutral-700">
           Nos souscripteurs sont en dette senior : payés les premiers, exposés
-          les derniers. La tranche junior — nos propres fonds et les revenus
-          des autres stratégies maintenus en réserve — encaisse la première
+          les derniers. La tranche junior, nos propres fonds et les revenus
+          des autres stratégies maintenus en réserve, encaisse la première
           perte avant que le coupon senior ne soit touché.
         </p>
 
@@ -67,7 +68,7 @@ export function BusinessModelBlocks() {
             </marker>
           </defs>
 
-          {/* rail gauche — les paiements descendent */}
+          {/* rail gauche, les paiements descendent */}
           <path
             d="M26 34 L26 196"
             stroke="var(--bm-muted)"
@@ -85,7 +86,7 @@ export function BusinessModelBlocks() {
             PAIEMENTS
           </text>
 
-          {/* rail droit — les pertes remontent */}
+          {/* rail droit, les pertes remontent */}
           <path
             d="M534 196 L534 34"
             stroke="var(--bm-accent)"
@@ -174,6 +175,59 @@ export function BusinessModelBlocks() {
           payeurs publics à exposer leurs données : nous les construisons
           stratégie après stratégie, et nous ne les annoncerons livrés que
           lorsqu&apos;ils le seront.
+        </p>
+      </section>
+
+      {/* --- Comment nous nous rémunérons ---
+          Les deux commissions sont les seuls moments où nous prélevons. Le
+          mécanisme de la seconde est le cœur du modèle : il mérite d'être
+          expliqué, pas seulement chiffré. */}
+      <section className="rounded-xl border border-bm-border bg-bm-surface p-6 min-[860px]:col-span-2">
+        <h2 className="text-base font-semibold tracking-tight">
+          Comment nous nous rémunérons
+        </h2>
+
+        <dl className="mt-5 grid gap-5 min-[620px]:grid-cols-2">
+          <div className="rounded-lg border border-bm-border bg-bm-accent-soft/40 p-5">
+            <dt className="text-[11px] font-semibold uppercase tracking-[0.12em] text-bm-muted">
+              Transaction fees
+            </dt>
+            <dd className="mt-1 text-3xl font-bold tracking-tight tabular-nums text-bm-accent">
+              {FEES.transaction}
+            </dd>
+            <dd className="mt-2 text-[13px] leading-[1.6] text-neutral-700">
+              Prélevés sur le flux entrant, à la souscription. Ils couvrent la
+              structuration du produit, l&apos;entrée en relation et la mise en
+              registre.
+            </dd>
+          </div>
+
+          <div className="rounded-lg border border-bm-border bg-bm-accent-soft/40 p-5">
+            <dt className="text-[11px] font-semibold uppercase tracking-[0.12em] text-bm-muted">
+              Performance fees
+            </dt>
+            <dd className="mt-1 text-3xl font-bold tracking-tight tabular-nums text-bm-accent">
+              {FEES.performance}
+            </dd>
+            <dd className="mt-2 text-[13px] leading-[1.6] text-neutral-700">
+              Prélevés sur la remontée des coupons, avant redistribution. La
+              fourchette dépend de la stratégie et du niveau de surperformance
+              constaté.
+            </dd>
+          </div>
+        </dl>
+
+        <p className="mt-6 text-sm leading-[1.7] text-neutral-700">
+          Les souscripteurs sont exposés en dette, avec un rendement annoncé à
+          l&apos;entrée. Toute performance dégagée au-delà de ce rendement
+          constitue notre rémunération. Notre exposition en dette senior et en
+          venture debt nous permet ainsi de capter la surperformance des
+          produits sous-jacents.
+        </p>
+
+        <p className="mt-4 border-t border-bm-border pt-4 text-[13px] leading-[1.6] text-bm-muted">
+          Le détail complet de la mécanique, hypothèses et cas chiffrés compris,
+          est disponible au niveau 2 de la data room.
         </p>
       </section>
     </div>

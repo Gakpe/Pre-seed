@@ -20,7 +20,7 @@ export default function Home() {
           className="mx-auto h-10 w-auto"
         />
         <p className="mx-auto max-w-md text-balance text-neutral-600 dark:text-neutral-400">
-          {/* Contenu vitrine placeholder — texte définitif à venir. */}
+          {/* Contenu vitrine placeholder, texte définitif à venir. */}
           La plateforme de dette privée pour l&apos;Afrique. Dette senior
           sécurisée, coupons fixes, infrastructure on-chain.
         </p>

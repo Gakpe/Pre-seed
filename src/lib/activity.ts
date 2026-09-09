@@ -60,7 +60,7 @@ export function buildDailyBuckets(
     );
     for (const [path, ms] of pages.slice(0, 4)) {
       const min = Math.round(ms / 60000);
-      lines.push(`${path} — ${min >= 1 ? `${min} min` : "< 1 min"}`);
+      lines.push(`${path}, ${min >= 1 ? `${min} min` : "< 1 min"}`);
     }
     for (const doc of (docsByDay.get(k) ?? []).slice(0, 4)) {
       lines.push(`📄 ${doc}`);

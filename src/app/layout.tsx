@@ -21,7 +21,7 @@ const sourceSerif = Source_Serif_4({
 
 export const metadata: Metadata = {
   title: "Minah",
-  description: "Minah — portail investisseurs",
+  description: "Minah, portail investisseurs",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

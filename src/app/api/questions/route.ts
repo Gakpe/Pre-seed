@@ -4,7 +4,7 @@ import { dataRoomBlocked } from "@/lib/dataroom";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 // Reçoit une liste de questions distinctes ({questions: string[]}),
-// une ligne par question — chaque insert déclenche une alerte Yao.
+// une ligne par question, chaque insert déclenche une alerte Yao.
 export async function POST(request: Request) {
   // Une question posée en démo ne doit pas alerter l'équipe.
   if (await getDemoSession()) return new Response(null, { status: 403 });

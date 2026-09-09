@@ -111,7 +111,7 @@ export function CapitalFlow() {
           })}
           <circle cx={CONVERGE.x} cy={CONVERGE.y} r="6" fill="var(--bm-accent)" />
 
-          {/* tronc de souscription — il passe DERRIÈRE la pastille de fees */}
+          {/* tronc de souscription, il passe DERRIÈRE la pastille de fees */}
           <path
             d={`M${CONVERGE.x + 6} ${CONVERGE.y} L${NODES.minah.x - 6} ${CONVERGE.y}`}
             fill="none"
@@ -166,7 +166,7 @@ export function CapitalFlow() {
             style={{ letterSpacing: "0.1em" }}
             fill="var(--bm-muted)"
           >
-            RETOUR — COUPONS ET PRINCIPAL
+            RETOUR, COUPONS ET PRINCIPAL
           </text>
 
           {/* branche des performance fees : tout ne remonte pas à 100 % */}
@@ -187,7 +187,7 @@ export function CapitalFlow() {
               <g
                 key={inv.id}
                 {...pick(inv.id)}
-                aria-label={`${inv.title} — ${inv.subtitle}`}
+                aria-label={`${inv.title}, ${inv.subtitle}`}
               >
                 <rect
                   x={cardX(i)}
@@ -220,7 +220,7 @@ export function CapitalFlow() {
             );
           })}
 
-          {/* Minah — seul nœud en fond plein : c'est le centre du modèle */}
+          {/* Minah, seul nœud en fond plein : c'est le centre du modèle */}
           <Node
             id="minah"
             x={NODES.minah.x}
@@ -272,7 +272,7 @@ export function CapitalFlow() {
         </svg>
       </div>
 
-      {/* panneau de détail — enrichit, ne conditionne rien */}
+      {/* panneau de détail, enrichit, ne conditionne rien */}
       <div
         aria-live="polite"
         className="mt-4 rounded-xl border border-bm-border bg-bm-surface-2 p-6"
@@ -314,7 +314,7 @@ function Node({
   pick: PickFn;
 }) {
   return (
-    <g {...pick(id)} aria-label={`${title} — ${subtitle}`}>
+    <g {...pick(id)} aria-label={`${title}, ${subtitle}`}>
       <rect
         x={x}
         y={NODE_Y}
@@ -349,7 +349,7 @@ function Node({
 }
 
 // Pastille de commission. Posée à cheval sur le flux : le trait passe
-// derrière et en ressort — le prélèvement se lit au moment où il se produit.
+// derrière et en ressort, le prélèvement se lit au moment où il se produit.
 function FeePill({
   id,
   cx,
@@ -370,7 +370,7 @@ function FeePill({
   const w = 170;
   const h = 46;
   return (
-    <g {...pick(id)} aria-label={`${label} — taux ${rate}`}>
+    <g {...pick(id)} aria-label={`${label}, taux ${rate}`}>
       <rect
         x={cx - w / 2}
         y={cy - h / 2}

@@ -63,7 +63,7 @@ export function AdminsPanel({
                 }`}
                 title={
                   a.source === "env"
-                    ? "Défini dans ADMIN_EMAILS, côté serveur — non retirable ici."
+                    ? "Défini dans ADMIN_EMAILS, côté serveur, non retirable ici."
                     : "Ajouté depuis cette page."
                 }
               >
@@ -78,9 +78,7 @@ export function AdminsPanel({
                   Retirer
                 </button>
               ) : (
-                <span className="w-12 text-right text-xs text-neutral-300">
-                  —
-                </span>
+                <span className="w-12 text-right text-xs text-neutral-300">, </span>
               )}
             </div>
           </li>

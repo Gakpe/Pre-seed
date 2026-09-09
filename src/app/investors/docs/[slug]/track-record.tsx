@@ -1,6 +1,6 @@
 import type { Locale } from "@/lib/i18n";
 
-// Fiche track record : deux volets dans cet ordre — ce que le fondateur a déjà
+// Fiche track record : deux volets dans cet ordre, ce que le fondateur a déjà
 // fait ailleurs, puis ce que la société a déjà fait elle-même. L'ordre porte du
 // sens : le second volet est petit en montants, et il ne se lit correctement
 // qu'après le premier.
@@ -8,39 +8,45 @@ import type { Locale } from "@/lib/i18n";
 // Le contenu vit ici plutôt qu'en base : ce sont des chiffres à tenir à jour
 // avec l'équipe, pas de la prose éditable depuis l'admin.
 
-// Fonds cités en exemple sur la période Bpifrance. Liens vérifiés à la main —
+// Fonds cités en exemple sur la période Bpifrance. Liens vérifiés à la main :
 // un lien mort dans une data room investisseur coûte plus cher qu'un
 // aller-retour par le code. Vérifiés le 9 septembre 2026.
+// Logo Bpifrance : déposer le fichier fourni par l'équipe en
+// public/brand/logos/bpifrance.svg et renseigner le chemin ci-dessous. Tant
+// qu'il est nul, on affiche un cartouche typographique plutôt qu'une image
+// cassée, et on ne va pas chercher un logo de marque ailleurs.
+const BPI_LOGO: string | null = null;
+
 const FUNDS = [
   { name: "Ardian", url: "https://www.ardian.com" },
-  { name: "New Form Capital", url: "https://www.newformcapital.com" },
+  { name: "New Form Capital", url: "https://www.newformcap.com/" },
   { name: "Cathay Capital", url: "https://www.cathaycapital.com" },
   { name: "PSG Equity", url: "https://www.psgequity.com" },
 ];
 
 const copy = {
   fr: {
-    personalEyebrow: "Volet 1 — Le fondateur",
+    personalEyebrow: "Volet 1 · Le fondateur",
     personalTitle: "Un demi-milliard d'euros déployé, avant Minah.",
     personalLead:
-      "Julien Gakpé a passé plus de cinq ans du côté institutionnel de la table, chez Bpifrance, en investisseur fonds de fonds. Ce n'est pas une ligne de CV : c'est la discipline exacte que Minah applique aujourd'hui à ses propres opérations — instruire, structurer, doser le risque, et répondre de ce qu'on a signé.",
+      "Julien Gakpé a passé plus de cinq ans du côté institutionnel de la table, chez Bpifrance, en investisseur fonds de fonds. Il ne s'agit pas d'une ligne de CV, mais de la discipline exacte que Minah applique aujourd'hui à ses propres opérations : instruire, structurer, doser le risque et répondre de ses engagements.",
     bigStatLabel: "Déployés via Bpifrance",
     bigStatValue: "≈ 500 M€",
     bigStatNote:
-      "En investisseur institutionnel fonds de fonds — la sélection, la structuration et le suivi des véhicules souscrits.",
+      "En investisseur institutionnel fonds de fonds : sélection, structuration et suivi des véhicules souscrits.",
     facts: [
       { label: "Taille des tickets", value: "5 à 80 M€" },
-      { label: "Structuration de deals", value: "5+ ans" },
+      { label: "Structuration d'opérations", value: "Plus de 5 ans" },
       { label: "Position", value: "Investisseur institutionnel" },
     ],
     fundsLabel: "Exemples de fonds souscrits",
     fundsNote:
-      "Une vraie capacité à structurer des deals, éprouvée sur des véhicules de ce calibre.",
+      "Une capacité de structuration éprouvée sur des véhicules de ce calibre.",
 
-    companyEyebrow: "Volet 2 — La société",
-    companyTitle: "Deux MVP, pas une promesse.",
+    companyEyebrow: "Volet 2 · La société",
+    companyTitle: "Deux jalons franchis, et non une promesse.",
     companyLead:
-      "Les montants sont sans commune mesure avec le volet précédent, et c'est le sujet : il ne s'agissait pas de déployer, il s'agissait de vérifier que la mécanique tient — juridiquement, opérationnellement, puis financièrement.",
+      "Les montants sont sans commune mesure avec le volet précédent, et c'est le sujet : il ne s'agissait pas de déployer, il s'agissait de vérifier que la mécanique tient : juridiquement, opérationnellement, puis financièrement.",
 
     mvps: [
       {
@@ -49,10 +55,10 @@ const copy = {
         amountLabel: "Montant engagé",
         amount: "< 100 K€",
         goalLabel: "Objectif",
-        goal: "Tester les flux financiers — opérationnellement et légalement — pour déployer des fonds en zone UEMOA.",
+        goal: "Éprouver les flux financiers, sur le plan opérationnel comme juridique, avant tout déploiement en zone UEMOA.",
         resultLabel: "Résultat",
         result:
-          "Ça fonctionne. Remboursement en cours au taux de 8 %, avec un remboursement anticipé du capital probable.",
+          "Le dispositif fonctionne. Le remboursement est en cours au taux de 8 %, avec un remboursement anticipé du capital jugé probable.",
         status: "Validé",
       },
       {
@@ -61,10 +67,10 @@ const copy = {
         amountLabel: "Taille du deal",
         amount: "2 M€",
         goalLabel: "Closing réalisé",
-        goal: "500 K€+, avec des retours sur investissement confirmés via le partenaire.",
+        goal: "500 K€ et plus, avec des retours sur investissement confirmés par le partenaire.",
         resultLabel: "En cours",
         result:
-          "Structuration des niveaux de protection — assurance, garanties — pour être prêt côté investisseurs institutionnels.",
+          "Structuration des niveaux de protection (assurance, garanties) afin d'être prêt pour des investisseurs institutionnels.",
         status: "En cours",
       },
     ],
@@ -75,7 +81,7 @@ const copy = {
       {
         value: "10 M€+",
         label: "déjà déployés par le partenaire",
-        note: "Capital propre du partenaire, en avance des closings — à ne pas confondre avec le closing de 500 K€.",
+        note: "Capital propre du partenaire, engagé en avance des closings. À ne pas confondre avec le closing de 500 K€.",
       },
       {
         value: "15 M€",
@@ -90,31 +96,31 @@ const copy = {
     ],
 
     closing:
-      "On a le knowledge, on a testé un premier niveau, on est prêt à accélérer : objectif 100 M€ de déploiement, en poursuivant la dynamique de x10 en volume déjà amorcée.",
+      "Nous avons validé la thèse sur une première stratégie. L'objectif est désormais de porter le déploiement à 100 M€, en prolongeant la trajectoire de croissance déjà constatée.",
   },
 
   en: {
-    personalEyebrow: "Part 1 — The founder",
+    personalEyebrow: "Part 1 · The founder",
     personalTitle: "Half a billion euros deployed, before Minah.",
     personalLead:
-      "Julien Gakpé spent more than five years on the institutional side of the table, at Bpifrance, as a fund-of-funds investor. That is not a CV line: it is exactly the discipline Minah now applies to its own operations — assess, structure, calibrate risk, and answer for what you signed.",
+      "Julien Gakpé spent more than five years on the institutional side of the table, at Bpifrance, as a fund-of-funds investor. That is not a CV line: it is exactly the discipline Minah now applies to its own operations: assess, structure, calibrate risk and answer for what has been signed.",
     bigStatLabel: "Deployed through Bpifrance",
     bigStatValue: "≈ €500M",
     bigStatNote:
-      "As an institutional fund-of-funds investor — selecting, structuring and monitoring the subscribed vehicles.",
+      "As an institutional fund-of-funds investor: selection, structuring and monitoring of the subscribed vehicles.",
     facts: [
       { label: "Ticket size", value: "€5M to €80M" },
-      { label: "Deal structuring", value: "5+ years" },
+      { label: "Deal structuring", value: "Over 5 years" },
       { label: "Seat", value: "Institutional investor" },
     ],
     fundsLabel: "Examples of subscribed funds",
     fundsNote:
-      "A real ability to structure deals, proven on vehicles of that calibre.",
+      "A structuring capability proven on vehicles of that calibre.",
 
-    companyEyebrow: "Part 2 — The company",
-    companyTitle: "Two MVPs, not a promise.",
+    companyEyebrow: "Part 2 · The company",
+    companyTitle: "Two milestones delivered, not a promise.",
     companyLead:
-      "The amounts bear no comparison with the previous section, and that is the point: this was not about deploying, it was about verifying that the mechanics hold — legally, operationally, then financially.",
+      "The amounts bear no comparison with the previous section, and that is the point: this was not about deploying, it was about verifying that the mechanics hold: legally, operationally, then financially.",
 
     mvps: [
       {
@@ -123,10 +129,10 @@ const copy = {
         amountLabel: "Amount committed",
         amount: "< €100K",
         goalLabel: "Objective",
-        goal: "Test the financial flows — operationally and legally — in order to deploy funds in the WAEMU zone.",
+        goal: "Test the financial flows, operationally and legally, before any deployment in the WAEMU zone.",
         resultLabel: "Outcome",
         result:
-          "It works. Repayment under way at an 8% rate, with early repayment of the principal likely.",
+          "The mechanism works. Repayment is under way at an 8% rate, with early repayment of the principal considered likely.",
         status: "Validated",
       },
       {
@@ -135,10 +141,10 @@ const copy = {
         amountLabel: "Deal size",
         amount: "€2M",
         goalLabel: "Closing achieved",
-        goal: "€500K+, with returns on investment confirmed through the partner.",
+        goal: "€500K and above, with returns on investment confirmed by the partner.",
         resultLabel: "In progress",
         result:
-          "Structuring the protection layers — insurance, guarantees — to be ready for institutional investors.",
+          "Structuring the protection layers (insurance, guarantees) in order to be ready for institutional investors.",
         status: "In progress",
       },
     ],
@@ -149,7 +155,7 @@ const copy = {
       {
         value: "€10M+",
         label: "already deployed by the partner",
-        note: "The partner's own capital, ahead of the closings — not to be confused with the €500K closing.",
+        note: "The partner's own capital, committed ahead of the closings. Not to be confused with the €500K closing.",
       },
       {
         value: "€15M",
@@ -164,7 +170,7 @@ const copy = {
     ],
 
     closing:
-      "We have the knowledge, we have tested a first level, we are ready to accelerate: a €100M deployment target, continuing the 10x volume dynamic already under way.",
+      "We have validated the thesis on a first strategy. The objective is now to raise deployment to €100M, extending the growth trajectory already observed.",
   },
 };
 
@@ -190,8 +196,8 @@ export function TrackRecord({ locale }: { locale: Locale }) {
               <p className="text-sm font-semibold text-white">Julien Gakpé</p>
               <p className="mt-0.5 text-[11px] text-white/60">
                 {locale === "en"
-                  ? "Co-founder — CEO · formerly Bpifrance"
-                  : "Co-fondateur — Directeur général · ex-Bpifrance"}
+                  ? "Co-founder, CEO · formerly Bpifrance"
+                  : "Co-fondateur, Directeur général · ex-Bpifrance"}
               </p>
             </figcaption>
           </figure>
@@ -206,9 +212,23 @@ export function TrackRecord({ locale }: { locale: Locale }) {
 
             {/* Le chiffre existe pour être vu avant d'être lu. */}
             <div className="mt-7 rounded-xl border border-foreground/10 bg-white/60 p-6">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
-                {c.bigStatLabel}
-              </p>
+              <div className="flex items-center gap-3">
+                {BPI_LOGO ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={BPI_LOGO}
+                    alt="Bpifrance"
+                    className="h-7 w-auto shrink-0"
+                  />
+                ) : (
+                  <span className="shrink-0 rounded border border-foreground/15 bg-chalk px-2 py-1 text-[11px] font-semibold tracking-tight text-marsala">
+                    Bpifrance
+                  </span>
+                )}
+                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
+                  {c.bigStatLabel}
+                </p>
+              </div>
               <p className="mt-1 text-5xl font-bold tracking-tight tabular-nums text-brand">
                 {c.bigStatValue}
               </p>
@@ -265,8 +285,7 @@ export function TrackRecord({ locale }: { locale: Locale }) {
           {c.companyLead}
         </p>
 
-        {/* Traitement compact, volontairement : pas de photo, pas d'emphase —
-            ces montants ne sont pas l'argument, leur validation l'est. */}
+        {/* Traitement compact, volontairement : pas de photo, pas d'emphase, ces montants ne sont pas l'argument, leur validation l'est. */}
         <div className="mt-7 grid gap-4 md:grid-cols-2">
           {c.mvps.map((m) => (
             <article

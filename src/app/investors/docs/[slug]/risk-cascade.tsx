@@ -11,7 +11,7 @@ const TOKEN = 14;
 type Token = { index: number; x: number; y: number };
 
 export function RiskCascade() {
-  // Ligne survolée ou focalisée — met les autres en retrait.
+  // Ligne survolée ou focalisée, met les autres en retrait.
   const [active, setActive] = useState<number | null>(null);
   // Niveau où la perte simulée a été absorbée.
   const [absorbed, setAbsorbed] = useState<number | null>(null);
@@ -51,7 +51,7 @@ export function RiskCascade() {
   }
 
   // Une ligne s'efface si une autre est mise en avant, ou si la perte simulée
-  // s'est arrêtée avant elle — montrer qu'elle n'a jamais été sollicitée.
+  // s'est arrêtée avant elle, montrer qu'elle n'a jamais été sollicitée.
   function dim(i: number): boolean {
     if (absorbed !== null) return i > absorbed;
     return active !== null && active !== i;
@@ -226,7 +226,7 @@ function Row({
       ref={ref}
       role="button"
       tabIndex={0}
-      aria-label={`Niveau ${level.index} — ${level.name}`}
+      aria-label={`Niveau ${level.index}, ${level.name}`}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
       onFocus={onEnter}
@@ -246,7 +246,7 @@ function Row({
         className="absolute bottom-2 left-0 top-2 rounded bg-risk-border lg:hidden"
       />
 
-      {/* colonne 1 — le niveau, décalé d'un cran par rapport au précédent */}
+      {/* colonne 1, le niveau, décalé d'un cran par rapport au précédent */}
       <div className="lg:w-[30%] lg:pr-6">
         <div
           style={{ "--indent": `${index * STEP}px` } as React.CSSProperties}
@@ -261,7 +261,7 @@ function Row({
         </div>
       </div>
 
-      {/* colonne 2 — le déclencheur */}
+      {/* colonne 2, le déclencheur */}
       <div className="mt-4 lg:mt-0 lg:w-[28%] lg:pr-6">
         <p className="text-[13px] leading-[1.6] text-neutral-700 lg:hyphens-auto lg:text-justify">
           <strong className="font-semibold text-foreground">
@@ -271,7 +271,7 @@ function Row({
         </p>
       </div>
 
-      {/* colonne 3 — la protection */}
+      {/* colonne 3, la protection */}
       <div className="mt-4 lg:mt-0 lg:w-[42%]">
         <div
           className={`rounded-md border transition-colors ${
@@ -301,7 +301,7 @@ function Row({
             <div aria-live="polite">
               {highlighted && (
                 <p className="mt-3 rounded bg-risk-ok/10 px-2.5 py-1.5 text-[12px] font-medium text-risk-ok">
-                  Absorbé à ce niveau — impact investisseur : aucun
+                  Absorbé à ce niveau, impact investisseur : aucun
                 </p>
               )}
             </div>
