@@ -54,9 +54,16 @@ export function CapitalFlow() {
       <div className="relative overflow-x-auto rounded-xl border border-bm-border bg-bm-surface p-4 sm:p-6">
         {/* Le schéma illustre une stratégie, pas le modèle en général : il faut
             le dire là où l'œil se pose, sur le schéma lui-même. */}
-        <span className="absolute right-4 top-4 z-10 rounded-full border border-bm-border bg-bm-accent-soft px-3 py-1 text-[11px] font-medium text-bm-accent sm:right-6 sm:top-6">
-          Exemple : Kupanda, notre dernière stratégie
-        </span>
+        {/* Au téléphone le cartouche passe au-dessus du schéma : posé dessus,
+            il masquerait la première colonne. */}
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2 sm:mb-0 sm:block">
+          <span className="rounded-full border border-bm-border bg-bm-accent-soft px-3 py-1 text-[11px] font-medium text-bm-accent sm:absolute sm:right-6 sm:top-6 sm:z-10">
+            Exemple : Kupanda, notre dernière stratégie
+          </span>
+          <span className="text-[11px] text-bm-muted sm:hidden">
+            Faites défiler le schéma →
+          </span>
+        </div>
         <svg
           viewBox="0 0 1190 480"
           className="w-full"

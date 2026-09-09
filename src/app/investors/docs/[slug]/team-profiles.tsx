@@ -258,7 +258,7 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
     <section className="mt-10">
       <p className="text-sm leading-6 text-neutral-500">{c.intro}</p>
 
-      <ul className="mt-6 flex flex-col gap-4 md:h-[min(560px,calc((100vw-80px)/2))] md:flex-row">
+      <ul className="mt-6 flex flex-col gap-4 lg:h-[min(560px,calc((100vw-80px)/2))] lg:flex-row">
         {PEOPLE.map((p) => {
           const open = openId === p.id;
           // Un portrait ouvert : les deux autres se replient.
@@ -294,10 +294,10 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                   }
                 }}
               >
-                <div className="flex h-full w-full flex-col md:flex-row">
+                <div className="flex h-full w-full flex-col lg:flex-row">
                   {/* Le portrait garde son cadrage : il ne s'étire pas quand la
                       carte s'élargit, sinon le visage se déforme. */}
-                  <div className="relative aspect-[2/3] w-full shrink-0 md:aspect-[2/3] md:h-full md:w-auto">
+                  <div className="relative aspect-[2/3] w-full shrink-0 lg:aspect-[2/3] lg:h-full lg:w-auto">
                     {/* repos : la découpe de la photo d'équipe, nette */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={p.rest} alt={p.name} className="tp-layer tp-rest" />
@@ -317,20 +317,9 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                       className="tp-scrim absolute inset-0"
                       style={{
                         background:
-                          "linear-gradient(to top, rgba(20,13,11.9) 0%, rgba(20,13,11.55) 18%, rgba(20,13,11.1) 40%, rgba(20,13,11,0) 60%)",
+                          "linear-gradient(to top, rgba(20,13,11,.9) 0%, rgba(20,13,11,.55) 18%, rgba(20,13,11,.1) 40%, rgba(20,13,11,0) 60%)",
                       }}
                     />
-                    {/* au doigt, le panneau se pose sur le portrait : il lui
-                        faut son propre voile */}
-                    <div
-                      aria-hidden
-                      className="tp-scrim tp-scrim-open absolute inset-0 md:hidden"
-                      style={{
-                        background:
-                          "linear-gradient(to top, rgba(18,11,9.97) 0%, rgba(18,11,9.93) 46%, rgba(18,11,9.62) 72%, rgba(18,11,9.14) 92%, rgba(18,11,9,0) 100%)",
-                      }}
-                    />
-
                     {/* affordance : plus au repos, moins une fois ouvert */}
                     <span
                       aria-hidden
@@ -355,62 +344,64 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                   </div>
 
                   {/* Les informations prennent la place libérée par les deux
-                      autres portraits : sur le portrait au doigt, à côté de lui
-                      au large. */}
-                  <div className="absolute inset-x-0 bottom-0 space-y-3 p-4 pb-24 md:static md:flex md:min-w-0 md:flex-1 md:flex-col md:justify-center md:space-y-5 md:overflow-hidden md:p-9">
-                    <div className="tp-field tp-field-1">
-                      <Label>{c.academic}</Label>
-                      <p
-                        className={`mt-1 text-[11.5px] leading-snug md:text-sm ${
-                          p.academic.fr === "À compléter"
-                            ? "text-brand/90 underline decoration-dashed underline-offset-2"
-                            : "text-white/85"
-                        }`}
-                      >
-                        {p.academic[locale]}
-                      </p>
-                    </div>
+                      autres portraits : à côté du portrait au large, dépliées
+                      sous lui au doigt, pour ne pas masquer le visage. */}
+                  <div className="tp-panel">
+                    <div className="space-y-3 p-4 lg:space-y-5 lg:p-9">
+                      <div className="tp-field tp-field-1">
+                        <Label>{c.academic}</Label>
+                        <p
+                          className={`mt-1 text-[11.5px] leading-snug lg:text-sm ${
+                            p.academic.fr === "À compléter"
+                              ? "text-brand/90 underline decoration-dashed underline-offset-2"
+                              : "text-white/85"
+                          }`}
+                        >
+                          {p.academic[locale]}
+                        </p>
+                      </div>
 
-                    <div className="tp-field tp-field-2">
-                      <Label>{c.career}</Label>
-                      <ul className="mt-1 space-y-1">
-                        {p.career[locale].map((line) => (
-                          <li
-                            key={line}
-                            className="border-l border-white/15 pl-3 text-[11.5px] leading-snug text-white/80 md:text-sm md:leading-6"
-                          >
-                            {line}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="tp-field tp-field-3 grid max-w-2xl grid-cols-2 gap-3 md:gap-10">
-                      <div>
-                        <Label>{c.likes}</Label>
-                        <ul className="mt-1 space-y-0.5">
-                          {p.likes[locale].map((l) => (
+                      <div className="tp-field tp-field-2">
+                        <Label>{c.career}</Label>
+                        <ul className="mt-1 space-y-1">
+                          {p.career[locale].map((line) => (
                             <li
-                              key={l}
-                              className="text-[11px] leading-snug text-white/80 md:text-[13px] md:leading-6"
+                              key={line}
+                              className="border-l border-white/15 pl-3 text-[11.5px] leading-snug text-white/80 lg:text-sm lg:leading-6"
                             >
-                              {l}
+                              {line}
                             </li>
                           ))}
                         </ul>
                       </div>
-                      <div>
-                        <Label>{c.dislikes}</Label>
-                        <ul className="mt-1 space-y-0.5">
-                          {p.dislikes[locale].map((d) => (
-                            <li
-                              key={d}
-                              className="text-[11px] leading-snug text-white/55 md:text-[13px] md:leading-6"
-                            >
-                              {d}
-                            </li>
-                          ))}
-                        </ul>
+
+                      <div className="tp-field tp-field-3 grid max-w-2xl grid-cols-2 gap-3 lg:gap-10">
+                        <div>
+                          <Label>{c.likes}</Label>
+                          <ul className="mt-1 space-y-0.5">
+                            {p.likes[locale].map((l) => (
+                              <li
+                                key={l}
+                                className="text-[11px] leading-snug text-white/80 lg:text-[13px] lg:leading-6"
+                              >
+                                {l}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <Label>{c.dislikes}</Label>
+                          <ul className="mt-1 space-y-0.5">
+                            {p.dislikes[locale].map((d) => (
+                              <li
+                                key={d}
+                                className="text-[11px] leading-snug text-white/55 lg:text-[13px] lg:leading-6"
+                              >
+                                {d}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -428,7 +419,7 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[9.5px] font-semibold uppercase tracking-[0.14em] text-white/40 md:text-[10px]">
+    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
       {children}
     </p>
   );

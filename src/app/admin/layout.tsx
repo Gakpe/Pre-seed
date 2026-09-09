@@ -7,8 +7,8 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="flex items-center justify-between border-b border-neutral-200 px-6 py-4 dark:border-neutral-800">
-        <div className="flex items-center gap-4">
+      <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-neutral-200 px-4 py-3 sm:px-6 sm:py-4 dark:border-neutral-800">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <Link href="/" aria-label="Minah">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/brand/logo.png" alt="Minah" className="h-5 w-auto" />
@@ -29,7 +29,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
             Accès admin
           </Link>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 sm:gap-x-4">
           <DataRoomSwitch status={dataRoomStatus} />
           {/* Démo : ouvre un espace investisseur factice pour les calls. */}
           <Link

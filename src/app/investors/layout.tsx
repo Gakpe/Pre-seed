@@ -79,8 +79,8 @@ export default async function InvestorsLayout({
         />
       )}
 
-      <header className="z-10 flex items-center justify-between gap-4 border-b border-foreground/10 px-6 py-4">
-        <div className="flex min-w-0 items-center gap-3">
+      <header className="z-10 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-foreground/10 px-4 py-3 sm:px-6 sm:py-4">
+        <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
           <Link href="/" aria-label="Minah" className="shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/brand/logo.png" alt="Minah" className="h-5 w-auto" />
@@ -95,7 +95,7 @@ export default async function InvestorsLayout({
             </>
           )}
         </div>
-        <div className="flex shrink-0 items-center gap-4">
+        <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 sm:gap-x-4">
           <LanguageSwitch locale={locale} />
           {demo ? (
             <DemoBar level2={demo.level2} />
@@ -127,11 +127,11 @@ export default async function InvestorsLayout({
       </div>
 
       {/* Badge confidentiel, bas gauche */}
-      <div className={`group fixed bottom-5 left-5 z-40 ${gated ? "hidden" : ""}`}>
-        <span className="pointer-events-none absolute bottom-full left-0 mb-2 w-72 rounded-md bg-foreground px-3 py-2 text-xs leading-5 text-background opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+      <div className={`group fixed bottom-4 left-4 z-40 sm:bottom-5 sm:left-5 ${gated ? "hidden" : ""}`}>
+        <span className="pointer-events-none absolute bottom-full left-0 mb-2 w-[min(18rem,calc(100vw-2rem))] rounded-md bg-foreground px-3 py-2 text-xs leading-5 text-background opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
           {t(locale, "layout.confidential.tooltip")}
         </span>
-        <span className="flex cursor-default items-center gap-2 rounded-full border border-marsala/25 bg-white/60 px-3 py-1.5 text-[11px] font-medium tracking-wide text-marsala shadow-sm">
+        <span className="flex cursor-default items-center gap-1.5 rounded-full border border-marsala/25 bg-white/60 px-2.5 py-1 text-[10px] font-medium tracking-wide text-marsala shadow-sm backdrop-blur-sm sm:gap-2 sm:px-3 sm:py-1.5 sm:text-[11px]">
           <span className="h-1.5 w-1.5 rounded-full bg-brand" />
           {t(locale, "layout.confidential")}
         </span>

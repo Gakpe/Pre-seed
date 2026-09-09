@@ -216,7 +216,7 @@ export function Fundraise({ locale }: { locale: Locale }) {
           <ul className="mt-4 divide-y divide-foreground/10">
             {PARTICIPANTS.map((p) => (
               <li key={p.id} className="py-3 first:pt-0 last:pb-0">
-                <div className="flex items-start gap-4">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-4">
                   <div className="min-w-0 flex-1">
                     {/* Le nom reste masqué : flouté et retiré de l'arbre
                         d'accessibilité, pour qu'il ne soit pas lu à voix haute
@@ -237,7 +237,7 @@ export function Fundraise({ locale }: { locale: Locale }) {
                     )}
                   </div>
 
-                  <div className="flex shrink-0 flex-col items-end gap-1.5">
+                  <div className="flex shrink-0 items-center gap-3 sm:flex-col sm:items-end sm:gap-1.5">
                     <span className="text-sm font-medium tabular-nums text-neutral-700">
                       {p.amount[locale]}
                     </span>

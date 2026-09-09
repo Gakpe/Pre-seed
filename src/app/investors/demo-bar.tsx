@@ -27,7 +27,7 @@ export function DemoBar({ level2 }: { level2: boolean }) {
   }
 
   return (
-    <div className="flex items-center gap-3 text-xs">
+    <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-xs">
       <span className="rounded-full border border-brand/40 bg-brand/10 px-2.5 py-1 font-medium text-marsala">
         Démo
       </span>

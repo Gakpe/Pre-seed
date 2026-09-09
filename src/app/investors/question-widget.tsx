@@ -59,7 +59,7 @@ export function QuestionWidget({
 
   return (
     <>
-      <div className="group fixed right-5 bottom-5 z-40 flex items-center gap-2">
+      <div className="group fixed right-4 bottom-4 z-40 flex items-center gap-2 sm:right-5 sm:bottom-5">
         <span className="pointer-events-none translate-x-1 rounded-md bg-foreground px-2.5 py-1 text-xs text-background opacity-0 shadow transition-all group-hover:translate-x-0 group-hover:opacity-100">
           {t(locale, "widget.hover")}
         </span>
@@ -69,7 +69,7 @@ export function QuestionWidget({
           className="rounded-full shadow-md transition-transform hover:scale-105"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/icon.png" alt="" className="h-11 w-11 rounded-full" />
+          <img src="/brand/icon.png" alt="" className="h-9 w-9 rounded-full sm:h-11 sm:w-11" />
         </button>
       </div>
 

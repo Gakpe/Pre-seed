@@ -185,7 +185,7 @@ export function TrackRecord({ locale }: { locale: Locale }) {
 
         <div className="mt-4 grid gap-8 md:grid-cols-[minmax(0,300px)_1fr] md:gap-10">
           {/* Photo dominante : c'est l'argument du volet, pas une illustration. */}
-          <figure className="overflow-hidden rounded-xl bg-[#140d0b] md:sticky md:top-8">
+          <figure className="max-w-[15rem] overflow-hidden rounded-xl bg-[#140d0b] sm:max-w-[18rem] md:max-w-none md:sticky md:top-8">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/brand/team/julien.jpg"

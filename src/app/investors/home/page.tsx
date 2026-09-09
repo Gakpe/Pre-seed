@@ -241,7 +241,7 @@ export default async function InvestorHomePage() {
             </Term>
           </dl>
           <div className="mt-6">
-            <div className="flex items-baseline justify-between text-xs text-neutral-500">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-xs text-neutral-500">
               <MatchingFundTooltip locale={locale}>
                 {deal.engagedLabel}
               </MatchingFundTooltip>
@@ -279,7 +279,7 @@ export default async function InvestorHomePage() {
             <>
               <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-400">
                 {t(locale, "home.dataroom.level2")}
-                <span className="ml-2 rounded-full bg-salvia px-2 py-0.5 text-xs font-normal normal-case tracking-normal text-foreground">
+                <span className="mt-1 inline-block rounded-full bg-salvia px-2 py-0.5 text-xs font-normal normal-case tracking-normal text-foreground sm:mt-0 sm:ml-2">
                   {investor.interest_tranche
                     ? t(locale, "home.dataroom.unlockedInterest", {
                         tranche: investor.interest_tranche,
