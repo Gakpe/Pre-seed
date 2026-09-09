@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -8,10 +9,15 @@ import { docFields, t } from "@/lib/i18n";
 import type { DocumentRow } from "@/lib/types";
 import { CapTableInteractive } from "./captable";
 import { MarketReports } from "./market-reports";
-import { BusinessModelFlow } from "./business-model-flow";
+import { MarketNote } from "./market-note";
+import { CapitalFlow } from "./capital-flow";
+import { BusinessModelBlocks } from "./business-model-blocks";
 import { TeamProfiles } from "./team-profiles";
 import { TrackRecord } from "./track-record";
 import { Fundraise } from "./fundraise";
+import { RiskCascade } from "./risk-cascade";
+import { ResilienceBar } from "./resilience-bar";
+import { RiskClosing } from "./risk-closing";
 
 export default async function DocPage({
   params,
@@ -51,18 +57,21 @@ export default async function DocPage({
   if (docsendUrl) redirect(docsendUrl);
 
   // Les fiches à schéma ou à portraits respirent mal dans la colonne de lecture.
-  // L'équipe va plus large encore (trois portraits verticaux de front), mais on
-  // garde son chapô dans une colonne de lecture normale.
-  const width =
-    doc.slug === "equipe"
-      ? "max-w-6xl"
-      : doc.slug === "business-model" ||
-          doc.slug === "track-record" ||
-          doc.slug === "la-levee"
-        ? "max-w-5xl"
-        : "max-w-2xl";
+  // La cascade de risque a besoin de plus encore : trois colonnes et une
+  // indentation qui se creuse à chaque niveau. L'équipe va plus large encore
+  // (trois portraits verticaux de front).
+  const note = doc.slug === "note-marche";
+  const team = doc.slug === "equipe";
+  const extraWide =
+    doc.slug === "gestion-du-risque" ||
+    doc.slug === "business-model" ||
+    doc.slug === "track-record" ||
+    doc.slug === "la-levee";
+
+  // Ces fiches débordent en largeur, mais leur chapô reste dans une colonne
+  // de lecture normale — sinon le texte court sur toute la page.
   const proseWidth =
-    doc.slug === "equipe" || doc.slug === "track-record" || doc.slug === "la-levee"
+    team || doc.slug === "track-record" || doc.slug === "la-levee"
       ? "max-w-2xl"
       : "";
 
@@ -72,7 +81,17 @@ export default async function DocPage({
   const richOnly = doc.slug === "track-record" || doc.slug === "la-levee";
 
   return (
-    <main className={`mx-auto w-full flex-1 px-6 py-12 ${width}`}>
+    <main
+      className={`mx-auto w-full flex-1 px-6 py-12 ${
+        note
+          ? "max-w-[748px]"
+          : team
+            ? "max-w-6xl"
+            : extraWide
+              ? "max-w-5xl"
+              : "max-w-2xl"
+      }`}
+    >
       <div className={proseWidth}>
         <Link
           href="/investors/home"
@@ -87,11 +106,28 @@ export default async function DocPage({
         {!richOnly && <DocContent text={content ?? ""} />}
       </div>
       {/* Certaines fiches portent un contenu riche en plus de leur texte. */}
-      {doc.slug === "note-marche" && <MarketReports locale={locale} />}
-      {doc.slug === "business-model" && <BusinessModelFlow locale={locale} />}
+      {doc.slug === "note-marche" && (
+        <>
+          <MarketNote />
+          <MarketReports locale={locale} />
+        </>
+      )}
+      {doc.slug === "business-model" && (
+        <>
+          <CapitalFlow />
+          <BusinessModelBlocks />
+        </>
+      )}
       {doc.slug === "equipe" && <TeamProfiles locale={locale} />}
       {doc.slug === "track-record" && <TrackRecord locale={locale} />}
       {doc.slug === "la-levee" && <Fundraise locale={locale} />}
+      {doc.slug === "gestion-du-risque" && (
+        <>
+          <RiskCascade />
+          <ResilienceBar />
+          <RiskClosing />
+        </>
+      )}
       {doc.slug === "cap-table" && (
         <CapTableInteractive title={t(locale, "docs.captable")} />
       )}
@@ -99,26 +135,74 @@ export default async function DocPage({
   );
 }
 
-// Les contenus sont du texte simple, à une convention près : un bloc préfixé
-// par « ## » est un intertitre. Assez pour structurer une note sans imposer
-// un éditeur riche à l'équipe.
+// Les contenus sont du texte, avec un sous-ensemble de Markdown volontairement
+// étroit : intertitre « ## », liste « - », filet « --- », et **gras** en ligne.
+// Assez pour structurer une note d'investissement sans imposer un éditeur riche
+// à l'équipe, et sans jamais injecter de HTML brut.
+function inline(text: string) {
+  return text
+    .split(/(\*\*[^*]+\*\*)/g)
+    .filter(Boolean)
+    .map((part, i) =>
+      part.startsWith("**") && part.endsWith("**") ? (
+        <strong key={i} className="font-semibold text-foreground">
+          {part.slice(2, -2)}
+        </strong>
+      ) : (
+        <Fragment key={i}>{part}</Fragment>
+      )
+    );
+}
+
 function DocContent({ text }: { text: string }) {
   return (
     <div className="mt-6 text-sm leading-7 text-neutral-700 dark:text-neutral-300">
-      {text.split("\n\n").map((block, i) =>
-        block.startsWith("## ") ? (
-          <h2
-            key={i}
-            className="mt-9 mb-1 text-base font-semibold tracking-tight text-foreground"
-          >
-            {block.slice(3)}
-          </h2>
-        ) : (
+      {text.split("\n\n").map((block, i) => {
+        const b = block.trim();
+
+        if (b === "---") {
+          return (
+            <hr
+              key={i}
+              className="mt-10 mb-2 border-0 border-t border-neutral-200 dark:border-neutral-800"
+            />
+          );
+        }
+
+        if (b.startsWith("## ")) {
+          return (
+            <h2
+              key={i}
+              className="mt-9 mb-1 text-base font-semibold tracking-tight text-foreground"
+            >
+              {b.slice(3)}
+            </h2>
+          );
+        }
+
+        if (b.startsWith("- ")) {
+          return (
+            <ul key={i} className="mt-4 space-y-2.5">
+              {b
+                .split("\n")
+                .filter((l) => l.trimStart().startsWith("- "))
+                .map((l) => l.trimStart().slice(2))
+                .map((item) => (
+                  <li key={item} className="flex gap-3">
+                    <span className="mt-3 h-1 w-1 shrink-0 rounded-full bg-brand" />
+                    <span>{inline(item)}</span>
+                  </li>
+                ))}
+            </ul>
+          );
+        }
+
+        return (
           <p key={i} className="mt-4 whitespace-pre-line first:mt-0">
-            {block}
+            {inline(b)}
           </p>
-        )
-      )}
+        );
+      })}
     </div>
   );
 }

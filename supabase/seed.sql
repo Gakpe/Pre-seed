@@ -342,3 +342,164 @@ update public.documents set
   content    = replace(content,    ' sur les deux opérations, sans incident de remboursement.', ' sur les deux opérations.'),
   content_en = replace(content_en, ' across the two operations, with no repayment incident.', ' across the two operations.')
 where slug = 'track-record';
+-- Refonte de la fiche « Pourquoi Minah » (septembre 2026)
+update public.documents set
+  title = 'Pourquoi Minah', title_en = 'Why Minah',
+  content = $doc$**L'Afrique n'a pas un problème de croissance. Elle a un problème d'infrastructure financière.**
+
+---
+
+## Le constat
+
+Le continent concentre la démographie et la croissance des trente prochaines années. Son infrastructure financière, elle, est restée calibrée pour un autre marché.
+
+Nous avons construit Minah depuis les deux côtés de cette fracture : la finance et la sphère publique. Des deux côtés, le même constat s'impose — l'écart n'est pas entre le potentiel économique du continent et sa demande de capital, mais entre cette demande et **la capacité à la structurer** pour qu'elle soit finançable.
+
+Le capital existe. Les projets existent. Ce qui manque, c'est la couche qui les rend lisibles l'un pour l'autre.
+
+## La thèse
+
+**La première génération de fintech africaine a résolu le mouvement de l'argent.** M-Pesa, Wave, Flutterwave, Paystack : faire circuler la valeur, à bas coût, à l'échelle. Un problème d'infrastructure, résolu.
+
+**La deuxième génération résoudra son usage.** Non plus déplacer l'argent, mais bien l'employer : le structurer, le tarifer, l'allouer, le tracer. C'est le passage du paiement à l'investissement.
+
+C'est là que se situe Minah. Nous ne construisons pas un rail de transfert de plus. Nous construisons la couche de structuration financière qui permet au capital international d'atteindre l'économie réelle africaine, avec les standards de traçabilité et de reporting qu'exige un investisseur institutionnel.
+
+## L'opportunité
+
+**Les PME africaines empruntent à ~20 % en moyenne.** Un niveau sans rapport avec le risque réel des meilleurs dossiers — contrats publics sécurisés, revenus récurrents, contreparties solides.
+
+**La théorie des taux d'intérêt décrit ce qui devrait suivre.** Un différentiel de rendement de cette ampleur, à risque comparable, appelle un afflux de capitaux vers le marché le mieux rémunéré, jusqu'à ce que la concurrence entre prêteurs comprime l'écart. C'est le mécanisme de convergence qui a joué sur tous les marchés émergents avant celui-ci.
+
+**Si ce mouvement ne s'est pas encore produit, c'est à cause de l'asymétrie d'information.** Le prêteur international ne dispose pas des données qui lui permettraient de distinguer un bon dossier d'un mauvais : historiques fragmentaires, absence de reporting standardisé, aucun suivi possible à distance. Face à cette asymétrie, il ne tarife pas le risque — il l'évite, ou le surtarife massivement. Le 20 % n'est donc pas le prix du risque réel : c'est le prix de l'opacité.
+
+**Réduire cette asymétrie est notre métier.** Structuration contractuelle, scoring propriétaire nourri par les données locales (mobile money, historiques de paiement, contreparties publiques), suivi continu et traçabilité on-chain : nous produisons l'information qui manquait, et nous l'assortissons d'une **gestion du risque de niveau institutionnel** — sélection, garanties, assurance-crédit, réserve de liquidité, diversification par pays et par secteur.
+
+Notre positionnement en découle directement : **nous connectons des actifs africains correctement structurés et correctement notés aux marchés de capitaux, y compris on-chain**, où la traçabilité est native et la fiabilité vérifiable en continu.
+
+La convergence des taux aura lieu. La question n'est pas de savoir si, mais qui aura construit l'infrastructure d'information qui la déclenche — et capté la valeur de l'écart pendant qu'il se referme.
+
+## La conviction technologique
+
+On ne construit pas l'infrastructure financière de 2035 avec les outils de 2010.
+
+Deux choix technologiques structurent notre architecture :
+
+- **La blockchain**, pour la traçabilité et la fiabilité de la transaction. Un investisseur doit pouvoir vérifier, et non croire.
+- **L'IA**, intégrée à nos process d'analyse, de scoring et d'exécution. C'est notre principal levier contre l'asymétrie d'information : elle nous permet de collecter, structurer et actualiser en continu la donnée d'un marché fragmenté, avec une équipe resserrée et sans dégrader la qualité de l'analyse.
+
+Ce n'est pas une posture d'innovation. C'est ce qui rend l'économie de notre modèle possible : un coût marginal d'analyse et de structuration suffisamment bas pour adresser un marché que la finance traditionnelle juge trop coûteux à servir.
+
+---
+
+## Pourquoi le nom Minah
+
+Le mina est une langue éwé, parlée dans le sud du Togo.
+
+**Parler mina, c'est faire affaire.** Notre métier consiste à permettre à des investisseurs qui ne parlent pas mina de faire des affaires avec ceux qui le parlent — de traduire des opportunités locales en actifs investissables depuis Paris, Londres ou Dubaï.
+
+**Une langue, plusieurs frontières.** Le mina est parlé au Togo, au Bénin et au Ghana. Il dessine une géographie de peuples et d'échanges, pas de frontières héritées. C'est aussi ainsi que nous regardons le marché.
+
+**Et « mina » veut dire donner.** Apporter, transmettre, mettre à disposition. Difficile de trouver un mot plus juste pour une société dont le métier est d'acheminer du capital là où il crée de la valeur.$doc$,
+  content_en = $doc$**Africa does not have a growth problem. It has a financial infrastructure problem.**
+
+---
+
+## The observation
+
+The continent holds the demographics and the growth of the next thirty years. Its financial infrastructure, meanwhile, is still calibrated for a different market.
+
+We built Minah from both sides of that divide: finance and the public sphere. From both sides the same conclusion imposes itself — the gap is not between the continent's economic potential and its demand for capital, but between that demand and **the ability to structure it** so that it becomes financeable.
+
+The capital exists. The projects exist. What is missing is the layer that makes them legible to one another.
+
+## The thesis
+
+**African fintech's first generation solved the movement of money.** M-Pesa, Wave, Flutterwave, Paystack: moving value, at low cost, at scale. An infrastructure problem, solved.
+
+**The second generation will solve its use.** No longer moving money, but putting it to work: structuring it, pricing it, allocating it, tracing it. This is the shift from payments to investment.
+
+That is where Minah sits. We are not building one more transfer rail. We are building the financial structuring layer that lets international capital reach the African real economy, with the traceability and reporting standards an institutional investor requires.
+
+## The opportunity
+
+**African SMEs borrow at around 20% on average.** A level unrelated to the actual risk of the best files — secured public contracts, recurring revenue, solid counterparties.
+
+**Interest rate theory describes what should follow.** A yield differential of that magnitude, at comparable risk, calls capital toward the better-paying market until competition among lenders compresses the spread. It is the convergence mechanism that has played out in every emerging market before this one.
+
+**If that movement has not happened yet, it is because of information asymmetry.** The international lender does not have the data that would let it tell a good file from a bad one: fragmentary track records, no standardised reporting, no way to monitor from a distance. Faced with that asymmetry it does not price risk — it avoids it, or prices it far above. The 20% is therefore not the price of the actual risk: it is the price of opacity.
+
+**Reducing that asymmetry is our business.** Contractual structuring, proprietary scoring fed by local data (mobile money, payment histories, public counterparties), continuous monitoring and on-chain traceability: we produce the information that was missing, and we pair it with **institutional-grade risk management** — selection, guarantees, credit insurance, liquidity reserve, diversification by country and by sector.
+
+Our positioning follows directly: **we connect properly structured and properly rated African assets to the capital markets, including on-chain**, where traceability is native and reliability continuously verifiable.
+
+Rate convergence will happen. The question is not whether, but who will have built the information infrastructure that triggers it — and captured the value of the spread while it closes.
+
+## The technology conviction
+
+You do not build the financial infrastructure of 2035 with the tools of 2010.
+
+Two technology choices structure our architecture:
+
+- **Blockchain**, for the traceability and reliability of the transaction. An investor must be able to verify, not to believe.
+- **AI**, embedded in our analysis, scoring and execution processes. It is our main lever against information asymmetry: it lets us collect, structure and continuously refresh the data of a fragmented market, with a small team and without degrading the quality of the analysis.
+
+This is not an innovation posture. It is what makes the economics of our model possible: a marginal cost of analysis and structuring low enough to address a market that traditional finance considers too expensive to serve.
+
+---
+
+## Why the name Minah
+
+Mina is an Ewe language, spoken in southern Togo.
+
+**To speak Mina is to do business.** Our business is to let investors who do not speak Mina do business with those who do — to turn local opportunities into assets investable from Paris, London or Dubai.
+
+**One language, several borders.** Mina is spoken in Togo, Benin and Ghana. It traces a geography of peoples and exchange, not of inherited borders. That is also how we read the market.
+
+**And “mina” means to give.** To bring, to pass on, to make available. Hard to find a truer word for a company whose business is to channel capital where it creates value.$doc$
+where slug = 'pourquoi-minah';
+-- Nouvelle fiche « gestion du risque » : la cascade de protections, niveau par
+-- niveau. Le corps de la page (cascade, bandeau de résistance, clôture) est
+-- rendu par des composants ; seul le chapô vit ici.
+insert into public.documents
+  (slug, title, title_en, category, category_en, access_level, sort_order,
+   visible_to_pending, docsend_url, content)
+values (
+  'gestion-du-risque',
+  'Une architecture de risque, niveau par niveau',
+  'A risk architecture, level by level',
+  'Gestion des risques', 'Risk management',
+  2, 74, false, null,
+  $doc$Notre métier n'est pas de prêter. C'est de concevoir des stratégies de dette senior dont l'architecture de risque est calibrée sur les réalités du terrain : la nature de la contrepartie, le droit applicable, la devise, et la façon dont l'argent circule réellement dans la région.
+
+Chaque stratégie a donc sa propre cascade de protections. Le principe, lui, ne change pas : une perte doit franchir plusieurs barrières avant d'atteindre le coupon de nos souscripteurs.
+
+Ci-dessous, la cascade de la stratégie Kupanda, où la contrepartie finale est un État.$doc$
+)
+on conflict (slug) do update set
+  title = excluded.title, title_en = excluded.title_en,
+  category = excluded.category, category_en = excluded.category_en,
+  access_level = excluded.access_level, sort_order = excluded.sort_order,
+  docsend_url = excluded.docsend_url, content = excluded.content;
+-- Chapô de la fiche « business model ». Le corps (schéma de flux, panneau de
+-- détail, blocs risque et traçabilité) est rendu par des composants.
+update public.documents set
+  content = $doc$Le modèle tient en une phrase : nous transformons un contrat public africain déjà attribué en un instrument de dette souscriptible depuis l'Europe, avec un coupon fixe et une maturité connue à l'entrée.
+
+Le schéma ci-dessous suit l'argent de bout en bout — des souscripteurs jusqu'à la PME qui exécute le contrat, puis le chemin par lequel les coupons et le principal remontent. Il montre surtout les deux seuls moments où nous nous rémunérons : à la souscription, sur le flux entrant, et sur la performance, prélevée sur le flux de retour. Survolez un nœud ou une pastille pour le détail.$doc$,
+  content_en = $doc$The model fits in one sentence: we turn an already-awarded African public contract into a debt instrument subscribable from Europe, with a fixed coupon and a maturity known upfront.
+
+The diagram below follows the money end to end — from subscribers down to the SME delivering the contract, then back up the path coupons and principal take. Above all it shows the only two moments at which we are paid: at subscription, on the inbound flow, and on performance, taken from the return flow. Hover a node or a pill for detail.$doc$
+where slug = 'business-model';
+-- La note de marché devient un objet de lecture : chapô en base, raisonnement
+-- en trois temps et visualisations rendus par des composants.
+update public.documents set
+  title = 'Pourquoi la dette, et pourquoi maintenant',
+  title_en = 'Why debt, and why now',
+  content = $doc$L'Afrique est le continent où le capital est le plus rare et le plus cher. C'est aussi celui où l'on parle le plus d'equity.
+
+Cette note explique pourquoi nous pensons que l'opportunité des dix prochaines années est ailleurs — dans la dette privée structurée — et pourquoi la fenêtre est ouverte maintenant.$doc$,
+  content_en = $doc$Africa is the continent where capital is scarcest and most expensive. It is also the one where equity is discussed the most.
+
+This note sets out why we believe the opportunity of the next ten years lies elsewhere — in structured private debt — and why the window is open now.$doc$
+where slug = 'note-marche';

@@ -40,8 +40,6 @@ export function Splash() {
     }
     if (!playRef.current) return;
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- la décision
-    // dépend de sessionStorage et de l'URL, indisponibles au rendu serveur.
     setShow(true);
     setPhase("fadein");
     const timers = [

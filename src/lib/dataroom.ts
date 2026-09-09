@@ -16,11 +16,17 @@ export const DATAROOM_STATUSES: DataRoomStatus[] = [
 ];
 
 // Le développement local et la production partagent la même base Supabase.
-// Sans cette séparation, basculer la data room en local pour vérifier un écran
-// la fermerait aussi pour les vrais investisseurs — c'est arrivé deux fois.
-// `next dev` tourne en NODE_ENV=development, Vercel en production.
+// Sans séparation, basculer la data room en local pour vérifier un écran la
+// fermerait aussi pour les vrais investisseurs.
+//
+// Le discriminant n'est pas NODE_ENV : `next build` le passe à "production"
+// en local, si bien qu'une instance locale pouvait encore écrire sur la clé
+// de production — c'est ce qui a fermé la data room le 8 septembre. VERCEL_ENV
+// n'est renseigné que par Vercel, et vaut "production" pour le seul
+// déploiement de production : les prévisualisations et le local retombent
+// donc sur la clé de développement.
 const SETTING_KEY =
-  process.env.NODE_ENV === "production"
+  process.env.VERCEL_ENV === "production"
     ? "dataroom_status"
     : "dataroom_status_dev";
 

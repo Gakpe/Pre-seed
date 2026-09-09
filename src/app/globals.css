@@ -12,6 +12,37 @@
   --marsala: #61100d;
   --chalk: #f4f8f4;
   --salvia: #d0e0d1;
+
+  /* Architecture de risque (fiche « gestion du risque ») */
+  --risk-ink: #2b1a16;
+  --risk-critical: #f26522;
+  --risk-soft: #ffe6d5;
+  --risk-surface: #fafaf8;
+  --risk-border: #e8e2d8;
+  --risk-rule: #2f4f2f;
+  --risk-ok: #1baf7a;
+
+  /* Schéma de flux de capitaux (fiche « business model ») */
+  --bm-surface: #ffffff;
+  --bm-surface-2: #f3f1eb;
+  --bm-border: #e4dfd5;
+  --bm-border-strong: #d3ccbe;
+  --bm-ink: #1b1917;
+  --bm-muted: #7a736a;
+  --bm-minah: #5c1512;
+  --bm-accent: #dd5f1b;
+  --bm-accent-soft: #f6d9c3;
+
+  /* Note de marché — registre « note de recherche » */
+  --note-ink: #1a1613;
+  --note-muted: #7c7368;
+  --note-accent: #d2571a;
+  --note-border: #e2dcd0;
+  --note-border-strong: #cfc6b5;
+  --note-dark-bg: #1c1611;
+  --note-dark-panel: #261e17;
+  --note-dark-ink: #f4efe6;
+  --note-dark-muted: #a0958a;
 }
 
 @theme inline {
@@ -21,8 +52,34 @@
   --color-marsala: var(--marsala);
   --color-chalk: var(--chalk);
   --color-salvia: var(--salvia);
+  --color-risk-ink: var(--risk-ink);
+  --color-risk-critical: var(--risk-critical);
+  --color-risk-soft: var(--risk-soft);
+  --color-risk-surface: var(--risk-surface);
+  --color-risk-border: var(--risk-border);
+  --color-risk-rule: var(--risk-rule);
+  --color-risk-ok: var(--risk-ok);
+  --color-bm-surface: var(--bm-surface);
+  --color-bm-surface-2: var(--bm-surface-2);
+  --color-bm-border: var(--bm-border);
+  --color-bm-border-strong: var(--bm-border-strong);
+  --color-bm-ink: var(--bm-ink);
+  --color-bm-muted: var(--bm-muted);
+  --color-bm-minah: var(--bm-minah);
+  --color-bm-accent: var(--bm-accent);
+  --color-bm-accent-soft: var(--bm-accent-soft);
+  --color-note-ink: var(--note-ink);
+  --color-note-muted: var(--note-muted);
+  --color-note-accent: var(--note-accent);
+  --color-note-border: var(--note-border);
+  --color-note-border-strong: var(--note-border-strong);
+  --color-note-dark-bg: var(--note-dark-bg);
+  --color-note-dark-panel: var(--note-dark-panel);
+  --color-note-dark-ink: var(--note-dark-ink);
+  --color-note-dark-muted: var(--note-dark-muted);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-source-serif);
 }
 
 body {
@@ -316,5 +373,69 @@ body {
   /* Halo statique : il apparaît, il ne monte pas en fondu. */
   .halo-hover::before {
     transition: none;
+  }
+}
+
+
+/* --- Architecture de risque : descente du jeton et remplissage de la barre --- */
+
+@keyframes resilience-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.resilience-fill {
+  transform-origin: left;
+  animation: resilience-fill 0.6s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resilience-fill {
+    animation: none;
+  }
+}
+
+/* --- Architecture de risque : descente du jeton le long de la cascade --- */
+
+@keyframes token-drop {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(var(--token-x), var(--token-y));
+  }
+}
+
+.token-drop {
+  animation: token-drop 0.9s ease-in-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .token-drop {
+    animation: none;
+    transform: translate(var(--token-x), var(--token-y));
+  }
+}
+
+/* --- Schéma de flux : le petit flux qui passe le long des chemins --- */
+
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+.flow-dash {
+  stroke-dasharray: 5 7;
+  animation: flow-dash 1.1s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-dash {
+    animation: none;
   }
 }
