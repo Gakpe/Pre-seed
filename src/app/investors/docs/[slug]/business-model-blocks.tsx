@@ -225,6 +225,51 @@ export function BusinessModelBlocks() {
           produits sous-jacents.
         </p>
 
+        {/* La rotation est le ressort du modèle : sans elle, l'écart entre le
+            coupon servi et le rendement capté n'a pas d'explication. */}
+        <div className="mt-6 rounded-lg border border-bm-border bg-bm-surface p-5">
+          <h3 className="text-sm font-semibold tracking-tight">
+            La rotation du capital
+          </h3>
+          <p className="mt-2 text-sm leading-[1.7] text-neutral-700">
+            Un souscripteur s&apos;expose sur douze mois. Sur cette même
+            période, le capital sous-jacent tourne trois à quatre fois, sur des
+            opérations courtes rémunérées à des taux de l&apos;ordre de 20 %.
+            C&apos;est cet écart entre la durée d&apos;exposition de
+            l&apos;investisseur et la vitesse de rotation du capital qui
+            alimente la surperformance, et donc notre rémunération.
+          </p>
+
+          <ul className="mt-5 grid gap-px overflow-hidden rounded-lg border border-bm-border bg-bm-border sm:grid-cols-3">
+            <li className="bg-bm-surface p-4">
+              <p className="text-2xl font-bold tracking-tight tabular-nums text-bm-ink">
+                100 €
+              </p>
+              <p className="mt-1 text-xs text-neutral-600">de volume déployé</p>
+            </li>
+            <li className="bg-bm-surface p-4">
+              <p className="text-2xl font-bold tracking-tight tabular-nums text-bm-accent">
+                ≈ 50 €
+              </p>
+              <p className="mt-1 text-xs text-neutral-600">
+                de chiffre d&apos;affaires
+              </p>
+            </li>
+            <li className="bg-bm-surface p-4">
+              <p className="text-2xl font-bold tracking-tight tabular-nums text-bm-ink">
+                25 %
+              </p>
+              <p className="mt-1 text-xs text-neutral-600">d&apos;EBITDA</p>
+            </li>
+          </ul>
+
+          <p className="mt-3 text-[12px] leading-5 text-bm-muted">
+            Ordres de grandeur, sur la base de trois à quatre rotations
+            annuelles. Ce sont des estimations de modèle, pas un historique
+            constaté.
+          </p>
+        </div>
+
         <p className="mt-4 border-t border-bm-border pt-4 text-[13px] leading-[1.6] text-bm-muted">
           Le détail complet de la mécanique, hypothèses et cas chiffrés compris,
           est disponible au niveau 2 de la data room.

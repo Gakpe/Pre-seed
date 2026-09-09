@@ -15,8 +15,7 @@ import { BusinessModelBlocks } from "./business-model-blocks";
 import { TeamProfiles } from "./team-profiles";
 import { TrackRecord } from "./track-record";
 import { Fundraise } from "./fundraise";
-import { GenerationsStrip } from "./generations-strip";
-import { ScrollReveal } from "./scroll-reveal";
+import { WhyMinah } from "./why-minah";
 import { RiskCascade } from "./risk-cascade";
 import { ResilienceBar } from "./resilience-bar";
 import { RiskClosing } from "./risk-closing";
@@ -68,19 +67,26 @@ export default async function DocPage({
     doc.slug === "gestion-du-risque" ||
     doc.slug === "business-model" ||
     doc.slug === "track-record" ||
-    doc.slug === "la-levee";
+    doc.slug === "la-levee" ||
+    doc.slug === "pourquoi-minah";
 
   // Ces fiches débordent en largeur, mais leur chapô reste dans une colonne
   // de lecture normale, sinon le texte court sur toute la page.
   const proseWidth =
-    team || doc.slug === "track-record" || doc.slug === "la-levee"
+    team ||
+    doc.slug === "track-record" ||
+    doc.slug === "la-levee" ||
+    doc.slug === "pourquoi-minah"
       ? "max-w-2xl"
       : "";
 
   // Deux fiches sont entièrement portées par leur composant : le texte de la
   // base ferait doublon avec, et par endroits contredirait, les chiffres
   // qu'elles détaillent. Il reste en base, simplement plus affiché ici.
-  const richOnly = doc.slug === "track-record" || doc.slug === "la-levee";
+  const richOnly =
+    doc.slug === "track-record" ||
+    doc.slug === "la-levee" ||
+    doc.slug === "pourquoi-minah";
 
   return (
     <main
@@ -105,12 +111,10 @@ export default async function DocPage({
           {category}
         </p>
         <h1 className="mt-1 text-2xl font-semibold tracking-tight">{title}</h1>
-        {!richOnly && (
-          <DocContent text={content ?? ""} reveal={doc.slug === "pourquoi-minah"} />
-        )}
+        {!richOnly && <DocContent text={content ?? ""} />}
       </div>
       {/* Certaines fiches portent un contenu riche en plus de leur texte. */}
-      {doc.slug === "pourquoi-minah" && <GenerationsStrip />}
+      {doc.slug === "pourquoi-minah" && <WhyMinah locale={locale} />}
       {doc.slug === "note-marche" && (
         <>
           <MarketNote />
@@ -159,52 +163,34 @@ function inline(text: string) {
     );
 }
 
-function DocContent({
-  text,
-  reveal = false,
-}: {
-  text: string;
-  /** Fiches à traitement animé : chaque bloc entre par la droite au scroll. */
-  reveal?: boolean;
-}) {
-  const wrap = (node: React.ReactNode, key: number) =>
-    reveal ? (
-      <ScrollReveal key={key} delay={(key % 3) * 60}>
-        {node}
-      </ScrollReveal>
-    ) : (
-      node
-    );
-
+function DocContent({ text }: { text: string }) {
   return (
     <div className="mt-6 text-sm leading-7 text-neutral-700 dark:text-neutral-300">
       {text.split("\n\n").map((block, i) => {
         const b = block.trim();
 
         if (b === "---") {
-          return wrap(
+          return (
             <hr
               key={i}
               className="mt-10 mb-2 border-0 border-t border-neutral-200 dark:border-neutral-800"
-            />,
-            i
+            />
           );
         }
 
         if (b.startsWith("## ")) {
-          return wrap(
+          return (
             <h2
               key={i}
               className="mt-9 mb-1 text-base font-semibold tracking-tight text-foreground"
             >
               {b.slice(3)}
-            </h2>,
-            i
+            </h2>
           );
         }
 
         if (b.startsWith("- ")) {
-          return wrap(
+          return (
             <ul key={i} className="mt-4 space-y-2.5">
               {b
                 .split("\n")
@@ -216,19 +202,17 @@ function DocContent({
                     <span>{inline(item)}</span>
                   </li>
                 ))}
-            </ul>,
-            i
+            </ul>
           );
         }
 
-        return wrap(
+        return (
           <p
             key={i}
             className={`whitespace-pre-line ${i === 0 ? "" : "mt-4"}`}
           >
             {inline(b)}
-          </p>,
-          i
+          </p>
         );
       })}
     </div>
