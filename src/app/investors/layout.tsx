@@ -59,7 +59,7 @@ export default async function InvestorsLayout({
   }
 
   return (
-    <div className="relative flex flex-1 flex-col">
+    <div className="relative flex flex-1 flex-col overflow-x-clip">
       {/* Aucune visite tracée pendant une démo. */}
       {investor && !demo && !gated && <TrackingProvider investor={investor} />}
       {investor && !gated && <Splash />}
