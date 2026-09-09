@@ -60,7 +60,9 @@ const dict = {
     "home.pitch.title": "La plateforme de dette privée pour l'Afrique.",
     "home.pitch.body":
       "La première génération de la fintech africaine a gagné les paiements. La prochaine gagnera l'investissement. Minah en construit les rails — dette senior sécurisée, coupons fixes, infrastructure on-chain — et ouvre son pre-seed.",
-    "home.photo.placeholder": "Photo équipe — à venir",
+    "home.photo.alt":
+      "L'équipe fondatrice de Minah — Julien Gakpé, Coralie Lolliot et Hervé Gakpé.",
+    "home.photo.caption": "Julien Gakpé · Coralie Lolliot · Hervé Gakpé",
     "home.deal.title": "La levée en cours",
     "home.deal.target": "Objectif",
     "home.deal.minTicket": "Ticket minimum",
@@ -175,7 +177,9 @@ const dict = {
     "home.pitch.title": "The private debt platform for Africa.",
     "home.pitch.body":
       "African fintech's first generation won payments. The next one wins investment. Minah is building its rails — senior secured debt, fixed coupons, on-chain infrastructure — and is opening its pre-seed round.",
-    "home.photo.placeholder": "Team photo — coming soon",
+    "home.photo.alt":
+      "Minah's founding team — Julien Gakpé, Coralie Lolliot and Hervé Gakpé.",
+    "home.photo.caption": "Julien Gakpé · Coralie Lolliot · Hervé Gakpé",
     "home.deal.title": "The current round",
     "home.deal.target": "Target",
     "home.deal.minTicket": "Minimum ticket",

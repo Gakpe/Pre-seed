@@ -1,108 +1,236 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 
-// Fiche équipe : trois portraits longs. Les monogrammes servent de repli tant
-// qu'il n'y a pas de photos — déposer public/brand/team/<id>.jpg et renseigner
-// `photo` ci-dessous suffit à les remplacer.
-type Profile = {
+// Fiche équipe : trois portraits verticaux qui se révèlent au survol.
+//
+// Chaque carte superpose deux images issues de deux prises de vue :
+//  - `rest`  : découpe de la photo d'équipe (public/brand/team.jpg) — les trois
+//              découpes partagent distance, lumière et fond noir, c'est ce qui
+//              fait tenir l'effet comme un système et pas comme trois bricolages ;
+//  - `photo` : le portrait studio individuel, recadré sur la même géométrie
+//              (même hauteur de visage, même ligne des yeux à 25 % du cadre).
+// Repères de recadrage et coordonnées exactes : docs/photos-equipe.md. Un écart
+// de quelques pour cent sur la ligne des yeux se voit : le visage saute au lieu
+// de se résoudre.
+type Bilingual = { fr: string; en: string };
+type BilingualList = { fr: string[]; en: string[] };
+
+type Person = {
   id: string;
   name: string;
-  initials: string;
-  photo?: string;
-  role: { fr: string; en: string };
-  tagline: { fr: string; en: string };
-  story: { fr: string[]; en: string[] };
-  owns: { fr: string[]; en: string[] };
+  rest: string;
+  photo: string;
+  role: Bilingual;
+  tagline: Bilingual;
+  academic: Bilingual;
+  career: BilingualList;
+  likes: BilingualList;
+  dislikes: BilingualList;
 };
 
-const PROFILES: Profile[] = [
-  {
-    id: "coralie-lolliot",
-    name: "Coralie Lolliot",
-    initials: "CL",
-    role: { fr: "Co-fondatrice — Ecosystems & Partnerships", en: "Co-founder — Ecosystems & Partnerships" },
-    tagline: {
-      fr: "Celle par qui le capital arrive.",
-      en: "The one the capital comes through.",
-    },
-    story: {
-      fr: [
-        "Dans un fonds de dette, la difficulté n'est jamais de trouver des dossiers : c'est de trouver de l'argent qui comprend ce qu'il finance. Coralie tient cette moitié-là du problème.",
-        "Son terrain : les network builders, les brokers, les banquiers privés et les asset managers — c'est-à-dire les gens qui décident, chez leurs clients, si une classe d'actifs mérite qu'on s'y arrête. Ce réseau ne se constitue pas au moment où l'on lève ; il se construit en amont, relation par relation, et c'est ce qui explique qu'un pre-seed sur un actif aussi peu couvert que la dette privée africaine soit déjà engagé à plus de 700 K€.",
-        "Le rôle couvre aussi l'écosystème au sens large : partenaires bancaires, structures d'accompagnement, interlocuteurs institutionnels. Autrement dit, tout ce qui transforme une thèse d'investissement en canal de distribution durable.",
-      ],
-      en: [
-        "In a debt fund the hard part is never finding deals — it is finding money that understands what it is funding. Coralie owns that half of the problem.",
-        "The ground covered: network builders, brokers, private bankers and asset managers — the people who decide, on behalf of their clients, whether an asset class is worth a second look. That network is not assembled when the raise opens; it is built beforehand, relationship by relationship, which is why a pre-seed on an asset as thinly covered as African private debt is already over €700K committed.",
-        "The remit also spans the wider ecosystem: banking partners, support structures, institutional counterparts — everything that turns an investment thesis into a durable distribution channel.",
-      ],
-    },
-    owns: {
-      fr: ["Relation investisseurs et capital-in", "Réseau prescripteurs et distribution", "Partenariats écosystème"],
-      en: ["Investor relations and capital-in", "Prescriber network and distribution", "Ecosystem partnerships"],
-    },
-  },
-  {
-    id: "herve-gakpe",
-    name: "Hervé Gakpe",
-    initials: "HG",
-    role: { fr: "Co-fondateur — Directeur financier", en: "Co-founder — CFO" },
-    tagline: {
-      fr: "Trente bilans de PME avant celui-ci.",
-      en: "Thirty SME balance sheets before this one.",
-    },
-    story: {
-      fr: [
-        "Hervé commence sa carrière au Crédit Agricole, en financement de projets. C'est exactement la discipline dont vit Minah : regarder un contrat, un échéancier et un ensemble de sûretés, et dire si l'argent reviendra — et quand.",
-        "Il devient ensuite directeur financier à temps partiel pour plus de trente startups et PME françaises. Un DAF externalisé voit ce qu'un DAF interne ne voit jamais : trente façons de se tromper sur sa trésorerie, trente jeux d'hypothèses qui tiennent ou qui cassent. Cette accumulation est difficile à répliquer, et elle explique la prudence du modèle — coupons fixes, maturités courtes, protections empilées plutôt que rendement maximal affiché.",
-        "Formé à l'ESSEC et passé par SMASH, il pilote aujourd'hui la finance de Minah et le reporting investisseurs : la cap table, les appels de fonds, les échéanciers, et la discipline de ce que l'on promet par écrit à ceux qui souscrivent.",
-      ],
-      en: [
-        "Hervé started out at Crédit Agricole in project finance — precisely the discipline Minah lives on: look at a contract, a repayment schedule and a set of securities, and say whether the money comes back, and when.",
-        "He then spent years as a part-time CFO for more than thirty French startups and SMEs. An outsourced CFO sees what an in-house one never does: thirty ways to be wrong about your cash position, thirty sets of assumptions that hold or break. That accumulation is hard to replicate, and it explains the caution built into the model — fixed coupons, short maturities, stacked protections rather than a headline yield.",
-        "ESSEC-trained and formerly at SMASH, he now runs Minah's finance and investor reporting: the cap table, capital calls, repayment schedules, and the discipline of what gets promised in writing to those who subscribe.",
-      ],
-    },
-    owns: {
-      fr: ["Finance, trésorerie et cap table", "Reporting investisseurs et échéanciers", "Modélisation des stratégies"],
-      en: ["Finance, treasury and cap table", "Investor reporting and schedules", "Strategy modelling"],
-    },
-  },
+// ⚠️ À VALIDER PAR LES INTÉRESSÉS avant mise en ligne : les « aime / n'aime pas »
+// sont une proposition de rédaction, tenue dans un registre professionnel et
+// dérivée des bios déjà validées. Le parcours de Coralie et sa formation
+// restent à compléter (marqués TODO ci-dessous).
+const PEOPLE: Person[] = [
   {
     id: "julien-gakpe",
-    name: "Julien Gakpe",
-    initials: "JG",
-    role: { fr: "Co-fondateur — Directeur général", en: "Co-founder — CEO" },
+    name: "Julien Gakpé",
+    rest: "/brand/team/julien-rest.jpg",
+    photo: "/brand/team/julien.jpg",
+    role: {
+      fr: "Co-fondateur — Directeur général",
+      en: "Co-founder — CEO",
+    },
     tagline: {
       fr: "Le financement public, vu de l'intérieur.",
       en: "Public financing, seen from the inside.",
     },
-    story: {
+    academic: {
+      fr: "École Polytechnique (X)",
+      en: "École Polytechnique (X)",
+    },
+    career: {
       fr: [
-        "Polytechnicien, Julien a exercé chez Bpifrance et chez Avolta. Bpifrance, c'est l'école du financement d'entreprise à grande échelle : instruire, structurer, doser le risque, et le faire dans un cadre institutionnel où l'on rend des comptes.",
-        "Cette trajectoire explique le positionnement de Minah. Là où la première génération de la fintech africaine a construit les rails du paiement, Minah s'attaque à ce qui reste ouvert — la façon dont l'argent travaille. Ce n'est pas un pari technologique : c'est une question de structuration, et elle se traite avec les outils du financement de projets, pas avec ceux du capital-risque.",
-        "Julien pilote la structuration et l'origination : le choix des contrats financés, le montage des protections, la relation avec les payeurs publics et les partenaires bancaires. C'est-à-dire l'endroit exact où se décide si un coupon de 20 % est un rendement ou un risque mal évalué.",
+        "Bpifrance — financement d'entreprise",
+        "Avolta — corporate finance",
+        "Minah — direction générale, structuration et origination",
       ],
       en: [
-        "An École Polytechnique graduate, Julien has worked at Bpifrance and at Avolta. Bpifrance is the school of corporate financing at scale: assess, structure, calibrate risk — and do it inside an institutional frame where you answer for it.",
-        "That path explains Minah's positioning. Where African fintech's first generation built the payment rails, Minah takes on what is still open: how money works, not how it moves. This is not a technology bet — it is a structuring question, and it is handled with project-finance tools rather than venture-capital ones.",
-        "Julien runs structuring and origination: which contracts get financed, how the protections are assembled, the relationship with public payers and banking partners. That is precisely where it is decided whether a 20% coupon is a yield or a mispriced risk.",
+        "Bpifrance — corporate financing",
+        "Avolta — corporate finance",
+        "Minah — general management, structuring and origination",
       ],
     },
-    owns: {
-      fr: ["Structuration et origination", "Relation payeurs publics et partenaires bancaires", "Direction générale et stratégie"],
-      en: ["Structuring and origination", "Public payer and banking relationships", "General management and strategy"],
+    likes: {
+      fr: [
+        "Les montages qui tiennent sur une page",
+        "Les échéanciers connus",
+        "Le risque nommé",
+        "Les partenaires qui répondent vite",
+      ],
+      en: [
+        "Structures that fit on one page",
+        "Known repayment schedules",
+        "Risk that is named",
+        "Counterparts who answer fast",
+      ],
+    },
+    dislikes: {
+      fr: [
+        "Le mot « disruption »",
+        "Un rendement sans son risque",
+        "Les due diligences tardives",
+        "L'optimisme non chiffré",
+      ],
+      en: [
+        "The word “disruption”",
+        "A yield without its risk",
+        "Late-stage due diligence",
+        "Optimism with no numbers under it",
+      ],
+    },
+  },
+  {
+    id: "coralie-lolliot",
+    name: "Coralie Lolliot",
+    rest: "/brand/team/coralie-rest.jpg",
+    photo: "/brand/team/coralie.jpg",
+    role: {
+      fr: "Co-fondatrice — Ecosystems & Partnerships",
+      en: "Co-founder — Ecosystems & Partnerships",
+    },
+    tagline: {
+      fr: "Celle par qui le capital arrive.",
+      en: "The one the capital comes through.",
+    },
+    // TODO — formation à renseigner (école / diplôme).
+    academic: {
+      fr: "À compléter",
+      en: "To be completed",
+    },
+    career: {
+      fr: [
+        // TODO — compléter par les employeurs et les dates.
+        "Réseau prescripteurs — brokers, banquiers privés, asset managers",
+        "Partenariats bancaires et institutionnels",
+        "Minah — relation investisseurs, capital-in et écosystème",
+      ],
+      en: [
+        "Prescriber network — brokers, private bankers, asset managers",
+        "Banking and institutional partnerships",
+        "Minah — investor relations, capital-in and ecosystem",
+      ],
+    },
+    likes: {
+      fr: [
+        "Les rendez-vous préparés",
+        "Les réseaux entretenus hors levée",
+        "La question gênante",
+        "Les partenariats qui durent",
+      ],
+      en: [
+        "Meetings that were prepared",
+        "Networks kept warm between raises",
+        "The awkward question",
+        "Partnerships that last",
+      ],
+    },
+    dislikes: {
+      fr: [
+        "Le cold outreach de masse",
+        "Les promesses non écrites",
+        "Les intermédiaires sans engagement",
+        "Les levées annoncées trop tôt",
+      ],
+      en: [
+        "Mass cold outreach",
+        "Promises never written down",
+        "Intermediaries with no stake",
+        "Raises announced too early",
+      ],
+    },
+  },
+  {
+    id: "herve-gakpe",
+    name: "Hervé Gakpé",
+    rest: "/brand/team/herve-rest.jpg",
+    photo: "/brand/team/herve.jpg",
+    role: {
+      fr: "Co-fondateur — Directeur financier",
+      en: "Co-founder — CFO",
+    },
+    tagline: {
+      fr: "Trente bilans de PME avant celui-ci.",
+      en: "Thirty SME balance sheets before this one.",
+    },
+    academic: {
+      fr: "ESSEC Business School",
+      en: "ESSEC Business School",
+    },
+    career: {
+      fr: [
+        "Crédit Agricole — financement de projets",
+        "SMASH, puis DAF externalisé — 30+ startups et PME",
+        "Minah — finance, trésorerie, cap table et reporting",
+      ],
+      en: [
+        "Crédit Agricole — project finance",
+        "SMASH, then outsourced CFO — 30+ startups and SMEs",
+        "Minah — finance, treasury, cap table and reporting",
+      ],
+    },
+    likes: {
+      fr: [
+        "Un prévisionnel qui tient",
+        "Les maturités courtes",
+        "Les sûretés empilées",
+        "Le reporting en avance",
+      ],
+      en: [
+        "A forecast that holds",
+        "Short maturities",
+        "Stacked securities",
+        "Reporting that lands early",
+      ],
+    },
+    dislikes: {
+      fr: [
+        "Les hypothèses écrites en dur",
+        "Le BFR découvert en mars",
+        "Les tableurs opaques",
+        "Le rendement maximal affiché",
+      ],
+      en: [
+        "Hard-coded assumptions",
+        "Working capital found in March",
+        "Opaque spreadsheets",
+        "The maximum headline yield",
+      ],
     },
   },
 ];
 
 const copy = {
   fr: {
-    owns: "Son périmètre",
+    intro: "Survolez un portrait pour ouvrir le profil — au doigt, touchez-le.",
+    academic: "Formation",
+    career: "Parcours",
+    likes: "Aime",
+    dislikes: "N'aime pas",
+    reveal: "Voir le profil de",
     support:
       "Autour des fondateurs, huit profils support — tech, communication, juridique. Bios détaillées sur demande.",
   },
   en: {
-    owns: "Scope",
+    intro: "Hover a portrait to open the profile — on touch, tap it.",
+    academic: "Education",
+    career: "Career",
+    likes: "Likes",
+    dislikes: "Dislikes",
+    reveal: "See the profile of",
     support:
       "Around the founders, eight support profiles — tech, communications, legal. Detailed bios on request.",
   },
@@ -110,80 +238,191 @@ const copy = {
 
 export function TeamProfiles({ locale }: { locale: Locale }) {
   const c = copy[locale];
+  const [openId, setOpenId] = useState<string | null>(null);
+
+  // Survol sur les pointeurs fins, appui ailleurs : sur tactile, un tap émet
+  // aussi un mouseenter et la carte s'ouvrirait puis se refermerait aussitôt.
+  const [canHover, setCanHover] = useState(true);
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const apply = () => setCanHover(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  const close = (id: string) =>
+    setOpenId((current) => (current === id ? null : current));
 
   return (
     <section className="mt-10">
-      <div className="space-y-8">
-        {PROFILES.map((p, i) => (
-          <article
-            key={p.id}
-            className="overflow-hidden rounded-xl border border-foreground/10 bg-white/60"
-          >
-            <div className="flex flex-col gap-6 p-6 sm:flex-row sm:gap-8 sm:p-8">
-              {/* portrait : monogramme tant qu'il n'y a pas de photo */}
-              <div className="shrink-0">
-                {p.photo ? (
-                  // eslint-disable-next-line @next/next/no-img-element
+      <p className="text-sm leading-6 text-neutral-500">{c.intro}</p>
+
+      <ul className="mt-6 grid gap-5 sm:grid-cols-3">
+        {PEOPLE.map((p) => {
+          const open = openId === p.id;
+          return (
+            <li key={p.id}>
+              <button
+                type="button"
+                aria-expanded={open}
+                aria-label={`${c.reveal} ${p.name}`}
+                className={`${open ? "tp-open" : ""} group relative block w-full overflow-hidden rounded-xl bg-[#140d0b] text-left outline-none ring-brand/60 ring-offset-2 ring-offset-background focus-visible:ring-2`}
+                onPointerEnter={
+                  canHover ? () => setOpenId(p.id) : undefined
+                }
+                onPointerLeave={canHover ? () => close(p.id) : undefined}
+                // Au clavier seulement : un tap tactile pose aussi le focus, et
+                // ouvrir ici referait basculer la carte au clic qui suit.
+                onFocus={(e) => {
+                  if (e.currentTarget.matches(":focus-visible")) setOpenId(p.id);
+                }}
+                onBlur={() => close(p.id)}
+                onClick={() => {
+                  if (!canHover) setOpenId((cur) => (cur === p.id ? null : p.id));
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setOpenId(open ? null : p.id);
+                  }
+                }}
+              >
+                <div className="relative aspect-[2/3] w-full">
+                  {/* état de repos : la découpe de la photo d'équipe, floutée */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={p.rest}
+                    alt=""
+                    aria-hidden
+                    className="tp-layer tp-rest"
+                  />
+                  {/* état révélé : le portrait studio, net */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={p.photo}
                     alt={p.name}
-                    className="h-24 w-24 rounded-full object-cover shadow-sm"
+                    decoding="async"
+                    className="tp-layer tp-sharp"
                   />
-                ) : (
+
+                  {/* voiles de lecture */}
                   <div
                     aria-hidden
-                    className={`flex h-24 w-24 items-center justify-center rounded-full text-2xl font-semibold tracking-wide shadow-sm ${
-                      i === 1
-                        ? "bg-marsala text-white"
-                        : i === 2
-                          ? "bg-brand text-white"
-                          : "bg-salvia text-marsala"
-                    }`}
+                    className="tp-scrim absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(to top, rgba(20,13,11,.92) 0%, rgba(20,13,11,.62) 20%, rgba(20,13,11,.12) 44%, rgba(20,13,11,0) 64%)",
+                    }}
+                  />
+                  <div
+                    aria-hidden
+                    className="tp-scrim tp-scrim-open absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(to top, rgba(18,11,9,.97) 0%, rgba(18,11,9,.93) 46%, rgba(18,11,9,.62) 72%, rgba(18,11,9,.14) 92%, rgba(18,11,9,0) 100%)",
+                    }}
+                  />
+
+                  {/* affordance : + au repos, − une fois ouvert */}
+                  <span
+                    aria-hidden
+                    className="absolute right-3.5 top-3.5 flex h-7 w-7 items-center justify-center rounded-full border border-white/25 backdrop-blur-[2px]"
                   >
-                    {p.initials}
+                    <span className="absolute h-px w-2.5 bg-white/80" />
+                    <span className="tp-plus-v absolute h-px w-2.5 rotate-90 bg-white/80" />
+                  </span>
+
+                  {/* Identité en bas, données au-dessus : flex-col-reverse garde
+                      l'ordre de lecture (nom puis détail) tout en empilant le
+                      panneau vers le haut, sans déplacer quoi que ce soit. */}
+                  <div className="absolute inset-x-0 bottom-0 flex flex-col-reverse p-4">
+                    <div>
+                      <h3 className="text-base font-semibold leading-tight tracking-tight text-white">
+                        {p.name}
+                      </h3>
+                      <p className="mt-0.5 text-[11px] font-medium leading-snug text-white/70">
+                        {p.role[locale]}
+                      </p>
+                      <p className="mt-1.5 text-[11px] italic leading-snug text-white/45">
+                        {p.tagline[locale]}
+                      </p>
+                    </div>
+
+                    <div className="mb-3 space-y-3">
+                      <div className="tp-field tp-field-1">
+                        <Label>{c.academic}</Label>
+                        <p
+                          className={`mt-1 text-[11.5px] leading-snug ${
+                            p.academic.fr === "À compléter"
+                              ? "text-brand/90 underline decoration-dashed underline-offset-2"
+                              : "text-white/85"
+                          }`}
+                        >
+                          {p.academic[locale]}
+                        </p>
+                      </div>
+
+                      <div className="tp-field tp-field-2">
+                        <Label>{c.career}</Label>
+                        <ul className="mt-1 space-y-1">
+                          {p.career[locale].map((line) => (
+                            <li
+                              key={line}
+                              className="border-l border-white/15 pl-2 text-[11.5px] leading-snug text-white/80"
+                            >
+                              {line}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="tp-field tp-field-3 grid grid-cols-2 gap-3">
+                        <div>
+                          <Label>{c.likes}</Label>
+                          <ul className="mt-1 space-y-0.5">
+                            {p.likes[locale].map((l) => (
+                              <li
+                                key={l}
+                                className="text-[11px] leading-snug text-white/80"
+                              >
+                                {l}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <Label>{c.dislikes}</Label>
+                          <ul className="mt-1 space-y-0.5">
+                            {p.dislikes[locale].map((d) => (
+                              <li
+                                key={d}
+                                className="text-[11px] leading-snug text-white/55"
+                              >
+                                {d}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                )}
-              </div>
-
-              <div className="min-w-0 flex-1">
-                <h3 className="text-xl font-semibold tracking-tight">
-                  {p.name}
-                </h3>
-                <p className="mt-0.5 text-sm font-medium text-marsala">
-                  {p.role[locale]}
-                </p>
-                <p className="mt-3 text-sm italic text-neutral-500">
-                  {p.tagline[locale]}
-                </p>
-
-                <div className="mt-4 space-y-3">
-                  {p.story[locale].map((para) => (
-                    <p key={para} className="text-sm leading-7 text-neutral-700">
-                      {para}
-                    </p>
-                  ))}
                 </div>
-
-                <p className="mt-6 text-xs font-semibold uppercase tracking-widest text-neutral-400">
-                  {c.owns}
-                </p>
-                <ul className="mt-2 flex flex-wrap gap-2">
-                  {p.owns[locale].map((o) => (
-                    <li
-                      key={o}
-                      className="rounded-full border border-foreground/10 bg-chalk px-3 py-1 text-xs text-neutral-600"
-                    >
-                      {o}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
 
       <p className="mt-8 text-sm leading-6 text-neutral-500">{c.support}</p>
     </section>
+  );
+}
+
+function Label({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-[9.5px] font-semibold uppercase tracking-[0.14em] text-white/40">
+      {children}
+    </p>
   );
 }

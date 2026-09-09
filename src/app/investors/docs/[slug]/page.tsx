@@ -49,23 +49,31 @@ export default async function DocPage({
   if (docsendUrl) redirect(docsendUrl);
 
   // Les fiches à schéma ou à portraits respirent mal dans la colonne de lecture.
-  const wide = doc.slug === "business-model" || doc.slug === "equipe";
+  // L'équipe va plus large encore (trois portraits verticaux de front), mais on
+  // garde son chapô dans une colonne de lecture normale.
+  const width =
+    doc.slug === "equipe"
+      ? "max-w-6xl"
+      : doc.slug === "business-model"
+        ? "max-w-4xl"
+        : "max-w-2xl";
+  const proseWidth = doc.slug === "equipe" ? "max-w-2xl" : "";
 
   return (
-    <main
-      className={`mx-auto w-full flex-1 px-6 py-12 ${wide ? "max-w-4xl" : "max-w-2xl"}`}
-    >
-      <Link
-        href="/investors/home"
-        className="text-sm text-neutral-500 hover:underline"
-      >
-        {t(locale, "docs.back")}
-      </Link>
-      <p className="mt-6 text-xs font-medium uppercase tracking-widest text-neutral-400">
-        {category}
-      </p>
-      <h1 className="mt-1 text-2xl font-semibold tracking-tight">{title}</h1>
-      <DocContent text={content ?? ""} />
+    <main className={`mx-auto w-full flex-1 px-6 py-12 ${width}`}>
+      <div className={proseWidth}>
+        <Link
+          href="/investors/home"
+          className="text-sm text-neutral-500 hover:underline"
+        >
+          {t(locale, "docs.back")}
+        </Link>
+        <p className="mt-6 text-xs font-medium uppercase tracking-widest text-neutral-400">
+          {category}
+        </p>
+        <h1 className="mt-1 text-2xl font-semibold tracking-tight">{title}</h1>
+        <DocContent text={content ?? ""} />
+      </div>
       {/* Certaines fiches portent un contenu riche en plus de leur texte. */}
       {doc.slug === "note-marche" && <MarketReports locale={locale} />}
       {doc.slug === "business-model" && <BusinessModelFlow locale={locale} />}

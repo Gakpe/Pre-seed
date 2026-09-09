@@ -198,8 +198,8 @@ export default async function InvestorHomePage() {
         </div>
 
         {/* Présentation */}
-        <section className="mt-10 grid gap-8 md:grid-cols-[1fr_200px] md:items-center">
-          <div>
+        <section className="mt-10">
+          <div className="max-w-2xl">
             <h2 className="text-2xl font-semibold leading-tight tracking-tight">
               {t(locale, "home.pitch.title")}
             </h2>
@@ -207,10 +207,19 @@ export default async function InvestorHomePage() {
               {t(locale, "home.pitch.body")}
             </p>
           </div>
-          {/* Photo corporate — remplacer par la vraie photo (public/brand/team.jpg) */}
-          <div className="flex aspect-[4/3] items-center justify-center rounded-lg bg-gradient-to-br from-salvia/50 to-salvia text-xs text-neutral-500">
-            {t(locale, "home.photo.placeholder")}
-          </div>
+          {/* Photo des fondateurs — bande large : les trois sont de front, un
+              cadre 4/3 les rognerait. Fond noir de la prise de vue conservé. */}
+          <figure className="mt-6 overflow-hidden rounded-lg bg-[#050505]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/team.jpg"
+              alt={t(locale, "home.photo.alt")}
+              className="h-full w-full object-cover"
+            />
+            <figcaption className="px-4 py-2.5 text-[11px] tracking-wide text-white/45">
+              {t(locale, "home.photo.caption")}
+            </figcaption>
+          </figure>
         </section>
 
         {/* Conditions du deal */}
