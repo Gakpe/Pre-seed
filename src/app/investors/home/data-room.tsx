@@ -64,7 +64,7 @@ export function DataRoom({
                         label: doc.title,
                       })
                     }
-                    className="flex items-center justify-between px-4 py-3 text-sm transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900"
+                    className="halo-hover flex items-center justify-between px-4 py-3 text-sm transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900"
                   >
                     <span>{title}</span>
                     <span className="text-xs text-neutral-400">
@@ -76,7 +76,7 @@ export function DataRoom({
                 <li key={doc.slug}>
                   <Link
                     href={`/investors/docs/${doc.slug}`}
-                    className="flex items-center justify-between px-4 py-3 text-sm transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900"
+                    className="halo-hover flex items-center justify-between px-4 py-3 text-sm transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900"
                   >
                     <span>{title}</span>
                     <span className="text-xs text-neutral-400">

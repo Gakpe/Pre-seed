@@ -10,6 +10,7 @@ import type { DocumentRow, Investor } from "@/lib/types";
 import { DataRoom } from "./data-room";
 import { InterestModal } from "./interest-modal";
 import { MeetingButton } from "./meeting-button";
+import { MatchingFundTooltip } from "../matching-fund-tooltip";
 
 export async function generateMetadata() {
   return { title: t(await getLocale(), "meta.title") };
@@ -232,14 +233,18 @@ export default async function InvestorHomePage() {
               value={deal.minTicket}
             />
             <Term label={t(locale, "home.deal.lead")} value={deal.leadWanted} />
-            <Term
-              label={t(locale, "home.deal.matching")}
-              value={deal.matchingFund}
-            />
+            {/* Le montant est un total pondéré : l'infobulle en donne le détail. */}
+            <Term label={t(locale, "home.deal.matching")}>
+              <MatchingFundTooltip locale={locale} align="right">
+                {deal.matchingFund}
+              </MatchingFundTooltip>
+            </Term>
           </dl>
           <div className="mt-6">
             <div className="flex items-baseline justify-between text-xs text-neutral-500">
-              <span>{deal.engagedLabel}</span>
+              <MatchingFundTooltip locale={locale}>
+                {deal.engagedLabel}
+              </MatchingFundTooltip>
               <span>{t(locale, "home.deal.of", { target: deal.target })}</span>
             </div>
             {/* Tirets fins : montants identifiés en soft commit, pas encore signés */}
@@ -366,11 +371,19 @@ function Main({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Term({ label, value }: { label: string; value: string }) {
+function Term({
+  label,
+  value,
+  children,
+}: {
+  label: string;
+  value?: string;
+  children?: React.ReactNode;
+}) {
   return (
     <div>
       <dt className="text-xs text-neutral-500">{label}</dt>
-      <dd className="mt-0.5 text-sm font-medium">{value}</dd>
+      <dd className="mt-0.5 text-sm font-medium">{children ?? value}</dd>
     </div>
   );
 }

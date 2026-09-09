@@ -10,6 +10,8 @@ import { CapTableInteractive } from "./captable";
 import { MarketReports } from "./market-reports";
 import { BusinessModelFlow } from "./business-model-flow";
 import { TeamProfiles } from "./team-profiles";
+import { TrackRecord } from "./track-record";
+import { Fundraise } from "./fundraise";
 
 export default async function DocPage({
   params,
@@ -54,17 +56,27 @@ export default async function DocPage({
   const width =
     doc.slug === "equipe"
       ? "max-w-6xl"
-      : doc.slug === "business-model"
-        ? "max-w-4xl"
+      : doc.slug === "business-model" ||
+          doc.slug === "track-record" ||
+          doc.slug === "la-levee"
+        ? "max-w-5xl"
         : "max-w-2xl";
-  const proseWidth = doc.slug === "equipe" ? "max-w-2xl" : "";
+  const proseWidth =
+    doc.slug === "equipe" || doc.slug === "track-record" || doc.slug === "la-levee"
+      ? "max-w-2xl"
+      : "";
+
+  // Deux fiches sont entièrement portées par leur composant : le texte de la
+  // base ferait doublon avec — et par endroits contredirait — les chiffres
+  // qu'elles détaillent. Il reste en base, simplement plus affiché ici.
+  const richOnly = doc.slug === "track-record" || doc.slug === "la-levee";
 
   return (
     <main className={`mx-auto w-full flex-1 px-6 py-12 ${width}`}>
       <div className={proseWidth}>
         <Link
           href="/investors/home"
-          className="text-sm text-neutral-500 hover:underline"
+          className="halo-hover -mx-1 inline-block rounded px-1 text-sm text-neutral-500 hover:underline"
         >
           {t(locale, "docs.back")}
         </Link>
@@ -72,12 +84,14 @@ export default async function DocPage({
           {category}
         </p>
         <h1 className="mt-1 text-2xl font-semibold tracking-tight">{title}</h1>
-        <DocContent text={content ?? ""} />
+        {!richOnly && <DocContent text={content ?? ""} />}
       </div>
       {/* Certaines fiches portent un contenu riche en plus de leur texte. */}
       {doc.slug === "note-marche" && <MarketReports locale={locale} />}
       {doc.slug === "business-model" && <BusinessModelFlow locale={locale} />}
       {doc.slug === "equipe" && <TeamProfiles locale={locale} />}
+      {doc.slug === "track-record" && <TrackRecord locale={locale} />}
+      {doc.slug === "la-levee" && <Fundraise locale={locale} />}
       {doc.slug === "cap-table" && (
         <CapTableInteractive title={t(locale, "docs.captable")} />
       )}
