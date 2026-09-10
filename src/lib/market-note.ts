@@ -1,3 +1,24 @@
+// Chapitres de la note. La liste sert à la fois au corps de la note et au fil
+// d'Ariane latéral : un titre modifié à un seul endroit.
+export const CHAPTERS = [
+  {
+    id: "note-01",
+    num: "01",
+    title: "Le continent où le crédit n'existe presque pas",
+  },
+  {
+    id: "note-02",
+    num: "02",
+    title: "Des taux qui devraient converger, et qui ne convergent pas",
+  },
+  {
+    id: "note-03",
+    num: "03",
+    title: "La dette privée africaine est déjà en train de décoller",
+  },
+  { id: "note-04", num: "04", title: "Ce que nous en concluons" },
+] as const;
+
 // Données de la note de marché. Tracés SVG et valeurs repris du prototype
 // validé ; la silhouette de l'Afrique est stylisée, c'est assumé.
 

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { track } from "@/lib/tracking";
 import { docFields, t, type Locale } from "@/lib/i18n";
 import type { DocumentRow } from "@/lib/types";
+import { OWN_PAGE_SLUGS } from "@/lib/own-pages";
 
 // Regroupe par catégorie (ordre dicté par sort_order) et numérote 01, 02, …
 export function DataRoom({
@@ -50,7 +51,12 @@ export function DataRoom({
           </h3>
           <ul className="mt-2 divide-y divide-neutral-200 rounded-md border border-neutral-200 dark:divide-neutral-800 dark:border-neutral-800">
             {cat.docs.map((doc) => {
-              const { title, docsendUrl } = docFields(doc, locale);
+              const fields = docFields(doc, locale);
+              const { title } = fields;
+              // Une fiche qui a sa page dans l'application n'est pas un renvoi.
+              const docsendUrl = OWN_PAGE_SLUGS.has(doc.slug)
+                ? null
+                : fields.docsendUrl;
               return docsendUrl ? (
                 <li key={doc.slug}>
                   <a

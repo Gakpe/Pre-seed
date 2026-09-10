@@ -11,11 +11,9 @@ import type { Locale } from "@/lib/i18n";
 // Fonds cités en exemple sur la période Bpifrance. Liens vérifiés à la main :
 // un lien mort dans une data room investisseur coûte plus cher qu'un
 // aller-retour par le code. Vérifiés le 9 septembre 2026.
-// Logo Bpifrance : déposer le fichier fourni par l'équipe en
-// public/brand/logos/bpifrance.svg et renseigner le chemin ci-dessous. Tant
-// qu'il est nul, on affiche un cartouche typographique plutôt qu'une image
-// cassée, et on ne va pas chercher un logo de marque ailleurs.
-const BPI_LOGO: string | null = null;
+// Logo Bpifrance fourni par l'équipe. S'il venait à manquer, le cartouche
+// typographique reprend la main plutôt qu'une image cassée.
+const BPI_LOGO: string | null = "/brand/logos/bpifrance.png";
 
 const FUNDS = [
   { name: "Ardian", url: "https://www.ardian.com" },
@@ -218,7 +216,7 @@ export function TrackRecord({ locale }: { locale: Locale }) {
                   <img
                     src={BPI_LOGO}
                     alt="Bpifrance"
-                    className="h-7 w-auto shrink-0"
+                    className="h-6 w-auto shrink-0 sm:h-7"
                   />
                 ) : (
                   <span className="shrink-0 rounded border border-foreground/15 bg-chalk px-2 py-1 text-[11px] font-semibold tracking-tight text-marsala">

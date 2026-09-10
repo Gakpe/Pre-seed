@@ -10,8 +10,8 @@ export const deal = {
   minTicket: "100 K€",
   leadWanted: "500 K€",
   matchingFund: "500 K€ en soft commitment",
-  engagedLabel: "800 K€ d'engagements à date, pondérés",
-  progressPct: 53,
+  engagedLabel: "1 M€ d'engagements à date, pondérés",
+  progressPct: 67,
   tranches: ["< 100 K€", "< 250 K€", "< 500 K€", "500 K€+ (lead)"],
   // Lien de prise de RDV (Calendly / Cal.com), placeholder à remplacer.
   meetingUrl: "https://cal.com/minah/30min",
@@ -24,7 +24,7 @@ const dealEn = {
   minTicket: "€100K",
   leadWanted: "€500K",
   matchingFund: "€500K soft commitment",
-  engagedLabel: "€800K of weighted commitments to date",
+  engagedLabel: "€1M of weighted commitments to date",
   tranches: ["< €100K", "< €250K", "< €500K", "€500K+ (lead)"],
 } as const;
 
@@ -32,57 +32,58 @@ export function dealFor(locale: Locale) {
   return locale === "en" ? { ...deal, ...dealEn } : deal;
 }
 
-// Détail des engagements à date. Le chiffre affiché est un total pondéré :
-// présenté seul, c'est un nombre sans justification. D'où l'infobulle, qui
-// montre le brut et le pondéré côte à côte pour les lignes non fermes.
+// Engagements à date. Le chiffre affiché est un total pondéré : présenté seul,
+// c'est un nombre sans justification, d'où l'infobulle qui le détaille.
 //
-// Le matching fund n'est pas confirmé : il est porté comme soft commitment, et
-// la contrepartie n'est pas nommée. Ne pas requalifier cette ligne en
-// engagement ferme sans instruction écrite de l'équipe.
-export type MatchingLine = {
+// Aucune identité n'est publiée. Chaque ligne porte un rôle, jamais un nom :
+// les contreparties ne sont communiquées qu'après réception d'une intention
+// d'investissement. Ne pas requalifier une ligne en engagement ferme sans
+// instruction écrite de l'équipe.
+export type Commitment = {
   id: string;
-  label: { fr: string; en: string };
-  category: { fr: string; en: string };
+  /** Rôle affiché à la place du nom. */
+  role: { fr: string; en: string };
   gross: number;
-  /** Part retenue dans le total. 1 pour un soft commitment, 0,5 en discussion. */
+  /** Plafond et non montant ferme : affiché « jusqu'à ». */
+  capped?: boolean;
+  /** Part retenue dans le total pondéré. */
   weight: number;
   status: "soft" | "discussion";
 };
 
-export const matchingFund: MatchingLine[] = [
+export const commitments: Commitment[] = [
   {
-    id: "partenaire-blockchain",
-    label: {
-      fr: "Partenaire de l'écosystème blockchain",
-      en: "Blockchain ecosystem partner",
-    },
-    category: { fr: "Soft commitment", en: "Soft commitment" },
+    id: "co-lead",
+    role: { fr: "Co-lead", en: "Co-lead" },
     gross: 500_000,
+    capped: true,
     weight: 1,
     status: "soft",
   },
   {
-    id: "bpifrance",
-    label: { fr: "Bpifrance", en: "Bpifrance" },
-    category: {
-      fr: "Banque publique d'investissement",
-      en: "Public investment bank",
-    },
-    gross: 400_000,
-    weight: 0.5,
-    status: "discussion",
-  },
-  {
-    id: "fonds-vc",
-    label: { fr: "Fonds de capital-risque", en: "Venture capital fund" },
-    category: { fr: "Capital-risque", en: "Venture capital" },
+    id: "vc",
+    role: { fr: "Fonds de capital-risque", en: "Venture capital fund" },
     gross: 200_000,
     weight: 0.5,
     status: "discussion",
   },
+  {
+    id: "institutionnel",
+    role: { fr: "Acteur institutionnel", en: "Institutional investor" },
+    gross: 300_000,
+    weight: 1,
+    status: "discussion",
+  },
+  {
+    id: "business-angel",
+    role: { fr: "Business angel", en: "Business angel" },
+    gross: 100_000,
+    weight: 1,
+    status: "discussion",
+  },
 ];
 
-export const matchingFundTotal = matchingFund.reduce(
+export const commitmentsTotal = commitments.reduce(
   (sum, line) => sum + line.gross * line.weight,
   0
-); // 800 000 €
+); // 1 000 000 €

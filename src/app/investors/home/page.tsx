@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -209,23 +210,48 @@ export default async function InvestorHomePage() {
             </p>
           </div>
           {/* Photo des fondateurs, en vignette : les trois sont de front, la
-              bande large de la prise de vue est conservée telle quelle. */}
-          <figure className="overflow-hidden rounded-lg bg-[#050505]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/brand/team.jpg"
-              alt={t(locale, "home.photo.alt")}
-              className="w-full object-cover"
-            />
-            <figcaption className="px-3 py-2 text-[10px] tracking-wide text-white/45">
-              {t(locale, "home.photo.caption")}
-            </figcaption>
-          </figure>
+              bande large de la prise de vue est conservée telle quelle. Elle
+              mène à la fiche équipe. */}
+          <Link
+            href="/investors/docs/equipe"
+            className="halo-hover group block overflow-hidden rounded-lg bg-[#050505] outline-none ring-brand/60 ring-offset-2 ring-offset-background focus-visible:ring-2"
+          >
+            <figure>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/brand/team.jpg"
+                alt={t(locale, "home.photo.alt")}
+                className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              />
+              <figcaption className="flex items-center justify-between gap-2 px-3 py-2 text-[10px] tracking-wide text-white/45">
+                <span>{t(locale, "home.photo.caption")}</span>
+                <span
+                  aria-hidden
+                  className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
+                >
+                  →
+                </span>
+              </figcaption>
+            </figure>
+          </Link>
         </section>
 
         {/* Conditions du deal */}
-        <section className="mt-10 rounded-lg border border-foreground/10 bg-white/50 p-6">
-          <h2 className="text-sm font-semibold">{t(locale, "home.deal.title")}</h2>
+        <section className="halo-hover group relative mt-10 rounded-lg border border-foreground/10 bg-white/50 p-6 transition-colors hover:border-foreground/25">
+          <Link
+            href="/investors/docs/la-levee"
+            aria-label={t(locale, "home.deal.title")}
+            className="absolute inset-0 z-0 rounded-lg outline-none ring-brand/60 ring-offset-2 ring-offset-background focus-visible:ring-2"
+          />
+          <h2 className="flex items-center gap-2 text-sm font-semibold">
+            {t(locale, "home.deal.title")}
+            <span
+              aria-hidden
+              className="text-neutral-400 transition-transform duration-300 group-hover:translate-x-0.5"
+            >
+              →
+            </span>
+          </h2>
           <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4">
             <Term label={t(locale, "home.deal.target")} value={deal.target} />
             <Term
@@ -235,16 +261,20 @@ export default async function InvestorHomePage() {
             <Term label={t(locale, "home.deal.lead")} value={deal.leadWanted} />
             {/* Le montant est un total pondéré : l'infobulle en donne le détail. */}
             <Term label={t(locale, "home.deal.matching")}>
-              <MatchingFundTooltip locale={locale} align="right">
-                {deal.matchingFund}
-              </MatchingFundTooltip>
+              <span className="relative z-10">
+                <MatchingFundTooltip locale={locale} align="right">
+                  {deal.matchingFund}
+                </MatchingFundTooltip>
+              </span>
             </Term>
           </dl>
           <div className="mt-6">
             <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-xs text-neutral-500">
-              <MatchingFundTooltip locale={locale}>
-                {deal.engagedLabel}
-              </MatchingFundTooltip>
+              <span className="relative z-10">
+                <MatchingFundTooltip locale={locale}>
+                  {deal.engagedLabel}
+                </MatchingFundTooltip>
+              </span>
               <span>{t(locale, "home.deal.of", { target: deal.target })}</span>
             </div>
             {/* Tirets fins : montants identifiés en soft commit, pas encore signés */}

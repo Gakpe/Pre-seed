@@ -1,6 +1,7 @@
-import { SOURCES } from "@/lib/market-note";
+import { CHAPTERS, SOURCES } from "@/lib/market-note";
 import { AfricaRatesMap } from "./africa-rates-map";
 import { PrivateDebtLandscape } from "./private-debt-landscape";
+import { NoteRail } from "./note-rail";
 
 // Corps de la note de marché. Le rythme de la page tient à l'alternance des
 // largeurs : prose en colonne étroite, visuels débordant du texte, et un seul
@@ -8,16 +9,16 @@ import { PrivateDebtLandscape } from "./private-debt-landscape";
 const serif = "font-[family-name:var(--font-serif)]";
 
 function Chapter({
-  num,
-  title,
+  chapter,
   children,
 }: {
-  num: string;
-  title: string;
+  chapter: (typeof CHAPTERS)[number];
   children: React.ReactNode;
 }) {
+  const { id, num, title } = chapter;
   return (
-    <section className="mt-20">
+    // scroll-mt : le fil d'Ariane amène le titre sous l'en-tête, pas dessous.
+    <section id={id} className="mt-20 scroll-mt-24">
       <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-note-accent">
         {num}
       </p>
@@ -111,15 +112,16 @@ function Wide({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function MarketNote() {
+export function MarketNote({ title }: { title: string }) {
   return (
     <div>
+      <NoteRail title={title} />
       <p className="mt-6 text-xs text-note-muted">
         Temps de lecture : 8 minutes · Document destiné à des investisseurs
         professionnels
       </p>
 
-      <Chapter num="01" title="Le continent où le crédit n'existe presque pas">
+      <Chapter chapter={CHAPTERS[0]}>
         <BigStat
           label="Crédit au secteur privé, en % du PIB, Afrique subsaharienne"
           value="~28 %"
@@ -175,10 +177,7 @@ export function MarketNote() {
         </P>
       </Chapter>
 
-      <Chapter
-        num="02"
-        title="Des taux qui devraient converger, et qui ne convergent pas"
-      >
+      <Chapter chapter={CHAPTERS[1]}>
         <AfricaRatesMap />
 
         <P>
@@ -210,10 +209,7 @@ export function MarketNote() {
         </P>
       </Chapter>
 
-      <Chapter
-        num="03"
-        title="La dette privée africaine est déjà en train de décoller"
-      >
+      <Chapter chapter={CHAPTERS[2]}>
         <div className="grid gap-8 min-[780px]:grid-cols-3">
           <SmallStat label="Dette privée · 2025" value="+57 %">
             de croissance du nombre d&apos;opérations de dette privée en Afrique, un record.
@@ -258,7 +254,7 @@ export function MarketNote() {
         </P>
       </Chapter>
 
-      <Chapter num=", " title="Ce que nous en concluons">
+      <Chapter chapter={CHAPTERS[3]}>
         <P>
           La place d&apos;un acteur de référence est ouverte, et elle a une forme
           précise.

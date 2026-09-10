@@ -1,97 +1,35 @@
 import Link from "next/link";
-import { dealFor } from "@/lib/deal";
 import type { Locale } from "@/lib/i18n";
 
 // Fiche « Levée en cours » : trois blocs, l'état de la levée, puis deux
 // sections de contexte (positionnement, horizon de sortie).
 //
-// ⚠️ La liste nominative des souscripteurs et leurs logos ne sont pas encore
-// arrivés. Les entrées ne portent donc que ce qui est documenté : la nature de
-// la contrepartie, sa catégorie et son montant. Dès que la liste est là,
-// renseigner `name` et déposer le logo en `public/brand/investors/<id>.png` :
-// le rendu bascule du monogramme au logo, en niveaux de gris au repos et en
-// couleur au survol.
-//
-// Le matching fund est un soft commitment, jamais un engagement ferme, et la
-// contrepartie n'est pas nommée. Voir aussi src/lib/deal.ts.
+// Aucune identité n'est publiée : chaque ligne porte un rôle et un montant, le
+// nom reste masqué jusqu'à réception d'une intention d'investissement. Les
+// montants et les statuts sont tenus dans src/lib/deal.ts, qui alimente aussi
+// l'infobulle de l'accueil : une seule source, un seul total.
 
-type Status = "committed" | "soft" | "discussion";
+import { commitments, dealFor } from "@/lib/deal";
 
-type Participant = {
-  id: string;
-  name: { fr: string; en: string };
-  category: { fr: string; en: string };
-  amount: { fr: string; en: string };
-  detail?: { fr: string; en: string };
-  status: Status;
+// Précisions propres à la fiche, indexées par l'identifiant de l'engagement.
+const NOTES: Record<string, { fr: string; en: string } | undefined> = {
+  "co-lead": {
+    fr: "Intention exprimée, non contractualisée",
+    en: "Intention expressed, not contracted",
+  },
 };
-
-// Une seule liste : l'état de la levée se lit d'un coup d'œil, le statut est
-// porté par la ligne et non par la colonne dans laquelle elle se trouve.
-//
-// Les noms restent masqués tant qu'aucune intention d'investissement n'a été
-// reçue. La catégorie, elle, est affichée : c'est elle qui porte l'information
-// utile à un lecteur, pas l'identité.
-const PARTICIPANTS: Participant[] = [
-  {
-    id: "business-angels",
-    name: { fr: "Business angels", en: "Business angels" },
-    category: { fr: "Personnes physiques", en: "Individuals" },
-    amount: { fr: "200 K€", en: "€200K" },
-    status: "committed",
-  },
-  {
-    id: "partenaire-blockchain",
-    name: {
-      fr: "Partenaire de l'écosystème blockchain",
-      en: "Blockchain ecosystem partner",
-    },
-    category: {
-      fr: "Partenaire stratégique, écosystème blockchain",
-      en: "Strategic partner, blockchain ecosystem",
-    },
-    amount: { fr: "500 K€", en: "€500K" },
-    detail: {
-      fr: "Intention exprimée, non contractualisée",
-      en: "Intention expressed, not contracted",
-    },
-    status: "soft",
-  },
-  {
-    id: "bpifrance",
-    name: { fr: "Bpifrance", en: "Bpifrance" },
-    category: {
-      fr: "Banque publique d'investissement",
-      en: "Public investment bank",
-    },
-    amount: { fr: "400 K€", en: "€400K" },
-    detail: { fr: "pondéré à 50 %", en: "weighted at 50%" },
-    status: "discussion",
-  },
-  {
-    id: "fonds-vc",
-    name: { fr: "Fonds de capital-risque", en: "Venture capital fund" },
-    category: { fr: "Capital-risque", en: "Venture capital" },
-    amount: { fr: "200 K€", en: "€200K" },
-    detail: { fr: "pondéré à 50 %", en: "weighted at 50%" },
-    status: "discussion",
-  },
-];
 
 const copy = {
   fr: {
     roundEyebrow: "01 · État de la levée",
     roundTitle: "Où en est le tour.",
-    statuses: {
-      committed: "Engagement ferme",
-      soft: "Soft commitment",
-      discussion: "En discussion",
-    },
+    statuses: { soft: "Soft commitment", discussion: "En discussion" },
+    upTo: "jusqu'à",
+    weightedAt: "pondéré à",
     listTitle: "Souscripteurs",
+    hidden: "Identité masquée",
     redacted:
       "L'identité des souscripteurs est communiquée après réception d'une intention d'investissement. La catégorie et le montant, eux, sont affichés dès maintenant.",
-    pending:
-      "Libellés provisoires : la liste définitive des souscripteurs reste à confirmer côté équipe.",
     terms: {
       target: "Objectif",
       minTicket: "Ticket minimum",
@@ -136,16 +74,13 @@ const copy = {
   en: {
     roundEyebrow: "01 · State of the round",
     roundTitle: "Where the round stands.",
-    statuses: {
-      committed: "Firm commitment",
-      soft: "Soft commitment",
-      discussion: "In discussion",
-    },
+    statuses: { soft: "Soft commitment", discussion: "In discussion" },
+    upTo: "up to",
+    weightedAt: "weighted at",
     listTitle: "Subscribers",
+    hidden: "Identity withheld",
     redacted:
       "Subscriber identities are disclosed once an investment intention has been received. Category and amount are shown from the outset.",
-    pending:
-      "Placeholder labels: the final subscriber list is still to be confirmed by the team.",
     terms: {
       target: "Target",
       minTicket: "Minimum ticket",
@@ -214,48 +149,57 @@ export function Fundraise({ locale }: { locale: Locale }) {
           </p>
 
           <ul className="mt-4 divide-y divide-foreground/10">
-            {PARTICIPANTS.map((p) => (
-              <li key={p.id} className="py-3 first:pt-0 last:pb-0">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-4">
-                  <div className="min-w-0 flex-1">
-                    {/* Le nom reste masqué : flouté et retiré de l'arbre
-                        d'accessibilité, pour qu'il ne soit pas lu à voix haute
-                        ni sélectionnable. */}
-                    <span
-                      aria-hidden
-                      className="block select-none truncate text-sm font-medium blur-[5px]"
-                    >
-                      {p.name[locale]}
-                    </span>
-                    <span className="mt-1 block text-xs text-neutral-600">
-                      {p.category[locale]}
-                    </span>
-                    {p.detail && (
-                      <span className="mt-0.5 block text-[11px] text-neutral-400">
-                        {p.detail[locale]}
+            {commitments.map((line) => {
+              const note = NOTES[line.id];
+              return (
+                <li key={line.id} className="py-3 first:pt-0 last:pb-0">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-4">
+                    <div className="min-w-0 flex-1">
+                      {/* Une barre plutôt qu'un nom flouté : une identité
+                          masquée ne doit pas exister dans la page. */}
+                      <span
+                        aria-hidden
+                        className="block h-2.5 w-32 rounded-full bg-neutral-300/80 blur-[3px]"
+                      />
+                      <span className="sr-only">{c.hidden}</span>
+                      <span className="mt-2 block text-sm font-medium">
+                        {line.role[locale]}
                       </span>
-                    )}
-                  </div>
+                      {line.weight < 1 && (
+                        <span className="mt-0.5 block text-[11px] text-neutral-400">
+                          {c.weightedAt} {Math.round(line.weight * 100)} %
+                        </span>
+                      )}
+                      {note && (
+                        <span className="mt-0.5 block text-[11px] text-neutral-400">
+                          {note[locale]}
+                        </span>
+                      )}
+                    </div>
 
-                  <div className="flex shrink-0 items-center gap-3 sm:flex-col sm:items-end sm:gap-1.5">
-                    <span className="text-sm font-medium tabular-nums text-neutral-700">
-                      {p.amount[locale]}
-                    </span>
-                    <span
-                      className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium ${
-                        p.status === "committed"
-                          ? "bg-salvia text-marsala"
-                          : p.status === "soft"
+                    <div className="flex shrink-0 items-center gap-3 sm:flex-col sm:items-end sm:gap-1.5">
+                      <span className="text-sm font-medium tabular-nums text-neutral-700">
+                        {line.capped && (
+                          <span className="font-normal text-neutral-400">
+                            {c.upTo}{" "}
+                          </span>
+                        )}
+                        {amount(line.gross, locale)}
+                      </span>
+                      <span
+                        className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium ${
+                          line.status === "soft"
                             ? "border border-foreground/15 bg-chalk text-neutral-600"
                             : "border border-brand/40 bg-brand/10 text-foreground"
-                      }`}
-                    >
-                      {c.statuses[p.status]}
-                    </span>
+                        }`}
+                      >
+                        {c.statuses[line.status]}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
 
           <p className="mt-5 border-t border-foreground/10 pt-4 text-[11px] leading-4 text-neutral-500">
@@ -263,7 +207,6 @@ export function Fundraise({ locale }: { locale: Locale }) {
           </p>
         </div>
 
-        <p className="mt-4 text-xs leading-5 text-brand/90">{c.pending}</p>
       </section>
 
       {/* ---------- 02 · Paysage et positionnement ---------- */}
@@ -358,6 +301,14 @@ export function Fundraise({ locale }: { locale: Locale }) {
       </section>
     </div>
   );
+}
+
+function amount(value: number, locale: Locale) {
+  return new Intl.NumberFormat(locale === "en" ? "en-GB" : "fr-FR", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0,
+  }).format(value);
 }
 
 function Term({ label, value }: { label: string; value: string }) {

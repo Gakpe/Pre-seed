@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getDemoSession } from "@/lib/demo";
+import { OWN_PAGE_SLUGS } from "@/lib/own-pages";
 import { getLocale } from "@/lib/i18n-server";
 import { docFields, t } from "@/lib/i18n";
 import type { DocumentRow } from "@/lib/types";
@@ -16,6 +17,7 @@ import { TeamProfiles } from "./team-profiles";
 import { TrackRecord } from "./track-record";
 import { Fundraise } from "./fundraise";
 import { WhyMinah } from "./why-minah";
+import { TermSheet } from "./term-sheet";
 import { RiskCascade } from "./risk-cascade";
 import { ResilienceBar } from "./resilience-bar";
 import { RiskClosing } from "./risk-closing";
@@ -55,7 +57,7 @@ export default async function DocPage({
   if (!doc) notFound();
 
   const { title, category, content, docsendUrl } = docFields(doc, locale);
-  if (docsendUrl) redirect(docsendUrl);
+  if (docsendUrl && !OWN_PAGE_SLUGS.has(doc.slug)) redirect(docsendUrl);
 
   // Les fiches à schéma ou à portraits respirent mal dans la colonne de lecture.
   // La cascade de risque a besoin de plus encore : trois colonnes et une
@@ -68,7 +70,8 @@ export default async function DocPage({
     doc.slug === "business-model" ||
     doc.slug === "track-record" ||
     doc.slug === "la-levee" ||
-    doc.slug === "pourquoi-minah";
+    doc.slug === "pourquoi-minah" ||
+    doc.slug === "term-sheet-kupanda";
 
   // Ces fiches débordent en largeur, mais leur chapô reste dans une colonne
   // de lecture normale, sinon le texte court sur toute la page.
@@ -76,7 +79,8 @@ export default async function DocPage({
     team ||
     doc.slug === "track-record" ||
     doc.slug === "la-levee" ||
-    doc.slug === "pourquoi-minah"
+    doc.slug === "pourquoi-minah" ||
+    doc.slug === "term-sheet-kupanda"
       ? "max-w-2xl"
       : "";
 
@@ -86,7 +90,8 @@ export default async function DocPage({
   const richOnly =
     doc.slug === "track-record" ||
     doc.slug === "la-levee" ||
-    doc.slug === "pourquoi-minah";
+    doc.slug === "pourquoi-minah" ||
+    doc.slug === "term-sheet-kupanda";
 
   return (
     <main
@@ -115,9 +120,10 @@ export default async function DocPage({
       </div>
       {/* Certaines fiches portent un contenu riche en plus de leur texte. */}
       {doc.slug === "pourquoi-minah" && <WhyMinah locale={locale} />}
+      {doc.slug === "term-sheet-kupanda" && <TermSheet locale={locale} />}
       {doc.slug === "note-marche" && (
         <>
-          <MarketNote />
+          <MarketNote title={title} />
           <MarketReports locale={locale} />
         </>
       )}
