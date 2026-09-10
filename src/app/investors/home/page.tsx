@@ -214,7 +214,7 @@ export default async function InvestorHomePage() {
               mène à la fiche équipe. */}
           <Link
             href="/investors/docs/equipe"
-            className="halo-hover group block overflow-hidden rounded-lg bg-[#050505] outline-none ring-brand/60 ring-offset-2 ring-offset-background focus-visible:ring-2"
+            className="halo-hover halo-soft group block overflow-hidden rounded-lg bg-[#050505] outline-none ring-brand/60 ring-offset-2 ring-offset-background focus-visible:ring-2"
           >
             <figure>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -237,7 +237,7 @@ export default async function InvestorHomePage() {
         </section>
 
         {/* Conditions du deal */}
-        <section className="halo-hover group relative mt-10 rounded-lg border border-foreground/10 bg-white/50 p-6 transition-colors hover:border-foreground/25">
+        <section className="halo-hover halo-soft group relative mt-10 rounded-lg border border-foreground/10 bg-white/50 p-6 transition-colors hover:border-foreground/25">
           <Link
             href="/investors/docs/la-levee"
             aria-label={t(locale, "home.deal.title")}

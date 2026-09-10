@@ -379,19 +379,36 @@ body {
 .halo-hover::before {
   content: "";
   position: absolute;
-  inset: -55% -8%;
+  /* Débordement en pourcentage : sur un lien de liste il fait une tache, sur
+     un grand bloc il ferait une nappe. D'où la variable, et `halo-soft` pour
+     les cartes. */
+  inset: var(--halo-inset, -34% -5%);
   z-index: -1;
   border-radius: 9999px;
   background: radial-gradient(
     ellipse at center,
-    color-mix(in srgb, var(--brand) 34%, transparent) 0%,
-    color-mix(in srgb, var(--brand) 17%, transparent) 48%,
+    color-mix(in srgb, var(--brand) var(--halo-core, 26%), transparent) 0%,
+    color-mix(in srgb, var(--brand) var(--halo-edge, 12%), transparent) 48%,
     transparent 74%
   );
-  filter: blur(26px);
+  filter: blur(var(--halo-blur, 20px));
   opacity: 0;
   transition: opacity 300ms cubic-bezier(0.22, 0.61, 0.36, 1);
   pointer-events: none;
+}
+
+/* Grands blocs : un liseré, pas une nappe. Le débordement passe en pixels,
+   sans quoi il grandit avec la carte. */
+.halo-soft {
+  --halo-inset: -10px;
+  --halo-blur: 16px;
+  --halo-core: 14%;
+  --halo-edge: 7%;
+  --halo-radius: 0.5rem;
+}
+
+.halo-soft::before {
+  border-radius: var(--halo-radius);
 }
 
 .halo-hover:hover::before,

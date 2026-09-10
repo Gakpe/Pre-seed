@@ -10,8 +10,8 @@ export const deal = {
   minTicket: "100 K€",
   leadWanted: "500 K€",
   matchingFund: "500 K€ en soft commitment",
-  engagedLabel: "1 M€ d'engagements à date, pondérés",
-  progressPct: 67,
+  engagedLabel: "800 K€ d'engagements à date, pondérés",
+  progressPct: 53,
   tranches: ["< 100 K€", "< 250 K€", "< 500 K€", "500 K€+ (lead)"],
   // Lien de prise de RDV (Calendly / Cal.com), placeholder à remplacer.
   meetingUrl: "https://cal.com/minah/30min",
@@ -24,7 +24,7 @@ const dealEn = {
   minTicket: "€100K",
   leadWanted: "€500K",
   matchingFund: "€500K soft commitment",
-  engagedLabel: "€1M of weighted commitments to date",
+  engagedLabel: "€800K of weighted commitments to date",
   tranches: ["< €100K", "< €250K", "< €500K", "€500K+ (lead)"],
 } as const;
 
@@ -71,14 +71,14 @@ export const commitments: Commitment[] = [
     id: "institutionnel",
     role: { fr: "Acteur institutionnel", en: "Institutional investor" },
     gross: 300_000,
-    weight: 1,
+    weight: 0.5,
     status: "discussion",
   },
   {
     id: "business-angel",
     role: { fr: "Business angel", en: "Business angel" },
     gross: 100_000,
-    weight: 1,
+    weight: 0.5,
     status: "discussion",
   },
 ];
@@ -86,4 +86,4 @@ export const commitments: Commitment[] = [
 export const commitmentsTotal = commitments.reduce(
   (sum, line) => sum + line.gross * line.weight,
   0
-); // 1 000 000 €
+); // 800 000 €
