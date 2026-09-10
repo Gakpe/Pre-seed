@@ -81,7 +81,10 @@ export default async function AdminPage() {
             {investors.map((inv) => {
               const s = stats.get(inv.id);
               return (
-                <tr key={inv.id}>
+                <tr
+                  key={inv.id}
+                  className="group transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900/50"
+                >
                   <td className="px-4 py-3">
                     <Link
                       href={`/admin/investors/${inv.id}`}
@@ -91,7 +94,7 @@ export default async function AdminPage() {
                     </Link>
                     <div className="text-xs text-neutral-500">{inv.email}</div>
                   </td>
-                  <td className="px-4 py-3">{inv.entity ?? ", "}</td>
+                  <td className="px-4 py-3">{inv.entity ?? "·"}</td>
                   <td className="px-4 py-3">
                     <StatusBadge status={inv.status} />
                   </td>
@@ -106,12 +109,12 @@ export default async function AdminPage() {
                         )}
                       </>
                     ) : (
-                      ", "
+                      "·"
                     )}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <span>{inv.level2_access ? "✓" : ", "}</span>
+                      <span>{inv.level2_access ? "✓" : "·"}</span>
                       <form
                         action={setLevel2Access.bind(
                           null,
@@ -165,6 +168,12 @@ export default async function AdminPage() {
                         </button>
                       </form>
                     )}
+                    <Link
+                      href={`/admin/investors/${inv.id}`}
+                      className="mt-1 block text-xs font-medium text-neutral-500 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 hover:text-foreground hover:underline"
+                    >
+                      Fiche →
+                    </Link>
                   </td>
                 </tr>
               );

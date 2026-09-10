@@ -7,6 +7,7 @@ import {
   REGIONS,
   type Region,
 } from "@/lib/market-note";
+import type { Locale } from "@/lib/i18n";
 
 // Carte des taux PME et fourchettes par région. Survol croisé : la carte et le
 // graphique se répondent. Au repos la synthèse reste affichée, la
@@ -17,7 +18,31 @@ const BAR_Y = (i: number) => 48 + i * 52;
 const sx = (v: number) => X0 + (v / RATE_AXIS.max) * (X1 - X0);
 const REF_X = sx(RATE_AXIS.reference);
 
-export function AfricaRatesMap() {
+const copy = {
+  fr: {
+    eyebrow: "Coût du crédit PME",
+    title: "Ce que paie une PME africaine, région par région",
+    mapAlt:
+      "Carte de l'Afrique en quatre régions, colorées selon le taux moyen payé par les PME",
+    rangesLabel: "Taux moyen · bas → élevé",
+    rangesAlt: "Fourchettes de taux par région, de 0 à 40 pour cent",
+    reference: "Kupanda, notre produit de dette actuel : 20 %",
+    to: "à",
+  },
+  en: {
+    eyebrow: "Cost of SME credit",
+    title: "What an African SME pays, region by region",
+    mapAlt:
+      "Map of Africa in four regions, coloured by the average rate paid by SMEs",
+    rangesLabel: "Average rate · low → high",
+    rangesAlt: "Rate ranges by region, from 0 to 40 percent",
+    reference: "Kupanda, our current debt product: 20%",
+    to: "to",
+  },
+};
+
+export function AfricaRatesMap({ locale }: { locale: Locale }) {
+  const t = copy[locale];
   const [active, setActive] = useState<string | null>(null);
   const region = REGIONS.find((r) => r.id === active) ?? null;
   const on = (r: Region) => !active || active === r.id;
@@ -47,17 +72,17 @@ export function AfricaRatesMap() {
         {/* --- la carte --- */}
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-note-accent">
-            Coût du crédit PME
+            {t.eyebrow}
           </p>
           <h3 className="mt-2 font-[family-name:var(--font-serif)] text-2xl leading-snug text-note-dark-ink">
-            Ce que paie une PME africaine, région par région
+            {t.title}
           </h3>
 
           <svg
             viewBox="0 0 400 470"
             className="mt-6 w-full"
             role="img"
-            aria-label="Carte de l'Afrique en quatre régions, colorées selon le taux moyen payé par les PME"
+            aria-label={t.mapAlt}
           >
             {REGIONS.map((r) => (
               <path
@@ -68,14 +93,14 @@ export function AfricaRatesMap() {
                 strokeWidth="1.5"
                 opacity={on(r) ? 1 : 0.38}
                 style={{ transition: "opacity 150ms" }}
-                aria-label={`${r.name}, ${r.low} à ${r.high} pour cent`}
+                aria-label={`${r.name[locale]}, ${r.low} ${t.to} ${r.high} %`}
                 {...handlers(r.id)}
               />
             ))}
 
             {/* villes repères : seulement sur la région active, sinon surcharge */}
             {region?.cities.map((c) => (
-              <g key={c.n} aria-hidden>
+              <g key={c.n[locale]} aria-hidden>
                 <circle cx={c.x} cy={c.y} r="3.5" fill="var(--note-dark-ink)" />
                 <text
                   x={c.x + 8}
@@ -83,7 +108,7 @@ export function AfricaRatesMap() {
                   className="text-[11px] font-semibold"
                   fill="var(--note-dark-ink)"
                 >
-                  {c.n}
+                  {c.n[locale]}
                 </text>
                 <text
                   x={c.x + 8}
@@ -105,12 +130,12 @@ export function AfricaRatesMap() {
             {region ? (
               <>
                 <strong className="font-semibold text-note-dark-ink">
-                  {region.note.lead}
+                  {region.note.lead[locale]}
                 </strong>{" "}
-                {region.note.body}
+                {region.note.body[locale]}
               </>
             ) : (
-              MAP_RESTING_NOTE
+              MAP_RESTING_NOTE[locale]
             )}
           </p>
         </div>
@@ -118,13 +143,13 @@ export function AfricaRatesMap() {
         {/* --- les fourchettes --- */}
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-note-dark-muted">
-            Taux moyen · bas → élevé
+            {t.rangesLabel}
           </p>
           <svg
             viewBox="0 0 560 290"
             className="mt-4 w-full"
             role="img"
-            aria-label="Fourchettes de taux par région, de 0 à 40 pour cent"
+            aria-label={t.rangesAlt}
           >
             {/* repère : notre coupon actuel */}
             <line
@@ -143,7 +168,7 @@ export function AfricaRatesMap() {
               className="text-[11px] font-semibold"
               fill="var(--note-accent)"
             >
-              Kupanda, notre produit de dette actuel : 20 %
+              {t.reference}
             </text>
 
             {REGIONS.map((r, i) => {
@@ -153,7 +178,7 @@ export function AfricaRatesMap() {
                   key={r.id}
                   opacity={on(r) ? 1 : 0.38}
                   style={{ transition: "opacity 150ms" }}
-                  aria-label={`${r.name}, ${r.low} à ${r.high} pour cent`}
+                  aria-label={`${r.name[locale]}, ${r.low} ${t.to} ${r.high} %`}
                   {...handlers(r.id)}
                 >
                   <text
@@ -163,7 +188,7 @@ export function AfricaRatesMap() {
                     className="text-[12px]"
                     fill="var(--note-dark-ink)"
                   >
-                    {r.name}
+                    {r.name[locale]}
                   </text>
                   <rect
                     x={sx(r.low)}

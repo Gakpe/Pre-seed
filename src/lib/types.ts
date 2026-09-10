@@ -41,6 +41,19 @@ export type DocumentRow = {
   category_en: string | null;
 };
 
+// Note ou relance saisie depuis /admin. `fomo` marque une relance faite
+// pendant l'audit de l'investisseur.
+export type NoteKind = "note" | "fomo";
+
+export type InvestorNote = {
+  id: number;
+  investor_id: string;
+  kind: NoteKind;
+  body: string;
+  author: string | null;
+  created_at: string;
+};
+
 export type EventType =
   | "login"
   | "page_view"

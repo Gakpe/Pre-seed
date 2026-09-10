@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CHAPTERS } from "@/lib/market-note";
+import type { Locale } from "@/lib/i18n";
 
 // Fil d'Ariane vertical de la note de marché : le titre, les trois chapitres et
 // la conclusion. Le trait se remplit à mesure qu'on descend, et chaque entrée
@@ -15,7 +16,13 @@ import { CHAPTERS } from "@/lib/market-note";
 // qu'on veut n'est pas « la section est visible » mais « la section que je suis
 // en train de lire », c'est-à-dire celle qui couvre le tiers haut du cadre.
 
-export function NoteRail({ title }: { title: string }) {
+export function NoteRail({
+  title,
+  locale,
+}: {
+  title: string;
+  locale: Locale;
+}) {
   const [active, setActive] = useState<string>(CHAPTERS[0].id);
   const [progress, setProgress] = useState(0);
   const frame = useRef<number | null>(null);
@@ -123,7 +130,7 @@ export function NoteRail({ title }: { title: string }) {
                         : "text-note-muted group-hover:text-note-ink"
                     }`}
                   >
-                    {chapter.title}
+                    {chapter.title[locale]}
                   </span>
                 </button>
               </li>

@@ -123,7 +123,7 @@ export default async function DocPage({
       {doc.slug === "term-sheet-kupanda" && <TermSheet locale={locale} />}
       {doc.slug === "note-marche" && (
         <>
-          <MarketNote title={title} />
+          <MarketNote title={title} locale={locale} />
           <MarketReports locale={locale} />
         </>
       )}

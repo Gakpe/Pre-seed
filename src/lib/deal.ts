@@ -10,8 +10,8 @@ export const deal = {
   minTicket: "100 K€",
   leadWanted: "500 K€",
   matchingFund: "500 K€ en soft commitment",
-  engagedLabel: "800 K€ d'engagements à date, pondérés",
-  progressPct: 53,
+  engagedLabel: "700 K€ d'engagements à date, pondérés",
+  progressPct: 47,
   tranches: ["< 100 K€", "< 250 K€", "< 500 K€", "500 K€+ (lead)"],
   // Lien de prise de RDV (Calendly / Cal.com), placeholder à remplacer.
   meetingUrl: "https://cal.com/minah/30min",
@@ -24,7 +24,7 @@ const dealEn = {
   minTicket: "€100K",
   leadWanted: "€500K",
   matchingFund: "€500K soft commitment",
-  engagedLabel: "€800K of weighted commitments to date",
+  engagedLabel: "€700K of weighted commitments to date",
   tranches: ["< €100K", "< €250K", "< €500K", "€500K+ (lead)"],
 } as const;
 
@@ -83,7 +83,13 @@ export const commitments: Commitment[] = [
   },
 ];
 
-export const commitmentsTotal = commitments.reduce(
+// Somme pondérée des lignes ci-dessus, à titre de contrôle : 800 000 €.
+export const commitmentsWeightedSum = commitments.reduce(
   (sum, line) => sum + line.gross * line.weight,
   0
-); // 800 000 €
+);
+
+// Total retenu et communiqué par l'équipe. Volontairement plus prudent que la
+// somme pondérée : c'est ce chiffre qui s'affiche partout, jauge comprise.
+// À réaligner avec les lignes dès qu'une pondération est arrêtée.
+export const commitmentsTotal = 700_000;

@@ -79,7 +79,7 @@ export default async function InvestorsLayout({
         />
       )}
 
-      <header className="z-10 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-foreground/10 px-4 py-3 sm:px-6 sm:py-4">
+      <header className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-foreground/10 bg-background/85 px-4 py-3 backdrop-blur-md sm:px-6 sm:py-4">
         <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
           <Link href="/" aria-label="Minah" className="shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -70,3 +70,59 @@ export function buildDailyBuckets(
   }
   return buckets;
 }
+
+// Rythme de visite : combien de fois l'investisseur est revenu, et à quel
+// intervalle. On repart des sessions plutôt que des `login` : une session
+// couvre une visite, y compris quand le cookie évite de se reconnecter.
+export type VisitRhythm = {
+  visits: number;
+  /** Nombre de retours, c'est-à-dire les visites au-delà de la première. */
+  returns: number;
+  /** Écart moyen entre deux visites, en millisecondes. Null en dessous de 2. */
+  averageGapMs: number | null;
+  /** Écart depuis la visite précédente, en millisecondes. */
+  lastGapMs: number | null;
+  /** Début de chaque visite, de la plus récente à la plus ancienne. */
+  visitStarts: string[];
+};
+
+export function buildVisitRhythm(
+  events: { session_id: string | null; created_at: string }[]
+): VisitRhythm {
+  // Début de chaque session : le premier événement qu'elle porte.
+  const starts = new Map<string, string>();
+  for (const e of events) {
+    if (!e.session_id) continue;
+    const known = starts.get(e.session_id);
+    if (!known || e.created_at < known) starts.set(e.session_id, e.created_at);
+  }
+
+  const ordered = [...starts.values()].sort();
+  const gaps: number[] = [];
+  for (let i = 1; i < ordered.length; i++) {
+    gaps.push(
+      new Date(ordered[i]).getTime() - new Date(ordered[i - 1]).getTime()
+    );
+  }
+
+  return {
+    visits: ordered.length,
+    returns: Math.max(0, ordered.length - 1),
+    averageGapMs: gaps.length
+      ? Math.round(gaps.reduce((a, b) => a + b, 0) / gaps.length)
+      : null,
+    lastGapMs: gaps.length ? gaps[gaps.length - 1] : null,
+    visitStarts: ordered.slice().reverse(),
+  };
+}
+
+// Durée lisible pour un écart entre visites : on ne descend pas sous l'heure,
+// personne ne lit « 3 j 4 h 12 min » sur une fiche.
+export function formatGap(ms: number | null): string {
+  if (ms === null) return "—";
+  const minutes = Math.round(ms / 60000);
+  if (minutes < 60) return `${minutes} min`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 48) return `${hours} h`;
+  return `${Math.round(hours / 24)} j`;
+}

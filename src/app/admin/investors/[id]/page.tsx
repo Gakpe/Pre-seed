@@ -3,9 +3,18 @@ import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatDuration } from "@/lib/format";
-import { buildDailyBuckets } from "@/lib/activity";
-import type { Investor, InvestorStats } from "@/lib/types";
-import { setInvestorStatus, setLevel2Access } from "../../actions";
+import {
+  buildDailyBuckets,
+  buildVisitRhythm,
+  formatGap,
+} from "@/lib/activity";
+import type { Investor, InvestorNote, InvestorStats } from "@/lib/types";
+import {
+  addInvestorNote,
+  deleteInvestorNote,
+  setInvestorStatus,
+  setLevel2Access,
+} from "../../actions";
 import { StatusBadge } from "../../status-badge";
 import { ActivityHistogram } from "../../activity-histogram";
 
@@ -61,6 +70,8 @@ export default async function InvestorDetailPage({
     { data: eventsData },
     { data: leaves },
     { data: clicks },
+    { data: sessionRows },
+    { data: noteRows },
   ] = await Promise.all([
       admin.from("investors").select("*").eq("id", id).maybeSingle(),
       admin.from("investor_stats").select("*").eq("investor_id", id).maybeSingle(),
@@ -82,6 +93,17 @@ export default async function InvestorDetailPage({
         .select("label, created_at")
         .eq("investor_id", id)
         .eq("type", "docsend_click"),
+      // Rythme de visite : toutes les sessions, sans la limite de la timeline.
+      admin
+        .from("events")
+        .select("session_id, created_at")
+        .eq("investor_id", id)
+        .order("created_at"),
+      admin
+        .from("investor_notes")
+        .select("*")
+        .eq("investor_id", id)
+        .order("created_at", { ascending: false }),
     ]);
 
   const investor = data as Investor | null;
@@ -106,6 +128,13 @@ export default async function InvestorDetailPage({
     30,
     (clicks ?? []) as { label: string | null; created_at: string }[]
   );
+  const rhythm = buildVisitRhythm(
+    (sessionRows ?? []) as { session_id: string | null; created_at: string }[]
+  );
+  const notes = (noteRows ?? []) as InvestorNote[];
+  const remarks = notes.filter((n) => n.kind === "note");
+  const fomos = notes.filter((n) => n.kind === "fomo");
+
   const topPages = [...byPage.entries()].sort((a, b) => b[1] - a[1]);
   const maxPageMs = topPages[0]?.[1] ?? 0;
 
@@ -180,6 +209,41 @@ export default async function InvestorDetailPage({
         <Stat label="Docs ouverts" value={String(stats?.docsend_clicks ?? 0)} />
       </div>
 
+      {/* Rythme de visite : revenir trois fois en dix jours ne dit pas la même
+          chose que trois visites étalées sur deux mois. */}
+      <h2 className="mt-10 text-sm font-semibold">Rythme de visite</h2>
+      <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <Stat label="Visites" value={String(rhythm.visits)} />
+        <Stat label="Retours" value={String(rhythm.returns)} />
+        <Stat label="Écart moyen" value={formatGap(rhythm.averageGapMs)} />
+        <Stat label="Dernier écart" value={formatGap(rhythm.lastGapMs)} />
+      </div>
+      {rhythm.visitStarts.length > 1 && (
+        <ul className="mt-3 space-y-1">
+          {rhythm.visitStarts.slice(0, 8).map((start, i) => {
+            const previous = rhythm.visitStarts[i + 1];
+            const gap = previous
+              ? new Date(start).getTime() - new Date(previous).getTime()
+              : null;
+            return (
+              <li
+                key={start}
+                className="flex items-baseline justify-between gap-4 text-sm"
+              >
+                <span className="tabular-nums text-neutral-600 dark:text-neutral-400">
+                  {dateFmt.format(new Date(start))}
+                </span>
+                <span className="shrink-0 text-xs text-neutral-400">
+                  {gap === null
+                    ? "première visite"
+                    : `+ ${formatGap(gap)} après la précédente`}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
       <h2 className="mt-10 text-sm font-semibold">
         Temps passé par jour (30 derniers jours)
       </h2>
@@ -211,6 +275,31 @@ export default async function InvestorDetailPage({
         </>
       )}
 
+      {/* Relances : ce qu'on a fait pour raviver l'intérêt pendant l'audit,
+          daté, pour savoir quand on a relancé et quand s'arrêter. */}
+      <NoteSection
+        investorId={investor.id}
+        kind="fomo"
+        title="Relances pendant l'audit"
+        hint="Ce qui a été tenté pour raviver l'intérêt, et quand."
+        placeholder="Ex. : appel de suivi après ouverture du term sheet, mention du closing du co-lead."
+        submitLabel="Enregistrer la relance"
+        empty="Aucune relance enregistrée."
+        notes={fomos}
+        accent
+      />
+
+      <NoteSection
+        investorId={investor.id}
+        kind="note"
+        title="Notes"
+        hint="Contexte, objections, points à reprendre au prochain échange."
+        placeholder="Ex. : cherche une exposition Afrique de l'Ouest, bloque sur la liquidité."
+        submitLabel="Ajouter la note"
+        empty="Aucune note."
+        notes={remarks}
+      />
+
       <h2 className="mt-10 text-sm font-semibold">
         Timeline ({events.length} derniers events)
       </h2>
@@ -230,6 +319,100 @@ export default async function InvestorDetailPage({
         )}
       </ul>
     </main>
+  );
+}
+
+// Une section de saisie et sa liste. Le formulaire est un <form> classique
+// piloté par une action serveur : aucun état client à tenir pour ça.
+function NoteSection({
+  investorId,
+  kind,
+  title,
+  hint,
+  placeholder,
+  submitLabel,
+  empty,
+  notes,
+  accent = false,
+}: {
+  investorId: string;
+  kind: "note" | "fomo";
+  title: string;
+  hint: string;
+  placeholder: string;
+  submitLabel: string;
+  empty: string;
+  notes: InvestorNote[];
+  accent?: boolean;
+}) {
+  return (
+    <section className="mt-10">
+      <h2 className="text-sm font-semibold">
+        {title}
+        {notes.length > 0 && (
+          <span className="ml-2 font-normal text-neutral-400">
+            {notes.length}
+          </span>
+        )}
+      </h2>
+      <p className="mt-1 text-xs text-neutral-500">{hint}</p>
+
+      <form
+        action={addInvestorNote.bind(null, investorId, kind)}
+        className="mt-3"
+      >
+        <textarea
+          name="body"
+          rows={3}
+          required
+          maxLength={4000}
+          placeholder={placeholder}
+          className="w-full rounded-md border border-neutral-300 bg-transparent px-3 py-2 text-sm outline-none focus:border-neutral-500 dark:border-neutral-700"
+        />
+        <button
+          type="submit"
+          className={`mt-2 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+            accent
+              ? "border border-brand/40 bg-brand/10 text-marsala hover:border-brand"
+              : "border border-neutral-300 text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-900"
+          }`}
+        >
+          {submitLabel}
+        </button>
+      </form>
+
+      <ul className="mt-4 space-y-3">
+        {notes.map((note) => (
+          <li
+            key={note.id}
+            className={`rounded-md border p-3 ${
+              accent
+                ? "border-brand/25 bg-brand/[0.04]"
+                : "border-neutral-200 dark:border-neutral-800"
+            }`}
+          >
+            <div className="flex items-baseline justify-between gap-4">
+              <span className="text-xs tabular-nums text-neutral-500">
+                {dateFmt.format(new Date(note.created_at))}
+                {note.author ? ` · ${note.author}` : ""}
+              </span>
+              <form action={deleteInvestorNote.bind(null, investorId, note.id)}>
+                <button
+                  type="submit"
+                  className="shrink-0 text-xs text-neutral-400 hover:text-neutral-700 hover:underline dark:hover:text-neutral-200"
+                >
+                  Supprimer
+                </button>
+              </form>
+            </div>
+            <p className="mt-1.5 text-sm whitespace-pre-line">{note.body}</p>
+          </li>
+        ))}
+        {notes.length === 0 && (
+          <li className="text-sm text-neutral-500">{empty}</li>
+        )}
+      </ul>
+    </section>
   );
 }
 

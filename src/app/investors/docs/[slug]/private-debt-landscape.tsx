@@ -1,15 +1,32 @@
 import { LANDSCAPE } from "@/lib/market-note";
+import type { Locale } from "@/lib/i18n";
 
 // Positionnement par classe d'instrument. Noms en texte et non en logos :
 // nous n'avons pas les droits, et le texte reste lisible partout.
-export function PrivateDebtLandscape() {
+const copy = {
+  fr: {
+    alt: "Positionnement des acteurs de la dette privée africaine par classe d'instrument et rendement cible",
+    axis: "Rendement cible brut (%)",
+    caption:
+      "Positionnement indicatif par classe d'instrument. Les fourchettes de rendement sont des ordres de grandeur de marché, à confirmer avant diffusion.",
+  },
+  en: {
+    alt: "Positioning of African private debt players by instrument class and target return",
+    axis: "Gross target return (%)",
+    caption:
+      "Indicative positioning by instrument class. The return ranges are market orders of magnitude, to be confirmed before circulation.",
+  },
+};
+
+export function PrivateDebtLandscape({ locale }: { locale: Locale }) {
+  const t = copy[locale];
   return (
     <figure className="mt-12">
       <svg
         viewBox="0 0 900 450"
         className="w-full"
         role="img"
-        aria-label="Positionnement des acteurs de la dette privée africaine par classe d'instrument et rendement cible"
+        aria-label={t.alt}
       >
         <text
           x="0"
@@ -18,7 +35,7 @@ export function PrivateDebtLandscape() {
           style={{ letterSpacing: "0.12em" }}
           fill="var(--note-muted)"
         >
-          Rendement cible brut (%)
+          {t.axis}
         </text>
 
         {/* grille horizontale et axe des rendements */}
@@ -126,7 +143,7 @@ export function PrivateDebtLandscape() {
         {/* bandes d'instrument */}
         {LANDSCAPE.bands.map((b) => (
           <text
-            key={b.label}
+            key={b.label.fr}
             x={b.cx}
             y="428"
             textAnchor="middle"
@@ -134,14 +151,12 @@ export function PrivateDebtLandscape() {
             style={{ letterSpacing: "0.08em" }}
             fill="var(--note-muted)"
           >
-            {b.label}
+            {b.label[locale]}
           </text>
         ))}
       </svg>
       <figcaption className="mt-3 text-xs leading-5 text-note-muted">
-        Positionnement indicatif par classe d&apos;instrument. Les fourchettes
-        de rendement sont des ordres de grandeur de marché, à confirmer avant
-        diffusion.
+        {t.caption}
       </figcaption>
     </figure>
   );
