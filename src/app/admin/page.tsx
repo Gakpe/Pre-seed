@@ -6,6 +6,7 @@ import { formatDuration } from "@/lib/format";
 import { buildDailyBuckets } from "@/lib/activity";
 import { setInvestorStatus, setLevel2Access } from "./actions";
 import { StatusBadge } from "./status-badge";
+import { InvestorRow } from "./investor-row";
 import { ActivityHistogram } from "./activity-histogram";
 
 export const metadata = { title: "Admin, Minah" };
@@ -81,9 +82,9 @@ export default async function AdminPage() {
             {investors.map((inv) => {
               const s = stats.get(inv.id);
               return (
-                <tr
+                <InvestorRow
                   key={inv.id}
-                  className="group transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900/50"
+                  href={`/admin/investors/${inv.id}`}
                 >
                   <td className="px-4 py-3">
                     <Link
@@ -168,14 +169,8 @@ export default async function AdminPage() {
                         </button>
                       </form>
                     )}
-                    <Link
-                      href={`/admin/investors/${inv.id}`}
-                      className="mt-1 block text-xs font-medium text-neutral-500 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 hover:text-foreground hover:underline"
-                    >
-                      Fiche →
-                    </Link>
                   </td>
-                </tr>
+                </InvestorRow>
               );
             })}
             {investors.length === 0 && (
