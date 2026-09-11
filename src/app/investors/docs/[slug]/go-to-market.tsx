@@ -39,7 +39,7 @@ const copy = {
     centerLine: "coupon · protections · maturité",
     assetsLabel: "Assets-out / sell-side",
     assetsSub: "qui apporte les deals",
-    capIn: ["Network builders", "Institutions", "Écosystème blockchain"],
+    capIn: ["15 Network builders", "Institutions", "Écosystème blockchain"],
     capOut: [
       "Top scale-ups & entreprises",
       "États & banques",
@@ -69,6 +69,10 @@ const copy = {
       {
         h: "Écosystème blockchain",
         b: "La liquidité on-chain cherche du rendement réel : près de 30 Md$ d'actifs réels sont déjà tokenisés, dont environ 17 Md$ de crédit privé, mais presque rien n'est connecté à des sous-jacents africains. C'est précisément le pont que nous construisons, avec Canton Network, Ubuntu Tribe et la Stellar Foundation, qui nous subventionne déjà.",
+      },
+      {
+        h: "Minah OS (IA)",
+        b: "Notre IA en production — les agents Yao et Comlan — analyse les appels, gère les relances et le business development. L'équipe se concentre sur ce qui demande un humain, structurer et vendre, pendant qu'une équipe resserrée anime un réseau large.",
       },
     ] as Card[],
     assetsTitle: "Côté actifs — les bons sous-jacents",
@@ -184,7 +188,7 @@ const copy = {
     centerLine: "coupon · protections · maturity",
     assetsLabel: "Assets-out / sell-side",
     assetsSub: "who brings the deals",
-    capIn: ["Network builders", "Institutions", "Blockchain ecosystem"],
+    capIn: ["15 Network builders", "Institutions", "Blockchain ecosystem"],
     capOut: [
       "Top scale-ups & companies",
       "Governments & banks",
@@ -214,6 +218,10 @@ const copy = {
       {
         h: "Blockchain ecosystem",
         b: "On-chain liquidity is hunting for real yield: close to $30B of real-world assets are already tokenized, of which about $17B is private credit, yet almost none is connected to African underlyings. That is precisely the bridge we build, with Canton Network, Ubuntu Tribe and the Stellar Foundation, which already backs us with grants.",
+      },
+      {
+        h: "Minah OS (AI)",
+        b: "Our AI in production — the Yao and Comlan agents — analyses calls, handles follow-ups and business development. The team focuses on what needs a human, structuring and selling, while a lean team runs a broad network.",
       },
     ] as Card[],
     assetsTitle: "Asset side — the best underlyings",
