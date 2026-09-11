@@ -24,7 +24,7 @@ type Person = {
   photo: string;
   role: Bilingual;
   tagline: Bilingual;
-  academic: Bilingual;
+  academic: BilingualList;
   career: BilingualList;
   likes: BilingualList;
   dislikes: BilingualList;
@@ -32,8 +32,7 @@ type Person = {
 
 // ⚠️ À VALIDER PAR LES INTÉRESSÉS avant mise en ligne : les « aime / n'aime pas »
 // sont une proposition de rédaction, tenue dans un registre professionnel et
-// dérivée des bios déjà validées. Le parcours de Coralie et sa formation
-// restent à compléter (marqués TODO ci-dessous).
+// dérivée des bios déjà validées.
 const PEOPLE: Person[] = [
   {
     id: "julien-gakpe",
@@ -49,8 +48,8 @@ const PEOPLE: Person[] = [
       en: "Public financing, seen from the inside.",
     },
     academic: {
-      fr: "École Polytechnique (X)",
-      en: "École Polytechnique (X)",
+      fr: ["École Polytechnique (X)"],
+      en: ["École Polytechnique (X)"],
     },
     career: {
       fr: [
@@ -99,57 +98,69 @@ const PEOPLE: Person[] = [
     rest: "/brand/team/coralie-rest.jpg",
     photo: "/brand/team/coralie.jpg",
     role: {
-      fr: "Co-fondatrice, Ecosystems & Partnerships",
-      en: "Co-founder, Ecosystems & Partnerships",
+      fr: "Co-fondatrice, Chief Ecosystems & Partnerships",
+      en: "Co-founder, Chief Ecosystems & Partnerships",
     },
     tagline: {
       fr: "Celle par qui le capital arrive.",
       en: "The one the capital comes through.",
     },
-    // TODO, formation à renseigner (école / diplôme).
     academic: {
-      fr: "À compléter",
-      en: "To be completed",
+      fr: [
+        "Université d'Oxford — Master, économie et études africaines",
+        "Harvard Business School — Leading with Finance, certificat",
+        "Université de Manchester — Bachelor, économie et sciences politiques",
+      ],
+      en: [
+        "University of Oxford — Master's degree, Economics & African Studies",
+        "Harvard Business School — Leading with Finance, certificate",
+        "University of Manchester — Bachelor's degree, Economics & Politics",
+      ],
     },
     career: {
       fr: [
-        // TODO, compléter par les employeurs et les dates.
-        "Réseau prescripteurs, brokers, banquiers privés, asset managers",
-        "Partenariats bancaires et institutionnels",
-        "Minah, relation investisseurs, capital-in et écosystème",
+        "Sciences Po Paris (Executive), Africa Director — passerelle avec les grands dirigeants & ministres africains venus en formation",
+        "Africa CEO Forum, Director — co-création de l'écosystème des principaux CEO et acteurs tech du continent",
+        "UNESCO (siège), consultante — politiques publiques auprès des États",
+        "Minah, co-fondatrice — capital-in, relation investisseurs et écosystème",
       ],
       en: [
-        "Prescriber network, brokers, private bankers, asset managers",
-        "Banking and institutional partnerships",
-        "Minah, investor relations, capital-in and ecosystem",
+        "Sciences Po Paris (Executive), Africa Director — bridge to Africa's senior leaders and ministers in executive programmes",
+        "Africa CEO Forum, Director — co-creating the ecosystem of the continent's leading CEOs and tech players",
+        "UNESCO (HQ), consultant — public policy advisory to governments",
+        "Minah, co-founder — capital-in, investor relations and ecosystem",
       ],
     },
     likes: {
       fr: [
         "Les rendez-vous préparés",
-        "Les réseaux entretenus hors levée",
-        "La question gênante",
-        "Les partenariats qui durent",
+        "Les relations de long terme",
+        "Les mises en relation chaleureuses",
+        "Les partenariats qui capitalisent",
+        "Faire avancer les choses",
       ],
       en: [
-        "Meetings that were prepared",
-        "Networks kept warm between raises",
-        "The awkward question",
-        "Partnerships that last",
+        "Prepared meetings",
+        "Long-term relationships",
+        "Warm introductions",
+        "Partnerships that compound",
+        "Getting things done",
       ],
     },
     dislikes: {
       fr: [
         "La prospection de masse",
+        "Les accords sur poignée de main",
         "Les promesses non écrites",
-        "Les intermédiaires qui n'engagent rien",
-        "Les levées annoncées trop tôt",
+        "Les intermédiaires sans engagement réel",
+        "Les annonces prématurées",
       ],
       en: [
         "Mass prospecting",
-        "Promises never written down",
-        "Intermediaries with no stake",
-        "Raises announced too early",
+        "Handshake deals",
+        "Unwritten promises",
+        "Intermediaries without skin in the game",
+        "Premature announcements",
       ],
     },
   },
@@ -167,8 +178,8 @@ const PEOPLE: Person[] = [
       en: "Thirty SME balance sheets before this one.",
     },
     academic: {
-      fr: "ESSEC Business School",
-      en: "ESSEC Business School",
+      fr: ["ESSEC Business School"],
+      en: ["ESSEC Business School"],
     },
     career: {
       fr: [
@@ -275,7 +286,7 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                 type="button"
                 aria-expanded={open}
                 aria-label={`${c.reveal} ${p.name}`}
-                className={`${open ? "tp-open" : ""} group relative block h-full w-full overflow-hidden rounded-xl bg-[#140d0b] text-left outline-none ring-brand/60 ring-offset-2 ring-offset-background focus-visible:ring-2`}
+                className={`${open ? "tp-open" : ""} group relative block h-full w-full overflow-hidden rounded-xl bg-[#f7ecdd] text-left outline-none ring-brand/60 ring-offset-2 ring-offset-background focus-visible:ring-2`}
                 onPointerEnter={canHover ? () => setOpenId(p.id) : undefined}
                 onPointerLeave={canHover ? () => close(p.id) : undefined}
                 // Au clavier seulement : un tap tactile pose aussi le focus, et
@@ -317,27 +328,27 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                       className="tp-scrim absolute inset-0"
                       style={{
                         background:
-                          "linear-gradient(to top, rgba(20,13,11,.9) 0%, rgba(20,13,11,.55) 18%, rgba(20,13,11,.1) 40%, rgba(20,13,11,0) 60%)",
+                          "linear-gradient(to top, #f7ecdd 0%, rgba(247,236,221,.92) 22%, rgba(247,236,221,.35) 44%, rgba(247,236,221,0) 64%)",
                       }}
                     />
                     {/* affordance : plus au repos, moins une fois ouvert */}
                     <span
                       aria-hidden
-                      className="absolute right-3.5 top-3.5 flex h-7 w-7 items-center justify-center rounded-full border border-white/25 backdrop-blur-[2px]"
+                      className="absolute right-3.5 top-3.5 flex h-7 w-7 items-center justify-center rounded-full border border-foreground/20 bg-white/40 backdrop-blur-[2px]"
                     >
-                      <span className="absolute h-px w-2.5 bg-white/80" />
-                      <span className="tp-plus-v absolute h-px w-2.5 rotate-90 bg-white/80" />
+                      <span className="absolute h-px w-2.5 bg-foreground/60" />
+                      <span className="tp-plus-v absolute h-px w-2.5 rotate-90 bg-foreground/60" />
                     </span>
 
                     {/* identité : toujours visible, en bas du portrait */}
                     <div className="absolute inset-x-0 bottom-0 p-4">
-                      <h3 className="text-base font-semibold leading-tight tracking-tight text-white">
+                      <h3 className="text-base font-semibold leading-tight tracking-tight text-foreground">
                         {p.name}
                       </h3>
-                      <p className="mt-0.5 text-[11px] font-medium leading-snug text-white/70">
+                      <p className="mt-0.5 text-[11px] font-medium leading-snug text-neutral-600">
                         {p.role[locale]}
                       </p>
-                      <p className="mt-1.5 text-[11px] italic leading-snug text-white/45">
+                      <p className="mt-1.5 text-[11px] italic leading-snug text-neutral-500">
                         {p.tagline[locale]}
                       </p>
                     </div>
@@ -350,15 +361,16 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                     <div className="space-y-3 p-4 lg:space-y-5 lg:p-9">
                       <div className="tp-field tp-field-1">
                         <Label>{c.academic}</Label>
-                        <p
-                          className={`mt-1 text-[11.5px] leading-snug lg:text-sm ${
-                            p.academic.fr === "À compléter"
-                              ? "text-brand/90 underline decoration-dashed underline-offset-2"
-                              : "text-white/85"
-                          }`}
-                        >
-                          {p.academic[locale]}
-                        </p>
+                        <ul className="mt-1 space-y-1">
+                          {p.academic[locale].map((line) => (
+                            <li
+                              key={line}
+                              className="border-l border-neutral-300 pl-3 text-[11.5px] leading-snug text-neutral-700 lg:text-sm lg:leading-6"
+                            >
+                              {line}
+                            </li>
+                          ))}
+                        </ul>
                       </div>
 
                       <div className="tp-field tp-field-2">
@@ -367,7 +379,7 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                           {p.career[locale].map((line) => (
                             <li
                               key={line}
-                              className="border-l border-white/15 pl-3 text-[11.5px] leading-snug text-white/80 lg:text-sm lg:leading-6"
+                              className="border-l border-neutral-300 pl-3 text-[11.5px] leading-snug text-neutral-700 lg:text-sm lg:leading-6"
                             >
                               {line}
                             </li>
@@ -382,7 +394,7 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                             {p.likes[locale].map((l) => (
                               <li
                                 key={l}
-                                className="text-[11px] leading-snug text-white/80 lg:text-[13px] lg:leading-6"
+                                className="text-[11px] leading-snug text-neutral-700 lg:text-[13px] lg:leading-6"
                               >
                                 {l}
                               </li>
@@ -395,7 +407,7 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                             {p.dislikes[locale].map((d) => (
                               <li
                                 key={d}
-                                className="text-[11px] leading-snug text-white/55 lg:text-[13px] lg:leading-6"
+                                className="text-[11px] leading-snug text-neutral-500 lg:text-[13px] lg:leading-6"
                               >
                                 {d}
                               </li>
@@ -419,7 +431,7 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
+    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-500">
       {children}
     </p>
   );
