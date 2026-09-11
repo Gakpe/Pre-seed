@@ -129,8 +129,8 @@ export default async function DocPage({
       )}
       {doc.slug === "business-model" && (
         <>
-          <CapitalFlow />
-          <BusinessModelBlocks />
+          <CapitalFlow locale={locale} />
+          <BusinessModelBlocks locale={locale} />
         </>
       )}
       {doc.slug === "equipe" && <TeamProfiles locale={locale} />}
@@ -138,9 +138,9 @@ export default async function DocPage({
       {doc.slug === "la-levee" && <Fundraise locale={locale} />}
       {doc.slug === "gestion-du-risque" && (
         <>
-          <RiskCascade />
-          <ResilienceBar />
-          <RiskClosing />
+          <RiskCascade locale={locale} />
+          <ResilienceBar locale={locale} />
+          <RiskClosing locale={locale} />
         </>
       )}
       {doc.slug === "cap-table" && (

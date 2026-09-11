@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FEES, FLOW_NODES, INVESTORS } from "@/lib/flow-nodes";
+import type { Locale } from "@/lib/i18n";
 
 // Schéma de flux de capitaux. SVG écrit à la main : la géométrie porte le
 // sens, notamment la position des deux pastilles de commission.
@@ -23,6 +24,38 @@ const NODES = {
   pme: { x: 1005, w: 170 },
 };
 
+// Libellés propres au schéma (les données des nœuds vivent dans flow-nodes).
+const copy = {
+  fr: {
+    example: "Exemple : Kupanda, notre dernière stratégie",
+    scrollHint: "Faites défiler le schéma →",
+    svgAlt: "Schéma des flux de capitaux, des souscripteurs aux PME et retour",
+    investors: "INVESTISSEURS GLOBAUX",
+    atSubscription: "prélevés à la souscription",
+    returnFlow: "RETOUR, COUPONS ET PRINCIPAL",
+    minahTitle: "Minah",
+    minahSub: "Structuration · registre",
+    localTitle: "Sociétés financières",
+    localSub: "Entités de droit local",
+    pmeTitle: "PME sous contrat",
+    pmeSub: "Marchés publics exécutés",
+  },
+  en: {
+    example: "Example: Kupanda, our latest strategy",
+    scrollHint: "Scroll the diagram →",
+    svgAlt: "Capital-flow diagram, from subscribers to SMEs and back",
+    investors: "GLOBAL INVESTORS",
+    atSubscription: "charged at subscription",
+    returnFlow: "RETURN, COUPONS AND PRINCIPAL",
+    minahTitle: "Minah",
+    minahSub: "Structuring · registry",
+    localTitle: "Finance companies",
+    localSub: "Locally incorporated entities",
+    pmeTitle: "SMEs under contract",
+    pmeSub: "Public contracts delivered",
+  },
+} as const;
+
 function cardY(i: number) {
   return STACK_TOP + i * (CARD.h + CARD.gap);
 }
@@ -30,7 +63,8 @@ function cardX(i: number) {
   return i % 2 === 0 ? 20 : 52;
 }
 
-export function CapitalFlow() {
+export function CapitalFlow({ locale }: { locale: Locale }) {
+  const c = copy[locale];
   const [selected, setSelected] = useState("minah");
   const node = FLOW_NODES.find((n) => n.id === selected) ?? FLOW_NODES[5];
 
@@ -58,10 +92,10 @@ export function CapitalFlow() {
             il masquerait la première colonne. */}
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2 sm:mb-0 sm:block">
           <span className="rounded-full border border-bm-border bg-bm-accent-soft px-3 py-1 text-[11px] font-medium text-bm-accent sm:absolute sm:right-6 sm:top-6 sm:z-10">
-            Exemple : Kupanda, notre dernière stratégie
+            {c.example}
           </span>
           <span className="text-[11px] text-bm-muted sm:hidden">
-            Faites défiler le schéma →
+            {c.scrollHint}
           </span>
         </div>
         <svg
@@ -69,7 +103,7 @@ export function CapitalFlow() {
           className="w-full"
           style={{ minWidth: 900 }}
           role="img"
-          aria-label="Schéma des flux de capitaux, des souscripteurs aux PME et retour"
+          aria-label={c.svgAlt}
         >
           <defs>
             <marker
@@ -103,7 +137,7 @@ export function CapitalFlow() {
             style={{ letterSpacing: "0.1em" }}
             fill="var(--bm-muted)"
           >
-            INVESTISSEURS GLOBAUX
+            {c.investors}
           </text>
 
           {/* convergence des cinq familles vers un point unique */}
@@ -139,7 +173,7 @@ export function CapitalFlow() {
             className="text-[10.5px]"
             fill="var(--bm-muted)"
           >
-            prélevés à la souscription
+            {c.atSubscription}
           </text>
 
           {/* chaîne de déploiement */}
@@ -178,7 +212,7 @@ export function CapitalFlow() {
             style={{ letterSpacing: "0.1em" }}
             fill="var(--bm-muted)"
           >
-            RETOUR, COUPONS ET PRINCIPAL
+            {c.returnFlow}
           </text>
 
           {/* branche des performance fees : tout ne remonte pas à 100 % */}
@@ -199,7 +233,7 @@ export function CapitalFlow() {
               <g
                 key={inv.id}
                 {...pick(inv.id)}
-                aria-label={`${inv.title}, ${inv.subtitle}`}
+                aria-label={`${inv.title[locale]}, ${inv.subtitle[locale]}`}
               >
                 <rect
                   x={cardX(i)}
@@ -218,7 +252,7 @@ export function CapitalFlow() {
                   className="text-[13px] font-semibold"
                   fill="var(--bm-ink)"
                 >
-                  {inv.title}
+                  {inv.title[locale]}
                 </text>
                 <text
                   x={cardX(i) + 14}
@@ -226,7 +260,7 @@ export function CapitalFlow() {
                   className="text-[10.5px]"
                   fill="var(--bm-muted)"
                 >
-                  {inv.subtitle}
+                  {inv.subtitle[locale]}
                 </text>
               </g>
             );
@@ -237,8 +271,8 @@ export function CapitalFlow() {
             id="minah"
             x={NODES.minah.x}
             w={NODES.minah.w}
-            title="Minah"
-            subtitle="Structuration · registre"
+            title={c.minahTitle}
+            subtitle={c.minahSub}
             filled
             selected={selected === "minah"}
             pick={pick}
@@ -247,8 +281,8 @@ export function CapitalFlow() {
             id="societes-locales"
             x={NODES.locales.x}
             w={NODES.locales.w}
-            title="Sociétés financières"
-            subtitle="Entités de droit local"
+            title={c.localTitle}
+            subtitle={c.localSub}
             selected={selected === "societes-locales"}
             pick={pick}
           />
@@ -256,8 +290,8 @@ export function CapitalFlow() {
             id="pme"
             x={NODES.pme.x}
             w={NODES.pme.w}
-            title="PME sous contrat"
-            subtitle="Marchés publics exécutés"
+            title={c.pmeTitle}
+            subtitle={c.pmeSub}
             selected={selected === "pme"}
             pick={pick}
           />
@@ -268,7 +302,7 @@ export function CapitalFlow() {
             cx={460}
             cy={CONVERGE.y}
             label="Transaction fees"
-            rate={FEES.transaction}
+            rate={FEES.transaction[locale]}
             selected={selected === "transaction-fees"}
             pick={pick}
           />
@@ -277,7 +311,7 @@ export function CapitalFlow() {
             cx={665}
             cy={350}
             label="Performance fees"
-            rate={FEES.performance}
+            rate={FEES.performance[locale]}
             selected={selected === "performance-fees"}
             pick={pick}
           />
@@ -289,13 +323,16 @@ export function CapitalFlow() {
         aria-live="polite"
         className="mt-4 rounded-xl border border-bm-border bg-bm-surface-2 p-6"
       >
-        <h3 className="text-sm font-semibold text-bm-ink">{node.title}</h3>
-        <p className="mt-0.5 text-xs text-bm-muted">{node.tag}</p>
+        <h3 className="text-sm font-semibold text-bm-ink">{node.title[locale]}</h3>
+        <p className="mt-0.5 text-xs text-bm-muted">{node.tag[locale]}</p>
         <ul className="mt-4 space-y-2">
           {node.items.map((item) => (
-            <li key={item} className="flex gap-3 text-sm leading-[1.6] text-neutral-700">
+            <li
+              key={item.fr}
+              className="flex gap-3 text-sm leading-[1.6] text-neutral-700"
+            >
               <span className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-bm-accent" />
-              <span>{item}</span>
+              <span>{item[locale]}</span>
             </li>
           ))}
         </ul>
@@ -382,7 +419,7 @@ function FeePill({
   const w = 170;
   const h = 46;
   return (
-    <g {...pick(id)} aria-label={`${label}, taux ${rate}`}>
+    <g {...pick(id)} aria-label={`${label}, ${rate}`}>
       <rect
         x={cx - w / 2}
         y={cy - h / 2}
