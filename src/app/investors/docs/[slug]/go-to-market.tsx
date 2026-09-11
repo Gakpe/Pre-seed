@@ -64,7 +64,7 @@ const copy = {
       },
       {
         h: "Discussions en cours",
-        b: "Plusieurs pistes avancent en parallèle : Atlantic Financials étudie une ligne de 1 à 4 M€ dans Kupanda, aux côtés de Black Manta et d'un réseau d'institutionnels et de brokers internationaux.",
+        b: "Plusieurs pistes avancent en parallèle : Atlantic Financials étudie une ligne de 1 à 4 M€ dans Kupanda, aux côtés de Black Manta et d'un réseau d'institutionnels et de brokers internationaux. Notre stratégie en Afrique de l'Ouest a déjà suscité de l'intérêt pour des lignes de crédit d'au moins 5 M€, au même titre que Kupanda II.",
       },
       {
         h: "Écosystème blockchain",
@@ -209,7 +209,7 @@ const copy = {
       },
       {
         h: "In discussion",
-        b: "Several tracks are advancing in parallel: Atlantic Financials is looking at a €1–4M line into Kupanda, alongside Black Manta and a network of international institutions and brokers.",
+        b: "Several tracks are advancing in parallel: Atlantic Financials is looking at a €1–4M line into Kupanda, alongside Black Manta and a network of international institutions and brokers. Our West African strategy has already drawn interest for credit lines of at least €5M, as has Kupanda II.",
       },
       {
         h: "Blockchain ecosystem",
