@@ -16,7 +16,7 @@ import type { Locale } from "@/lib/i18n";
 const copy = {
   fr: {
     title: "Engagements à date",
-    total: "Total pondéré",
+    total: "Total retenu",
     upTo: "jusqu'à",
     weighted: "pondéré à",
     open: "Voir le détail des engagements à date",
@@ -27,7 +27,7 @@ const copy = {
   },
   en: {
     title: "Commitments to date",
-    total: "Weighted total",
+    total: "Total retained",
     upTo: "up to",
     weighted: "weighted at",
     open: "See the breakdown of commitments to date",
@@ -49,11 +49,9 @@ function euros(amount: number, locale: Locale) {
 export function MatchingFundTooltip({
   children,
   locale,
-  align = "left",
 }: {
   children: React.ReactNode;
   locale: Locale;
-  align?: "left" | "right";
 }) {
   const c = copy[locale];
   const [open, setOpen] = useState(false);
@@ -118,9 +116,9 @@ export function MatchingFundTooltip({
 
       <span
         role="tooltip"
-        className={`mf-tip pointer-events-none absolute bottom-full z-30 mb-2.5 block w-[24rem] max-w-[calc(100vw-3rem)] rounded-xl border border-foreground/10 bg-white p-4 text-left shadow-xl ${
-          align === "right" ? "right-0" : "left-0"
-        } ${open ? "mf-tip-open" : ""}`}
+        className={`mf-tip pointer-events-none absolute bottom-full left-0 z-30 mb-2.5 block w-[24rem] max-w-[calc(100vw-3rem)] rounded-xl border border-foreground/10 bg-white p-4 text-left shadow-xl sm:bottom-0 sm:left-full sm:mb-0 sm:ml-4 ${
+          open ? "mf-tip-open" : ""
+        }`}
       >
         <span className="block text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-400">
           {c.title}

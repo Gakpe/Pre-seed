@@ -13,8 +13,8 @@ export const deal = {
   engagedLabel: "700 K€ d'engagements à date, pondérés",
   progressPct: 47,
   tranches: ["< 100 K€", "< 250 K€", "< 500 K€", "500 K€+ (lead)"],
-  // Lien de prise de RDV (Calendly / Cal.com), placeholder à remplacer.
-  meetingUrl: "https://cal.com/minah/30min",
+  // Lien de prise de RDV Cal.com (pitch pre-seed, équipe complète).
+  meetingUrl: "https://cal.com/julien-gakpe-1icblz/pre-seed-pitch-minah-full-team",
 } as const;
 
 // Mêmes montants, format anglophone (« 1,5 M€ » → « €1.5M »).

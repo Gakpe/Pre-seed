@@ -108,16 +108,33 @@ export default async function DocPage({
       <div className={proseWidth}>
         <Link
           href="/investors/home"
-          className="halo-hover -mx-1 inline-block rounded px-1 text-sm text-neutral-500 hover:underline"
+          className="halo-hover -mx-1 inline-flex items-center gap-1.5 rounded px-1 text-sm text-neutral-500 hover:underline"
         >
+          <span aria-hidden>←</span>
           {t(locale, "docs.back")}
         </Link>
-        <p className="mt-6 text-xs font-medium uppercase tracking-widest text-neutral-400">
-          {category}
-        </p>
-        <h1 className="mt-1 text-2xl font-semibold tracking-tight">{title}</h1>
+        {doc.slug !== "la-levee" && (
+          <>
+            <p className="mt-6 text-xs font-medium uppercase tracking-widest text-neutral-400">
+              {category}
+            </p>
+            <h1 className="mt-1 text-2xl font-semibold tracking-tight">
+              {title}
+            </h1>
+          </>
+        )}
         {!richOnly && <DocContent text={content ?? ""} />}
       </div>
+      {doc.slug === "la-levee" && (
+        <header className="mt-6 rounded-xl border border-foreground/10 bg-white/60 px-6 py-9 text-center">
+          <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
+          <span
+            aria-hidden
+            className="mx-auto mt-3.5 block h-[3px] w-10 rounded-full bg-brand"
+          />
+        </header>
+      )}
+
       {/* Certaines fiches portent un contenu riche en plus de leur texte. */}
       {doc.slug === "pourquoi-minah" && <WhyMinah locale={locale} />}
       {doc.slug === "term-sheet-kupanda" && <TermSheet locale={locale} />}

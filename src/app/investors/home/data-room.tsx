@@ -43,8 +43,8 @@ export function DataRoom({
     >
       {categories.map((cat, i) => (
         <section key={cat.name}>
-          <h3 className="flex items-baseline gap-3 text-sm font-semibold">
-            <span className="font-mono text-xs text-neutral-400">
+          <h3 className="flex items-center gap-2.5 text-sm font-semibold">
+            <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-brand/10 font-mono text-[11px] font-semibold text-marsala">
               {String(startIndex + i).padStart(2, "0")}
             </span>
             {cat.label}

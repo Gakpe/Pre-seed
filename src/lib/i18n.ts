@@ -52,14 +52,16 @@ const dict = {
     // home
     "home.banner.overline": "Espace investisseurs · Confidentiel",
     "home.banner.title": "Opportunité d'investissement en pre-seed",
-    "home.banner.subtitle": "Tour de {target} · {period} · L'investissement africain, next gen.",
+    "home.banner.subtitle": "Tour de {target} · {period}",
     "home.level1.badge": "Niveau 1 · vous êtes ici",
     "home.level2.unlocked": "Niveau 2 débloqué ✓",
     "home.level2.pending": "Niveau 2 · ouverture en cours…",
     "home.level2.locked": "Niveau 2 verrouillé 🔒",
     "home.pitch.title": "La plateforme de dette privée pour l'Afrique.",
+    // Trois lignes voulues : le retour à la ligne est porté par le texte
+    // (whitespace-pre-line côté page), pas par trois clés séparées.
     "home.pitch.body":
-      "La première génération de la fintech africaine a gagné les paiements. La prochaine gagnera l'investissement. Minah en construit les rails : dette senior sécurisée, coupons fixes, infrastructure on-chain. Le tour de pre-seed est ouvert.",
+      "La première génération de la fintech africaine a gagné les paiements.\nLa prochaine gagnera l'investissement.\nMinah en construit les rails : dette senior sécurisée, coupons fixes, infrastructure on-chain.",
     "home.photo.alt":
       "L'équipe fondatrice de Minah : Julien Gakpé, Coralie Lolliot et Hervé Gakpé.",
     "home.photo.caption": "Julien Gakpé · Coralie Lolliot · Hervé Gakpé",
@@ -123,7 +125,7 @@ const dict = {
       "Le plus simple pour y répondre : prenez un rendez-vous avec l'équipe. Sinon, nous reviendrons vers vous avec l'ensemble des réponses par écrit.",
 
     // page document
-    "docs.back": "← Data room",
+    "docs.back": "Accueil data room",
     "docs.docsend": "DocSend ↗",
     "docs.captable": "Cap table interactive Minah",
   },
@@ -169,14 +171,14 @@ const dict = {
 
     "home.banner.overline": "Investor space · Confidential",
     "home.banner.title": "Pre-seed investment opportunity",
-    "home.banner.subtitle": "{target} round · {period} · African investment, next gen.",
+    "home.banner.subtitle": "{target} round · {period}",
     "home.level1.badge": "Level 1 · you are here",
     "home.level2.unlocked": "Level 2 unlocked ✓",
     "home.level2.pending": "Level 2 · opening in progress…",
     "home.level2.locked": "Level 2 locked 🔒",
     "home.pitch.title": "The private debt platform for Africa.",
     "home.pitch.body":
-      "African fintech's first generation won payments. The next one wins investment. Minah is building its rails: senior secured debt, fixed coupons, on-chain infrastructure. The pre-seed round is now open.",
+      "African fintech's first generation won payments.\nThe next one wins investment.\nMinah is building its rails: senior secured debt, fixed coupons, on-chain infrastructure.",
     "home.photo.alt":
       "Minah's founding team: Julien Gakpé, Coralie Lolliot and Hervé Gakpé.",
     "home.photo.caption": "Julien Gakpé · Coralie Lolliot · Hervé Gakpé",
@@ -237,7 +239,7 @@ const dict = {
     "widget.thanks.body":
       "The easiest way to get answers: book a meeting with the team. Otherwise, we will come back to you with all the answers in writing.",
 
-    "docs.back": "← Data room",
+    "docs.back": "Data room home",
     "docs.docsend": "DocSend ↗",
     "docs.captable": "Minah interactive cap table",
   },

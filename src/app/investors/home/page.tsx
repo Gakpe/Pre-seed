@@ -157,7 +157,7 @@ export default async function InvestorHomePage() {
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white md:text-4xl">
             {t(locale, "home.banner.title")}
           </h1>
-          <p className="mt-2 text-sm text-white/90 md:text-base">
+          <p className="mt-2 text-xl text-white/90 md:text-2xl">
             {t(locale, "home.banner.subtitle", {
               target: deal.target,
               period: deal.period,
@@ -205,7 +205,7 @@ export default async function InvestorHomePage() {
             <h2 className="text-2xl font-semibold leading-tight tracking-tight">
               {t(locale, "home.pitch.title")}
             </h2>
-            <p className="mt-3 text-sm leading-6 text-neutral-600">
+            <p className="mt-3 whitespace-pre-line text-sm leading-6 text-neutral-600">
               {t(locale, "home.pitch.body")}
             </p>
           </div>
@@ -287,14 +287,10 @@ export default async function InvestorHomePage() {
               value={deal.minTicket}
             />
             <Term label={t(locale, "home.deal.lead")} value={deal.leadWanted} />
-            {/* Le montant est un total pondéré : l'infobulle en donne le détail. */}
-            <Term label={t(locale, "home.deal.matching")}>
-              <span className="relative z-10">
-                <MatchingFundTooltip locale={locale} align="right">
-                  {deal.matchingFund}
-                </MatchingFundTooltip>
-              </span>
-            </Term>
+            <Term
+              label={t(locale, "home.deal.matching")}
+              value={deal.matchingFund}
+            />
           </dl>
           <div className="mt-6">
             <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-xs text-neutral-500">
@@ -305,25 +301,32 @@ export default async function InvestorHomePage() {
               </span>
               <span>{t(locale, "home.deal.of", { target: deal.target })}</span>
             </div>
-            {/* Tirets fins : montants identifiés en soft commit, pas encore signés */}
-            <div className="mt-2 h-1 rounded-full bg-neutral-200/80">
+            {/* Le pourcentage vient de deal.ts et pilote l'animation de
+                remplissage : rien à toucher ici quand le montant évolue. */}
+            <div
+              className="gauge-track mt-2"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={deal.progressPct}
+              aria-label={deal.engagedLabel}
+            >
               <div
-                className="relative h-full"
-                style={{
-                  width: `${deal.progressPct}%`,
-                  backgroundImage:
-                    "repeating-linear-gradient(90deg, var(--brand) 0 10px, transparent 10px 17px)",
-                }}
-              >
-                <span className="absolute -top-[3px] right-0 h-2.5 w-2.5 rounded-full bg-brand" />
-              </div>
+                className="gauge-fill"
+                style={
+                  {
+                    "--gauge-target": `${deal.progressPct}%`,
+                  } as React.CSSProperties
+                }
+              />
             </div>
           </div>
         </section>
 
-        {/* Data room niveau 1, deux colonnes */}
-        <section className="mt-10">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-400">
+        {/* Data room niveau 1, deux colonnes. Cadre blanc : c'est le contenu
+            ouvert, il doit ressortir. Le niveau 2 verrouillé reste en gris. */}
+        <section className="mt-10 rounded-lg border border-foreground/10 bg-white/50 p-6">
+          <h2 className="text-2xl font-semibold leading-tight tracking-tight">
             {t(locale, "home.dataroom.level1")}
           </h2>
           <div className="mt-4">
@@ -332,12 +335,18 @@ export default async function InvestorHomePage() {
         </section>
 
         {/* Niveau 2 */}
-        <section className="mt-10 rounded-lg border border-foreground/10 bg-white/50 p-6">
+        <section
+          className={`mt-10 rounded-lg border p-6 ${
+            level2Unlocked
+              ? "border-foreground/10 bg-white/50"
+              : "border-neutral-300/70 bg-neutral-200/40"
+          }`}
+        >
           {level2Unlocked ? (
             <>
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-400">
+              <h2 className="text-2xl font-semibold leading-tight tracking-tight">
                 {t(locale, "home.dataroom.level2")}
-                <span className="mt-1 inline-block rounded-full bg-salvia px-2 py-0.5 text-xs font-normal normal-case tracking-normal text-foreground sm:mt-0 sm:ml-2">
+                <span className="mt-1 inline-block rounded-full bg-salvia px-2 py-0.5 align-middle text-xs font-normal tracking-normal text-foreground sm:mt-0 sm:ml-2">
                   {investor.interest_tranche
                     ? t(locale, "home.dataroom.unlockedInterest", {
                         tranche: investor.interest_tranche,
@@ -362,7 +371,7 @@ export default async function InvestorHomePage() {
             </>
           ) : (
             <>
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-400">
+              <h2 className="text-2xl font-semibold leading-tight tracking-tight text-neutral-500">
                 {t(locale, "home.dataroom.level2.locked")}
               </h2>
               <p className="mt-2 text-sm leading-6 text-neutral-600">

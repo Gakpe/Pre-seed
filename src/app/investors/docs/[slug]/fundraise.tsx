@@ -21,15 +21,14 @@ const NOTES: Record<string, { fr: string; en: string } | undefined> = {
 
 const copy = {
   fr: {
-    roundEyebrow: "01 · État de la levée",
-    roundTitle: "Où en est le tour.",
+    roundLabel: "État de la levée",
     statuses: { soft: "Soft commitment", discussion: "En discussion" },
     upTo: "jusqu'à",
     weightedAt: "pondéré à",
     listTitle: "Souscripteurs",
     hidden: "Identité masquée",
     redacted:
-      "L'identité des souscripteurs est communiquée après réception d'une intention d'investissement. La catégorie et le montant, eux, sont affichés dès maintenant.",
+      "L'identité des souscripteurs est communiquée après réception d'une intention d'investissement.",
     terms: {
       target: "Objectif",
       minTicket: "Ticket minimum",
@@ -37,26 +36,24 @@ const copy = {
       period: "Période",
     },
 
-    posEyebrow: "02 · Paysage et positionnement",
-    posTitle: "Où nous nous situons.",
+    posLabel: "Paysage et positionnement",
     marketLink: "Le contexte général du marché est traité à part :",
-    whereTitle: "Où nous nous situons",
+    whereTitle: "Où est-ce que nous nous situons ?",
     where: [
-      "Acteur jeune et cutting-edge, tourné IA et blockchain.",
-      "Connecté à des liquidités on-chain plus avancées : nos comparables sont les acteurs de la finance on-chain, pas les acteurs traditionnels.",
-      "Le métier : construire l'infrastructure qui permet aux digital asset managers de déployer des fonds sur le continent africain via Minah : connexions API, cross-chain, suivi des investissements on-chain.",
-      "Valorisations benchmarkées sur les meilleurs vintages et les meilleurs profils blockchain du marché. Ce sont précisément ces profils que nous cherchons à attirer.",
-      "Dimension impact : chaque stratégie porte un impact indirect, avec des ODD clairement associés.",
+      "Nous sommes un acteur jeune et innovant, construit autour de l'IA et de la blockchain.",
+      "Nous construisons une infrastructure qui permet aux digital asset managers les plus avancés de se déployer en Afrique : connexions API, cross-chain, suivi des investissements.",
+      "Nos comparables sont les acteurs de la finance on-chain.",
+      "Les valorisations sont benchmarkées sur les meilleurs vintages et les profils blockchain du marché.",
+      "Chaque stratégie porte une dimension d'impact, direct ou indirect, rattachée à des ODD de l'ONU identifiés.",
     ],
-    whoTitle: "Qui nous cherchons",
+    whoTitle: "Qui est-ce que nous cherchons ?",
     whoLead:
-      "De la smart money capable d'accompagner Minah vers le statut de leader de la dette privée on-chain à orientation fintech, et dotée d'une sensibilité impact et Afrique.",
+      "De la smart money et des investisseurs familiers de la dette privée on-chain et des fintechs. Plus particulièrement des personnes qui ont une sensibilité pour l'impact et pour l'Afrique.",
     whoProfiles: ["Généralistes", "Spécialistes fintech", "Spécialistes blockchain", "Spécialistes impact"],
 
-    exitEyebrow: "03 · Horizon de sortie",
-    exitTitle: "Horizon 5 ans, deux scénarios.",
+    exitLabel: "Horizons de sortie",
     exitLead:
-      "Le raisonnement de fond est dans la note de marché : les acteurs traditionnels vont vouloir se digitaliser et devenir cutting-edge. Les deux scénarios ci-dessous se jouent à cinq ans.",
+      "Le raisonnement de fond est dans la note de marché : les acteurs traditionnels vont vouloir se digitaliser eux aussi. Les deux scénarios que nous envisageons se jouent à un horizon de cinq ans.",
     exits: [
       {
         tag: "Sortie industrielle",
@@ -72,15 +69,14 @@ const copy = {
   },
 
   en: {
-    roundEyebrow: "01 · State of the round",
-    roundTitle: "Where the round stands.",
+    roundLabel: "State of the round",
     statuses: { soft: "Soft commitment", discussion: "In discussion" },
     upTo: "up to",
     weightedAt: "weighted at",
     listTitle: "Subscribers",
     hidden: "Identity withheld",
     redacted:
-      "Subscriber identities are disclosed once an investment intention has been received. Category and amount are shown from the outset.",
+      "Subscriber identities are disclosed once an investment intention has been received.",
     terms: {
       target: "Target",
       minTicket: "Minimum ticket",
@@ -88,26 +84,24 @@ const copy = {
       period: "Period",
     },
 
-    posEyebrow: "02 · Landscape and positioning",
-    posTitle: "Where we sit.",
+    posLabel: "Landscape and positioning",
     marketLink: "The general market context is covered separately:",
-    whereTitle: "Where we sit",
+    whereTitle: "Where do we stand?",
     where: [
-      "A young, cutting-edge player, built around AI and blockchain.",
-      "Connected to more advanced on-chain liquidity: our comparables are on-chain finance players, not traditional ones.",
-      "The business: building the infrastructure that lets digital asset managers deploy funds across Africa through Minah: API connections, cross-chain, on-chain investment tracking.",
-      "Valuations benchmarked against the best vintages and the best blockchain profiles on the market. These are precisely the profiles we intend to attract.",
-      "Impact dimension: every strategy carries an indirect impact, with clearly mapped SDGs.",
+      "We are a young, innovative player, built around AI and blockchain.",
+      "We build the infrastructure that lets the most advanced digital asset managers deploy across Africa: API connections, cross-chain, investment tracking.",
+      "Our comparables are on-chain finance players.",
+      "Valuations are benchmarked against the best vintages and blockchain profiles on the market.",
+      "Every strategy carries a direct or indirect impact dimension, mapped to identified UN SDGs.",
     ],
-    whoTitle: "Who we are looking for",
+    whoTitle: "Who are we looking for?",
     whoLead:
-      "Smart money able to take Minah to leadership of fintech-oriented on-chain private debt, with a genuine impact and Africa sensibility.",
+      "Smart money and investors familiar with on-chain private debt and fintech. More specifically, people with a sensibility for impact and for Africa.",
     whoProfiles: ["Generalists", "Fintech specialists", "Blockchain specialists", "Impact specialists"],
 
-    exitEyebrow: "03 · Exit horizon",
-    exitTitle: "Five-year horizon, two scenarios.",
+    exitLabel: "Exit horizons",
     exitLead:
-      "The underlying reasoning is in the market note: traditional players will want to digitalise and turn cutting-edge. Both scenarios below play out over five years.",
+      "The underlying reasoning is in the market note: traditional players will want to digitalise too. The two scenarios we envisage play out over a five-year horizon.",
     exits: [
       {
         tag: "Industrial exit",
@@ -131,10 +125,7 @@ export function Fundraise({ locale }: { locale: Locale }) {
     <div className="mt-10 space-y-16">
       {/* ---------- 01 · État de la levée ---------- */}
       <section>
-        <Eyebrow>{c.roundEyebrow}</Eyebrow>
-        <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-tight">
-          {c.roundTitle}
-        </h2>
+        <SectionTitle n="01">{c.roundLabel}</SectionTitle>
 
         <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 rounded-xl border border-foreground/10 bg-white/60 p-5 sm:grid-cols-4">
           <Term label={c.terms.target} value={deal.target} />
@@ -144,9 +135,7 @@ export function Fundraise({ locale }: { locale: Locale }) {
         </dl>
 
         <div className="mt-8 rounded-xl border border-foreground/10 bg-white/60 p-5 sm:p-6">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
-            {c.listTitle}
-          </p>
+          <h3 className="text-sm font-semibold">{c.listTitle}</h3>
 
           <ul className="mt-4 divide-y divide-foreground/10">
             {commitments.map((line) => {
@@ -162,7 +151,7 @@ export function Fundraise({ locale }: { locale: Locale }) {
                         className="block h-2.5 w-32 rounded-full bg-neutral-300/80 blur-[3px]"
                       />
                       <span className="sr-only">{c.hidden}</span>
-                      <span className="mt-2 block text-sm font-medium">
+                      <span className="mt-2 block text-sm text-neutral-700">
                         {line.role[locale]}
                       </span>
                       {line.weight < 1 && (
@@ -211,16 +200,13 @@ export function Fundraise({ locale }: { locale: Locale }) {
 
       {/* ---------- 02 · Paysage et positionnement ---------- */}
       <section>
-        <Eyebrow>{c.posEyebrow}</Eyebrow>
-        <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-tight">
-          {c.posTitle}
-        </h2>
+        <SectionTitle n="02">{c.posLabel}</SectionTitle>
 
-        <p className="mt-3 text-sm leading-7 text-neutral-600">
+        <p className="mt-4 text-sm leading-7 text-neutral-600">
           {c.marketLink}{" "}
           <Link
             href="/investors/docs/note-marche"
-            className="halo-hover rounded px-1 font-medium text-marsala underline decoration-marsala/30 underline-offset-4 transition-colors hover:decoration-marsala"
+            className="halo-hover rounded px-1 font-medium whitespace-nowrap text-marsala underline decoration-marsala/30 underline-offset-4 transition-colors hover:decoration-marsala"
           >
             {locale === "en" ? "Market note ↗" : "Note de marché ↗"}
           </Link>
@@ -231,10 +217,7 @@ export function Fundraise({ locale }: { locale: Locale }) {
             <h3 className="text-sm font-semibold">{c.whereTitle}</h3>
             <ul className="mt-4 space-y-3">
               {c.where.map((w) => (
-                <li
-                  key={w}
-                  className="border-l-2 border-salvia pl-4 text-sm leading-6 text-neutral-700"
-                >
+                <li key={w} className="text-sm leading-6 text-neutral-700">
                   {w}
                 </li>
               ))}
@@ -260,24 +243,23 @@ export function Fundraise({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* ---------- 03 · Horizon de sortie ---------- */}
+      {/* ---------- 03 · Horizons de sortie ---------- */}
       <section>
-        <Eyebrow>{c.exitEyebrow}</Eyebrow>
-        <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-tight">
-          {c.exitTitle}
-        </h2>
-        <p className="mt-3 max-w-2xl text-sm leading-7 text-neutral-600">
-          {c.exitLead}{" "}
+        <SectionTitle n="03">{c.exitLabel}</SectionTitle>
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-neutral-600">
+          {c.exitLead}
+        </p>
+        <p className="mt-2">
           <Link
             href="/investors/docs/note-marche"
-            className="halo-hover rounded px-1 font-medium text-marsala underline decoration-marsala/30 underline-offset-4 transition-colors hover:decoration-marsala"
+            className="halo-hover -mx-1 rounded px-1 text-sm font-medium whitespace-nowrap text-marsala underline decoration-marsala/30 underline-offset-4 transition-colors hover:decoration-marsala"
           >
             {locale === "en" ? "Market note ↗" : "Note de marché ↗"}
           </Link>
         </p>
 
-        <div className="mt-7 grid gap-4 md:grid-cols-[auto_1fr] md:items-start md:gap-8">
-          <div className="rounded-xl border border-foreground/10 bg-white/60 px-6 py-5 text-center">
+        <div className="mt-7 grid gap-4 md:grid-cols-[auto_1fr] md:gap-8">
+          <div className="flex flex-col justify-center rounded-xl border border-foreground/10 bg-white/60 px-6 py-5 text-center">
             <p className="text-3xl font-bold tracking-tight text-brand">
               {c.horizon}
             </p>
@@ -320,10 +302,21 @@ function Term({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Eyebrow({ children }: { children: React.ReactNode }) {
+// Même habillage que les catégories de la data room, sur l'accueil : la
+// pastille dit qu'on est sur un titre, le reste de la ligne dit lequel.
+function SectionTitle({
+  n,
+  children,
+}: {
+  n: string;
+  children: React.ReactNode;
+}) {
   return (
-    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-brand">
+    <h2 className="flex items-center gap-3 text-2xl font-semibold leading-tight tracking-tight">
+      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand/10 font-mono text-sm font-semibold text-marsala">
+        {n}
+      </span>
       {children}
-    </p>
+    </h2>
   );
 }

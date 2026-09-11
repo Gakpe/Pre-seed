@@ -366,6 +366,21 @@ body {
   transition-delay: 0s, 0s, 0s;
 }
 
+/* À partir de `sm` l'infobulle s'ouvre à droite du montant et non au-dessus :
+   le titre du bloc reste lisible pendant la lecture. Le glissement suit alors
+   l'axe de l'ouverture. */
+@media (min-width: 40rem) {
+  .mf-tip {
+    transform: translateX(-5px);
+  }
+
+  /* Déclaré après .mf-tip dans la media query, sans quoi le glissement
+     l'emporterait sur l'état ouvert, à spécificité égale. */
+  .mf-tip-open {
+    transform: none;
+  }
+}
+
 /* --- Halo orange au survol (navigation secondaire) ---
    Même teinte et même flou que le halo de marque du layout investisseurs
    (bg-brand/10 + blur-3xl) : c'est la seule tache orange de l'interface, on
@@ -531,5 +546,71 @@ body {
   .sr {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* --- Jauge de la levée (accueil investisseurs) ---
+   La barre se remplit au chargement jusqu'au pourcentage porté par
+   --gauge-target, calculé dans src/lib/deal.ts : le jour où le montant engagé
+   change, l'animation suit sans retouche ici. Animation en largeur plutôt
+   qu'en transform : la tête lumineuse doit rester collée au bord droit du
+   remplissage, et un scaleX l'aurait déformée. */
+
+@keyframes gauge-fill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--gauge-target, 0%);
+  }
+}
+
+.gauge-track {
+  position: relative;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  overflow: hidden;
+}
+
+.gauge-fill {
+  position: relative;
+  height: 100%;
+  width: var(--gauge-target, 0%);
+  border-radius: 9999px;
+  /* Hachures sur le remplissage : les montants sont des soft commits, pas des
+     engagements signés. L'ancienne barre le disait par des tirets, qui la
+     laissaient trouée ; la texture porte la même information sur une barre
+     pleine. */
+  background:
+    repeating-linear-gradient(
+      45deg,
+      color-mix(in srgb, #fff 32%, transparent) 0 4px,
+      transparent 4px 9px
+    ),
+    linear-gradient(90deg, var(--marsala) 0%, var(--brand) 78%);
+  box-shadow:
+    0 0 10px color-mix(in srgb, var(--brand) 55%, transparent),
+    0 0 22px color-mix(in srgb, var(--brand) 28%, transparent);
+  animation: gauge-fill 1400ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+/* Tête lumineuse au point d'arrivée. */
+.gauge-fill::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  height: 0.5rem;
+  width: 0.5rem;
+  transform: translateY(-50%);
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--brand) 35%, #fff);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--brand) 80%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gauge-fill {
+    animation: none;
   }
 }
