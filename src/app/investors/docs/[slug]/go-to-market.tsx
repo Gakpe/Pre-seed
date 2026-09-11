@@ -72,7 +72,7 @@ const copy = {
       },
       {
         h: "Minah OS (IA)",
-        b: "Notre IA en production — les agents Yao et Comlan — analyse les appels et notre capacité à closer, gère les relances et les meetings, rédige toutes nos communications pour relecture, scanne les cartes de visite instantanément vers notre CRM et approfondit le mapping de l'écosystème. L'équipe se concentre sur ce qui demande un humain, structurer et vendre, pendant que l'IA s'améliore pour animer et renforcer un réseau large.",
+        b: "Notre IA en production — les agents Yao et Comlan — analyse les appels et notre capacité à closer, gère les relances et les meetings, et rédige toutes nos communications pour relecture. Elle nous remonte surtout des signaux clairs pour attirer et closer du capital, analyser les sous-jacents et appuyer la structuration, et approfondit le mapping de l'écosystème. L'équipe se concentre sur ce qui demande un humain, structurer et vendre, pendant que l'IA s'améliore pour animer et renforcer un réseau large.",
       },
     ] as Card[],
     assetsTitle: "Côté actifs — les bons sous-jacents",
@@ -221,7 +221,7 @@ const copy = {
       },
       {
         h: "Minah OS (AI)",
-        b: "Our AI in production — the Yao and Comlan agents — analyses calls and our ability to close, handles follow-ups and meetings, drafts all our communications for review, scans business cards instantly into our CRM and deepens the mapping of the ecosystem. The team focuses on what needs a human, structuring and selling, while the AI keeps improving to nurture and strengthen a broad network.",
+        b: "Our AI in production — the Yao and Comlan agents — analyses calls and our ability to close, handles follow-ups and meetings, and drafts all our communications for review. Above all, it surfaces clear signals to attract and close capital, analyse the underlying assets and support structuring, and deepens the mapping of the ecosystem. The team focuses on what needs a human, structuring and selling, while the AI keeps improving to nurture and strengthen a broad network.",
       },
     ] as Card[],
     assetsTitle: "Asset side — the best underlyings",
