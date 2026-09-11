@@ -113,7 +113,7 @@ const copy = {
     ] as Proof[],
     roadmapTitle: "La trajectoire",
     milestones: [
-      { t: "Aujourd'hui", v: "~500 K€", d: "déployés · 1 stratégie live et 2 en structuration (27 M€ au total)" },
+      { t: "Aujourd'hui", v: "~500 K€", d: "déployés · 1 stratégie live et 2 en structuration (~30 M€ de pipeline)" },
       { t: "Phase 1 — MVP", v: "~15 M€", d: "de volume · H2 2026 → H2 2027" },
       { t: "Accélération", v: "~50 M€", d: "nouvelles stratégies & géographies" },
       { t: "Fin 2027 — Scale", v: "100 M€", d: "d'AUM · licence de crédit" },
@@ -124,11 +124,11 @@ const copy = {
     pathSteps: [
       {
         h: "500 K€ → 15 M€",
-        b: "Les HNWI et les Network Builders, plus une première ligne institutionnelle (Atlantic Financials, fonds américain), financent les 27 M€ de stratégies en cours de structuration : Kupanda I, Kupanda II et Esgni.",
+        b: "Les HNWI, les Network Builders et une première ligne institutionnelle (Atlantic Financials, fonds américain) financent le pipeline à bonne visibilité : Kupanda 2/3 (~15 M€) et Esgni, notre stratégie scale-up ouest-africaine (~15 M€), soit ~30 M€.",
       },
       {
         h: "15 → 50 M€",
-        b: "Deux à trois lignes institutionnelles de 5 à 15 M€, et des stratégies supplémentaires.",
+        b: "Notre prospection structure ~20 M€ de plus — un véhicule adossé aux gouvernements ouest-africains, en logique de partenariat public-privé (PPP) — appuyé par deux à trois lignes institutionnelles de 5 à 15 M€.",
       },
       {
         h: "50 → 100 M€",
@@ -254,7 +254,7 @@ const copy = {
     ] as Proof[],
     roadmapTitle: "The trajectory",
     milestones: [
-      { t: "Today", v: "~€500K", d: "deployed · 1 strategy live and 2 being structured (€27M total)" },
+      { t: "Today", v: "~€500K", d: "deployed · 1 strategy live and 2 being structured (~€30M pipeline)" },
       { t: "Phase 1 — MVP", v: "~€15M", d: "of volume · H2 2026 → H2 2027" },
       { t: "Acceleration", v: "~€50M", d: "new strategies & geographies" },
       { t: "End-2027 — Scale", v: "€100M", d: "AUM · credit licence" },
@@ -265,11 +265,11 @@ const copy = {
     pathSteps: [
       {
         h: "€500K → €15M",
-        b: "HNWIs and Network Builders, plus a first institutional line (Atlantic Financials, the American fund), fund the €27M of strategies being structured: Kupanda I, Kupanda II and Esgni.",
+        b: "HNWIs, Network Builders and a first institutional line (Atlantic Financials, the American fund) fund the pipeline with good visibility: Kupanda 2/3 (~€15M) and Esgni, our West African scale-up strategy (~€15M) — about €30M.",
       },
       {
         h: "€15M → €50M",
-        b: "Two to three institutional lines of €5–15M, plus additional strategies.",
+        b: "Our prospecting structures another ~€20M — a vehicle anchored to West African governments, on a public-private-partnership (PPP) basis — supported by two to three institutional lines of €5–15M.",
       },
       {
         h: "€50M → €100M",
