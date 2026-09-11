@@ -72,7 +72,7 @@ const copy = {
       },
       {
         h: "Minah OS (IA)",
-        b: "Notre IA en production — les agents Yao et Comlan — analyse les appels, gère les relances et le business development. L'équipe se concentre sur ce qui demande un humain, structurer et vendre, pendant qu'une équipe resserrée anime un réseau large.",
+        b: "Notre IA en production — les agents Yao et Comlan — analyse les appels, gère les relances et les meetings, rédige toutes nos communications pour relecture, scanne les cartes de visite instantanément et approfondit le mapping de l'écosystème. L'équipe se concentre sur ce qui demande un humain, structurer et vendre, pendant que l'IA s'améliore pour animer et renforcer un réseau large.",
       },
     ] as Card[],
     assetsTitle: "Côté actifs — les bons sous-jacents",
@@ -221,7 +221,7 @@ const copy = {
       },
       {
         h: "Minah OS (AI)",
-        b: "Our AI in production — the Yao and Comlan agents — analyses calls, handles follow-ups and business development. The team focuses on what needs a human, structuring and selling, while a lean team runs a broad network.",
+        b: "Our AI in production — the Yao and Comlan agents — analyses calls, handles follow-ups and meetings, drafts all our communications for review, scans business cards instantly and deepens the mapping of the ecosystem. The team focuses on what needs a human, structuring and selling, while the AI keeps improving to nurture and strengthen a broad network.",
       },
     ] as Card[],
     assetsTitle: "Asset side — the best underlyings",
