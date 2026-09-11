@@ -109,12 +109,12 @@ const PEOPLE: Person[] = [
       fr: [
         "Université d'Oxford — Master, économie et études africaines",
         "Harvard Business School — Leading with Finance, certificat",
-        "Université de Manchester — Bachelor, économie et sciences politiques",
+        "Université de Manchester — Bachelor, économie et sciences politiques (top 40 mondial, QS World University Rankings 2027)",
       ],
       en: [
         "University of Oxford — Master's degree, Economics & African Studies",
         "Harvard Business School — Leading with Finance, certificate",
-        "University of Manchester — Bachelor's degree, Economics & Politics",
+        "University of Manchester — Bachelor's degree, Economics & Politics (top 40 worldwide, QS World University Rankings 2027)",
       ],
     },
     career: {
