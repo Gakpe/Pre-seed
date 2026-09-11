@@ -56,7 +56,7 @@ const copy = {
       },
       {
         h: "Minah Circles",
-        b: "Nos événements propriétaires réunissent environ 50 personnes qualifiées par édition. Nous les organisons dans cinq hubs : Paris, Abidjan (en marge de l'Africa CEO Forum), Nairobi, New York et Davos (en marge du WEF).",
+        b: "Nos événements propriétaires réunissent environ 50 personnes qualifiées par édition. Nous les organisons dans trois hubs : Paris, Abidjan (en marge de l'Africa CEO Forum) et Davos (en marge du WEF).",
       },
       {
         h: "Les tables clés",
@@ -145,7 +145,7 @@ const copy = {
       },
       {
         h: "Cadencer les Minah Circles",
-        b: "Cinq hubs — Paris, Abidjan, Nairobi, New York et Davos — pour transformer chaque édition en pipeline d'investisseurs qualifiés.",
+        b: "Passer de trois à cinq hubs — en ajoutant Nairobi et New York — pour transformer chaque édition en pipeline d'investisseurs qualifiés.",
       },
       {
         h: "Renforcer l'équipe",
@@ -201,7 +201,7 @@ const copy = {
       },
       {
         h: "Minah Circles",
-        b: "Our proprietary events gather around 50 qualified guests per edition. We run them in five hubs: Paris, Abidjan (alongside the Africa CEO Forum), Nairobi, New York and Davos (alongside the WEF).",
+        b: "Our proprietary events gather around 50 qualified guests per edition. We run them in three hubs: Paris, Abidjan (alongside the Africa CEO Forum) and Davos (alongside the WEF).",
       },
       {
         h: "The key tables",
@@ -286,7 +286,7 @@ const copy = {
       },
       {
         h: "Set the Circles' cadence",
-        b: "Five hubs — Paris, Abidjan, Nairobi, New York and Davos — turning every edition into a pipeline of qualified investors.",
+        b: "Go from three to five hubs — adding Nairobi and New York — turning every edition into a pipeline of qualified investors.",
       },
       {
         h: "Strengthen the team",
