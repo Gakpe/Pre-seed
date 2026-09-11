@@ -51,7 +51,7 @@ const copy = {
     capitalTitle: "Côté capital — qui finance",
     capitalCards: [
       {
-        h: "Network builders",
+        h: "+15 Network Builders",
         b: "Un réseau choisi d'apporteurs — brokers, banquiers privés et asset managers — qui nous introduisent des investisseurs qualifiés par des mises en relation chaudes et engageantes. Nous comptons aujourd'hui 15 Network Builders, qui nous ont déjà amené dix investisseurs qualifiés ; d'autres introductions sont en cours.",
       },
       {
@@ -72,7 +72,7 @@ const copy = {
       },
       {
         h: "Minah OS (IA)",
-        b: "Notre IA en production — les agents Yao et Comlan — analyse les appels et notre capacité à closer, gère les relances et les meetings, rédige toutes nos communications pour relecture, scanne les cartes de visite instantanément sur notre CRM et approfondit le mapping de l'écosystème. L'équipe se concentre sur ce qui demande un humain, structurer et vendre, pendant que l'IA s'améliore pour animer et renforcer un réseau large.",
+        b: "Notre IA en production — les agents Yao et Comlan — analyse les appels et notre capacité à closer, gère les relances et les meetings, rédige toutes nos communications pour relecture, scanne les cartes de visite instantanément vers notre CRM et approfondit le mapping de l'écosystème. L'équipe se concentre sur ce qui demande un humain, structurer et vendre, pendant que l'IA s'améliore pour animer et renforcer un réseau large.",
       },
     ] as Card[],
     assetsTitle: "Côté actifs — les bons sous-jacents",
@@ -200,7 +200,7 @@ const copy = {
     capitalTitle: "Capital side — who funds",
     capitalCards: [
       {
-        h: "Network builders",
+        h: "+15 Network Builders",
         b: "A curated network of introducers — brokers, private bankers and asset managers — who bring us qualified investors through warm, committing introductions. We now count 15 Network Builders, who have already brought in ten qualified investors; more introductions are underway.",
       },
       {
