@@ -217,13 +217,13 @@ export default async function InvestorHomePage() {
             aria-label={t(locale, "home.photo.alt")}
             className="halo-hover halo-soft group block rounded-lg px-4 py-5 outline-none ring-brand/60 ring-offset-2 ring-offset-background focus-visible:ring-2"
           >
-            <div className="flex items-end justify-center gap-3 sm:gap-6">
+            <div className="flex items-end justify-center gap-3 sm:gap-4">
               <figure className="flex flex-col items-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/brand/founders/herve.png"
                   alt="Hervé Gakpé"
-                  className="h-20 w-20 shrink-0 transition-transform duration-500 group-hover:scale-[1.05] sm:h-24 sm:w-24"
+                  className="aspect-square w-24 shrink-0 object-cover transition-transform duration-500 group-hover:scale-[1.05] md:w-20"
                 />
                 <figcaption className="mt-2 text-[11px] leading-tight text-neutral-600">
                   Hervé Gakpé
@@ -234,9 +234,9 @@ export default async function InvestorHomePage() {
                 <img
                   src="/brand/founders/julien.png"
                   alt="Julien Gakpé"
-                  className="h-28 w-28 shrink-0 transition-transform duration-500 group-hover:scale-[1.05] sm:h-32 sm:w-32"
+                  className="aspect-square w-24 shrink-0 object-cover transition-transform duration-500 group-hover:scale-[1.05] md:w-20"
                 />
-                <figcaption className="mt-2 text-xs font-medium leading-tight text-neutral-800">
+                <figcaption className="mt-2 text-[11px] leading-tight text-neutral-600">
                   Julien Gakpé
                 </figcaption>
               </figure>
@@ -245,7 +245,7 @@ export default async function InvestorHomePage() {
                 <img
                   src="/brand/founders/coralie.png"
                   alt="Coralie Lolliot"
-                  className="h-20 w-20 shrink-0 transition-transform duration-500 group-hover:scale-[1.05] sm:h-24 sm:w-24"
+                  className="aspect-square w-24 shrink-0 object-cover transition-transform duration-500 group-hover:scale-[1.05] md:w-20"
                 />
                 <figcaption className="mt-2 text-[11px] leading-tight text-neutral-600">
                   Coralie Lolliot
