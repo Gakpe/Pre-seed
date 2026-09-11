@@ -121,13 +121,13 @@ const PEOPLE: Person[] = [
       fr: [
         "Sciences Po Paris (Executive), Africa Director — passerelle avec les grands dirigeants & ministres africains venus en formation",
         "Africa CEO Forum, Director — co-création de l'écosystème des principaux CEO et acteurs tech du continent",
-        "UNESCO (siège), consultante — politiques publiques auprès des États",
+        "UNESCO (siège), Consultante — politiques publiques auprès des États",
         "Minah, co-fondatrice — capital-in, relation investisseurs et écosystème",
       ],
       en: [
         "Sciences Po Paris (Executive), Africa Director — bridge to Africa's senior leaders and ministers in executive programmes",
         "Africa CEO Forum, Director — co-creating the ecosystem of the continent's leading CEOs and tech players",
-        "UNESCO (HQ), consultant — public policy advisory to governments",
+        "UNESCO (HQ), Consultant — public policy advisory to governments",
         "Minah, co-founder — capital-in, investor relations and ecosystem",
       ],
     },
