@@ -21,12 +21,12 @@ const copy = {
       "Six ans de carrière, poste après poste, relation après relation : un réseau propriétaire, gagné et difficile à copier, que la levée met en mouvement. Les deux côtés de la machine sont d'abord deux personnes.",
     founders: [
       {
-        side: "Le côté africain",
+        side: "Écosystèmes & investisseurs",
         h: "Coralie",
-        b: "A passé sa carrière à construire les écosystèmes où se rencontrent dirigeants, CEO, institutionnels et investisseurs qui travaillent avec et sur le continent africain.",
+        b: "A passé sa carrière à construire les écosystèmes, en Afrique comme à l'international, où se rencontrent dirigeants, CEO, institutionnels et investisseurs qui travaillent avec et sur le continent.",
       },
       {
-        side: "Le côté capital global",
+        side: "Capital institutionnel & on-chain",
         h: "Julien",
         b: "Connecté aux écosystèmes blockchain et aux institutionnels européens et nord-américains : il a investi 500 M€ en fonds de fonds chez Bpifrance.",
       },
@@ -147,12 +147,12 @@ const copy = {
       "Six years of careers, role after role, relationship after relationship: a proprietary network, earned and hard to copy, that the raise sets in motion. The two sides of the machine are, first, two people.",
     founders: [
       {
-        side: "The African side",
+        side: "Ecosystems & investors",
         h: "Coralie",
-        b: "Spent her career building the ecosystems where the leaders, CEOs, institutions and investors working with and on Africa meet.",
+        b: "Spent her career building the ecosystems — in Africa and internationally — where the leaders, CEOs, institutions and investors working with and on the continent meet.",
       },
       {
-        side: "The global-capital side",
+        side: "Institutional & on-chain capital",
         h: "Julien",
         b: "Plugged into the blockchain ecosystems and European & North American institutions: he invested €500M in fund-of-funds at Bpifrance.",
       },
