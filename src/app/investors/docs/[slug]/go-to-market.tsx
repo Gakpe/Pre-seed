@@ -60,7 +60,7 @@ const copy = {
       },
       {
         h: "Les tables clés",
-        b: "Nous sommes invités là où se concentre le capital africain : Davos en parallèle du World Economic Forum, l'Africa CEO Forum où les CEO doivent justifier d'un minimum de 10 M€ de chiffre d'affaires annuel, l'Africa Financial Industry Summit, Choiseul Afrique, TLG Capital, le Web Summit, le Financial Times Africa Summit et ChangeNOW. C'est lors de l'un de ces rendez-vous, au Qatar, qu'un fonds américain nous a rejoints pour co-structurer le déploiement de Kupanda.",
+        b: "Nous sommes invités là où se concentre le capital africain et international : Davos en parallèle du World Economic Forum, l'Africa CEO Forum où les CEO doivent justifier d'un minimum de 10 M€ de chiffre d'affaires annuel, l'Africa Financial Industry Summit, Choiseul Afrique, TLG Capital, le Web Summit, le Financial Times Africa Summit et ChangeNOW. C'est lors de l'un de ces rendez-vous, au Qatar, qu'un fonds américain nous a rejoints pour co-structurer le déploiement de Kupanda.",
       },
       {
         h: "Discussions en cours",
@@ -186,7 +186,7 @@ const copy = {
       },
       {
         h: "The key tables",
-        b: "We are invited where African capital concentrates: Davos alongside the World Economic Forum, the Africa CEO Forum — where CEOs must show at least €10M in annual revenue to attend — the Africa Financial Industry Summit, Choiseul Afrique, TLG Capital, the Web Summit, the Financial Times Africa Summit and ChangeNOW. It was at one of these gatherings, in Qatar, that an American fund joined us to co-structure the deployment of Kupanda.",
+        b: "We are invited where African and international capital concentrates: Davos alongside the World Economic Forum, the Africa CEO Forum — where CEOs must show at least €10M in annual revenue to attend — the Africa Financial Industry Summit, Choiseul Afrique, TLG Capital, the Web Summit, the Financial Times Africa Summit and ChangeNOW. It was at one of these gatherings, in Qatar, that an American fund joined us to co-structure the deployment of Kupanda.",
       },
       {
         h: "In discussion",
