@@ -15,7 +15,7 @@ const copy = {
   fr: {
     lead: "Notre force, c'est l'accès.",
     leadBody:
-      "En six mois, nous avons formalisé une machine à réseau qui nous connecte aux bonnes personnes des deux côtés : le capital qui finance, et les entreprises génératrices de cash qui font les meilleurs sous-jacents.",
+      "Nous avons formalisé une machine à réseau qui nous connecte aux bonnes personnes des deux côtés : le capital qui finance, et les entreprises génératrices de cash qui font les meilleurs sous-jacents.",
     originTitle: "Notre premier actif : le réseau des fondateurs",
     originBody:
       "Six ans de carrière, poste après poste, relation après relation : un réseau propriétaire, gagné et difficile à copier, que la levée met en mouvement. Les deux côtés de la machine sont d'abord deux personnes.",
@@ -160,7 +160,7 @@ const copy = {
   en: {
     lead: "Our strength is access.",
     leadBody:
-      "In six months, we have formalised a relationship machine that connects us to the right people on both sides: the capital that funds, and the cash-generative businesses that make the best underlyings.",
+      "We have formalised a relationship machine that connects us to the right people on both sides: the capital that funds, and the cash-generative businesses that make the best underlyings.",
     originTitle: "Our first asset: the founders' network",
     originBody:
       "Six years of careers, role after role, relationship after relationship: a proprietary network, earned and hard to copy, that the raise sets in motion. The two sides of the machine are, first, two people.",
