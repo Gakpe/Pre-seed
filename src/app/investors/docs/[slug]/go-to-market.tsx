@@ -124,7 +124,7 @@ const copy = {
     pathSteps: [
       {
         h: "500 K€ → 15 M€",
-        b: "Les HNWI, les Network Builders et une première ligne institutionnelle (Atlantic Financials, fonds américain) financent le pipeline à bonne visibilité : Kupanda 2/3 (~15 M€) et Esgni, notre stratégie scale-up ouest-africaine (~15 M€), soit ~30 M€.",
+        b: "Les HNWI, les Network Builders et une première ligne institutionnelle (Atlantic Financials, fonds américain) commencent à financer le pipeline à bonne visibilité : Kupanda 2/3 (~15 M€) et Esgni, notre stratégie scale-up ouest-africaine (~15 M€), soit ~30 M€.",
       },
       {
         h: "15 → 50 M€",
@@ -265,7 +265,7 @@ const copy = {
     pathSteps: [
       {
         h: "€500K → €15M",
-        b: "HNWIs, Network Builders and a first institutional line (Atlantic Financials, the American fund) fund the pipeline with good visibility: Kupanda 2/3 (~€15M) and Esgni, our West African scale-up strategy (~€15M) — about €30M.",
+        b: "HNWIs, Network Builders and a first institutional line (Atlantic Financials, the American fund) are starting to fund the pipeline with good visibility: Kupanda 2/3 (~€15M) and Esgni, our West African scale-up strategy (~€15M) — about €30M.",
       },
       {
         h: "€15M → €50M",
