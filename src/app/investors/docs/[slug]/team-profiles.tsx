@@ -107,12 +107,12 @@ const PEOPLE: Person[] = [
     },
     academic: {
       fr: [
-        "Université d'Oxford — Master, économie et études africaines",
+        "Université d'Oxford — Master, économie et études africaines (4e mondial au QS World University Rankings ; taux d'admission ~10–15 % selon les cursus)",
         "Harvard Business School — Leading with Finance, certificat",
         "Université de Manchester — Bachelor, économie et sciences politiques (top 40 mondial, QS World University Rankings 2027)",
       ],
       en: [
-        "University of Oxford — Master's degree, Economics & African Studies",
+        "University of Oxford — Master's degree, Economics & African Studies (ranked 4th worldwide in the QS World University Rankings; ~10–15% admission rate depending on course)",
         "Harvard Business School — Leading with Finance, certificate",
         "University of Manchester — Bachelor's degree, Economics & Politics (top 40 worldwide, QS World University Rankings 2027)",
       ],
