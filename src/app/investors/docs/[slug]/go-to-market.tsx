@@ -56,7 +56,7 @@ const copy = {
       },
       {
         h: "Minah Circles",
-        b: "Nos événements propriétaires réunissent environ 50 personnes qualifiées par édition. Nous les organisons dans trois hubs : Paris, Abidjan en marge de l'Africa CEO Forum, et Davos en marge du Forum économique mondial (WEF).",
+        b: "Nos événements propriétaires réunissent environ 50 personnes qualifiées par édition. Nous les organisons dans cinq hubs : Paris, Abidjan (en marge de l'Africa CEO Forum), Nairobi, New York et Davos (en marge du WEF).",
       },
       {
         h: "Les tables clés",
@@ -118,6 +118,25 @@ const copy = {
       { t: "Accélération", v: "~50 M€", d: "nouvelles stratégies & géographies" },
       { t: "Fin 2027 — Scale", v: "100 M€", d: "d'AUM · licence de crédit" },
     ] as Milestone[],
+    pathTitle: "Le chemin vers 100 M€",
+    pathLead:
+      "100 M€ ne se conquiert pas au retail : c'est une poignée de lignes institutionnelles — fonds de dette, fonds de fonds, DFI, trésoreries on-chain — de 5 à 20 M€ chacune, posées sur la base HNWI. Le fonds américain déjà entré valide ce ticket.",
+    pathSteps: [
+      {
+        h: "500 K€ → 15 M€",
+        b: "Les HNWI et les Network Builders, plus une première ligne institutionnelle (Atlantic Financials, fonds américain), financent les 27 M€ de stratégies déjà structurées.",
+      },
+      {
+        h: "15 → 50 M€",
+        b: "Deux à trois lignes institutionnelles de 5 à 15 M€, amplifiées par la rotation du capital — 3 à 4 fois par an sur des cycles de 3 à 6 mois.",
+      },
+      {
+        h: "50 → 100 M€",
+        b: "Une ancre DFI ou fonds de fonds, la liquidité on-chain, et la licence d'établissement de crédit qui débloque les plus gros tickets.",
+      },
+    ] as Card[],
+    pathComparables:
+      "Ce n'est pas inédit : TLG Capital (~120 M$, adossé à IFC et Proparco), Cauris et Enko ont atteint 100 M€+ dans cette même classe d'actifs. Le chemin est connu ; notre différence est la distribution.",
     scaleTitle: "Ce que la levée met à l'échelle",
     scale: [
       {
@@ -126,7 +145,7 @@ const copy = {
       },
       {
         h: "Cadencer les Minah Circles",
-        b: "Trois hubs — Paris, Abidjan et Davos — pour transformer chaque édition en pipeline d'investisseurs qualifiés.",
+        b: "Cinq hubs — Paris, Abidjan, Nairobi, New York et Davos — pour transformer chaque édition en pipeline d'investisseurs qualifiés.",
       },
       {
         h: "Renforcer l'équipe",
@@ -182,7 +201,7 @@ const copy = {
       },
       {
         h: "Minah Circles",
-        b: "Our proprietary events gather around 50 qualified guests per edition. We run them in three hubs: Paris, Abidjan alongside the Africa CEO Forum, and Davos alongside the World Economic Forum (WEF).",
+        b: "Our proprietary events gather around 50 qualified guests per edition. We run them in five hubs: Paris, Abidjan (alongside the Africa CEO Forum), Nairobi, New York and Davos (alongside the WEF).",
       },
       {
         h: "The key tables",
@@ -240,6 +259,25 @@ const copy = {
       { t: "Acceleration", v: "~€50M", d: "new strategies & geographies" },
       { t: "End-2027 — Scale", v: "€100M", d: "AUM · credit licence" },
     ] as Milestone[],
+    pathTitle: "The path to €100M",
+    pathLead:
+      "€100M is not a retail land-grab: it is a handful of institutional lines — debt funds, fund-of-funds, DFIs, on-chain treasuries — of €5–20M each, on top of the HNWI base. The American fund already in validates that ticket.",
+    pathSteps: [
+      {
+        h: "€500K → €15M",
+        b: "HNWIs and Network Builders, plus a first institutional line (Atlantic Financials, the American fund), fund the €27M of already-structured strategies.",
+      },
+      {
+        h: "€15M → €50M",
+        b: "Two to three institutional lines of €5–15M, amplified by capital rotation — 3 to 4 times a year on 3-to-6-month cycles.",
+      },
+      {
+        h: "€50M → €100M",
+        b: "A DFI or fund-of-funds anchor, on-chain liquidity, and the credit-institution licence that unlocks the largest tickets.",
+      },
+    ] as Card[],
+    pathComparables:
+      "This is not unprecedented: TLG Capital (~$120M, backed by IFC and Proparco), Cauris and Enko reached €100M+ in this same asset class. The path is known; our difference is distribution.",
     scaleTitle: "What the raise scales",
     scale: [
       {
@@ -248,7 +286,7 @@ const copy = {
       },
       {
         h: "Set the Circles' cadence",
-        b: "Three hubs — Paris, Abidjan and Davos — turning every edition into a pipeline of qualified investors.",
+        b: "Five hubs — Paris, Abidjan, Nairobi, New York and Davos — turning every edition into a pipeline of qualified investors.",
       },
       {
         h: "Strengthen the team",
@@ -303,10 +341,7 @@ export function GoToMarket({ locale }: { locale: Locale }) {
               key={f.h}
               className="rounded-xl border border-foreground/10 bg-white/60 p-5"
             >
-              <p className="text-[12px] font-medium text-marsala">{f.side}</p>
-              <p className="mt-0.5 text-base font-semibold text-foreground">
-                {f.h}
-              </p>
+              <p className="text-base font-semibold text-foreground">{f.h}</p>
               <p className="mt-1.5 text-[13px] leading-6 text-neutral-600">
                 {f.b}
               </p>
@@ -423,7 +458,7 @@ export function GoToMarket({ locale }: { locale: Locale }) {
             </div>
           ))}
         </div>
-        <p className="mt-4 rounded-xl border border-foreground/10 bg-white/60 p-5 text-[13px] leading-6 text-neutral-700">
+        <p className="mt-4 border-l-2 border-marsala pl-4 text-[13px] leading-6 text-neutral-700">
           {c.cabinets}
         </p>
       </section>
@@ -474,9 +509,35 @@ export function GoToMarket({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* 06 — ce que la levée met à l'échelle */}
+      {/* 06 — le chemin vers 100 M€ */}
       <section>
-        <SectionTitle n="06">{c.scaleTitle}</SectionTitle>
+        <SectionTitle n="06">{c.pathTitle}</SectionTitle>
+        <p className="mt-3 max-w-2xl text-sm leading-7 text-neutral-700">
+          {c.pathLead}
+        </p>
+        <div className="mt-5 grid gap-4 sm:grid-cols-3">
+          {c.pathSteps.map((s) => (
+            <div
+              key={s.h}
+              className="rounded-xl border border-foreground/10 bg-white/60 p-5"
+            >
+              <p className="text-sm font-bold tracking-tight text-marsala">
+                {s.h}
+              </p>
+              <p className="mt-1.5 text-[13px] leading-6 text-neutral-600">
+                {s.b}
+              </p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-4 border-l-2 border-marsala pl-4 text-[13px] leading-6 text-neutral-700">
+          {c.pathComparables}
+        </p>
+      </section>
+
+      {/* 07 — ce que la levée met à l'échelle */}
+      <section>
+        <SectionTitle n="07">{c.scaleTitle}</SectionTitle>
         <div className="mt-5 grid gap-4 sm:grid-cols-3">
           {c.scale.map((s) => (
             <div
