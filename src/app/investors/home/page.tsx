@@ -209,30 +209,58 @@ export default async function InvestorHomePage() {
               {t(locale, "home.pitch.body")}
             </p>
           </div>
-          {/* Photo des fondateurs, en vignette : les trois sont de front, la
-              bande large de la prise de vue est conservée telle quelle. Elle
-              mène à la fiche équipe. */}
+          {/* Portraits des trois fondateurs, en cercle : Hervé à gauche,
+              Julien au centre (plus grand), Coralie à droite. Alignés par le
+              bas. Mènent à la fiche équipe. */}
           <Link
             href="/investors/docs/equipe"
-            className="halo-hover halo-soft group block overflow-hidden rounded-lg bg-[#050505] outline-none ring-brand/60 ring-offset-2 ring-offset-background focus-visible:ring-2"
+            aria-label={t(locale, "home.photo.alt")}
+            className="halo-hover halo-soft group block rounded-lg px-4 py-5 outline-none ring-brand/60 ring-offset-2 ring-offset-background focus-visible:ring-2"
           >
-            <figure>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/brand/team.jpg"
-                alt={t(locale, "home.photo.alt")}
-                className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-              />
-              <figcaption className="flex items-center justify-between gap-2 px-3 py-2 text-[10px] tracking-wide text-white/45">
-                <span>{t(locale, "home.photo.caption")}</span>
-                <span
-                  aria-hidden
-                  className="shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
-                >
-                  →
-                </span>
-              </figcaption>
-            </figure>
+            <div className="flex items-end justify-center gap-3 sm:gap-6">
+              <figure className="flex flex-col items-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/brand/founders/herve.png"
+                  alt="Hervé Gakpé"
+                  className="h-20 w-20 shrink-0 transition-transform duration-500 group-hover:scale-[1.05] sm:h-24 sm:w-24"
+                />
+                <figcaption className="mt-2 text-[11px] leading-tight text-neutral-600">
+                  Hervé Gakpé
+                </figcaption>
+              </figure>
+              <figure className="flex flex-col items-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/brand/founders/julien.png"
+                  alt="Julien Gakpé"
+                  className="h-28 w-28 shrink-0 transition-transform duration-500 group-hover:scale-[1.05] sm:h-32 sm:w-32"
+                />
+                <figcaption className="mt-2 text-xs font-medium leading-tight text-neutral-800">
+                  Julien Gakpé
+                </figcaption>
+              </figure>
+              <figure className="flex flex-col items-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/brand/founders/coralie.png"
+                  alt="Coralie Lolliot"
+                  className="h-20 w-20 shrink-0 transition-transform duration-500 group-hover:scale-[1.05] sm:h-24 sm:w-24"
+                />
+                <figcaption className="mt-2 text-[11px] leading-tight text-neutral-600">
+                  Coralie Lolliot
+                </figcaption>
+              </figure>
+            </div>
+            <div className="mt-4 flex items-center justify-center gap-1 text-[11px] tracking-wide text-neutral-500">
+              <span>{locale === "en" ? "Meet the team" : "Découvrir l'équipe"}</span>
+              <span
+                aria-hidden
+                className="transition-transform duration-300 group-hover:translate-x-0.5"
+              >
+                →
+              </span>
+            </div>
           </Link>
         </section>
 
