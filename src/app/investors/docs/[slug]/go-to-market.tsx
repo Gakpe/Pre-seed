@@ -104,7 +104,7 @@ const copy = {
       },
     ] as Champion[],
     cabinets:
-      "Accès à une vingtaine de cabinets présidentiels, qui nous redirigent vers des sous-jacents stratégiques.",
+      "Accès à une trentaine de cabinets présidentiels, qui nous redirigent vers des sous-jacents stratégiques.",
     proofTitle: "La preuve, aujourd'hui",
     proof: [
       { k: "4 HNWI", v: "ont déjà souscrit (1er closing Kupanda)" },
@@ -120,19 +120,19 @@ const copy = {
     ] as Milestone[],
     pathTitle: "Le chemin vers 100 M€",
     pathLead:
-      "100 M€ ne se conquiert pas au retail : c'est une poignée de lignes institutionnelles — fonds de dette, fonds de fonds, DFI, trésoreries on-chain — de 5 à 20 M€ chacune, posées sur la base HNWI. Le fonds américain déjà entré valide ce ticket.",
+      "100 M€ ne se conquiert pas au retail : c'est une poignée de lignes institutionnelles — fonds de dette, fonds de fonds, DFI, trésoreries on-chain — de 5 à 20 M€ chacune, en complément de tickets d'HNWI à 300 K€.",
     pathSteps: [
       {
         h: "500 K€ → 15 M€",
-        b: "Les HNWI et les Network Builders, plus une première ligne institutionnelle (Atlantic Financials, fonds américain), financent les 27 M€ de stratégies déjà structurées.",
+        b: "Les HNWI et les Network Builders, plus une première ligne institutionnelle (Atlantic Financials, fonds américain), financent les 27 M€ de stratégies en cours de structuration : Kupanda I, Kupanda II et Esgni.",
       },
       {
         h: "15 → 50 M€",
-        b: "Deux à trois lignes institutionnelles de 5 à 15 M€, amplifiées par la rotation du capital — 3 à 4 fois par an sur des cycles de 3 à 6 mois.",
+        b: "Deux à trois lignes institutionnelles de 5 à 15 M€, et des stratégies supplémentaires.",
       },
       {
         h: "50 → 100 M€",
-        b: "Une ancre DFI ou fonds de fonds, la liquidité on-chain, et la licence d'établissement de crédit qui débloque les plus gros tickets.",
+        b: "Une ancre DFI ou fonds de fonds, la liquidité on-chain, et les licences supplémentaires qui débloquent les plus gros tickets.",
       },
     ] as Card[],
     pathComparables:
@@ -245,7 +245,7 @@ const copy = {
       },
     ] as Champion[],
     cabinets:
-      "Access to some twenty presidential offices, redirecting us toward strategic underlyings.",
+      "Access to some thirty presidential offices, redirecting us toward strategic underlyings.",
     proofTitle: "The proof, today",
     proof: [
       { k: "4 HNWIs", v: "have already subscribed (Kupanda first closing)" },
@@ -261,19 +261,19 @@ const copy = {
     ] as Milestone[],
     pathTitle: "The path to €100M",
     pathLead:
-      "€100M is not a retail land-grab: it is a handful of institutional lines — debt funds, fund-of-funds, DFIs, on-chain treasuries — of €5–20M each, on top of the HNWI base. The American fund already in validates that ticket.",
+      "€100M is not a retail land-grab: it is a handful of institutional lines — debt funds, fund-of-funds, DFIs, on-chain treasuries — of €5–20M each, on top of €300K HNWI tickets.",
     pathSteps: [
       {
         h: "€500K → €15M",
-        b: "HNWIs and Network Builders, plus a first institutional line (Atlantic Financials, the American fund), fund the €27M of already-structured strategies.",
+        b: "HNWIs and Network Builders, plus a first institutional line (Atlantic Financials, the American fund), fund the €27M of strategies being structured: Kupanda I, Kupanda II and Esgni.",
       },
       {
         h: "€15M → €50M",
-        b: "Two to three institutional lines of €5–15M, amplified by capital rotation — 3 to 4 times a year on 3-to-6-month cycles.",
+        b: "Two to three institutional lines of €5–15M, plus additional strategies.",
       },
       {
         h: "€50M → €100M",
-        b: "A DFI or fund-of-funds anchor, on-chain liquidity, and the credit-institution licence that unlocks the largest tickets.",
+        b: "A DFI or fund-of-funds anchor, on-chain liquidity, and the additional licences that unlock the largest tickets.",
       },
     ] as Card[],
     pathComparables:
