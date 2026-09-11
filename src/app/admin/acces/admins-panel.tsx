@@ -78,7 +78,7 @@ export function AdminsPanel({
                   Retirer
                 </button>
               ) : (
-                <span className="w-12 text-right text-xs text-neutral-300">, </span>
+                <span aria-hidden className="w-12" />
               )}
             </div>
           </li>
