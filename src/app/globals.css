@@ -614,3 +614,57 @@ body {
     animation: none;
   }
 }
+
+/* --- Bandeau photos « sur le terrain » (fiche « Go-to-market ») ---
+   Défilé horizontal en boucle. Le rail contient deux fois la même série ;
+   translateX(-50%) fait exactement une série, d'où une boucle sans couture
+   (chaque photo porte sa marge droite, la marge reste donc uniforme entre les
+   deux séries). Les bords sont estompés par un masque, et le défilé se met en
+   pause au survol. prefers-reduced-motion neutralise l'animation et rend le
+   bandeau simplement défilable à la main. */
+
+.ticker {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 60s linear infinite;
+}
+
+.ticker:hover .ticker-track {
+  animation-play-state: paused;
+}
+
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker {
+    overflow-x: auto;
+  }
+  .ticker-track {
+    animation: none;
+  }
+}

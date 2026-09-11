@@ -158,6 +158,10 @@ const copy = {
     ] as Card[],
     closer:
       "Des premières souscriptions honorées à 100 M€ de capital-in d'ici fin 2027 : l'extension d'un moteur qui tourne déjà.",
+    fieldTitle: "La machine à réseau, sur le terrain",
+    fieldCaption:
+      "Sommets présidentiels, forums d'investisseurs et institutions : les fondateurs, là où se nouent les relations qui alimentent la machine.",
+    fieldCta: "Découvrir Minah Circle",
     sources:
       "Sources : rwa.xyz & The Defiant (tokenisation RWA, 2025) · The Africa Report (paiements mobiles UEMOA, 2024) · Yango Impact Report 2024.",
   },
@@ -303,6 +307,10 @@ const copy = {
     ] as Card[],
     closer:
       "From our first subscriptions honoured to €100M of capital-in by end-2027: the extension of an engine already running.",
+    fieldTitle: "The relationship machine, in the field",
+    fieldCaption:
+      "Presidential summits, investor forums and institutions: the founders where the relationships that feed the machine are built.",
+    fieldCta: "Explore Minah Circle",
     sources:
       "Sources: rwa.xyz & The Defiant (RWA tokenization, 2025) · The Africa Report (WAEMU mobile money, 2024) · Yango Impact Report 2024.",
   },
@@ -562,7 +570,54 @@ export function GoToMarket({ locale }: { locale: Locale }) {
         </p>
       </section>
 
+      {/* Bandeau photos « sur le terrain » — preuve visuelle du réseau, en
+          niveaux de gris pour rester sobre. Défilé en boucle : cf. .ticker
+          dans globals.css (pause au survol, neutralisé si reduced-motion). */}
+      <section>
+        <p className="text-sm font-semibold text-foreground">{c.fieldTitle}</p>
+        <p className="mt-1 max-w-2xl text-[13px] leading-6 text-neutral-600">
+          {c.fieldCaption}
+        </p>
+        <a
+          href={CIRCLE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="halo-hover mt-3 inline-flex items-center gap-2 rounded-lg bg-brand/10 px-4 py-2.5 text-sm font-semibold text-marsala transition-colors hover:bg-brand/15"
+        >
+          {c.fieldCta}
+          <span aria-hidden className="whitespace-nowrap">
+            →
+          </span>
+        </a>
+        <div className="ticker mt-5">
+          <div className="ticker-track">
+            {[...FIELD, ...FIELD].map((src, i) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={i}
+                src={src}
+                alt=""
+                aria-hidden
+                className="mr-3 h-28 w-auto flex-none rounded-lg object-cover"
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
       <p className="text-[11px] leading-5 text-neutral-400">{c.sources}</p>
     </div>
   );
 }
+
+// Six photos de terrain (niveaux de gris), défilées en boucle en bas de fiche.
+const FIELD = [
+  "/brand/gtm/field-1.jpg",
+  "/brand/gtm/field-2.jpg",
+  "/brand/gtm/field-3.jpg",
+  "/brand/gtm/field-4.jpg",
+  "/brand/gtm/field-5.jpg",
+  "/brand/gtm/field-6.jpg",
+];
+
+const CIRCLE_URL = "https://minah-circle-website-drab.vercel.app";
