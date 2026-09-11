@@ -17,6 +17,7 @@ import { TeamProfiles } from "./team-profiles";
 import { TrackRecord } from "./track-record";
 import { Fundraise } from "./fundraise";
 import { WhyMinah } from "./why-minah";
+import { GoToMarket } from "./go-to-market";
 import { TermSheet } from "./term-sheet";
 import { RiskCascade } from "./risk-cascade";
 import { ResilienceBar } from "./resilience-bar";
@@ -71,7 +72,8 @@ export default async function DocPage({
     doc.slug === "track-record" ||
     doc.slug === "la-levee" ||
     doc.slug === "pourquoi-minah" ||
-    doc.slug === "term-sheet-kupanda";
+    doc.slug === "term-sheet-kupanda" ||
+    doc.slug === "go-to-market";
 
   // Ces fiches débordent en largeur, mais leur chapô reste dans une colonne
   // de lecture normale, sinon le texte court sur toute la page.
@@ -91,7 +93,8 @@ export default async function DocPage({
     doc.slug === "track-record" ||
     doc.slug === "la-levee" ||
     doc.slug === "pourquoi-minah" ||
-    doc.slug === "term-sheet-kupanda";
+    doc.slug === "term-sheet-kupanda" ||
+    doc.slug === "go-to-market";
 
   return (
     <main
@@ -137,6 +140,7 @@ export default async function DocPage({
 
       {/* Certaines fiches portent un contenu riche en plus de leur texte. */}
       {doc.slug === "pourquoi-minah" && <WhyMinah locale={locale} />}
+      {doc.slug === "go-to-market" && <GoToMarket locale={locale} />}
       {doc.slug === "term-sheet-kupanda" && <TermSheet locale={locale} />}
       {doc.slug === "note-marche" && (
         <>
