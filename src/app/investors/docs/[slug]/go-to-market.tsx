@@ -153,7 +153,7 @@ const copy = {
       },
       {
         h: "Renforcer l'équipe",
-        b: "Fondateurs à plein temps pour faire tourner la machine relationnelle à l'échelle et capter les tickets institutionnels, pour passer de deals de 2 M€ à un pipeline de 50 M€+.",
+        b: "Fondateurs à plein temps pour faire tourner la machine relationnelle à l'échelle et capter les tickets institutionnels, pour passer de deals de 2 M€ à un pipeline de 50 M€+ et renforcer notre capacité de structuration institutionnelle.",
       },
     ] as Card[],
     closer:
@@ -298,7 +298,7 @@ const copy = {
       },
       {
         h: "Strengthen the team",
-        b: "Founders full-time to run the relationship machine at scale and capture institutional tickets, moving from €2M deals to a €50M+ pipeline.",
+        b: "Founders full-time to run the relationship machine at scale and capture institutional tickets, moving from €2M deals to a €50M+ pipeline and strengthening our institutional structuring capacity.",
       },
     ] as Card[],
     closer:
