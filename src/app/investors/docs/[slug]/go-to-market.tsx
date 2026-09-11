@@ -163,16 +163,20 @@ const copy = {
       "Des premières souscriptions honorées à 100 M€ de capital-in d'ici fin 2027 : l'extension d'un moteur qui tourne déjà.",
     fieldTitle: "La machine à réseau, sur le terrain",
     fieldCaption:
-      "Sommets présidentiels, forums d'investisseurs et institutions : les fondateurs, là où se nouent les relations qui alimentent la machine.",
+      "Sommets présidentiels, forums d'investisseurs et institutions : une partie de la machine à réseau.",
     fieldCaps: [
       "Panel présidentiel — Africa CEO Forum",
       "Invitation à l'Élysée",
-      "ChangeNOW — Grand Palais",
+      "ChangeNOW — modération Grand Palais",
       "Congrès panafricain — Lomé",
       "Nairobi — délégation française",
       "Side event — Première dame de Côte d'Ivoire",
       "Davos — modération",
-      "AFIS — table ronde",
+      "Africa Financial Industry Summit — table ronde",
+      "Africa Financial Industry Summit — modération de panel",
+      "50 Days on Chain",
+      "Remise de prix — Banque Delubac",
+      "Minah Circle 3 — remise de prix",
     ],
     circleCta: "Découvrir Minah Circle",
     sources:
@@ -323,16 +327,20 @@ const copy = {
       "From our first subscriptions honoured to €100M of capital-in by end-2027: the extension of an engine already running.",
     fieldTitle: "The relationship machine, in the field",
     fieldCaption:
-      "Presidential summits, investor forums and institutions: the founders where the relationships that feed the machine are built.",
+      "Presidential summits, investor forums and institutions: part of the relationship machine.",
     fieldCaps: [
       "Presidential panel — Africa CEO Forum",
       "Invited to the Élysée",
-      "ChangeNOW — Grand Palais",
+      "ChangeNOW — panel moderation, Grand Palais",
       "Pan-African Congress — Lomé",
       "Nairobi — French delegation",
       "Side event — First Lady of Côte d'Ivoire",
       "Davos — moderation",
-      "AFIS — roundtable",
+      "Africa Financial Industry Summit — roundtable",
+      "Africa Financial Industry Summit — panel moderation",
+      "50 Days on Chain",
+      "Award ceremony — Banque Delubac",
+      "Minah Circle 3 — award ceremony",
     ],
     circleCta: "Explore Minah Circle",
     sources:
@@ -643,7 +651,7 @@ export function GoToMarket({ locale }: { locale: Locale }) {
   );
 }
 
-// Huit photos de terrain (couleur), défilées en boucle en bas de fiche.
+// Douze photos de terrain (couleur), défilées en boucle en bas de fiche.
 // L'ordre suit celui de c.fieldCaps (une légende par cliché).
 const FIELD = [
   "/brand/gtm/field-1.jpg",
@@ -654,4 +662,8 @@ const FIELD = [
   "/brand/gtm/field-6.jpg",
   "/brand/gtm/field-7.jpg",
   "/brand/gtm/field-8.jpg",
+  "/brand/gtm/field-9.jpg",
+  "/brand/gtm/field-10.jpg",
+  "/brand/gtm/field-11.jpg",
+  "/brand/gtm/field-12.jpg",
 ];
