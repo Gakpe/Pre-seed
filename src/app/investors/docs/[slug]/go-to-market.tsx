@@ -5,11 +5,13 @@ import type { Locale } from "@/lib/i18n";
 // double détente et la frise 500 K€ → 100 M€ — et le reste en cards, en
 // suivant le langage visuel de la zone investisseurs (AGENTS.md).
 
-type Card = { h: string; b: string };
+type Card = { h: string; b: string; href?: string };
 type Founder = { side: string; h: string; b: string };
 type Champion = { h: string; tag: string; figs: string[] };
 type Proof = { k: string; v: string };
 type Milestone = { t: string; v: string; d: string };
+
+const CIRCLE_URL = "https://minah-circle-website-drab.vercel.app";
 
 const copy = {
   fr: {
@@ -57,6 +59,7 @@ const copy = {
       {
         h: "Minah Circles",
         b: "Nos événements propriétaires réunissent environ 50 personnes qualifiées par édition. Nous les organisons dans trois hubs : Paris, Abidjan (en marge de l'Africa CEO Forum) et Davos (en marge du WEF).",
+        href: CIRCLE_URL,
       },
       {
         h: "Les tables clés",
@@ -161,7 +164,17 @@ const copy = {
     fieldTitle: "La machine à réseau, sur le terrain",
     fieldCaption:
       "Sommets présidentiels, forums d'investisseurs et institutions : les fondateurs, là où se nouent les relations qui alimentent la machine.",
-    fieldCta: "Découvrir Minah Circle",
+    fieldCaps: [
+      "Panel présidentiel — Africa CEO Forum",
+      "Invitation à l'Élysée",
+      "ChangeNOW — Grand Palais",
+      "Congrès panafricain — Lomé",
+      "Nairobi — délégation française",
+      "Side event — Première dame de Côte d'Ivoire",
+      "Davos — modération",
+      "AFIS — table ronde",
+    ],
+    circleCta: "Découvrir Minah Circle",
     sources:
       "Sources : rwa.xyz & The Defiant (tokenisation RWA, 2025) · The Africa Report (paiements mobiles UEMOA, 2024) · Yango Impact Report 2024.",
   },
@@ -210,6 +223,7 @@ const copy = {
       {
         h: "Minah Circles",
         b: "Our proprietary events gather around 50 qualified guests per edition. We run them in three hubs: Paris, Abidjan (alongside the Africa CEO Forum) and Davos (alongside the WEF).",
+        href: CIRCLE_URL,
       },
       {
         h: "The key tables",
@@ -310,7 +324,17 @@ const copy = {
     fieldTitle: "The relationship machine, in the field",
     fieldCaption:
       "Presidential summits, investor forums and institutions: the founders where the relationships that feed the machine are built.",
-    fieldCta: "Explore Minah Circle",
+    fieldCaps: [
+      "Presidential panel — Africa CEO Forum",
+      "Invited to the Élysée",
+      "ChangeNOW — Grand Palais",
+      "Pan-African Congress — Lomé",
+      "Nairobi — French delegation",
+      "Side event — First Lady of Côte d'Ivoire",
+      "Davos — moderation",
+      "AFIS — roundtable",
+    ],
+    circleCta: "Explore Minah Circle",
     sources:
       "Sources: rwa.xyz & The Defiant (RWA tokenization, 2025) · The Africa Report (WAEMU mobile money, 2024) · Yango Impact Report 2024.",
   },
@@ -438,6 +462,19 @@ export function GoToMarket({ locale }: { locale: Locale }) {
               <p className="mt-1 text-[13px] leading-6 text-neutral-600">
                 {card.b}
               </p>
+              {card.href && (
+                <a
+                  href={card.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="halo-hover mt-3 inline-flex items-center gap-1.5 rounded-lg bg-brand/10 px-3 py-1.5 text-[13px] font-semibold text-marsala transition-colors hover:bg-brand/15"
+                >
+                  {c.circleCta}
+                  <span aria-hidden className="whitespace-nowrap">
+                    →
+                  </span>
+                </a>
+              )}
             </div>
           ))}
         </div>
@@ -571,36 +608,32 @@ export function GoToMarket({ locale }: { locale: Locale }) {
       </section>
 
       {/* Bandeau photos « sur le terrain » — preuve visuelle du réseau, en
-          niveaux de gris pour rester sobre. Défilé en boucle : cf. .ticker
-          dans globals.css (pause au survol, neutralisé si reduced-motion). */}
+          couleur, avec la légende de l'événement sous chaque cliché. Défilé en
+          boucle : cf. .ticker dans globals.css (pause au survol, neutralisé si
+          reduced-motion). */}
       <section>
         <p className="text-sm font-semibold text-foreground">{c.fieldTitle}</p>
         <p className="mt-1 max-w-2xl text-[13px] leading-6 text-neutral-600">
           {c.fieldCaption}
         </p>
-        <a
-          href={CIRCLE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="halo-hover mt-3 inline-flex items-center gap-2 rounded-lg bg-brand/10 px-4 py-2.5 text-sm font-semibold text-marsala transition-colors hover:bg-brand/15"
-        >
-          {c.fieldCta}
-          <span aria-hidden className="whitespace-nowrap">
-            →
-          </span>
-        </a>
         <div className="ticker mt-5">
           <div className="ticker-track">
-            {[...FIELD, ...FIELD].map((src, i) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={i}
-                src={src}
-                alt=""
-                aria-hidden
-                className="mr-3 h-28 w-auto flex-none rounded-lg object-cover"
-              />
-            ))}
+            {[...FIELD, ...FIELD].map((src, i) => {
+              const cap = c.fieldCaps[i % FIELD.length];
+              return (
+                <figure key={i} className="mr-4 flex-none">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={src}
+                    alt={cap}
+                    className="h-44 w-auto rounded-lg object-cover"
+                  />
+                  <figcaption className="mt-1.5 max-w-[15rem] text-[11px] leading-4 text-neutral-500">
+                    {cap}
+                  </figcaption>
+                </figure>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -610,7 +643,8 @@ export function GoToMarket({ locale }: { locale: Locale }) {
   );
 }
 
-// Six photos de terrain (niveaux de gris), défilées en boucle en bas de fiche.
+// Huit photos de terrain (couleur), défilées en boucle en bas de fiche.
+// L'ordre suit celui de c.fieldCaps (une légende par cliché).
 const FIELD = [
   "/brand/gtm/field-1.jpg",
   "/brand/gtm/field-2.jpg",
@@ -618,6 +652,6 @@ const FIELD = [
   "/brand/gtm/field-4.jpg",
   "/brand/gtm/field-5.jpg",
   "/brand/gtm/field-6.jpg",
+  "/brand/gtm/field-7.jpg",
+  "/brand/gtm/field-8.jpg",
 ];
-
-const CIRCLE_URL = "https://minah-circle-website-drab.vercel.app";
