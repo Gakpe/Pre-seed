@@ -1,4 +1,5 @@
 import { RESILIENCE } from "@/lib/risk-levels";
+import type { Locale } from "@/lib/i18n";
 
 // Bandeau de résistance du portefeuille. Repères fixes, aucun curseur, aucun
 // calcul : c'est une échelle de lecture, pas un modèle. La barre couvre 0–30 %
@@ -9,11 +10,11 @@ const SEGMENTS = [
   { width: "50%", className: "bg-risk-critical" },
 ];
 
-export function ResilienceBar() {
+export function ResilienceBar({ locale }: { locale: Locale }) {
   return (
     <section className="mt-12 rounded-lg border border-risk-border bg-risk-surface p-6 sm:p-8">
       <p className="max-w-2xl text-sm leading-7 text-neutral-700">
-        {RESILIENCE.headline}
+        {RESILIENCE.headline[locale]}
       </p>
 
       <div className="mt-8">
@@ -45,9 +46,9 @@ export function ResilienceBar() {
           {RESILIENCE.marks.map((m, i) => (
             <div key={m.at} style={{ width: SEGMENTS[i].width }} className="pr-3">
               <dt className="font-semibold tabular-nums text-foreground">
-                {m.label}
+                {m.label[locale]}
               </dt>
-              <dd className="mt-0.5 leading-5 text-neutral-500">{m.caption}</dd>
+              <dd className="mt-0.5 leading-5 text-neutral-500">{m.caption[locale]}</dd>
             </div>
           ))}
         </dl>
@@ -57,9 +58,9 @@ export function ResilienceBar() {
           {RESILIENCE.marks.map((m) => (
             <div key={m.at} className="flex gap-3">
               <dt className="w-12 shrink-0 font-semibold tabular-nums text-foreground">
-                {m.label}
+                {m.label[locale]}
               </dt>
-              <dd className="leading-5 text-neutral-500">{m.caption}</dd>
+              <dd className="leading-5 text-neutral-500">{m.caption[locale]}</dd>
             </div>
           ))}
         </dl>

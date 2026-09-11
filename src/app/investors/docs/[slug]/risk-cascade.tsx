@@ -2,15 +2,47 @@
 
 import { useRef, useState } from "react";
 import { AXIS_CAPTION, RISK_LEVELS, type RiskLevel } from "@/lib/risk-levels";
+import type { Locale } from "@/lib/i18n";
 
 // Décalage horizontal d'un niveau au suivant. C'est le signal visuel principal
 // de la page : la cascade doit se lire sans lire le texte.
 const STEP = 36;
 const TOKEN = 14;
 
+// Libellés propres au composant (les données de risque vivent dans risk-levels).
+const copy = {
+  fr: {
+    colLevel: "Niveau",
+    colTrigger: "Déclencheur",
+    colProtection: "Protection",
+    axisTop: "Sous-jacent",
+    axisSide: "Niveaux de risque couverts",
+    axisBottom: "Émetteur",
+    reset: "Réinitialiser",
+    levelWord: "Niveau",
+    statusLabel: "Statut.",
+    absorbed: "Absorbé à ce niveau, impact investisseur : aucun",
+    simulate: "Simuler ce scénario",
+  },
+  en: {
+    colLevel: "Level",
+    colTrigger: "Trigger",
+    colProtection: "Protection",
+    axisTop: "Underlying",
+    axisSide: "Risk levels covered",
+    axisBottom: "Issuer",
+    reset: "Reset",
+    levelWord: "Level",
+    statusLabel: "Status.",
+    absorbed: "Absorbed at this level — investor impact: none",
+    simulate: "Simulate this scenario",
+  },
+} as const;
+
 type Token = { index: number; x: number; y: number };
 
-export function RiskCascade() {
+export function RiskCascade({ locale }: { locale: Locale }) {
+  const c = copy[locale];
   // Ligne survolée ou focalisée, met les autres en retrait.
   const [active, setActive] = useState<number | null>(null);
   // Niveau où la perte simulée a été absorbée.
@@ -59,17 +91,17 @@ export function RiskCascade() {
 
   return (
     <section className="mt-10">
-      <p className="text-xs leading-5 text-neutral-400">{AXIS_CAPTION}</p>
+      <p className="text-xs leading-5 text-neutral-400">{AXIS_CAPTION[locale]}</p>
 
       {/* en-têtes de colonnes, filets et point terminal */}
       <div className="mt-6 hidden lg:flex lg:pl-14">
-        <ColumnHead label="Niveau" className="w-[30%]" />
-        <ColumnHead label="Déclencheur" className="w-[28%]" />
-        <ColumnHead label="Protection" className="w-[42%]" />
+        <ColumnHead label={c.colLevel} className="w-[30%]" />
+        <ColumnHead label={c.colTrigger} className="w-[28%]" />
+        <ColumnHead label={c.colProtection} className="w-[42%]" />
       </div>
 
       <div className="mt-4 flex">
-        <VerticalAxis />
+        <VerticalAxis locale={locale} />
 
         <div ref={boxRef} className="relative flex-1">
           {/* jeton : apparaît en haut de la cascade et descend au niveau visé */}
@@ -110,6 +142,7 @@ export function RiskCascade() {
               <Row
                 level={level}
                 index={i}
+                locale={locale}
                 dimmed={dim(i)}
                 highlighted={absorbed === i}
                 focused={active === i}
@@ -139,7 +172,7 @@ export function RiskCascade() {
             onClick={reset}
             className="rounded-md border border-neutral-300 px-3 py-1.5 text-xs text-neutral-600 transition-colors hover:border-neutral-400"
           >
-            Réinitialiser
+            {c.reset}
           </button>
         </div>
       )}
@@ -163,11 +196,12 @@ function ColumnHead({ label, className }: { label: string; className: string }) 
 }
 
 // Flèche verticale du sous-jacent vers l'émetteur, avec le label pivoté.
-function VerticalAxis() {
+function VerticalAxis({ locale }: { locale: Locale }) {
+  const c = copy[locale];
   return (
     <div className="relative hidden w-14 shrink-0 lg:block" aria-hidden>
       <span className="absolute left-0 top-0 text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-400">
-        Sous-jacent
+        {c.axisTop}
       </span>
       <div className="absolute bottom-8 left-[6px] top-8 w-px bg-risk-border" />
       <svg
@@ -183,10 +217,10 @@ function VerticalAxis() {
         className="absolute left-4 top-1/2 origin-center -translate-y-1/2 rotate-180 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-400"
         style={{ writingMode: "vertical-rl" }}
       >
-        Niveaux de risque couverts
+        {c.axisSide}
       </span>
       <span className="absolute bottom-0 left-0 text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-400">
-        Émetteur
+        {c.axisBottom}
       </span>
     </div>
   );
@@ -195,6 +229,7 @@ function VerticalAxis() {
 type RowProps = {
   level: RiskLevel;
   index: number;
+  locale: Locale;
   dimmed: boolean;
   highlighted: boolean;
   focused: boolean;
@@ -208,6 +243,7 @@ type RowProps = {
 function Row({
   level,
   index,
+  locale,
   dimmed,
   highlighted,
   focused,
@@ -217,6 +253,7 @@ function Row({
   onLeave,
   ref,
 }: RowProps) {
+  const c = copy[locale];
   // Le niveau 4 est le seul en orange plein : c'est notre propre bilan qui
   // absorbe, cela doit se voir. Les niveaux 1 à 3 ne se distinguent pas entre eux.
   const critical = level.index === 4;
@@ -226,7 +263,7 @@ function Row({
       ref={ref}
       role="button"
       tabIndex={0}
-      aria-label={`Niveau ${level.index}, ${level.name}`}
+      aria-label={`${c.levelWord} ${level.index}, ${level.name[locale]}`}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
       onFocus={onEnter}
@@ -255,9 +292,11 @@ function Row({
           }`}
         >
           <p className="text-[10px] font-medium uppercase tracking-[0.14em] opacity-70">
-            Niveau {level.index}
+            {c.levelWord} {level.index}
           </p>
-          <p className="mt-1 text-sm font-semibold leading-snug">{level.name}</p>
+          <p className="mt-1 text-sm font-semibold leading-snug">
+            {level.name[locale]}
+          </p>
         </div>
       </div>
 
@@ -265,9 +304,9 @@ function Row({
       <div className="mt-4 lg:mt-0 lg:w-[28%] lg:pr-6">
         <p className="text-[13px] leading-[1.6] text-neutral-700 lg:hyphens-auto lg:text-justify">
           <strong className="font-semibold text-foreground">
-            {level.trigger.lead}
+            {level.trigger.lead[locale]}
           </strong>{" "}
-          {level.trigger.body}
+          {level.trigger.body[locale]}
         </p>
       </div>
 
@@ -281,7 +320,7 @@ function Row({
           }`}
         >
           <p className="rounded-t-md bg-risk-soft px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-risk-ink">
-            {level.protection.name}
+            {level.protection.name[locale]}
             {level.footnote && (
               <sup className="ml-1 font-normal tracking-normal opacity-60">
                 {level.index}
@@ -290,18 +329,19 @@ function Row({
           </p>
           <div className="px-4 py-3">
             <p className="text-[13px] leading-[1.6] text-neutral-700 lg:hyphens-auto lg:text-justify">
-              {level.protection.body}
+              {level.protection.body[locale]}
             </p>
             {level.status && (
               <p className="mt-2 text-[12px] text-neutral-500">
-                <span className="font-medium">Statut.</span> {level.status}
+                <span className="font-medium">{c.statusLabel}</span>{" "}
+                {level.status[locale]}
               </p>
             )}
 
             <div aria-live="polite">
               {highlighted && (
                 <p className="mt-3 rounded bg-risk-ok/10 px-2.5 py-1.5 text-[12px] font-medium text-risk-ok">
-                  Absorbé à ce niveau, impact investisseur : aucun
+                  {c.absorbed}
                 </p>
               )}
             </div>
@@ -314,7 +354,7 @@ function Row({
                 }}
                 className="mt-3 text-[11px] text-neutral-400 underline-offset-2 transition-colors hover:text-risk-critical hover:underline"
               >
-                Simuler ce scénario
+                {c.simulate}
               </button>
             )}
           </div>
