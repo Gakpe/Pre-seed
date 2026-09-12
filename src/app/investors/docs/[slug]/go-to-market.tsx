@@ -183,7 +183,7 @@ const copy = {
       },
       {
         src: "/brand/gtm/field-22.jpg",
-        t: "Africa Collective, World Economic Forum, Davos (Suisse)",
+        t: "Africa House powered by Kojo Annan, World Economic Forum, Davos (Suisse)",
       },
       {
         src: "/brand/gtm/field-9.jpg",
@@ -435,7 +435,7 @@ const copy = {
       },
       {
         src: "/brand/gtm/field-22.jpg",
-        t: "Africa Collective, World Economic Forum, Davos (Switzerland)",
+        t: "Africa House powered by Kojo Annan, World Economic Forum, Davos (Switzerland)",
       },
       {
         src: "/brand/gtm/field-9.jpg",
