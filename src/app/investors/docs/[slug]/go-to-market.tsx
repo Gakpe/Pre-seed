@@ -192,6 +192,11 @@ const copy = {
         d: "Modération de la rencontre avec la Première dame de Côte d'Ivoire, S.E. Mme Dominique Ouattara",
       },
       {
+        src: "/brand/gtm/field-21.jpg",
+        t: "Women Working for Change, Abidjan (Côte d'Ivoire)",
+        d: "Organisation du panel avec Jeremy Awori (CEO, Ecobank), Diane Karusisi (CEO, Bank of Kigali), Owen Omogiafo (CEO, Transcorp), Mukwandi Chibesakunda (CEO, Zambia National Commercial Bank), Lamia Merzouki (Deputy CEO, Casablanca Finance City Authority), Zineb Sqalli (Managing Partner, BCG)",
+      },
+      {
         src: "/brand/gtm/field-13.jpg",
         t: "Web Summit, Doha (Qatar)",
         d: "Prise de parole et participation",
@@ -437,6 +442,11 @@ const copy = {
         src: "/brand/gtm/field-6.jpg",
         t: "Africa CEO Forum, Abidjan (Côte d'Ivoire)",
         d: "Moderating the gathering with the First Lady of Côte d'Ivoire, H.E. Ms. Dominique Ouattara",
+      },
+      {
+        src: "/brand/gtm/field-21.jpg",
+        t: "Women Working for Change, Abidjan (Côte d'Ivoire)",
+        d: "Organising the panel with Jeremy Awori (CEO, Ecobank), Diane Karusisi (CEO, Bank of Kigali), Owen Omogiafo (CEO, Transcorp), Mukwandi Chibesakunda (CEO, Zambia National Commercial Bank), Lamia Merzouki (Deputy CEO, Casablanca Finance City Authority), Zineb Sqalli (Managing Partner, BCG)",
       },
       {
         src: "/brand/gtm/field-13.jpg",
