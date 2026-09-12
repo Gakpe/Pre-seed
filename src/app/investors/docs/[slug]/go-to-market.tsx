@@ -174,7 +174,7 @@ const copy = {
       {
         src: "/brand/gtm/field-2.jpg",
         t: "Le Palais de l'Élysée, Paris (France)",
-        d: "Rencontre avec Emmanuel Macron — résidence officielle du président de la République",
+        d: "Rencontre privée avec Emmanuel Macron & les grandes figures de la diaspora en France — résidence officielle du président de la République",
       },
       {
         src: "/brand/gtm/field-7.jpg?v=2",
@@ -421,7 +421,7 @@ const copy = {
       {
         src: "/brand/gtm/field-2.jpg",
         t: "The Élysée Palace, Paris (France)",
-        d: "Meeting with Emmanuel Macron — official residence of the President of France",
+        d: "Private meeting with Emmanuel Macron & leading diaspora figures in France — official residence of the President of France",
       },
       {
         src: "/brand/gtm/field-7.jpg?v=2",
