@@ -178,12 +178,12 @@ const copy = {
       },
       {
         src: "/brand/gtm/field-7.jpg?v=2",
-        t: "World Economic Forum, Davos (Suisse)",
+        t: "Africa House powered by Kojo Annan, World Economic Forum, Davos (Suisse)",
         d: "Modération de panel avec Dr. Ola Brown (Founding Partner, Healthcap), Nell Daly (Co-Founder, Revenge Capital), Alice Usanase (Lead, EMEA Region, Africa Finance Corporation), Tea Trumbic (Manager, Women, Business and the Law, The World Bank)",
       },
       {
         src: "/brand/gtm/field-22.jpg",
-        t: "Africa House powered by Kojo Annan, World Economic Forum, Davos (Suisse)",
+        t: "Africa Collective, World Economic Forum, Davos (Suisse)",
       },
       {
         src: "/brand/gtm/field-9.jpg",
@@ -430,12 +430,12 @@ const copy = {
       },
       {
         src: "/brand/gtm/field-7.jpg?v=2",
-        t: "World Economic Forum, Davos (Switzerland)",
+        t: "Africa House powered by Kojo Annan, World Economic Forum, Davos (Switzerland)",
         d: "Panel moderation with Dr. Ola Brown (Founding Partner, Healthcap), Nell Daly (Co-Founder, Revenge Capital), Alice Usanase (Lead, EMEA Region, Africa Finance Corporation), Tea Trumbic (Manager, Women, Business and the Law, The World Bank)",
       },
       {
         src: "/brand/gtm/field-22.jpg",
-        t: "Africa House powered by Kojo Annan, World Economic Forum, Davos (Switzerland)",
+        t: "Africa Collective, World Economic Forum, Davos (Switzerland)",
       },
       {
         src: "/brand/gtm/field-9.jpg",
