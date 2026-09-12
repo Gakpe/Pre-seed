@@ -182,6 +182,10 @@ const copy = {
         d: "Modération de panel avec Dr. Ola Brown (Founding Partner, Healthcap), Nell Daly (Co-Founder, Revenge Capital), Alice Usanase (Lead, EMEA Region, Africa Finance Corporation), Tea Trumbic (Manager, Women, Business and the Law, The World Bank)",
       },
       {
+        src: "/brand/gtm/field-22.jpg",
+        t: "Africa Collective, World Economic Forum, Davos (Suisse)",
+      },
+      {
         src: "/brand/gtm/field-9.jpg",
         t: "Africa Financial Industry Summit, Lomé (Togo)",
         d: "Modération de panel avec Delphine Traoré (CEO, SanlamAllianz), Abiola Bawuah (CEO, UBA), Wilfrid Abiola (Country Representative, AFDB), Sibi Lawson (Deputy CEO, AGF-WA), Coura Carine Sene (CEO Africa, Wave)",
@@ -428,6 +432,10 @@ const copy = {
         src: "/brand/gtm/field-7.jpg?v=2",
         t: "World Economic Forum, Davos (Switzerland)",
         d: "Panel moderation with Dr. Ola Brown (Founding Partner, Healthcap), Nell Daly (Co-Founder, Revenge Capital), Alice Usanase (Lead, EMEA Region, Africa Finance Corporation), Tea Trumbic (Manager, Women, Business and the Law, The World Bank)",
+      },
+      {
+        src: "/brand/gtm/field-22.jpg",
+        t: "Africa Collective, World Economic Forum, Davos (Switzerland)",
       },
       {
         src: "/brand/gtm/field-9.jpg",
