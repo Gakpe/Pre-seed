@@ -223,7 +223,7 @@ const copy = {
       {
         src: "/brand/gtm/field-18.jpg",
         t: "Sommet Paloneo (Partenaire du WEF), Hambourg (Allemagne)",
-        d: "VC, LP & founders",
+        d: "Rencontre VC, LP & founders où nous avons animé la table ronde Afrique avec Launch Africa",
       },
       {
         src: "/brand/gtm/field-19.jpg",
@@ -470,7 +470,7 @@ const copy = {
       {
         src: "/brand/gtm/field-18.jpg",
         t: "Paloneo Summit (WEF Partner), Hamburg (Germany)",
-        d: "VC, LP & founders",
+        d: "Meeting for VC, LP & founders where we led the Africa roundtable with Launch Africa",
       },
       {
         src: "/brand/gtm/field-19.jpg",
