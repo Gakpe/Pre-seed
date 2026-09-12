@@ -184,6 +184,7 @@ const copy = {
       {
         src: "/brand/gtm/field-22.jpg",
         t: "Africa Collective, World Economic Forum, Davos (Suisse)",
+        d: "Powered by Standard Bank, Ventures Platform, Old Mutual et Novartis",
       },
       {
         src: "/brand/gtm/field-9.jpg",
@@ -436,6 +437,7 @@ const copy = {
       {
         src: "/brand/gtm/field-22.jpg",
         t: "Africa Collective, World Economic Forum, Davos (Switzerland)",
+        d: "Powered by Standard Bank, Ventures Platform, Old Mutual and Novartis",
       },
       {
         src: "/brand/gtm/field-9.jpg",
