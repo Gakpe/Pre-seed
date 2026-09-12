@@ -177,7 +177,7 @@ const copy = {
         d: "Rencontre avec Emmanuel Macron — résidence officielle du président de la République",
       },
       {
-        src: "/brand/gtm/field-7.jpg",
+        src: "/brand/gtm/field-7.jpg?v=2",
         t: "World Economic Forum, Davos (Suisse)",
         d: "Modération de panel avec Dr. Ola Brown (Founding Partner, Healthcap), Nell Daly (Co-Founder, Revenge Capital), Alice Usanase (Lead, EMEA Region, Africa Finance Corporation), Tea Trumbic (Manager, Women, Business and the Law, The World Bank)",
       },
@@ -424,7 +424,7 @@ const copy = {
         d: "Meeting with Emmanuel Macron — official residence of the President of France",
       },
       {
-        src: "/brand/gtm/field-7.jpg",
+        src: "/brand/gtm/field-7.jpg?v=2",
         t: "World Economic Forum, Davos (Switzerland)",
         d: "Panel moderation with Dr. Ola Brown (Founding Partner, Healthcap), Nell Daly (Co-Founder, Revenge Capital), Alice Usanase (Lead, EMEA Region, Africa Finance Corporation), Tea Trumbic (Manager, Women, Business and the Law, The World Bank)",
       },
