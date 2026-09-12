@@ -202,10 +202,6 @@ const copy = {
         d: "Prise de parole et participation",
       },
       {
-        src: "/brand/gtm/field-20.jpg",
-        t: "Africa CEO Forum, Kigali (Rwanda)",
-      },
-      {
         src: "/brand/gtm/field-5.jpg",
         t: "Africa Forward, Nairobi (Kenya)",
         d: "Sommet co-organisé par la France et le Kenya — avec la délégation présidentielle française et le ministre Jean-Noël Barrot",
@@ -452,10 +448,6 @@ const copy = {
         src: "/brand/gtm/field-13.jpg",
         t: "Web Summit, Doha (Qatar)",
         d: "Speaking and participation",
-      },
-      {
-        src: "/brand/gtm/field-20.jpg",
-        t: "Africa CEO Forum, Kigali (Rwanda)",
       },
       {
         src: "/brand/gtm/field-5.jpg",
