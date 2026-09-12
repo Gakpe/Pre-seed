@@ -74,11 +74,11 @@ const copy = {
         h: "Écosystème blockchain",
         b: "La liquidité on-chain cherche du rendement réel : près de 30 Md$ d'actifs réels sont déjà tokenisés, dont environ 17 Md$ de crédit privé, mais presque rien n'est connecté à des sous-jacents africains. C'est précisément le pont que nous construisons, avec Canton Network, Ubuntu Tribe et la Stellar Foundation, qui nous subventionne déjà.",
       },
-      {
-        h: "Minah OS (IA)",
-        b: "Notre IA en production — les agents Yao et Comlan — analyse les appels et notre capacité à closer, gère les relances et les meetings, et rédige toutes nos communications pour relecture. Elle nous remonte surtout des signaux clairs pour attirer et closer du capital, analyser les sous-jacents et appuyer la structuration, et approfondit le mapping de l'écosystème. L'équipe se concentre sur ce qui demande un humain, structurer et vendre, pendant que l'IA s'améliore pour animer et renforcer un réseau large.",
-      },
     ] as Card[],
+    osSides: "Des deux côtés — capital-in & assets-out",
+    osTitle: "Minah OS (IA)",
+    osBody:
+      "Notre IA en production — les agents Yao et Comlan — analyse les appels et notre capacité à closer, gère les relances et les meetings, et rédige toutes nos communications pour relecture. Elle nous remonte surtout des signaux clairs pour attirer et closer du capital, analyser les sous-jacents et appuyer la structuration, et approfondit le mapping de l'écosystème. L'équipe se concentre sur ce qui demande un humain, structurer et vendre, pendant que l'IA s'améliore pour animer et renforcer un réseau large.",
     assetsTitle: "Côté actifs — les bons sous-jacents",
     assetsIntro:
       "Nous avons accès à une dizaine de scale-ups et futures licornes africaines, ainsi qu'à de grands opérateurs présents sur le continent — des contreparties aux flux de trésorerie massifs, exactement le profil qui fait des sous-jacents premium. Trois exemples :",
@@ -326,11 +326,11 @@ const copy = {
         h: "Blockchain ecosystem",
         b: "On-chain liquidity is hunting for real yield: close to $30B of real-world assets are already tokenized, of which about $17B is private credit, yet almost none is connected to African underlyings. That is precisely the bridge we build, with Canton Network, Ubuntu Tribe and the Stellar Foundation, which already backs us with grants.",
       },
-      {
-        h: "Minah OS (AI)",
-        b: "Our AI in production — the Yao and Comlan agents — analyses calls and our ability to close, handles follow-ups and meetings, and drafts all our communications for review. Above all, it surfaces clear signals to attract and close capital, analyse the underlying assets and support structuring, and deepens the mapping of the ecosystem. The team focuses on what needs a human, structuring and selling, while the AI keeps improving to nurture and strengthen a broad network.",
-      },
     ] as Card[],
+    osSides: "Both sides — capital-in & assets-out",
+    osTitle: "Minah OS (AI)",
+    osBody:
+      "Our AI in production — the Yao and Comlan agents — analyses calls and our ability to close, handles follow-ups and meetings, and drafts all our communications for review. Above all, it surfaces clear signals to attract and close capital, analyse the underlying assets and support structuring, and deepens the mapping of the ecosystem. The team focuses on what needs a human, structuring and selling, while the AI keeps improving to nurture and strengthen a broad network.",
     assetsTitle: "Asset side — the best underlyings",
     assetsIntro:
       "We have access to around ten African scale-ups and future unicorns, as well as major operators present on the continent — counterparties with massive cash flows, exactly the profile that makes premium underlyings. Three examples:",
@@ -691,6 +691,22 @@ export function GoToMarket({ locale }: { locale: Locale }) {
         <p className="mt-4 border-l-2 border-marsala pl-4 text-[13px] leading-6 text-neutral-700">
           {c.cabinets}
         </p>
+      </section>
+
+      {/* Minah OS — transversal : alimente les deux côtés (capital-in &
+          assets-out), donc hors des sections 02/03 plutôt que rangé dans l'une. */}
+      <section>
+        <div className="rounded-xl border border-foreground/10 bg-white/60 p-5">
+          <span className="inline-block rounded-md bg-brand/10 px-2 py-0.5 text-[11px] font-semibold text-marsala">
+            {c.osSides}
+          </span>
+          <p className="mt-2 text-sm font-semibold text-foreground">
+            {c.osTitle}
+          </p>
+          <p className="mt-1 text-[13px] leading-6 text-neutral-600">
+            {c.osBody}
+          </p>
+        </div>
       </section>
 
       {/* 04 — la preuve */}
