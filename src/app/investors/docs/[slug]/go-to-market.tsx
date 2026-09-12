@@ -188,7 +188,7 @@ const copy = {
       },
       {
         src: "/brand/gtm/field-6.jpg",
-        t: "Africa CEO Forum, Abidjan (Côte d'Ivoire)",
+        t: "Private cocktail, Abidjan (Côte d'Ivoire)",
         d: "Modération de la rencontre avec la Première dame de Côte d'Ivoire, S.E. Mme Dominique Ouattara",
       },
       {
@@ -440,7 +440,7 @@ const copy = {
       },
       {
         src: "/brand/gtm/field-6.jpg",
-        t: "Africa CEO Forum, Abidjan (Côte d'Ivoire)",
+        t: "Private cocktail, Abidjan (Côte d'Ivoire)",
         d: "Moderating the gathering with the First Lady of Côte d'Ivoire, H.E. Ms. Dominique Ouattara",
       },
       {
