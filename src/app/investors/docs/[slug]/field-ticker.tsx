@@ -22,7 +22,6 @@ export function FieldTicker({
   const hover = useRef(false);
   const speed = useRef(SLOW);
   const manualUntil = useRef(0); // horodatage jusqu'auquel l'auto s'efface
-  const pressAt = useRef(0);
 
   useEffect(() => {
     const el = ref.current;
@@ -31,10 +30,18 @@ export function FieldTicker({
 
     let raf = 0;
     const step = () => {
-      if (!hover.current && performance.now() >= manualUntil.current) {
-        el.scrollLeft += speed.current;
-        const half = el.scrollWidth / 2; // une série : boucle sans couture
-        if (el.scrollLeft >= half) el.scrollLeft -= half;
+      // Une série = la moitié du contenu dupliqué. Entier pour éviter toute
+      // dérive de sous-pixel sur la couture. On ne défile que si une série
+      // déborde du cadre (sinon rien à faire).
+      const half = Math.round(el.scrollWidth / 2);
+      if (
+        half > el.clientWidth &&
+        !hover.current &&
+        performance.now() >= manualUntil.current
+      ) {
+        let next = el.scrollLeft + speed.current;
+        if (next >= half) next -= half;
+        el.scrollLeft = next;
       }
       raf = requestAnimationFrame(step);
     };
@@ -46,6 +53,7 @@ export function FieldTicker({
     manualUntil.current = performance.now() + 1400;
   };
 
+  // Un clic (souris ou clavier via le <button>) avance d'un cran.
   const advance = () => {
     const el = ref.current;
     if (!el) return;
@@ -60,23 +68,14 @@ export function FieldTicker({
           type="button"
           aria-label={advanceLabel}
           title={advanceLabel}
+          onClick={advance}
           onPointerDown={() => {
-            pressAt.current = performance.now();
-            speed.current = FAST;
-            manualUntil.current = 0; // accélérer prime sur tout
+            speed.current = FAST; // maintenir = accélérer
+            manualUntil.current = 0;
           }}
-          onPointerUp={() => {
-            speed.current = SLOW;
-            if (performance.now() - pressAt.current < 180) advance(); // clic bref
-          }}
+          onPointerUp={() => (speed.current = SLOW)}
           onPointerLeave={() => (speed.current = SLOW)}
           onPointerCancel={() => (speed.current = SLOW)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              advance();
-            }
-          }}
           className="halo-hover inline-flex items-center gap-1.5 rounded-full bg-brand/10 px-3 py-1.5 text-[12px] font-semibold text-marsala transition-colors hover:bg-brand/15 active:bg-brand/20"
         >
           {advanceLabel}
@@ -114,7 +113,7 @@ export function FieldTicker({
                 className="relative h-full w-full object-contain"
               />
             </div>
-            <figcaption className="mt-1.5 w-64 text-[11px] leading-4 text-neutral-500">
+            <figcaption className="mt-1.5 w-64 break-words text-[11px] leading-4 text-neutral-500">
               <span className="font-semibold text-neutral-700">{it.t}</span>
               {it.d ? <> — {it.d}</> : null}
             </figcaption>

@@ -227,12 +227,13 @@ const copy = {
       },
       {
         src: "/brand/gtm/field-19.jpg",
-        t: "Salon diasporique & investisseurs, Marrakech (Maroc)",
+        t: "Rencontre privée, Marrakech (Maroc)",
+        d: "Diaspora & investisseurs",
       },
       {
         src: "/brand/gtm/field-10.jpg",
         t: "50 Days on Chain, Paris (France)",
-        d: "Panel",
+        d: "Panel de présentation de Minah",
       },
       {
         src: "/brand/gtm/field-11.jpg",
@@ -473,12 +474,13 @@ const copy = {
       },
       {
         src: "/brand/gtm/field-19.jpg",
-        t: "Diaspora & investor salon, Marrakech (Morocco)",
+        t: "Private gathering, Marrakech (Morocco)",
+        d: "Diaspora & investors",
       },
       {
         src: "/brand/gtm/field-10.jpg",
         t: "50 Days on Chain, Paris (France)",
-        d: "Panel",
+        d: "Panel presenting Minah",
       },
       {
         src: "/brand/gtm/field-11.jpg",
