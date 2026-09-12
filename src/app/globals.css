@@ -668,3 +668,30 @@ body {
     animation: none;
   }
 }
+
+/* --- Bandeau « sur le terrain » (fiche « Go-to-market »), version pilotée JS ---
+   Le défilé auto et l'accélération à la flèche sont gérés par FieldTicker
+   (client, scrollLeft en rAF). Ici on ne pose que l'apparence : scroll
+   horizontal, barre masquée, bords estompés. */
+.field-scroll {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
+}
+.field-scroll::-webkit-scrollbar {
+  display: none;
+}

@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/i18n";
+import { FieldTicker } from "./field-ticker";
 
 // Fiche « Go-to-market » : portée entièrement par ce composant (richOnly, le
 // texte de la base ne s'affiche pas). Deux visuels — la machine à réseau à
@@ -163,21 +164,103 @@ const copy = {
       "Des premières souscriptions honorées à 100 M€ de capital-in d'ici fin 2027 : l'extension d'un moteur qui tourne déjà.",
     fieldTitle: "La machine à réseau, sur le terrain",
     fieldCaption:
-      "Sommets présidentiels, forums d'investisseurs et institutions : une partie de la machine à réseau.",
+      "Quelques exemples de sommets présidentiels, forums d'investisseurs et institutions : une partie de la machine à réseau.",
     fieldCaps: [
-      "Panel présidentiel — Africa CEO Forum",
-      "Invitation à l'Élysée",
-      "ChangeNOW — modération Grand Palais",
-      "Congrès panafricain — Lomé",
-      "Nairobi — délégation française",
-      "Side event — Première dame de Côte d'Ivoire",
-      "Davos — modération",
-      "Africa Financial Industry Summit — table ronde",
-      "Africa Financial Industry Summit — modération de panel",
-      "50 Days on Chain",
-      "Remise de prix — Banque Delubac",
-      "Minah Circle 3 — remise de prix",
+      {
+        src: "/brand/gtm/field-1.jpg",
+        t: "Africa CEO Forum, Abidjan (Côte d'Ivoire)",
+        d: "Panel présidentiel — Cyril Ramaphosa (président de l'Afrique du Sud), Paul Kagame (président du Rwanda), Mohamed Cheikh El-Ghazouani (président de la Mauritanie), Tiémoko Meyliet Koné (vice-président de la Côte d'Ivoire)",
+      },
+      {
+        src: "/brand/gtm/field-2.jpg",
+        t: "Le Palais de l'Élysée, Paris (France)",
+        d: "Rencontre avec Emmanuel Macron — résidence officielle du président de la République",
+      },
+      {
+        src: "/brand/gtm/field-7.jpg",
+        t: "World Economic Forum, Davos (Suisse)",
+        d: "Modération de panel avec Dr. Ola Brown (Founding Partner, Healthcap), Nell Daly (Co-Founder, Revenge Capital), Alice Usanase (Lead, EMEA Region, Africa Finance Corporation), Tea Trumbic (Manager, Women, Business and the Law, The World Bank)",
+      },
+      {
+        src: "/brand/gtm/field-9.jpg",
+        t: "Africa Financial Industry Summit, Lomé (Togo)",
+        d: "Modération de panel avec Delphine Traoré (CEO, SanlamAllianz), Abiola Bawuah (CEO, UBA), Wilfrid Abiola (Country Representative, AFDB), Sibi Lawson (Deputy CEO, AGF-WA), Coura Carine Sene (CEO Africa, Wave)",
+      },
+      {
+        src: "/brand/gtm/field-6.jpg",
+        t: "Africa CEO Forum, Abidjan (Côte d'Ivoire)",
+        d: "Modération de la rencontre avec la Première dame de Côte d'Ivoire, S.E. Mme Dominique Ouattara",
+      },
+      {
+        src: "/brand/gtm/field-13.jpg",
+        t: "Web Summit, Doha (Qatar)",
+        d: "Prise de parole et participation",
+      },
+      {
+        src: "/brand/gtm/field-20.jpg",
+        t: "Africa CEO Forum, Kigali (Rwanda)",
+      },
+      {
+        src: "/brand/gtm/field-5.jpg",
+        t: "Africa Forward, Nairobi (Kenya)",
+        d: "Sommet co-organisé par la France et le Kenya — avec la délégation présidentielle française et le ministre Jean-Noël Barrot",
+      },
+      {
+        src: "/brand/gtm/field-3.jpg?v=2",
+        t: "ChangeNOW — Africa for Change, Grand Palais, Paris (France)",
+        d: "Modération de panel avec Dr. Anino Emuwa (Managing Director, Avandis Consulting ; Founder, 100 Davos Women), Kidus Asfaw (Co-founder, Kubik, Inc.), Michael Kakande (Founder, TheResilient40)",
+      },
+      {
+        src: "/brand/gtm/field-16.jpg",
+        t: "Rencontre privée, Cotonou (Bénin)",
+        d: "High-Net-Worth Individuals & corporates",
+      },
+      {
+        src: "/brand/gtm/field-17.jpg",
+        t: "Rencontre privée, Conakry (Guinée)",
+        d: "Corporate & investisseurs",
+      },
+      {
+        src: "/brand/gtm/field-18.jpg",
+        t: "Sommet Paloneo (Partenaire du WEF), Hambourg (Allemagne)",
+        d: "VC, LP & founders",
+      },
+      {
+        src: "/brand/gtm/field-19.jpg",
+        t: "Salon diasporique & investisseurs, Marrakech (Maroc)",
+      },
+      {
+        src: "/brand/gtm/field-10.jpg",
+        t: "50 Days on Chain, Paris (France)",
+        d: "Panel",
+      },
+      {
+        src: "/brand/gtm/field-11.jpg",
+        t: "Prix Cyrille Bialkiewicz, Paris (France)",
+        d: "Remis par la Banque Delubac",
+      },
+      {
+        src: "/brand/gtm/field-14.jpg",
+        t: "Minah Circle, Grand Palais, Paris (France)",
+        d: "Rencontre avec l'écosystème investisseur de ChangeNOW",
+      },
+      {
+        src: "/brand/gtm/field-15.jpg",
+        t: "Minah Circle, Lomé (Togo)",
+        d: "Rencontre avec l'écosystème tech & corporate de Lomé",
+      },
+      {
+        src: "/brand/gtm/field-12.jpg?v=2",
+        t: "Minah Circle, Paris (France)",
+        d: "Notre rendez-vous annuel parisien, en partenariat avec ChangeNOW et la Fondation Stellar",
+      },
+      {
+        src: "/brand/gtm/field-4.jpg",
+        t: "Congrès panafricain, Lomé (Togo)",
+        d: "Prise de parole et modération",
+      },
     ],
+    fieldAdvance: "Faire avancer les photos",
     circleCta: "Découvrir Minah Circle",
     sources:
       "Sources : rwa.xyz & The Defiant (tokenisation RWA, 2025) · The Africa Report (paiements mobiles UEMOA, 2024) · Yango Impact Report 2024.",
@@ -327,21 +410,103 @@ const copy = {
       "From our first subscriptions honoured to €100M of capital-in by end-2027: the extension of an engine already running.",
     fieldTitle: "The relationship machine, in the field",
     fieldCaption:
-      "Presidential summits, investor forums and institutions: part of the relationship machine.",
+      "A few examples of presidential summits, investor forums and institutions: part of the relationship machine.",
     fieldCaps: [
-      "Presidential panel — Africa CEO Forum",
-      "Invited to the Élysée",
-      "ChangeNOW — panel moderation, Grand Palais",
-      "Pan-African Congress — Lomé",
-      "Nairobi — French delegation",
-      "Side event — First Lady of Côte d'Ivoire",
-      "Davos — moderation",
-      "Africa Financial Industry Summit — roundtable",
-      "Africa Financial Industry Summit — panel moderation",
-      "50 Days on Chain",
-      "Award ceremony — Banque Delubac",
-      "Minah Circle 3 — award ceremony",
+      {
+        src: "/brand/gtm/field-1.jpg",
+        t: "Africa CEO Forum, Abidjan (Côte d'Ivoire)",
+        d: "Presidential panel — Cyril Ramaphosa (President of South Africa), Paul Kagame (President of Rwanda), Mohamed Cheikh El-Ghazouani (President of Mauritania), Tiémoko Meyliet Koné (Vice-President of Côte d'Ivoire)",
+      },
+      {
+        src: "/brand/gtm/field-2.jpg",
+        t: "The Élysée Palace, Paris (France)",
+        d: "Meeting with Emmanuel Macron — official residence of the President of France",
+      },
+      {
+        src: "/brand/gtm/field-7.jpg",
+        t: "World Economic Forum, Davos (Switzerland)",
+        d: "Panel moderation with Dr. Ola Brown (Founding Partner, Healthcap), Nell Daly (Co-Founder, Revenge Capital), Alice Usanase (Lead, EMEA Region, Africa Finance Corporation), Tea Trumbic (Manager, Women, Business and the Law, The World Bank)",
+      },
+      {
+        src: "/brand/gtm/field-9.jpg",
+        t: "Africa Financial Industry Summit, Lomé (Togo)",
+        d: "Panel moderation with Delphine Traoré (CEO, SanlamAllianz), Abiola Bawuah (CEO, UBA), Wilfrid Abiola (Country Representative, AFDB), Sibi Lawson (Deputy CEO, AGF-WA), Coura Carine Sene (CEO Africa, Wave)",
+      },
+      {
+        src: "/brand/gtm/field-6.jpg",
+        t: "Africa CEO Forum, Abidjan (Côte d'Ivoire)",
+        d: "Moderating the gathering with the First Lady of Côte d'Ivoire, H.E. Ms. Dominique Ouattara",
+      },
+      {
+        src: "/brand/gtm/field-13.jpg",
+        t: "Web Summit, Doha (Qatar)",
+        d: "Speaking and participation",
+      },
+      {
+        src: "/brand/gtm/field-20.jpg",
+        t: "Africa CEO Forum, Kigali (Rwanda)",
+      },
+      {
+        src: "/brand/gtm/field-5.jpg",
+        t: "Africa Forward, Nairobi (Kenya)",
+        d: "Summit co-organised by France and Kenya — with the French Presidential Delegation and Minister Jean-Noël Barrot",
+      },
+      {
+        src: "/brand/gtm/field-3.jpg?v=2",
+        t: "ChangeNOW — Africa for Change, Grand Palais, Paris (France)",
+        d: "Panel moderation with Dr. Anino Emuwa (Managing Director, Avandis Consulting; Founder, 100 Davos Women), Kidus Asfaw (Co-founder, Kubik, Inc.), Michael Kakande (Founder, TheResilient40)",
+      },
+      {
+        src: "/brand/gtm/field-16.jpg",
+        t: "Private gathering, Cotonou (Benin)",
+        d: "High-Net-Worth Individuals & corporates",
+      },
+      {
+        src: "/brand/gtm/field-17.jpg",
+        t: "Private gathering, Conakry (Guinea)",
+        d: "Corporates & investors",
+      },
+      {
+        src: "/brand/gtm/field-18.jpg",
+        t: "Paloneo Summit (WEF Partner), Hamburg (Germany)",
+        d: "VC, LP & founders",
+      },
+      {
+        src: "/brand/gtm/field-19.jpg",
+        t: "Diaspora & investor salon, Marrakech (Morocco)",
+      },
+      {
+        src: "/brand/gtm/field-10.jpg",
+        t: "50 Days on Chain, Paris (France)",
+        d: "Panel",
+      },
+      {
+        src: "/brand/gtm/field-11.jpg",
+        t: "Prix Cyrille Bialkiewicz, Paris (France)",
+        d: "Awarded by Banque Delubac",
+      },
+      {
+        src: "/brand/gtm/field-14.jpg",
+        t: "Minah Circle, Grand Palais, Paris (France)",
+        d: "Meeting with the ChangeNOW investor ecosystem",
+      },
+      {
+        src: "/brand/gtm/field-15.jpg",
+        t: "Minah Circle, Lomé (Togo)",
+        d: "Meeting with the Lomé tech & corporate ecosystem",
+      },
+      {
+        src: "/brand/gtm/field-12.jpg?v=2",
+        t: "Minah Circle, Paris (France)",
+        d: "Our annual Paris gathering, in partnership with ChangeNOW and the Stellar Foundation",
+      },
+      {
+        src: "/brand/gtm/field-4.jpg",
+        t: "Pan-African Congress, Lomé (Togo)",
+        d: "Keynote and moderation",
+      },
     ],
+    fieldAdvance: "Advance the photos",
     circleCta: "Explore Minah Circle",
     sources:
       "Sources: rwa.xyz & The Defiant (RWA tokenization, 2025) · The Africa Report (WAEMU mobile money, 2024) · Yango Impact Report 2024.",
@@ -616,34 +781,17 @@ export function GoToMarket({ locale }: { locale: Locale }) {
       </section>
 
       {/* Bandeau photos « sur le terrain » — preuve visuelle du réseau, en
-          couleur, avec la légende de l'événement sous chaque cliché. Défilé en
-          boucle : cf. .ticker dans globals.css (pause au survol, neutralisé si
-          reduced-motion). */}
+          couleur, avec la légende de l'événement sous chaque cliché. Défilé
+          auto + flèche pour avancer : cf. FieldTicker (client). */}
       <section>
         <p className="text-sm font-semibold text-foreground">{c.fieldTitle}</p>
         <p className="mt-1 max-w-2xl text-[13px] leading-6 text-neutral-600">
           {c.fieldCaption}
         </p>
-        <div className="ticker mt-5">
-          <div className="ticker-track">
-            {[...FIELD, ...FIELD].map((src, i) => {
-              const cap = c.fieldCaps[i % FIELD.length];
-              return (
-                <figure key={i} className="mr-4 flex-none">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={src}
-                    alt={cap}
-                    className="h-44 w-auto rounded-lg object-cover"
-                  />
-                  <figcaption className="mt-1.5 max-w-[15rem] text-[11px] leading-4 text-neutral-500">
-                    {cap}
-                  </figcaption>
-                </figure>
-              );
-            })}
-          </div>
-        </div>
+        <FieldTicker
+          advanceLabel={c.fieldAdvance}
+          items={[...c.fieldCaps]}
+        />
       </section>
 
       <p className="text-[11px] leading-5 text-neutral-400">{c.sources}</p>
@@ -651,19 +799,6 @@ export function GoToMarket({ locale }: { locale: Locale }) {
   );
 }
 
-// Douze photos de terrain (couleur), défilées en boucle en bas de fiche.
-// L'ordre suit celui de c.fieldCaps (une légende par cliché).
-const FIELD = [
-  "/brand/gtm/field-1.jpg",
-  "/brand/gtm/field-2.jpg",
-  "/brand/gtm/field-3.jpg",
-  "/brand/gtm/field-4.jpg",
-  "/brand/gtm/field-5.jpg",
-  "/brand/gtm/field-6.jpg",
-  "/brand/gtm/field-7.jpg",
-  "/brand/gtm/field-8.jpg",
-  "/brand/gtm/field-9.jpg",
-  "/brand/gtm/field-10.jpg",
-  "/brand/gtm/field-11.jpg",
-  "/brand/gtm/field-12.jpg",
-];
+// Les photos de terrain (couleur) vivent désormais dans c.fieldCaps, chacune
+// avec son chemin (src) et sa légende (t : titre en gras, d : détail). L'ordre
+// d'affichage du bandeau est simplement l'ordre du tableau.
