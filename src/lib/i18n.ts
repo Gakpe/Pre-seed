@@ -88,13 +88,15 @@ const dict = {
     "home.closing.body":
       "Ces documents méritent mieux qu'une lecture seule : l'équipe vous les présente volontiers en amont pour donner le contexte de chacun. Et une fois votre deep dive terminé, n'hésitez pas à prendre rendez-vous. Que vous envisagiez d'investir ou non, vos retours nous sont précieux.",
     "home.pending.badge": "Accès en cours de validation",
-    "home.pending.title": "Merci de votre intérêt pour Minah",
-    "home.pending.body":
-      "Votre compte est créé, {name}. Vous aurez accès à la data room, au mémo d'investissement et aux documents de la levée une fois votre accès validé.",
+    "home.pending.title": "Merci de l'intérêt que vous portez à Minah",
+    "home.pending.intro":
+      "Votre compte est créé, {name}, et nous sommes ravis que vous preniez le temps d'entrer dans notre data room.",
+    "home.pending.why":
+      "Nous validons chaque accès à la main. C'est le prix de deux choses auxquelles nous tenons : que les informations de la levée restent confidentielles, et qu'elles soient partagées avec des personnes réellement en mesure d'y participer, ou de la faire rayonner dans leur réseau.",
     "home.pending.delay":
-      "L'équipe revient vers vous pour valider votre accès, sous 24 heures maximum.",
+      "Il nous faudra moins de 24 heures pour ouvrir la data room.",
     "home.pending.contact":
-      "Une question d'ici là ? Écrivez-nous à",
+      "Une question d'ici là, ou l'envie d'échanger directement ? Écrivez à l'un de nous.",
     "home.blocked.title": "Accès indisponible",
     "home.blocked.body":
       "Votre accès à l'espace investisseurs n'est pas actif. Pour toute question :",
@@ -210,13 +212,15 @@ const dict = {
     "home.closing.body":
       "These documents deserve more than a solo read: the team is happy to walk you through each of them upfront. And once your deep dive is done, do not hesitate to book a meeting. Whether you plan to invest or not, your feedback is valuable to us.",
     "home.pending.badge": "Access being validated",
-    "home.pending.title": "Thank you for your interest in Minah",
-    "home.pending.body":
-      "Your account has been created, {name}. You will have access to the data room, the investment memo and the round documents once your access is validated.",
+    "home.pending.title": "Thank you for the interest you are showing in Minah",
+    "home.pending.intro":
+      "Your account has been created, {name}, and we are glad you are taking the time to step into our data room.",
+    "home.pending.why":
+      "We validate every access by hand. That is the price of two things we care about: that the round's information stays confidential, and that it is shared with people genuinely able to take part in it, or to carry it through their network.",
     "home.pending.delay":
-      "The team will get back to you to validate your access, within 24 hours at the latest.",
+      "It will take us less than 24 hours to open the data room.",
     "home.pending.contact":
-      "A question in the meantime? Write to us at",
+      "A question in the meantime, or would you rather talk to us directly? Write to any of us.",
     "home.blocked.title": "Access unavailable",
     "home.blocked.body":
       "Your access to the investor space is not active. For any question:",

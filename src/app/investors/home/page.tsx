@@ -13,6 +13,26 @@ import { InterestModal } from "./interest-modal";
 import { MeetingButton } from "./meeting-button";
 import { MatchingFundTooltip } from "../matching-fund-tooltip";
 
+// Contacts directs proposés à un investisseur en attente. Mêmes adresses que
+// le socle admin, voir ADMIN_EMAILS.
+const FOUNDERS = [
+  {
+    name: "Julien Gakpé",
+    email: "jgakpe@minah.io",
+    role: { fr: "Directeur général", en: "CEO" },
+  },
+  {
+    name: "Coralie Lolliot",
+    email: "coralie.lolliot@minah.io",
+    role: { fr: "Ecosystems & Partnerships", en: "Ecosystems & Partnerships" },
+  },
+  {
+    name: "Hervé Gakpé",
+    email: "hgakpe@minah.io",
+    role: { fr: "Directeur financier", en: "CFO" },
+  },
+];
+
 export async function generateMetadata() {
   return { title: t(await getLocale(), "meta.title") };
 }
@@ -123,29 +143,61 @@ export default async function InvestorHomePage() {
 
   // En attente de validation : aucun document, pas même la liste des titres.
   // La RLS le garantit déjà en base, on ne s'en remet pas au seul affichage.
+  //
+  // L'écran dit aussi pourquoi cette étape existe. Un accès retenu sans raison
+  // se lit comme une lenteur ; expliqué, il se lit comme une précaution, et
+  // c'en est une : la confidentialité de la levée.
   if (investor.status === "pending") {
     return (
       <Main>
-        <div className="mx-auto max-w-lg py-10 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-xs font-medium text-marsala">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-            {t(locale, "home.pending.badge")}
-          </span>
-          <h1 className="mt-5 text-2xl font-semibold leading-tight tracking-tight">
-            {t(locale, "home.pending.title")}
-          </h1>
-          <p className="mt-3 text-sm leading-6 text-neutral-600">
-            {t(locale, "home.pending.body", { name: investor.full_name ?? "" })}
+        <div className="mx-auto max-w-xl py-10">
+          <div className="text-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-xs font-medium text-marsala">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+              {t(locale, "home.pending.badge")}
+            </span>
+            <h1 className="mt-5 text-2xl font-semibold leading-tight tracking-tight">
+              {t(locale, "home.pending.title")}
+            </h1>
+            <p className="mt-3 text-sm leading-6 text-neutral-600">
+              {t(locale, "home.pending.intro", {
+                name: investor.full_name ?? "",
+              })}
+            </p>
+          </div>
+
+          <p className="mt-6 border-l-2 border-salvia pl-4 text-sm leading-6 text-neutral-700">
+            {t(locale, "home.pending.why")}
           </p>
-          <p className="mt-5 rounded-lg border border-foreground/10 bg-white/60 px-4 py-3 text-sm leading-6 text-foreground">
+
+          <p className="mt-6 rounded-lg border border-foreground/10 bg-white/60 px-4 py-3 text-center text-sm font-medium leading-6 text-foreground">
             {t(locale, "home.pending.delay")}
           </p>
-          <p className="mt-6 text-xs text-neutral-500">
-            {t(locale, "home.pending.contact")}{" "}
-            <a href="mailto:contact@minah.io" className="underline">
-              contact@minah.io
-            </a>
+
+          {/* Les trois adresses en clair : on invite à écrire, autant ne pas
+              faire chercher à qui. */}
+          <p className="mt-8 text-center text-sm leading-6 text-neutral-600">
+            {t(locale, "home.pending.contact")}
           </p>
+          <ul className="mt-4 grid gap-2 sm:grid-cols-3">
+            {FOUNDERS.map((f) => (
+              <li
+                key={f.email}
+                className="rounded-lg border border-foreground/10 bg-white/50 px-3 py-2.5 text-center"
+              >
+                <span className="block text-sm font-medium">{f.name}</span>
+                <span className="mt-0.5 block text-[11px] leading-snug text-neutral-500">
+                  {f.role[locale]}
+                </span>
+                <a
+                  href={`mailto:${f.email}`}
+                  className="mt-1.5 block text-[11px] text-marsala underline decoration-marsala/30 underline-offset-2 hover:decoration-marsala"
+                >
+                  {f.email}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </Main>
     );

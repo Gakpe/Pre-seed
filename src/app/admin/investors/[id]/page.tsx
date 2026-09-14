@@ -11,6 +11,7 @@ import {
 import type { Investor, InvestorNote, InvestorStats } from "@/lib/types";
 import {
   addInvestorNote,
+  approveInvestor,
   deleteInvestorNote,
   setInvestorStatus,
   setLevel2Access,
@@ -170,6 +171,15 @@ export default async function InvestorDetailPage({
           </div>
         </div>
         <div className="flex flex-col items-end gap-2">
+          {/* Un compte en attente n'a qu'une décision qui compte : l'ouvrir.
+              Elle est en premier et en plein, le blocage reste discret. */}
+          {investor.status === "pending" && (
+            <form action={approveInvestor.bind(null, investor.id)}>
+              <button className="rounded-md bg-foreground px-3 py-1.5 text-xs font-medium text-background transition-opacity hover:opacity-90">
+                Valider l&apos;accès
+              </button>
+            </form>
+          )}
           {investor.status === "blocked" ? (
             <form action={setInvestorStatus.bind(null, investor.id, "approved")}>
               <button className="rounded-md border border-emerald-300 px-3 py-1.5 text-xs text-emerald-700 hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-300 dark:hover:bg-emerald-950">

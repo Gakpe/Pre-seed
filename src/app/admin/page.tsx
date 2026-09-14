@@ -4,7 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import type { Investor, InvestorStats } from "@/lib/types";
 import { formatDuration } from "@/lib/format";
 import { buildDailyBuckets } from "@/lib/activity";
-import { setInvestorStatus, setLevel2Access } from "./actions";
+import { approveInvestor, setInvestorStatus, setLevel2Access } from "./actions";
 import { StatusBadge } from "./status-badge";
 import { InvestorRow } from "./investor-row";
 import { ActivityHistogram } from "./activity-histogram";
@@ -152,6 +152,18 @@ export default async function AdminPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3 text-right">
+                    {/* En attente : la validation se fait depuis la liste,
+                        sans passer par la file ni par la fiche. */}
+                    {inv.status === "pending" && (
+                      <form
+                        action={approveInvestor.bind(null, inv.id)}
+                        className="mb-1.5"
+                      >
+                        <button className="rounded-md bg-foreground px-2.5 py-1 text-xs font-medium text-background transition-opacity hover:opacity-90">
+                          Valider
+                        </button>
+                      </form>
+                    )}
                     {inv.status === "blocked" ? (
                       <form
                         action={setInvestorStatus.bind(null, inv.id, "approved")}
