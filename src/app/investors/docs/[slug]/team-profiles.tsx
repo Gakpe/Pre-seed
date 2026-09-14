@@ -235,7 +235,7 @@ const copy = {
     dislikes: "N'aime pas",
     reveal: "Voir le profil de",
     support:
-      "Autour des fondateurs, huit profils support, tech, communication, juridique. Bios détaillées sur demande.",
+      "Autour des fondateurs, quatre profils support, tech, communication, juridique. Bios détaillées sur demande.",
   },
   en: {
     intro: "Hover a portrait to open the profile, on touch, tap it.",
@@ -245,7 +245,7 @@ const copy = {
     dislikes: "Dislikes",
     reveal: "See the profile of",
     support:
-      "Around the founders, eight support profiles, tech, communications, legal. Detailed bios on request.",
+      "Around the founders, four support profiles, tech, communications, legal. Detailed bios on request.",
   },
 };
 
