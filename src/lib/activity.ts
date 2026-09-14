@@ -119,7 +119,7 @@ export function buildVisitRhythm(
 // Durée lisible pour un écart entre visites : on ne descend pas sous l'heure,
 // personne ne lit « 3 j 4 h 12 min » sur une fiche.
 export function formatGap(ms: number | null): string {
-  if (ms === null) return "—";
+  if (ms === null) return "";
   const minutes = Math.round(ms / 60000);
   if (minutes < 60) return `${minutes} min`;
   const hours = Math.round(minutes / 60);

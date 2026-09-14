@@ -1,10 +1,11 @@
--- Retrait des tirets cadratins dans le contenu des fiches de la data room.
+-- Retrait des tirets cadratins et des points médians dans le contenu des
+-- fiches de la data room.
 --
 -- Pourquoi un script séparé plutôt qu'un rejeu de seed.sql : le seed réécrit
 -- l'intégralité des colonnes de tous les documents. S'il y a eu des retouches
 -- de contenu directement en base depuis le dernier rejeu, elles seraient
--- perdues. Ce script ne touche que le caractère visé, ligne par ligne, et il
--- est idempotent : le rejouer ne change rien de plus.
+-- perdues. Ce script ne touche que les caractères visés, ligne par ligne, et
+-- il est idempotent : le rejouer ne change rien de plus.
 --
 -- Application (cf. README) :
 --   jq -n --rawfile sql supabase/maintenance/2026-09-tirets-cadratins.sql '{query: $sql}' \
@@ -12,68 +13,56 @@
 --       -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
 --       -H "Content-Type: application/json" -d @-
 --
--- Vérification avant / après :
---   select slug from public.documents where content like '%—%' or content_en like '%—%';
+-- Vérification :
+--   select slug from public.documents
+--   where content like '%—%' or content_en like '%—%'
+--      or title like '%—%' or title_en like '%—%';
 
 begin;
 
--- 1. Cas où le tiret introduisait une énumération : deux-points plutôt que virgule.
+-- 1. Cas où le tiret introduisait une glose ou une énumération : les
+--    deux-points portent mieux que la virgule.
 update public.documents set
-  content = replace(content,
-    'Les rails sont construits — wallets, KYC, argent mobile-first.',
-    'Les rails sont construits : wallets, KYC, argent mobile-first.'),
-  content_en = replace(content_en,
-    'The rails are built — wallets, KYC, mobile-first money.',
-    'The rails are built: wallets, KYC, mobile-first money.')
-where slug = 'pourquoi-minah';
+  content = replace(replace(replace(replace(replace(content,
+    '## Côté capital — qui finance',        '## Côté capital : qui finance'),
+    '## Côté actifs — qui nous apporte',    '## Côté actifs : qui nous apporte'),
+    'Performance bond — couvre',            'Performance bond : couvre'),
+    'Assurance défaut de crédit — couvre',  'Assurance défaut de crédit : couvre'),
+    'Buffer de calendrier — absorbe',       'Buffer de calendrier : absorbe'),
+  content_en = replace(replace(replace(replace(replace(coalesce(content_en, ''),
+    '## Capital side — who funds',          '## Capital side: who funds'),
+    '## Asset side — who brings us',        '## Asset side: who brings us'),
+    'Performance bond — covers',            'Performance bond: covers'),
+    'Credit default insurance — covers',    'Credit default insurance: covers'),
+    'Schedule buffer — absorbs',            'Schedule buffer: absorbs');
 
+-- 2. Passe générale. Le tiret encadré d'espaces marquait une incise ou une
+--    apposition : la virgule le remplace sans perte de sens. Le point médian
+--    servait de séparateur d'énumération : même traitement.
 update public.documents set
-  content = replace(content,
-    'des meilleurs dossiers — contrats publics sécurisés, revenus récurrents, contreparties solides.',
-    'des meilleurs dossiers : contrats publics sécurisés, revenus récurrents, contreparties solides.'),
-  content_en = replace(content_en,
-    'of the best files, secured public contracts, recurring revenue, solid counterparties.',
-    'of the best files: secured public contracts, recurring revenue, solid counterparties.')
-where slug = 'pourquoi-minah';
-
-update public.documents set
-  content = replace(content,
-    'il ne tarife pas le risque — il l''évite, ou le surtarife massivement.',
-    'il ne tarife pas le risque : il l''évite, ou le surtarife massivement.'),
-  content_en = replace(content_en,
-    'it does not price risk, it avoids it, or prices it far above.',
-    'it does not price risk: it avoids it, or prices it far above.')
-where slug = 'pourquoi-minah';
-
-update public.documents set
-  content = replace(content,
-    'gestion du risque de niveau institutionnel** — sélection, garanties, assurance-crédit,',
-    'gestion du risque de niveau institutionnel** : sélection, garanties, assurance-crédit,')
-where slug = 'pourquoi-minah';
-
-update public.documents set
-  content = replace(content,
-    'l''infrastructure d''information qui la déclenche — et capté la valeur de l''écart',
-    'l''infrastructure d''information qui la déclenche, et capté la valeur de l''écart')
-where slug = 'pourquoi-minah';
-
--- 2. Passe générale sur les documents restants.
---    Le tiret encadré d'espaces marquait une incise ou une apposition : la
---    virgule le remplace sans perte de sens.
-update public.documents
-set content    = replace(content,    ' — ', ', '),
-    content_en = replace(content_en, ' — ', ', ')
-where content like '%—%' or content_en like '%—%';
+  title      = replace(replace(title,                    ' — ', ', '), ' · ', ', '),
+  title_en   = replace(replace(title_en,                 ' — ', ', '), ' · ', ', '),
+  category   = replace(replace(category,                 ' — ', ', '), ' · ', ', '),
+  category_en= replace(replace(category_en,              ' — ', ', '), ' · ', ', '),
+  content    = replace(replace(content,                  ' — ', ', '), ' · ', ', '),
+  content_en = replace(replace(content_en,               ' — ', ', '), ' · ', ', ');
 
 -- 3. Les tirets restants (collés, ou en tête de segment) deviennent aussi des
 --    virgules, puis on nettoie les doublons de ponctuation que cela produit.
-update public.documents
-set content    = replace(content,    '—', ','),
-    content_en = replace(content_en, '—', ',')
-where content like '%—%' or content_en like '%—%';
+update public.documents set
+  title      = replace(replace(title,      '—', ','), '·', ','),
+  title_en   = replace(replace(title_en,   '—', ','), '·', ','),
+  content    = replace(replace(content,    '—', ','), '·', ','),
+  content_en = replace(replace(content_en, '—', ','), '·', ',')
+where title like '%—%' or title like '%·%'
+   or title_en like '%—%' or title_en like '%·%'
+   or content like '%—%' or content like '%·%'
+   or content_en like '%—%' or content_en like '%·%';
 
-update public.documents
-set content    = replace(replace(content,    ', ,', ','), ',,', ','),
-    content_en = replace(replace(content_en, ', ,', ','), ',,', ',');
+update public.documents set
+  content    = replace(replace(content,    ', ,', ','), ',,', ','),
+  content_en = replace(replace(content_en, ', ,', ','), ',,', ','),
+  title      = replace(replace(title,      ', ,', ','), ',,', ','),
+  title_en   = replace(replace(title_en,   ', ,', ','), ',,', ',');
 
 commit;

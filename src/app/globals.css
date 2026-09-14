@@ -5,7 +5,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* Palette Minah — style guidelines */
+  /* Palette Minah, style guidelines */
   --background: #f6f4ef; /* blanc cassé chaud */
   --foreground: #2c1716; /* Onyx */
   --brand: #f26404; /* Minah */
@@ -33,7 +33,7 @@
   --bm-accent: #dd5f1b;
   --bm-accent-soft: #f6d9c3;
 
-  /* Note de marché — registre « note de recherche » */
+  /* Note de marché, registre « note de recherche » */
   --note-ink: #1a1613;
   --note-muted: #7c7368;
   --note-accent: #d2571a;

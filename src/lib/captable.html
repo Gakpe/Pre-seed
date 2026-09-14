@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Minah · Cap table — trajectoire de dilution</title>
+<title>Minah, Cap table, trajectoire de dilution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -45,7 +45,7 @@
            text-transform:uppercase;color:var(--mut2)}
   .stat .v{font-family:'Fraunces',Georgia,serif;font-size:19px;margin-top:3px;line-height:1.1}
 
-  /* le graphique défile avec la page — pas d'épinglage */
+  /* le graphique défile avec la page, pas d'épinglage */
   .sticky{background:var(--bg);padding:2px 0 10px}
   svg{display:block;width:100%;height:auto}
   .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
@@ -135,8 +135,8 @@
 
   <div class="head">
     <div>
-      <div class="eyebrow">Minah · cap table</div>
-      <h1>De 50 / 50 à la Série A — qui détient quoi, et quand</h1>
+      <div class="eyebrow">Minah, cap table</div>
+      <h1>De 50 / 50 à la Série A, qui détient quoi, et quand</h1>
     </div>
     <div class="seg" id="mode">
       <button data-m="interne" class="on">interne</button>
@@ -145,10 +145,10 @@
   </div>
 
   <div class="moment">
-    <div class="big" id="m-idx">—</div>
+    <div class="big" id="m-idx"></div>
     <div>
-      <div class="lab" id="m-label">—</div>
-      <div class="sub" id="m-sub">—</div>
+      <div class="lab" id="m-label"></div>
+      <div class="sub" id="m-sub"></div>
     </div>
   </div>
   <p class="lede" id="m-text"></p>
@@ -163,25 +163,25 @@
   </div>
   <div class="legend" id="legend"></div>
 
-  <p class="sec" style="margin-top:22px">Entre fondateurs · hors tiers</p>
+  <p class="sec" style="margin-top:22px">Entre fondateurs, hors tiers</p>
   <div class="fbar" id="fbar"></div>
 
   <p class="sec" style="margin-top:22px" id="tbl-title">Cap table</p>
   <div class="rows" id="rows"></div>
 
-  <p class="sec" style="margin-top:22px">BSA2 · advisor Coralie — acquisition</p>
+  <p class="sec" style="margin-top:22px">BSA2, advisor Coralie, acquisition</p>
   <div class="bsa" id="vest"></div>
 
-  <p class="sec" style="margin-top:22px">Performance BSA1 · conversion au pré-seed → sortie Série A</p>
+  <p class="sec" style="margin-top:22px">Performance BSA1, conversion au pré-seed → sortie Série A</p>
   <div class="bsa" id="bsa"></div>
   <p class="note" id="bsa-note"></p>
 
   <p class="note" id="note"></p>
 
   <footer>
-    Source : <b>Model BSA 1er Invest.xlsx</b> · onglet « Estimation - return BSA Air » (12 févr. 2026),
+    Source : <b>Model BSA 1er Invest.xlsx</b>, onglet « Estimation - return BSA Air » (12 févr. 2026),
     restructuré : deux tours de BSA distincts, cession Hervé → Coralie, aucun pool BSPCE.<br>
-    Conversion BSA1 selon la formule de marché — min(plafond ; max(plancher ; pré-money × (1 − décote))) —
+    Conversion BSA1 selon la formule de marché, min(plafond ; max(plancher ; pré-money × (1 − décote))),
     et non le triple SI du tableur, qui applique la décote sous le plancher et bascule sur le plafond trop tôt.<br>
     Post-money = actions × prix par action, et non « pré-money + montant levé » : au pré-seed la conversion
     décotée du BSA1 crée de la valeur que l'addition manquait.
@@ -194,15 +194,15 @@
   <p class="note" style="margin:0 0 4px">Le graphique se recalcule à chaque mouvement.</p>
 
   <div class="grp">
-    <p class="sec">Cession de parts · re-scope Hervé</p>
+    <p class="sec">Cession de parts, re-scope Hervé</p>
     <div id="sl-cess"></div>
     <p class="note" style="margin-top:2px">Hervé cède directement à Coralie. Aucune action nouvelle :
-      les tiers ne bougent pas. Hervé n'a aucune cible — après cette cession il ne fait que se diluer
+      les tiers ne bougent pas. Hervé n'a aucune cible, après cette cession il ne fait que se diluer
       au rythme des tours.</p>
   </div>
 
   <div class="grp">
-    <p class="sec">BSA2 · advisor Coralie</p>
+    <p class="sec">BSA2, advisor Coralie</p>
     <div class="toggle" id="rythme">
       <button data-v="trimestriel" class="on"><span class="l">Trimestriel</span><span class="d">acquisition par quarts</span></button>
       <button data-v="mensuel"><span class="l">Mensuel</span><span class="d">acquisition lissée</span></button>
@@ -214,8 +214,8 @@
   </div>
 
   <div class="grp">
-    <p class="sec">BSA1 · investisseurs</p>
-    <p class="lock">Figé — déjà négocié</p>
+    <p class="sec">BSA1, investisseurs</p>
+    <p class="lock">Figé, déjà négocié</p>
     <div class="fixed">
       <div class="fr"><span>Bijon</span><span>30 000 €</span></div>
       <div class="fr"><span>Serge</span><span>10 000 €</span></div>
@@ -228,7 +228,7 @@
 
   <div class="grp">
     <p class="sec">Amorçage</p>
-    <p class="lock">Figé — déjà réalisé</p>
+    <p class="lock">Figé, déjà réalisé</p>
     <div class="fixed">
       <div class="fr"><span>Fondation</span><span>2 × 65 000 actions</span></div>
       <div class="fr"><span>Family &amp; Friends</span><span>22 500 € @ 10 €</span></div>
@@ -249,7 +249,7 @@
 
 <script>
 /* ============================================================================
-   MINAH — moteur de cap table, v3
+   MINAH, moteur de cap table, v3
 
    Chronologie modélisée :
      Fondation → Initial takeoff → BSA1 (Bijon + Serge)
@@ -265,19 +265,19 @@ const TAKEOFF_PRE  = 1300000;  // pré-money du takeoff -> PPS 10 €
 const FF_AMOUNT    = 22500;    // Family & Friends
 const P50_PCT      = 0.07;     // 50 Partners
 
-/* BSA1 — conditions figées, non exposées au panneau. */
+/* BSA1, conditions figées, non exposées au panneau. */
 const BSA1 = {bijon:30000, serge:10000, discount:0.20, floor:4e6, cap:6e6, date:2026.5};
 
 /* Ordre = ordre d'empilement dans le graphique (du bas vers le haut).
    Les acteurs d'une même catégorie sont contigus : c'est ce qui permet de tracer
    une accolade continue par catégorie. */
 const HOLDERS = [
-  {id:'j',   name:'Julien · fondateur',           short:'Julien',  color:'#B8772A', founder:true},
-  {id:'h',   name:'Hervé · fondateur',            short:'Hervé',   color:'#8E3B2F', founder:true},
-  {id:'c',   name:'Coralie · cession + BSA2',     short:'Coralie', color:'#4E3A62', founder:true},
+  {id:'j',   name:'Julien, fondateur',           short:'Julien',  color:'#B8772A', founder:true},
+  {id:'h',   name:'Hervé, fondateur',            short:'Hervé',   color:'#8E3B2F', founder:true},
+  {id:'c',   name:'Coralie, cession + BSA2',     short:'Coralie', color:'#4E3A62', founder:true},
   {id:'fff', name:'Family & Friends',             short:'F&F',     color:'#D9B98A'},
-  {id:'b1a', name:'BSA1 · Bijon',                 short:'Bijon',   color:'#86B2BA'},
-  {id:'b1b', name:'BSA1 · Serge',                 short:'Serge',   color:'#6A9CA6'},
+  {id:'b1a', name:'BSA1. Bijon',                 short:'Bijon',   color:'#86B2BA'},
+  {id:'b1b', name:'BSA1. Serge',                 short:'Serge',   color:'#6A9CA6'},
   {id:'ba1', name:'BA 1',                         short:'BA 1',    color:'#52868F'},
   {id:'ba2', name:'BA 2',                         short:'BA 2',    color:'#3E7079'},
   {id:'p50', name:'50 Partners',                  short:'50P',     color:'#3B6E8C'},
@@ -365,14 +365,14 @@ function model(p){
       snap({id:e.id, d:e.d, short:'Takeoff', label:'Initial takeoff', done:true,
             pre:TAKEOFF_PRE, raised:FF_AMOUNT, pps:pps0,
             text:"Love money et accélérateur entrent au capital : "+fEur(FF_AMOUNT)+" de Family & Friends à "
-                 +fNum(pps0,2)+" € l'action, et 7 % pour 50 Partners. Le nombre d'actions ne bouge pas — "
+                 +fNum(pps0,2)+" € l'action, et 7 % pour 50 Partners. Le nombre d'actions ne bouge pas, "
                  +"les deux fondateurs cèdent à parts égales et passent de 50 % à "+fPct(s.j/FOUND_SHARES*100)+" chacun."});
 
     } else if(e.id==='bsa1'){
       /* Aucune action émise : le BSA1 ne crée ni titre ni valorisation. */
-      snap({id:e.id, d:e.d, short:'BSA1', label:'BSA1 · Bijon + Serge', done:true,
+      snap({id:e.id, d:e.d, short:'BSA1', label:'BSA1. Bijon + Serge', done:true,
             pre:null, raised:air1Amt, pps:null, pending:air1Amt,
-            text:fEur(air1Amt)+" souscrits en BSA1 — "+fEur(BSA1.bijon)+" par Bijon et "+fEur(BSA1.serge)
+            text:fEur(air1Amt)+" souscrits en BSA1, "+fEur(BSA1.bijon)+" par Bijon et "+fEur(BSA1.serge)
                  +" par Serge. Décote "+fPct(BSA1.discount*100)+", tunnel de valorisation "
                  +fEur(BSA1.floor)+" – "+fEur(BSA1.cap)+". Aucune action émise à ce stade : "
                  +"la conversion a lieu au pré-seed."});
@@ -383,19 +383,19 @@ function model(p){
       cCess += toC; s.h -= toC; s.c = cCess + n2*vFrac;
       // Les BSA2 sont dimensionnés ici, sur le capital constaté juste après la cession.
       n2 = p.bsa2Pct>0 ? p.bsa2Pct/(1-p.bsa2Pct)*tot() : 0;
-      snap({id:e.id, d:e.d, short:'Cession', label:'Cession de parts · re-scope Hervé', done:done(e.d),
+      snap({id:e.id, d:e.d, short:'Cession', label:'Cession de parts, re-scope Hervé', done:done(e.d),
             pre:null, raised:0, pps:null,
             text:"Re-scope du rôle d'Hervé : il cède directement "+fPct(p.cessionPct*100)
-                 +" du capital à Coralie, soit "+fInt(toC)+" actions. Aucune action nouvelle — "
+                 +" du capital à Coralie, soit "+fInt(toC)+" actions. Aucune action nouvelle, "
                  +"Family & Friends et 50 Partners ne bougent pas. À partir d'ici Hervé n'a plus de cible : "
                  +"il se dilue simplement au rythme des tours."});
 
     } else if(e.id==='bsa2'){
-      snap({id:e.id, d:e.d, short:'BSA2', label:'BSA2 · advisor Coralie', done:done(e.d),
+      snap({id:e.id, d:e.d, short:'BSA2', label:'BSA2, advisor Coralie', done:done(e.d),
             pre:null, raised:0, pps:null,
             text:"Fin du vesting du BSA2 : "+fInt(n2)+" actions acquises par Coralie sur "
                  +fNum(p.bsa2Months,0)+" mois en rythme "+p.rythme+", soit "+fPct(p.bsa2Pct*100)
-                 +" du capital constaté à l'attribution. Rémunération de prestation — aucun prix d'entrée, "
+                 +" du capital constaté à l'attribution. Rémunération de prestation, aucun prix d'entrée, "
                  +"aucune valorisation associée."});
 
     } else if(e.id==='preseed'){
@@ -407,7 +407,7 @@ function model(p){
       const aPPS  = vc / before;
       const airSh = air1Amt / aPPS;
       // « dans le pré-money » : les actions de conversion entrent au dénominateur
-      // du prix payé par les nouveaux — ce sont les fondateurs qui en portent le coût.
+      // du prix payé par les nouveaux, ce sont les fondateurs qui en portent le coût.
       const pps   = p.airInside ? p.preseedPre/(before+airSh) : p.preseedPre/before;
       s.b1a = BSA1.bijon/aPPS; s.b1b = BSA1.serge/aPPS;
       const third = p.preseedAmt/3;
@@ -416,7 +416,7 @@ function model(p){
             pre:p.preseedPre, raised:p.preseedAmt, pps, airPPS:aPPS, airVc:vc,
             text:"Pré-money "+fEur(p.preseedPre)+" soit "+fNum(pps,2)+" € l'action ("
                  +(p.airInside?"BSA1 converti DANS le pré-money":"BSA1 converti HORS pré-money")
-                 +"). Le BSA1 convertit à "+fNum(aPPS,2)+" € — valorisation de conversion "+fEur(vc)+" ("
+                 +"). Le BSA1 convertit à "+fNum(aPPS,2)+" €, valorisation de conversion "+fEur(vc)+" ("
                  +(vc>=BSA1.cap-1 ? "plafond atteint" : vc<=BSA1.floor+1 ? "plancher atteint"
                    : fPct(BSA1.discount*100)+" de décote")+"), puis "+fEur(p.preseedAmt)
                  +" entrent en trois tickets égaux (BA 1, BA 2, VC A)."});
@@ -476,10 +476,10 @@ function model(p){
 // « Family & Friends », « Fondateurs & management » : le & doit être échappé,
 // sinon le fragment SVG injecté est invalide.
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-const fNum = (v,d)=> (v==null?'—':v.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}));
+const fNum = (v,d)=> (v==null?'':v.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}));
 const fInt = v => Math.round(v).toLocaleString('fr-FR');
 const fPct = v => fNum(v,1)+' %';
-const fEur = v => v==null ? '—'
+const fEur = v => v==null ? ''
   : Math.abs(v) >= 1e6 ? fNum(v/1e6, v>=1e7?0:2)+' M€'
   : Math.abs(v) >= 1e3 ? fNum(v/1e3,0)+' k€'
   : fNum(v,0)+' €';
@@ -501,8 +501,8 @@ function render(){
   /* -- lecture du moment -- */
   $('m-idx').textContent   = String(stage+1).padStart(2,'0');
   $('m-label').textContent = st.label;
-  $('m-sub').textContent   = fDate(st.d) + ' · ' + (st.done ? 'réalisé' : 'projection')
-                           + ' · ' + fInt(st.total) + ' actions';
+  $('m-sub').textContent   = fDate(st.d) + ', ' + (st.done ? 'réalisé' : 'projection')
+                           + ', ' + fInt(st.total) + ' actions';
   $('m-text').textContent  = st.text;
 
   /* -- bandeau de stats -- */
@@ -510,13 +510,13 @@ function render(){
   const fPrev = prev ? prev.rows.filter(r=>r.founder).reduce((a,r)=>a+r.pct,0) : null;
   const stats = [
     ['Pré-money',   fEur(st.pre)],
-    ['Montant',     st.raised ? fEur(st.raised) : '—'],
+    ['Montant',     st.raised ? fEur(st.raised) : ''],
     ['Post-money',  fEur(st.post)],
-    ['Prix / action', st.pps==null ? '—' : fNum(st.pps,2)+' €'],
+    ['Prix / action', st.pps==null ? '' : fNum(st.pps,2)+' €'],
     ['Actions',     fInt(st.total)],
     // dilution = actions nouvelles / actions post-événement. Vaut 0 sur les
     // opérations par cession (takeoff, cession Hervé) : seuls les % bougent.
-    ['Dilution', st.dil==null ? '—' : fPct(st.dil*100),
+    ['Dilution', st.dil==null ? '' : fPct(st.dil*100),
        st.dil!=null && st.dil>0.20 ? 'var(--down)' : null],
     ['Fondateurs',  fPct(fNow) + (fPrev==null?'' : ' <span style="font-family:IBM Plex Mono;font-size:11px;color:var(--mut2)">'
                      +(fNow-fPrev>=0?'+':'−')+fNum(Math.abs(fNow-fPrev),1)+' pt</span>')],
@@ -549,7 +549,7 @@ function render(){
     `<div style="width:${r.fpct}%;background:${r.color}">${r.fpct>=12?r.short+' '+fNum(r.fpct,0)+' %':''}</div>`).join('');
 
   /* -- cap table -- */
-  $('tbl-title').textContent = 'Cap table · ' + st.label + (prev ? ' — écart depuis ' + prev.short : '');
+  $('tbl-title').textContent = 'Cap table, ' + st.label + (prev ? ', écart depuis ' + prev.short : '');
   const visible = st.rows.filter(r=>r.shares>0.5);
   $('rows').innerHTML = visible.map((r,i)=>{
     const pr = prev && prev.rows.find(x=>x.id===r.id);
@@ -557,10 +557,10 @@ function render(){
     const d = had ? r.pct - pr.pct : null;
     const flat = d==null || Math.abs(d) < 0.05;
     const col = flat ? '#B4BAB2' : (d<0 ? 'var(--down)' : 'var(--up)');
-    const txt = !had ? 'entrée' : flat ? '·' : (d>0?'+':'−')+fNum(Math.abs(d),1)+' pt';
+    const txt = !had ? 'entrée' : flat ? '=' : (d>0?'+':'−')+fNum(Math.abs(d),1)+' pt';
     // Coralie : on détaille ce qui vient de la cession et ce qui vient du BSA2
     const sub = r.id==='c' && st.n2>0
-      ? fInt(r.shares)+' actions · cession '+fInt(st.cCess)+' + BSA2 '+fInt(st.n2*st.vFrac)
+      ? fInt(r.shares)+' actions, cession '+fInt(st.cCess)+' + BSA2 '+fInt(st.n2*st.vFrac)
       : fInt(r.shares)+' actions';
     return `<div class="row ${i%2?'alt':'plain'}">
       <i class="sw" style="background:${r.color}"></i>
@@ -570,9 +570,9 @@ function render(){
   }).join('')
    // le total en euros est la SOMME des lignes, pas « pré-money + montant levé »
    + `<div class="row tot"><i class="sw" style="background:transparent"></i>
-        <div class="nm"><b>Total</b><i>${visible.length} lignes · ${fInt(st.total)} actions${
-          st.est ? ' · valeurs au dernier prix connu' : ''}</i></div>
-        <div class="pc"><b>100,0 %</b><i>${st.vpps==null?'—':fEur(visible.reduce((a,r)=>a+r.value,0))}</i></div>
+        <div class="nm"><b>Total</b><i>${visible.length} lignes, ${fInt(st.total)} actions${
+          st.est ? ', valeurs au dernier prix connu' : ''}</i></div>
+        <div class="pc"><b>100,0 %</b><i>${st.vpps==null?'':fEur(visible.reduce((a,r)=>a+r.value,0))}</i></div>
         <div class="dl"></div></div>`;
 
   /* -- BSA2 : état d'acquisition au moment sélectionné -- */
@@ -599,15 +599,15 @@ function render(){
     // avantage réel sur le prix du tour : négatif = le BSA1 paie plus cher qu'un entrant
     ['Avantage vs tour', (b.edge>=0?'+':'−')+fPct(Math.abs(b.edge)*100),
        b.edge < 0.005 ? 'var(--down)' : null],
-    ['Bijon · 30 k€',     fEur(BSA1.bijon*b.multiple)],
-    ['Serge · 10 k€',     fEur(BSA1.serge*b.multiple)],
+    ['Bijon, 30 k€',     fEur(BSA1.bijon*b.multiple)],
+    ['Serge, 10 k€',     fEur(BSA1.serge*b.multiple)],
   ].map(([k,v,c])=>`<div class="stat"><div class="k">${k}</div><div class="v"${c?` style="color:${c}"`:''}>${v}</div></div>`).join('');
 
   /* -- lecture du tunnel BSA1 -- */
   /* Le tunnel 4–6 M€ et la décote de 20 % se recouvrent : la décote ne devient
      effective qu'au-dessus de floor/(1−décote) = 5 M€, et le plafond prend le
      relais au-dessus de cap/(1−décote) = 7,5 M€. Hors de cette fenêtre le
-     souscripteur ne gagne rien — voire paie plus cher que les entrants du tour. */
+     souscripteur ne gagne rien, voire paie plus cher que les entrants du tour. */
   const wLo = BSA1.floor/(1-BSA1.discount), wHi = BSA1.cap/(1-BSA1.discount);
   $('bsa-note').innerHTML =
       'Tunnel '+fEur(BSA1.floor)+' – '+fEur(BSA1.cap)+' avec '+fPct(BSA1.discount*100)
@@ -622,15 +622,15 @@ function render(){
   const A = S[S.length-1];
   const g = id => A.rows.find(r=>r.id===id);
   $('note').innerHTML =
-      '<b>En '+A.short+' · Julien '+fPct(g('j').pct)+' — Hervé '+fPct(g('h').pct)
-    + ' — Coralie '+fPct(g('c').pct)+'.</b><br>'
+      '<b>En '+A.short+', Julien '+fPct(g('j').pct)+', Hervé '+fPct(g('h').pct)
+    + ', Coralie '+fPct(g('c').pct)+'.</b><br>'
     + 'Hervé n\'a aucune cible de détention : il cède '+fPct(P.cessionPct*100)
     + ' à Coralie lors du re-scope, puis se dilue au même rythme que les autres actionnaires en place. '
     + 'Coralie combine cette cession et '+fPct(P.bsa2Pct*100)+' de BSA2 advisor acquis sur '
     + fNum(P.bsa2Months,0)+' mois. Aucun pool BSPCE n\'est modélisé.<br>'
     + (P.airInside
-        ? 'BSA1 converti DANS le pré-money : les actions de conversion sont au dénominateur du prix payé par les entrants — les fondateurs en supportent le coût.'
-        : 'BSA1 converti HORS pré-money : les entrants du pré-seed paient un prix calculé avant conversion — ce sont eux qui absorbent la décote. À valider avec le lead.');
+        ? 'BSA1 converti DANS le pré-money : les actions de conversion sont au dénominateur du prix payé par les entrants, les fondateurs en supportent le coût.'
+        : 'BSA1 converti HORS pré-money : les entrants du pré-seed paient un prix calculé avant conversion, ce sont eux qui absorbent la décote. À valider avec le lead.');
 }
 
 /* ---------------------------- graphique --------------------------------- */
@@ -688,7 +688,7 @@ function drawChart(){
          +  `<text x="${x(i)}" y="${H-B+16}" text-anchor="middle" font-family="IBM Plex Mono"
               font-size="11" fill="${i===stage?'#16211D':'#6B746E'}">${s.short}</text>`
          +  `<text x="${x(i)}" y="${H-B+28}" text-anchor="middle" font-family="IBM Plex Mono"
-              font-size="9" fill="#9AA39C">${s.done?'':'· '}${fDate(s.d)}</text>`;
+              font-size="9" fill="#9AA39C">${s.done?'':''}${fDate(s.d)}</text>`;
   });
 
   /* Accolades des catégories, au bord droit = composition au dernier événement */
@@ -740,15 +740,15 @@ const SLIDERS = {
     {k:'bsa2Months', l:'Durée du vesting',    min:3,     max:48,   step:3,    f:v=>fNum(v,0)+' mois'},
   ],
   'sl-rounds':[
-    {k:'preseedPre',  l:'Pré-seed · pré-money', min:3e6,  max:12e6, step:25e4, f:fEur},
-    {k:'preseedAmt',  l:'Pré-seed · montant',   min:5e5,  max:3e6,  step:1e5,  f:fEur},
-    {k:'preseedDate', l:'Pré-seed · date',      min:2027, max:2030, step:1/12, f:fDate},
-    {k:'seedPre',     l:'Seed · pré-money',     min:1e7,  max:6e7,  step:1e6,  f:fEur},
-    {k:'seedAmt',     l:'Seed · montant',       min:1e6,  max:8e6,  step:25e4, f:fEur},
-    {k:'seedDate',    l:'Seed · date',          min:2027, max:2031, step:1/12, f:fDate},
-    {k:'serieaPre',   l:'Série A · pré-money',  min:6e7,  max:2e8,  step:5e6,  f:fEur},
-    {k:'serieaAmt',   l:'Série A · montant',    min:5e6,  max:3e7,  step:1e6,  f:fEur},
-    {k:'serieaDate',  l:'Série A · date',       min:2028, max:2032, step:1/12, f:fDate},
+    {k:'preseedPre',  l:'Pré-seed, pré-money', min:3e6,  max:12e6, step:25e4, f:fEur},
+    {k:'preseedAmt',  l:'Pré-seed, montant',   min:5e5,  max:3e6,  step:1e5,  f:fEur},
+    {k:'preseedDate', l:'Pré-seed, date',      min:2027, max:2030, step:1/12, f:fDate},
+    {k:'seedPre',     l:'Seed, pré-money',     min:1e7,  max:6e7,  step:1e6,  f:fEur},
+    {k:'seedAmt',     l:'Seed, montant',       min:1e6,  max:8e6,  step:25e4, f:fEur},
+    {k:'seedDate',    l:'Seed, date',          min:2027, max:2031, step:1/12, f:fDate},
+    {k:'serieaPre',   l:'Série A, pré-money',  min:6e7,  max:2e8,  step:5e6,  f:fEur},
+    {k:'serieaAmt',   l:'Série A, montant',    min:5e6,  max:3e7,  step:1e6,  f:fEur},
+    {k:'serieaDate',  l:'Série A, date',       min:2028, max:2032, step:1/12, f:fDate},
   ],
 };
 
@@ -815,8 +815,8 @@ if (EMBED === 'investor') {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(P),
       });
-      saveBtn.textContent = r.ok ? 'Enregistré ✓' : 'Échec — réessayer';
-    } catch (e) { saveBtn.textContent = 'Échec — réessayer'; }
+      saveBtn.textContent = r.ok ? 'Enregistré ✓' : 'Échec, réessayer';
+    } catch (e) { saveBtn.textContent = 'Échec, réessayer'; }
     setTimeout(() => { saveBtn.textContent = 'Enregistrer les paramètres'; }, 2500);
   };
 }

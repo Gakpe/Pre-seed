@@ -14,7 +14,7 @@ const serif = "font-[family-name:var(--font-serif)]";
 const copy = {
   fr: {
     readingTime:
-      "Temps de lecture : 8 minutes · Document destiné à des investisseurs professionnels",
+      "Temps de lecture : 8 minutes. Document destiné à des investisseurs professionnels.",
     c1: {
       statLabel: "Crédit au secteur privé, en % du PIB, Afrique subsaharienne",
       statValue: "~28 %",
@@ -42,13 +42,13 @@ const copy = {
       p4: "C'est un problème de confiance, pas de rendement. Et un problème de confiance se résout par de l'infrastructure, de la donnée, de la structuration contractuelle, du suivi. Pas par de la patience.",
     },
     c3: {
-      s1Label: "Dette privée · 2025",
+      s1Label: "Dette privée, 2025",
       s1Value: "+57 %",
       s1Body: "de croissance du nombre d'opérations de dette privée en Afrique, un record.",
-      s2Label: "Venture debt · 2025",
+      s2Label: "Venture debt, 2025",
       s2Value: "1,8 Md $",
       s2Body: "levés sur l'année, un quasi-doublement en douze mois.",
-      s3Label: "Capital privé · 2025",
+      s3Label: "Capital privé, 2025",
       s3Value: "5,1 Md $",
       s3Body: "investis sur 530 opérations, en hausse de 8 % malgré le ralentissement mondial.",
       source: "Source : AVCA, 2025.",
@@ -61,7 +61,7 @@ const copy = {
       pt1Title: "Elle est panafricaine dès le premier jour.",
       pt1: "Un acteur mono-pays reste otage d'une banque centrale, d'une devise et d'un cycle politique. La diversification régionale n'est pas une ambition de croissance, c'est une condition de gestion du risque, et elle se décide à la structuration, pas trois ans plus tard.",
       pt2Title: "Elle est connectée aux marchés globaux.",
-      pt2: "Le capital ne manque pas — sur le continent comme ailleurs. L'épargne africaine est abondante mais ne travaille pas, faute de véhicule pour la mettre au service de ce rendement ; côté international, institutionnels européens, fonds de dette et diaspora professionnelle n'ont pas non plus de véhicule lisible pour s'y exposer. Construire ce véhicule, c'est construire le pont.",
+      pt2: "Le capital ne manque pas, sur le continent comme ailleurs. L'épargne africaine est abondante mais ne travaille pas, faute de véhicule pour la mettre au service de ce rendement ; côté international, institutionnels européens, fonds de dette et diaspora professionnelle n'ont pas non plus de véhicule lisible pour s'y exposer. Construire ce véhicule, c'est construire le pont.",
       pt3Title: "Elle est technologique, parce que le verrou est informationnel.",
       pt3: "Si l'écart de taux tient à l'opacité, l'avantage compétitif durable est du côté de celui qui produit l'information : scoring alimenté par la donnée locale, suivi continu, traçabilité vérifiable. C'est une infrastructure, pas une fonctionnalité.",
       p2: "Le marché compte aujourd'hui une trentaine d'acteurs sérieux, la plupart sous-dimensionnés par rapport à leur marché adressable. Dans un secteur où la sortie en bourse est fermée et où les acheteurs industriels dominent, la consolidation entre gestionnaires est la trajectoire naturelle, et elle offre aux LPs la liquidité que l'equity peine à leur fournir.",
@@ -73,7 +73,7 @@ const copy = {
 
   en: {
     readingTime:
-      "Reading time: 8 minutes · Document intended for professional investors",
+      "Reading time: 8 minutes. Document intended for professional investors.",
     c1: {
       statLabel: "Credit to the private sector, as % of GDP, sub-Saharan Africa",
       statValue: "~28%",
@@ -101,13 +101,13 @@ const copy = {
       p4: "This is a trust problem, not a yield problem. And a trust problem is solved with infrastructure, data, contractual structuring and monitoring. Not with patience.",
     },
     c3: {
-      s1Label: "Private debt · 2025",
+      s1Label: "Private debt, 2025",
       s1Value: "+57%",
       s1Body: "growth in the number of private debt deals in Africa, a record.",
-      s2Label: "Venture debt · 2025",
+      s2Label: "Venture debt, 2025",
       s2Value: "US$1.8bn",
       s2Body: "raised over the year, close to a doubling in twelve months.",
-      s3Label: "Private capital · 2025",
+      s3Label: "Private capital, 2025",
       s3Value: "US$5.1bn",
       s3Body: "invested across 530 deals, up 8% despite the global slowdown.",
       source: "Source: AVCA, 2025.",
@@ -120,7 +120,7 @@ const copy = {
       pt1Title: "It is pan-African from day one.",
       pt1: "A single-country player stays hostage to one central bank, one currency and one political cycle. Regional diversification is not a growth ambition, it is a risk management condition, and it is decided at structuring, not three years later.",
       pt2Title: "It is connected to global markets.",
-      pt2: "Capital is not what is missing — on the continent as much as off it. African savings are abundant but sit idle, for lack of a vehicle to put them to work at this yield; abroad, European institutions, debt funds and a professional diaspora likewise have no legible vehicle to gain exposure to it. Building that vehicle is building the bridge.",
+      pt2: "Capital is not what is missing, on the continent as much as off it. African savings are abundant but sit idle, for lack of a vehicle to put them to work at this yield; abroad, European institutions, debt funds and a professional diaspora likewise have no legible vehicle to gain exposure to it. Building that vehicle is building the bridge.",
       pt3Title: "It is technological, because the lock is informational.",
       pt3: "If the rate gap comes from opacity, the durable competitive advantage lies with whoever produces the information: scoring fed by local data, continuous monitoring, verifiable traceability. That is infrastructure, not a feature.",
       p2: "The market today counts around thirty serious players, most of them undersized relative to their addressable market. In a sector where the listing exit is shut and trade buyers dominate, consolidation between managers is the natural trajectory, and it offers LPs the liquidity equity struggles to provide.",

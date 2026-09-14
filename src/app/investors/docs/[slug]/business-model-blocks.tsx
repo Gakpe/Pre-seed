@@ -45,11 +45,11 @@ const copy = {
     payments: "PAIEMENTS",
     losses: "PERTES",
     seniorLabel: "Dette senior",
-    seniorSub: "Nos souscripteurs · coupon fixe, remboursé en premier",
-    juniorLabel: "Tranche junior · first loss",
-    juniorSub: "Fonds propres Minah · absorbe la première perte",
+    seniorSub: "Nos souscripteurs, coupon fixe, remboursé en premier",
+    juniorLabel: "Tranche junior, first loss",
+    juniorSub: "Fonds propres Minah, absorbe la première perte",
     traceTitle: "Suivre son argent sur toute la chaîne",
-    badge: "Ambition · en construction",
+    badge: "Ambition, en construction",
     traceBody:
       "Aujourd'hui, la traçabilité de votre position repose sur notre reporting. Ce que nous visons est plus exigeant : que chaque étage de la chaîne soit vérifiable sans avoir à nous croire sur parole.",
     stagesLabel: "Les quatre étages visés",
@@ -81,17 +81,17 @@ const copy = {
   en: {
     riskTitle: "Where our risk sits",
     riskBody:
-      "Our subscribers hold senior debt: paid first, exposed last. The junior tranche — our own funds and the revenue from other strategies held in reserve — takes the first loss before the senior coupon is ever touched.",
+      "Our subscribers hold senior debt: paid first, exposed last. The junior tranche, our own funds and the revenue from other strategies held in reserve, takes the first loss before the senior coupon is ever touched.",
     svgAlt:
       "Senior debt above the junior first-loss tranche; payments flow down, losses flow up",
     payments: "PAYMENTS",
     losses: "LOSSES",
     seniorLabel: "Senior debt",
-    seniorSub: "Our subscribers · fixed coupon, repaid first",
-    juniorLabel: "Junior tranche · first loss",
-    juniorSub: "Minah equity · absorbs the first loss",
+    seniorSub: "Our subscribers, fixed coupon, repaid first",
+    juniorLabel: "Junior tranche, first loss",
+    juniorSub: "Minah equity, absorbs the first loss",
     traceTitle: "Track your money along the whole chain",
-    badge: "Ambition · in progress",
+    badge: "Ambition, in progress",
     traceBody:
       "Today, the traceability of your position rests on our reporting. What we are aiming for is more demanding: that every stage of the chain be verifiable without taking our word for it.",
     stagesLabel: "The four stages targeted",
@@ -108,7 +108,7 @@ const copy = {
       "Subscribers are exposed through debt, with a return set upfront. Any performance generated beyond that return is our fee. Our exposure in senior debt and venture debt lets us capture the outperformance of the underlying products.",
     rotationTitle: "Capital rotation",
     rotationBody:
-      "A subscriber is exposed over twelve months. Over that same period, the underlying capital turns over three to four times, on short operations paid at rates of around 20%. It is this gap between the investor's exposure period and the speed of capital rotation that drives the outperformance — and therefore our fee.",
+      "A subscriber is exposed over twelve months. Over that same period, the underlying capital turns over three to four times, on short operations paid at rates of around 20%. It is this gap between the investor's exposure period and the speed of capital rotation that drives the outperformance, and therefore our fee.",
     stat1: "€100",
     caption1: "of volume deployed",
     stat2: "≈ €50",

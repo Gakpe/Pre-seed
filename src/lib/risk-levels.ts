@@ -43,7 +43,7 @@ export const RISK_LEVELS: RiskLevel[] = [
       name: { fr: "Performance bond", en: "Performance bond" },
       body: {
         fr: "Le performance bond couvre la sous-performance de l'actif sous-jacent, en deçà du défaut avéré, par exemple une mauvaise gestion du besoin en fonds de roulement qui dégrade la trésorerie de l'opérateur.",
-        en: "The performance bond covers underperformance of the underlying asset, short of outright default — for instance poor working-capital management that erodes the operator's cash position.",
+        en: "The performance bond covers underperformance of the underlying asset, short of outright default, for instance poor working-capital management that erodes the operator's cash position.",
       },
     },
     status: {
@@ -151,7 +151,7 @@ export const RESILIENCE: {
 } = {
   headline: {
     fr: "Coupons et principal restent servis jusqu'à 30 % de pertes cumulées sur le portefeuille. Soit six fois le taux de perte historique observé sur les contrats publics de ce type.",
-    en: "Coupons and principal keep being paid up to 30% of cumulative losses on the portfolio — six times the historical loss rate observed on public contracts of this type.",
+    en: "Coupons and principal keep being paid up to 30% of cumulative losses on the portfolio, six times the historical loss rate observed on public contracts of this type.",
   },
   marks: [
     {
@@ -227,6 +227,6 @@ export const RISK_CLOSING: {
   ],
   conclusion: {
     fr: "Concevoir cette cascade, la documenter, et la faire tenir contractuellement niveau par niveau : c'est précisément le produit que nous vendons à nos souscripteurs.",
-    en: "Designing this cascade, documenting it, and making it hold contractually level by level — that is precisely the product we sell to our subscribers.",
+    en: "Designing this cascade, documenting it, and making it hold contractually level by level, that is precisely the product we sell to our subscribers.",
   },
 };

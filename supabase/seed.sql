@@ -19,7 +19,7 @@ Minah construit la plateforme de dette privée pour l''Afrique : dette senior s�
 
   ('kupanda-en-bref', 'Kupanda en bref', null, false, 'Kupanda', 40, 1, 'Kupanda est notre première stratégie, déjà en production : financement de PME zambiennes exécutant des contrats gouvernementaux, dans le cadre d''accords avec la République de Zambie, déployé via Africa Rise Ltd (Lusaka).
 
-Termes : 12 mois · coupon fixe 20 % · 500 K€ au dernier closing.
+Termes : 12 mois, coupon fixe 20 %, 500 K€ au dernier closing.
 
 Cinq couches de protection entre le risque et l''investisseur :
 1. Performance bond : couvre la sous-performance de la PME.
@@ -44,13 +44,13 @@ Coralie Lolliot, co-fondatrice, Ecosystems & Partnerships. Anime le capital-in e
 
   ('la-levee', 'La levée en cours', null, false, 'Levée', 70, 1, 'Nous levons 1,5 M€ en pre-seed pour industrialiser la machine.
 
-Conditions : ticket minimum 100 K€ · recherche d''un lead investisseur à 500 K€ · matching fund de 600 K€ en discussion.
+Conditions : ticket minimum 100 K€, recherche d''un lead investisseur à 500 K€, matching fund de 600 K€ en discussion.
 
 Où nous en sommes : plus de 700 K€ engagés, business angels 200 K€ (committed), tickets écosystème jusqu''à 300 K€ (en discussion). S''y ajoutent environ 500 K$ de soutien non dilutif (grants Stellar Foundation) et 500 K€ de premier closing Kupanda souscrit par 4 HNWIs.
 
 Trajectoire : 15 M€ de volume en phase 1 (MVP, 2 stratégies live), 100 M€ fin 2027, 500 M€ à horizon 2029, chaque phase finançant la suivante.
 
-Partenaires bancaires et écosystème : Orabank Togo · SIB · Stellar · 50 Partners.'),
+Partenaires bancaires et écosystème : Orabank Togo, SIB, Stellar, 50 Partners.'),
 
   ('risk-deck-kupanda', 'Deck risk Kupanda', 'https://docsend.com/view/placeholder-risk-kupanda', false, 'Gestion des risques', 75, 2, null),
 
@@ -81,7 +81,7 @@ Sorties financières :
 3. Le modèle générant du cash (marge sur encours), une politique de distribution est envisageable sans sortie.
 4. À long terme, introduction en bourse portée par la liquidité on-chain.'),
 
-  ('contrat-cadre-zambie', 'Contrat cadre · République de Zambie', 'https://docsend.com/view/placeholder-contrat-zambie', false, 'Documents clés', 81, 2, null),
+  ('contrat-cadre-zambie', 'Contrat cadre, République de Zambie', 'https://docsend.com/view/placeholder-contrat-zambie', false, 'Documents clés', 81, 2, null),
 
   ('pacte-associes', 'Pacte d''associés (draft)', 'https://docsend.com/view/placeholder-pacte', false, 'Documents clés', 82, 2, null)
 
@@ -113,7 +113,7 @@ update public.documents set title_en = 'The current round' where slug = 'la-leve
 update public.documents set title_en = 'Kupanda risk deck' where slug = 'risk-deck-kupanda';
 update public.documents set title_en = 'Risk scenarios and protections' where slug = 'scenarios-risques';
 update public.documents set title_en = 'Capitalization table' where slug = 'cap-table';
-update public.documents set title_en = 'Framework agreement · Republic of Zambia' where slug = 'contrat-cadre-zambie';
+update public.documents set title_en = 'Framework agreement, Republic of Zambia' where slug = 'contrat-cadre-zambie';
 update public.documents set title_en = 'Shareholders'' agreement (draft)' where slug = 'pacte-associes';
 
 update public.documents set content_en = 'African fintech''s first generation won the payments battle: M-Pesa, Wave, Flutterwave, Paystack. The rails are built: wallets, KYC, mobile-first money. The next generation is about investment: how money works, not just how it moves.
@@ -124,7 +124,7 @@ Minah is building the private debt platform for Africa: senior secured debt, fix
 
 update public.documents set content_en = 'Kupanda is our first strategy, already live: financing Zambian SMEs executing government contracts, under framework agreements with the Republic of Zambia, deployed through Africa Rise Ltd (Lusaka).
 
-Terms: 12 months · 20% fixed coupon · €500K at the latest closing.
+Terms: 12 months, 20% fixed coupon, €500K at the latest closing.
 
 Five layers of protection between the risk and the investor:
 1. Performance bond: covers SME underperformance.
@@ -145,13 +145,13 @@ Coralie Lolliot, Co-founder, Ecosystems & Partnerships. Drives capital-in and th
 
 update public.documents set content_en = 'We are raising €1.5M in pre-seed to industrialize the machine.
 
-Terms: €100K minimum ticket · looking for a €500K lead investor · €600K matching fund in discussion.
+Terms: €100K minimum ticket, looking for a €500K lead investor, €600K matching fund in discussion.
 
 Where we stand: over €700K identified, €200K business angels (committed), up to €300K ecosystem tickets (in discussion). On top: about $500K of non-dilutive support (Stellar Foundation grants) and a €500K Kupanda first closing subscribed by 4 HNWIs.
 
 Trajectory: €15M of volume in phase 1 (MVP, 2 live strategies), €100M by end of 2027, €500M by 2029, each phase funding the next.
 
-Banking and ecosystem partners: Orabank Togo · SIB · Stellar · 50 Partners.' where slug = 'la-levee';
+Banking and ecosystem partners: Orabank Togo, SIB, Stellar, 50 Partners.' where slug = 'la-levee';
 
 update public.documents set content_en = 'Every scenario has a pre-wired answer. Investor impact in every identified case: coupons unchanged, principal protected.
 
@@ -272,13 +272,13 @@ where slug = 'equipe';
 update public.documents set
   content = $$Nous levons 1,5 M€ en pre-seed pour industrialiser la machine.
 
-Conditions : ticket minimum 100 K€ · recherche d'un lead investisseur à 500 K€ · matching fund de 600 K€ en discussion.
+Conditions : ticket minimum 100 K€, recherche d'un lead investisseur à 500 K€, matching fund de 600 K€ en discussion.
 
 Où nous en sommes : plus de 700 K€ engagés, business angels 200 K€ (committed), tickets écosystème jusqu'à 300 K€ (en discussion). S'y ajoutent environ 500 K$ de soutien non dilutif (grants Stellar Foundation) et 500 K€ de premier closing Kupanda souscrit par 4 HNWIs.
 
 Trajectoire : 15 M€ de volume en phase 1 (MVP, 2 stratégies live), 100 M€ fin 2027, 500 M€ à horizon 2029, chaque phase finançant la suivante.
 
-Partenaires bancaires et écosystème : Orabank Togo · SIB · Stellar · 50 Partners.
+Partenaires bancaires et écosystème : Orabank Togo, SIB, Stellar, 50 Partners.
 
 Le paysage, et où nous nous situons
 
@@ -299,13 +299,13 @@ Sorties industrielles. Les banques panafricaines à la recherche d'une plateform
 Sorties financières. Cession secondaire partielle en Série A ou B. Rachat par un fonds de private equity une fois la licence d'établissement de crédit obtenue. Et comme le modèle génère de la marge sur encours, une politique de distribution reste possible sans sortie.$$,
   content_en = $$We are raising €1.5M in pre-seed to industrialise the machine.
 
-Terms: €100K minimum ticket · seeking a €500K lead investor · €600K matching fund in discussion.
+Terms: €100K minimum ticket, seeking a €500K lead investor, €600K matching fund in discussion.
 
 Where we stand: over €700K committed, €200K from business angels (committed), ecosystem tickets up to €300K (in discussion). On top of that, around US$500K of non-dilutive support (Stellar Foundation grants) and a €500K Kupanda first closing subscribed by 4 HNWIs.
 
 Trajectory: €15M of volume in phase 1 (MVP, 2 live strategies), €100M by end of 2027, €500M by 2029, each phase funding the next.
 
-Banking and ecosystem partners: Orabank Togo · SIB · Stellar · 50 Partners.
+Banking and ecosystem partners: Orabank Togo, SIB, Stellar, 50 Partners.
 
 The landscape, and where we sit
 

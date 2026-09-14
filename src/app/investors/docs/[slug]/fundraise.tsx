@@ -123,7 +123,7 @@ export function Fundraise({ locale }: { locale: Locale }) {
 
   return (
     <div className="mt-10 space-y-16">
-      {/* ---------- 01 · État de la levée ---------- */}
+      {/* ---------- 01. État de la levée ---------- */}
       <section>
         <SectionTitle n="01">{c.roundLabel}</SectionTitle>
 
@@ -198,7 +198,7 @@ export function Fundraise({ locale }: { locale: Locale }) {
 
       </section>
 
-      {/* ---------- 02 · Paysage et positionnement ---------- */}
+      {/* ---------- 02. Paysage et positionnement ---------- */}
       <section>
         <SectionTitle n="02">{c.posLabel}</SectionTitle>
 
@@ -243,7 +243,7 @@ export function Fundraise({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* ---------- 03 · Horizons de sortie ---------- */}
+      {/* ---------- 03. Horizons de sortie ---------- */}
       <section>
         <SectionTitle n="03">{c.exitLabel}</SectionTitle>
         <p className="mt-4 max-w-2xl text-sm leading-7 text-neutral-600">

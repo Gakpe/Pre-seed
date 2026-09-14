@@ -2,8 +2,8 @@ import type { Locale } from "@/lib/i18n";
 import { FieldTicker } from "./field-ticker";
 
 // Fiche « Go-to-market » : portée entièrement par ce composant (richOnly, le
-// texte de la base ne s'affiche pas). Deux visuels — la machine à réseau à
-// double détente et la frise 500 K€ → 100 M€ — et le reste en cards, en
+// texte de la base ne s'affiche pas). Deux visuels, la machine à réseau à
+// double détente et la frise 500 K€ → 100 M€, et le reste en cards, en
 // suivant le langage visuel de la zone investisseurs (AGENTS.md).
 
 type Card = { h: string; b: string; href?: string };
@@ -39,7 +39,7 @@ const copy = {
     capitalSub: "qui apporte les investisseurs",
     centerName: "Minah",
     centerSub: "Moteur de structuration",
-    centerLine: "coupon · protections · maturité",
+    centerLine: "coupon, protections, maturité",
     assetsLabel: "Assets-out / sell-side",
     assetsSub: "qui apporte les deals",
     capIn: ["15 Network builders", "Institutions", "Écosystème blockchain"],
@@ -51,11 +51,11 @@ const copy = {
     capitalAnchor: "100 M€ de capital-in d'ici fin 2027",
     assetsAnchor: "80 M€ de pipeline d'actifs (live)",
     loop: "La boucle qui compose : chaque deal honoré recrute l'investisseur suivant, chaque investisseur finance le deal suivant.",
-    capitalTitle: "Côté capital — qui finance",
+    capitalTitle: "Côté capital : qui finance",
     capitalCards: [
       {
         h: "+15 Network Builders",
-        b: "Un réseau choisi d'apporteurs — brokers, banquiers privés et asset managers — qui nous introduisent des investisseurs qualifiés par des mises en relation chaudes et engageantes. Nous comptons aujourd'hui 15 Network Builders, qui nous ont déjà amené dix investisseurs qualifiés ; d'autres introductions sont en cours.",
+        b: "Un réseau choisi d'apporteurs, brokers, banquiers privés et asset managers, qui nous introduisent des investisseurs qualifiés par des mises en relation chaudes et engageantes. Nous comptons aujourd'hui 15 Network Builders, qui nous ont déjà amené dix investisseurs qualifiés ; d'autres introductions sont en cours.",
       },
       {
         h: "Minah Circles",
@@ -75,19 +75,19 @@ const copy = {
         b: "La liquidité on-chain cherche du rendement réel : près de 30 Md$ d'actifs réels sont déjà tokenisés, dont environ 17 Md$ de crédit privé, mais presque rien n'est connecté à des sous-jacents africains. C'est précisément le pont que nous construisons, avec Canton Network, Ubuntu Tribe et la Stellar Foundation, qui nous subventionne déjà.",
       },
     ] as Card[],
-    osSides: "Des deux côtés — capital-in & assets-out",
+    osSides: "Des deux côtés, capital-in & assets-out",
     osTitle: "Minah OS (IA)",
     osBody:
-      "Notre IA en production — les agents Yao et Comlan — analyse les appels et notre capacité à closer, gère les relances et les meetings, et rédige toutes nos communications pour relecture. Elle nous remonte surtout des signaux clairs pour attirer et closer du capital, analyser les sous-jacents et appuyer la structuration, et approfondit le mapping de l'écosystème. L'équipe se concentre sur ce qui demande un humain, structurer et vendre, pendant que l'IA s'améliore pour animer et renforcer un réseau large.",
-    assetsTitle: "Côté actifs — les bons sous-jacents",
+      "Notre IA en production, les agents Yao et Comlan, analyse les appels et notre capacité à closer, gère les relances et les meetings, et rédige toutes nos communications pour relecture. Elle nous remonte surtout des signaux clairs pour attirer et closer du capital, analyser les sous-jacents et appuyer la structuration, et approfondit le mapping de l'écosystème. L'équipe se concentre sur ce qui demande un humain, structurer et vendre, pendant que l'IA s'améliore pour animer et renforcer un réseau large.",
+    assetsTitle: "Côté actifs : les bons sous-jacents",
     assetsIntro:
-      "Nous avons accès à une dizaine de scale-ups et futures licornes africaines, ainsi qu'à de grands opérateurs présents sur le continent — des contreparties aux flux de trésorerie massifs, exactement le profil qui fait des sous-jacents premium. Trois exemples :",
+      "Nous avons accès à une dizaine de scale-ups et futures licornes africaines, ainsi qu'à de grands opérateurs présents sur le continent, des contreparties aux flux de trésorerie massifs, exactement le profil qui fait des sous-jacents premium. Trois exemples :",
     champions: [
       {
         h: "Wave",
         tag: "Paiements mobiles",
         figs: [
-          "Unicorne — 1,7 Md$",
+          "Unicorne, 1,7 Md$",
           "~38 % de la valeur mobile UEMOA (~267 Md$/an)",
           "10 M+ d'utilisateurs",
         ],
@@ -121,14 +121,14 @@ const copy = {
     ] as Proof[],
     roadmapTitle: "La trajectoire",
     milestones: [
-      { t: "Aujourd'hui", v: "~500 K€", d: "déployés · 1 stratégie live et 2 en structuration (~30 M€ de pipeline)" },
-      { t: "Phase 1 — MVP", v: "~15 M€", d: "de volume · H2 2026 → H2 2027" },
+      { t: "Aujourd'hui", v: "~500 K€", d: "déployés, 1 stratégie live et 2 en structuration (~30 M€ de pipeline)" },
+      { t: "Phase 1, MVP", v: "~15 M€", d: "de volume, H2 2026 → H2 2027" },
       { t: "Accélération", v: "~50 M€", d: "nouvelles stratégies & géographies" },
-      { t: "Fin 2027 — Scale", v: "100 M€", d: "d'AUM · licence de crédit" },
+      { t: "Fin 2027, Scale", v: "100 M€", d: "d'AUM, licence de crédit" },
     ] as Milestone[],
     pathTitle: "Le chemin vers 100 M€",
     pathLead:
-      "100 M€ ne se conquiert pas au retail : c'est une poignée de lignes institutionnelles — fonds de dette, fonds de fonds, DFI, trésoreries on-chain — de 5 à 20 M€ chacune, en complément de tickets d'HNWI à 300 K€.",
+      "100 M€ ne se conquiert pas au retail : c'est une poignée de lignes institutionnelles, fonds de dette, fonds de fonds, DFI, trésoreries on-chain, de 5 à 20 M€ chacune, en complément de tickets d'HNWI à 300 K€.",
     pathSteps: [
       {
         h: "500 K€ → 15 M€",
@@ -136,7 +136,7 @@ const copy = {
       },
       {
         h: "15 → 50 M€",
-        b: "Notre prospection structure ~20 M€ de plus — un véhicule adossé aux gouvernements ouest-africains, en logique de partenariat public-privé (PPP) — appuyé par deux à trois lignes institutionnelles de 5 à 15 M€.",
+        b: "Notre prospection structure ~20 M€ de plus, un véhicule adossé aux gouvernements ouest-africains, en logique de partenariat public-privé (PPP), appuyé par deux à trois lignes institutionnelles de 5 à 15 M€.",
       },
       {
         h: "50 → 100 M€",
@@ -153,7 +153,7 @@ const copy = {
       },
       {
         h: "Cadencer les Minah Circles",
-        b: "Passer de trois à cinq hubs — en ajoutant Nairobi et New York — pour transformer chaque édition en pipeline d'investisseurs qualifiés.",
+        b: "Passer de trois à cinq hubs, en ajoutant Nairobi et New York, pour transformer chaque édition en pipeline d'investisseurs qualifiés.",
       },
       {
         h: "Renforcer l'équipe",
@@ -169,12 +169,12 @@ const copy = {
       {
         src: "/brand/gtm/field-1.jpg",
         t: "Africa CEO Forum, Abidjan (Côte d'Ivoire)",
-        d: "Panel présidentiel — Cyril Ramaphosa (président de l'Afrique du Sud), Paul Kagame (président du Rwanda), Mohamed Cheikh El-Ghazouani (président de la Mauritanie), Tiémoko Meyliet Koné (vice-président de la Côte d'Ivoire)",
+        d: "Panel présidentiel, Cyril Ramaphosa (président de l'Afrique du Sud), Paul Kagame (président du Rwanda), Mohamed Cheikh El-Ghazouani (président de la Mauritanie), Tiémoko Meyliet Koné (vice-président de la Côte d'Ivoire)",
       },
       {
         src: "/brand/gtm/field-2.jpg",
         t: "Le Palais de l'Élysée, Paris (France)",
-        d: "Rencontre privée avec Emmanuel Macron & les grandes figures de la diaspora en France — résidence officielle du président de la République",
+        d: "Rencontre privée avec Emmanuel Macron & les grandes figures de la diaspora en France, résidence officielle du président de la République",
       },
       {
         src: "/brand/gtm/field-7.jpg?v=2",
@@ -209,11 +209,11 @@ const copy = {
       {
         src: "/brand/gtm/field-5.jpg",
         t: "Africa Forward, Nairobi (Kenya)",
-        d: "Sommet co-organisé par la France et le Kenya — avec la délégation présidentielle française et le ministre Jean-Noël Barrot",
+        d: "Sommet co-organisé par la France et le Kenya, avec la délégation présidentielle française et le ministre Jean-Noël Barrot",
       },
       {
         src: "/brand/gtm/field-3.jpg?v=2",
-        t: "ChangeNOW — Africa for Change, Grand Palais, Paris (France)",
+        t: "ChangeNOW, Africa for Change, Grand Palais, Paris (France)",
         d: "Modération de panel avec Dr. Anino Emuwa (Managing Director, Avandis Consulting ; Founder, 100 Davos Women), Kidus Asfaw (Co-founder, Kubik, Inc.), Michael Kakande (Founder, TheResilient40)",
       },
       {
@@ -270,7 +270,7 @@ const copy = {
     fieldAdvance: "Faire avancer les photos",
     circleCta: "Découvrir Minah Circle",
     sources:
-      "Sources : rwa.xyz & The Defiant (tokenisation RWA, 2025) · The Africa Report (paiements mobiles UEMOA, 2024) · Yango Impact Report 2024.",
+      "Sources : rwa.xyz & The Defiant (tokenisation RWA, 2025), The Africa Report (paiements mobiles UEMOA, 2024), Yango Impact Report 2024.",
   },
   en: {
     lead: "Our strength is access.",
@@ -283,7 +283,7 @@ const copy = {
       {
         side: "Ecosystems & investors",
         h: "Coralie",
-        b: "Spent her career building the ecosystems — in Africa and internationally — where the leaders, CEOs, institutions and investors working with and on the continent meet.",
+        b: "Spent her career building the ecosystems, in Africa and internationally, where the leaders, CEOs, institutions and investors working with and on the continent meet.",
       },
       {
         side: "Institutional & on-chain capital",
@@ -296,7 +296,7 @@ const copy = {
     capitalSub: "who brings the investors",
     centerName: "Minah",
     centerSub: "Structuring engine",
-    centerLine: "coupon · protections · maturity",
+    centerLine: "coupon, protections, maturity",
     assetsLabel: "Assets-out / sell-side",
     assetsSub: "who brings the deals",
     capIn: ["15 Network builders", "Institutions", "Blockchain ecosystem"],
@@ -308,11 +308,11 @@ const copy = {
     capitalAnchor: "€100M capital-in by end-2027",
     assetsAnchor: "€80M assets pipeline (live)",
     loop: "The loop that compounds: every deal honoured recruits the next investor, every investor funds the next deal.",
-    capitalTitle: "Capital side — who funds",
+    capitalTitle: "Capital side: who funds",
     capitalCards: [
       {
         h: "+15 Network Builders",
-        b: "A curated network of introducers — brokers, private bankers and asset managers — who bring us qualified investors through warm, committing introductions. We now count 15 Network Builders, who have already brought in ten qualified investors; more introductions are underway.",
+        b: "A curated network of introducers, brokers, private bankers and asset managers, who bring us qualified investors through warm, committing introductions. We now count 15 Network Builders, who have already brought in ten qualified investors; more introductions are underway.",
       },
       {
         h: "Minah Circles",
@@ -321,7 +321,7 @@ const copy = {
       },
       {
         h: "The key tables",
-        b: "We are invited where African and international capital concentrates: Davos alongside the World Economic Forum, the Africa CEO Forum — where CEOs must show at least €10M in annual revenue to attend — the Africa Financial Industry Summit, Choiseul Afrique, TLG Capital, the Web Summit, the Financial Times Africa Summit and ChangeNOW. It was at one of these gatherings, in Qatar, that an American fund joined us to co-structure the deployment of Kupanda.",
+        b: "We are invited where African and international capital concentrates: Davos alongside the World Economic Forum, the Africa CEO Forum, where CEOs must show at least €10M in annual revenue to attend, the Africa Financial Industry Summit, Choiseul Afrique, TLG Capital, the Web Summit, the Financial Times Africa Summit and ChangeNOW. It was at one of these gatherings, in Qatar, that an American fund joined us to co-structure the deployment of Kupanda.",
       },
       {
         h: "In discussion",
@@ -332,19 +332,19 @@ const copy = {
         b: "On-chain liquidity is hunting for real yield: close to $30B of real-world assets are already tokenized, of which about $17B is private credit, yet almost none is connected to African underlyings. That is precisely the bridge we build, with Canton Network, Ubuntu Tribe and the Stellar Foundation, which already backs us with grants.",
       },
     ] as Card[],
-    osSides: "Both sides — capital-in & assets-out",
+    osSides: "Both sides, capital-in & assets-out",
     osTitle: "Minah OS (AI)",
     osBody:
-      "Our AI in production — the Yao and Comlan agents — analyses calls and our ability to close, handles follow-ups and meetings, and drafts all our communications for review. Above all, it surfaces clear signals to attract and close capital, analyse the underlying assets and support structuring, and deepens the mapping of the ecosystem. The team focuses on what needs a human, structuring and selling, while the AI keeps improving to nurture and strengthen a broad network.",
-    assetsTitle: "Asset side — the best underlyings",
+      "Our AI in production, the Yao and Comlan agents, analyses calls and our ability to close, handles follow-ups and meetings, and drafts all our communications for review. Above all, it surfaces clear signals to attract and close capital, analyse the underlying assets and support structuring, and deepens the mapping of the ecosystem. The team focuses on what needs a human, structuring and selling, while the AI keeps improving to nurture and strengthen a broad network.",
+    assetsTitle: "Asset side: the best underlyings",
     assetsIntro:
-      "We have access to around ten African scale-ups and future unicorns, as well as major operators present on the continent — counterparties with massive cash flows, exactly the profile that makes premium underlyings. Three examples:",
+      "We have access to around ten African scale-ups and future unicorns, as well as major operators present on the continent, counterparties with massive cash flows, exactly the profile that makes premium underlyings. Three examples:",
     champions: [
       {
         h: "Wave",
         tag: "Mobile money",
         figs: [
-          "Unicorn — $1.7B",
+          "Unicorn, $1.7B",
           "~38% of WAEMU mobile-money value (~$267B/yr)",
           "10M+ users",
         ],
@@ -374,22 +374,22 @@ const copy = {
     ] as Proof[],
     roadmapTitle: "The trajectory",
     milestones: [
-      { t: "Today", v: "~€500K", d: "deployed · 1 strategy live and 2 being structured (~€30M pipeline)" },
-      { t: "Phase 1 — MVP", v: "~€15M", d: "of volume · H2 2026 → H2 2027" },
+      { t: "Today", v: "~€500K", d: "deployed, 1 strategy live and 2 being structured (~€30M pipeline)" },
+      { t: "Phase 1, MVP", v: "~€15M", d: "of volume, H2 2026 → H2 2027" },
       { t: "Acceleration", v: "~€50M", d: "new strategies & geographies" },
-      { t: "End-2027 — Scale", v: "€100M", d: "AUM · credit licence" },
+      { t: "End-2027, Scale", v: "€100M", d: "AUM, credit licence" },
     ] as Milestone[],
     pathTitle: "The path to €100M",
     pathLead:
-      "€100M is not a retail land-grab: it is a handful of institutional lines — debt funds, fund-of-funds, DFIs, on-chain treasuries — of €5–20M each, on top of €300K HNWI tickets.",
+      "€100M is not a retail land-grab: it is a handful of institutional lines, debt funds, fund-of-funds, DFIs, on-chain treasuries, of €5–20M each, on top of €300K HNWI tickets.",
     pathSteps: [
       {
         h: "€500K → €15M",
-        b: "HNWIs, Network Builders and a first institutional line (Atlantic Financials, the American fund) are starting to fund the pipeline with good visibility: Kupanda 2/3 (~€15M) and Esgni, our West African scale-up strategy (~€15M) — about €30M.",
+        b: "HNWIs, Network Builders and a first institutional line (Atlantic Financials, the American fund) are starting to fund the pipeline with good visibility: Kupanda 2/3 (~€15M) and Esgni, our West African scale-up strategy (~€15M), about €30M.",
       },
       {
         h: "€15M → €50M",
-        b: "Our prospecting structures another ~€20M — a vehicle anchored to West African governments, on a public-private-partnership (PPP) basis — supported by two to three institutional lines of €5–15M.",
+        b: "Our prospecting structures another ~€20M, a vehicle anchored to West African governments, on a public-private-partnership (PPP) basis, supported by two to three institutional lines of €5–15M.",
       },
       {
         h: "€50M → €100M",
@@ -406,7 +406,7 @@ const copy = {
       },
       {
         h: "Set the Circles' cadence",
-        b: "Go from three to five hubs — adding Nairobi and New York — turning every edition into a pipeline of qualified investors.",
+        b: "Go from three to five hubs, adding Nairobi and New York, turning every edition into a pipeline of qualified investors.",
       },
       {
         h: "Strengthen the team",
@@ -422,12 +422,12 @@ const copy = {
       {
         src: "/brand/gtm/field-1.jpg",
         t: "Africa CEO Forum, Abidjan (Côte d'Ivoire)",
-        d: "Presidential panel — Cyril Ramaphosa (President of South Africa), Paul Kagame (President of Rwanda), Mohamed Cheikh El-Ghazouani (President of Mauritania), Tiémoko Meyliet Koné (Vice-President of Côte d'Ivoire)",
+        d: "Presidential panel, Cyril Ramaphosa (President of South Africa), Paul Kagame (President of Rwanda), Mohamed Cheikh El-Ghazouani (President of Mauritania), Tiémoko Meyliet Koné (Vice-President of Côte d'Ivoire)",
       },
       {
         src: "/brand/gtm/field-2.jpg",
         t: "The Élysée Palace, Paris (France)",
-        d: "Private meeting with Emmanuel Macron & leading diaspora figures in France — official residence of the President of France",
+        d: "Private meeting with Emmanuel Macron & leading diaspora figures in France, official residence of the President of France",
       },
       {
         src: "/brand/gtm/field-7.jpg?v=2",
@@ -462,11 +462,11 @@ const copy = {
       {
         src: "/brand/gtm/field-5.jpg",
         t: "Africa Forward, Nairobi (Kenya)",
-        d: "Summit co-organised by France and Kenya — with the French Presidential Delegation and Minister Jean-Noël Barrot",
+        d: "Summit co-organised by France and Kenya, with the French Presidential Delegation and Minister Jean-Noël Barrot",
       },
       {
         src: "/brand/gtm/field-3.jpg?v=2",
-        t: "ChangeNOW — Africa for Change, Grand Palais, Paris (France)",
+        t: "ChangeNOW, Africa for Change, Grand Palais, Paris (France)",
         d: "Panel moderation with Dr. Anino Emuwa (Managing Director, Avandis Consulting; Founder, 100 Davos Women), Kidus Asfaw (Co-founder, Kubik, Inc.), Michael Kakande (Founder, TheResilient40)",
       },
       {
@@ -523,7 +523,7 @@ const copy = {
     fieldAdvance: "Advance the photos",
     circleCta: "Explore Minah Circle",
     sources:
-      "Sources: rwa.xyz & The Defiant (RWA tokenization, 2025) · The Africa Report (WAEMU mobile money, 2024) · Yango Impact Report 2024.",
+      "Sources: rwa.xyz & The Defiant (RWA tokenization, 2025), The Africa Report (WAEMU mobile money, 2024), Yango Impact Report 2024.",
   },
 } as const;
 
@@ -554,7 +554,7 @@ export function GoToMarket({ locale }: { locale: Locale }) {
         </p>
       </section>
 
-      {/* D'où vient le go-to-market — six ans de terrain des fondateurs */}
+      {/* D'où vient le go-to-market, six ans de terrain des fondateurs */}
       <section>
         <h3 className="text-xl font-semibold tracking-tight text-foreground">
           {c.originTitle}
@@ -577,7 +577,7 @@ export function GoToMarket({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* 01 — la machine à réseau, à double détente */}
+      {/* 01, la machine à réseau, à double détente */}
       <section>
         <SectionTitle n="01">{c.machineTitle}</SectionTitle>
         <div className="mt-5 grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr]">
@@ -600,7 +600,7 @@ export function GoToMarket({ locale }: { locale: Locale }) {
 
           <div className="flex flex-col items-center justify-center gap-1 rounded-xl bg-marsala px-6 py-6 text-center text-white md:w-44">
             <span aria-hidden className="text-white/45">
-              → · →
+              →, →
             </span>
             <p className="mt-1 text-lg font-semibold">{c.centerName}</p>
             <p className="text-xs text-white/80">{c.centerSub}</p>
@@ -608,7 +608,7 @@ export function GoToMarket({ locale }: { locale: Locale }) {
               {c.centerLine}
             </p>
             <span aria-hidden className="mt-1 text-white/45">
-              ← · ←
+              ←, ←
             </span>
           </div>
 
@@ -636,7 +636,7 @@ export function GoToMarket({ locale }: { locale: Locale }) {
         <p className="mt-3 text-xs leading-5 text-neutral-500">{c.loop}</p>
       </section>
 
-      {/* 02 — côté capital */}
+      {/* 02, côté capital */}
       <section>
         <SectionTitle n="02">{c.capitalTitle}</SectionTitle>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -667,7 +667,7 @@ export function GoToMarket({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* 03 — côté actifs */}
+      {/* 03, côté actifs */}
       <section>
         <SectionTitle n="03">{c.assetsTitle}</SectionTitle>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-700">
@@ -703,7 +703,7 @@ export function GoToMarket({ locale }: { locale: Locale }) {
         </p>
       </section>
 
-      {/* Minah OS — transversal : alimente les deux côtés (capital-in &
+      {/* Minah OS, transversal : alimente les deux côtés (capital-in &
           assets-out), donc hors des sections 02/03 plutôt que rangé dans l'une. */}
       <section>
         <div className="rounded-xl border border-foreground/10 bg-white/60 p-5">
@@ -719,7 +719,7 @@ export function GoToMarket({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* 04 — la preuve */}
+      {/* 04, la preuve */}
       <section>
         <SectionTitle n="04">{c.proofTitle}</SectionTitle>
         <div className="mt-5 grid gap-4 sm:grid-cols-3">
@@ -739,7 +739,7 @@ export function GoToMarket({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* 05 — la frise 500 K€ → 100 M€ */}
+      {/* 05, la frise 500 K€ → 100 M€ */}
       <section>
         <SectionTitle n="05">{c.roadmapTitle}</SectionTitle>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -765,7 +765,7 @@ export function GoToMarket({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* 06 — le chemin vers 100 M€ */}
+      {/* 06, le chemin vers 100 M€ */}
       <section>
         <SectionTitle n="06">{c.pathTitle}</SectionTitle>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-neutral-700">
@@ -791,7 +791,7 @@ export function GoToMarket({ locale }: { locale: Locale }) {
         </p>
       </section>
 
-      {/* 07 — ce que la levée met à l'échelle */}
+      {/* 07, ce que la levée met à l'échelle */}
       <section>
         <SectionTitle n="07">{c.scaleTitle}</SectionTitle>
         <div className="mt-5 grid gap-4 sm:grid-cols-3">
@@ -810,7 +810,7 @@ export function GoToMarket({ locale }: { locale: Locale }) {
         </p>
       </section>
 
-      {/* Bandeau photos « sur le terrain » — preuve visuelle du réseau, en
+      {/* Bandeau photos « sur le terrain », preuve visuelle du réseau, en
           couleur, avec la légende de l'événement sous chaque cliché. Défilé
           auto + flèche pour avancer : cf. FieldTicker (client). */}
       <section>

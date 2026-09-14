@@ -153,8 +153,8 @@ export default async function InvestorDetailPage({
             {investor.full_name ?? investor.email}
           </h1>
           <p className="mt-1 text-sm text-neutral-500">
-            {investor.entity ?? "entité inconnue"} · {investor.email}
-            {investor.ref ? ` · ref ${investor.ref}` : ""}
+            {investor.entity ?? "entité inconnue"}, {investor.email}
+            {investor.ref ? `, ref ${investor.ref}` : ""}
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
             <StatusBadge status={investor.status} />
@@ -404,7 +404,7 @@ function NoteSection({
             <div className="flex items-baseline justify-between gap-4">
               <span className="text-xs tabular-nums text-neutral-500">
                 {dateFmt.format(new Date(note.created_at))}
-                {note.author ? ` · ${note.author}` : ""}
+                {note.author ? `, ${note.author}` : ""}
               </span>
               <form action={deleteInvestorNote.bind(null, investorId, note.id)}>
                 <button

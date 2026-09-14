@@ -35,7 +35,7 @@ export default function Home() {
         <Link href="/privacy" className="hover:underline">
           Confidentialité
         </Link>
-        <span className="mx-2">·</span>
+        <span className="mx-2">/</span>
         <a href="mailto:contact@minah.io" className="hover:underline">
           contact@minah.io
         </a>

@@ -107,28 +107,28 @@ const PEOPLE: Person[] = [
     },
     academic: {
       fr: [
-        "Université d'Oxford — Master, économie et études africaines (4e mondial au QS World University Rankings ; taux d'admission ~10–15 % selon les cursus)",
-        "Harvard Business School — Leading with Finance, certificat",
-        "Université de Manchester — Bachelor, économie et sciences politiques (top 40 mondial, QS World University Rankings 2027)",
+        "Université d'Oxford, Master, économie et études africaines (4e mondial au QS World University Rankings ; taux d'admission ~10–15 % selon les cursus)",
+        "Harvard Business School, Leading with Finance, certificat",
+        "Université de Manchester, Bachelor, économie et sciences politiques (top 40 mondial, QS World University Rankings 2027)",
       ],
       en: [
-        "University of Oxford — Master's degree, Economics & African Studies (ranked 4th worldwide in the QS World University Rankings; ~10–15% admission rate depending on course)",
-        "Harvard Business School — Leading with Finance, certificate",
-        "University of Manchester — Bachelor's degree, Economics & Politics (top 40 worldwide, QS World University Rankings 2027)",
+        "University of Oxford, Master's degree, Economics & African Studies (ranked 4th worldwide in the QS World University Rankings; ~10–15% admission rate depending on course)",
+        "Harvard Business School, Leading with Finance, certificate",
+        "University of Manchester, Bachelor's degree, Economics & Politics (top 40 worldwide, QS World University Rankings 2027)",
       ],
     },
     career: {
       fr: [
-        "Sciences Po Paris (Executive), Africa Director — passerelle avec les grands dirigeants & ministres africains venus en formation",
-        "Africa CEO Forum, Director — co-création de l'écosystème des principaux CEO et acteurs tech du continent",
-        "UNESCO (siège), Consultante — politiques publiques auprès des États",
-        "Minah, co-fondatrice — capital-in, relation investisseurs et écosystème",
+        "Sciences Po Paris (Executive), Africa Director, passerelle avec les grands dirigeants & ministres africains venus en formation",
+        "Africa CEO Forum, Director, co-création de l'écosystème des principaux CEO et acteurs tech du continent",
+        "UNESCO (siège), Consultante, politiques publiques auprès des États",
+        "Minah, co-fondatrice, capital-in, relation investisseurs et écosystème",
       ],
       en: [
-        "Sciences Po Paris (Executive), Africa Director — bridge to Africa's senior leaders and ministers in executive programmes",
-        "Africa CEO Forum, Director — co-creating the ecosystem of the continent's leading CEOs and tech players",
-        "UNESCO (HQ), Consultant — public policy advisory to governments",
-        "Minah, co-founder — capital-in, investor relations and ecosystem",
+        "Sciences Po Paris (Executive), Africa Director, bridge to Africa's senior leaders and ministers in executive programmes",
+        "Africa CEO Forum, Director, co-creating the ecosystem of the continent's leading CEOs and tech players",
+        "UNESCO (HQ), Consultant, public policy advisory to governments",
+        "Minah, co-founder, capital-in, investor relations and ecosystem",
       ],
     },
     likes: {

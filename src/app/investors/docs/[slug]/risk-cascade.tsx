@@ -34,7 +34,7 @@ const copy = {
     reset: "Reset",
     levelWord: "Level",
     statusLabel: "Status.",
-    absorbed: "Absorbed at this level — investor impact: none",
+    absorbed: "Absorbed at this level, investor impact: none",
     simulate: "Simulate this scenario",
   },
 } as const;

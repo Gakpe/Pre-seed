@@ -53,7 +53,7 @@ const REPORTS: Report[] = [
     },
   },
   {
-    source: "IFC · Banque mondiale",
+    source: "IFC, Banque mondiale",
     year: "Référence",
     url: "https://documents1.worldbank.org/curated/en/653831510568517947/pdf/121264-WP-PUBLIC-MSMEReportFINAL.pdf",
     title: {

@@ -109,13 +109,13 @@ export function FieldTicker({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={it.src}
-                alt={it.d ? `${it.t} — ${it.d}` : it.t}
+                alt={it.d ? `${it.t}, ${it.d}` : it.t}
                 className="relative h-full w-full object-contain"
               />
             </div>
             <figcaption className="mt-1.5 w-64 break-words text-[11px] leading-4 text-neutral-500">
               <span className="font-semibold text-neutral-700">{it.t}</span>
-              {it.d ? <> — {it.d}</> : null}
+              {it.d ? <>, {it.d}</> : null}
             </figcaption>
           </figure>
         ))}

@@ -19,7 +19,7 @@ const dict = {
     "dataroom.maintenance.body":
       "La data room est en cours de mise à jour. Vous recevrez un email dès que les changements seront disponibles.",
 
-    "meta.title": "Espace investisseurs · Minah",
+    "meta.title": "Espace investisseurs Minah",
 
     // page /investors (connexion)
     "auth.title": "Espace investisseurs",
@@ -50,12 +50,12 @@ const dict = {
       "En demandant l'accès à l'espace investisseurs, vous acceptez que Minah SAS enregistre vos informations de contact et votre navigation dans cet espace (pages consultées, documents ouverts, durée des visites) à des fins de suivi de la relation investisseur. Vous pouvez demander l'accès ou la suppression de ces données à",
 
     // home
-    "home.banner.overline": "Espace investisseurs · Confidentiel",
+    "home.banner.overline": "Espace investisseurs confidentiel",
     "home.banner.title": "Opportunité d'investissement en pre-seed",
-    "home.banner.subtitle": "Tour de {target} · {period}",
-    "home.level1.badge": "Niveau 1 · vous êtes ici",
+    "home.banner.subtitle": "Tour de {target}, {period}",
+    "home.level1.badge": "Niveau 1 (vous êtes ici)",
     "home.level2.unlocked": "Niveau 2 débloqué ✓",
-    "home.level2.pending": "Niveau 2 · ouverture en cours…",
+    "home.level2.pending": "Niveau 2 en cours d'ouverture…",
     "home.level2.locked": "Niveau 2 verrouillé 🔒",
     "home.pitch.title": "La plateforme de dette privée pour l'Afrique.",
     // Trois lignes voulues : le retour à la ligne est porté par le texte
@@ -64,18 +64,18 @@ const dict = {
       "La première génération de la fintech africaine a gagné les paiements.\nLa prochaine gagnera l'investissement.\nMinah en construit les rails : dette senior sécurisée, coupons fixes, infrastructure on-chain.",
     "home.photo.alt":
       "L'équipe fondatrice de Minah : Julien Gakpé, Coralie Lolliot et Hervé Gakpé.",
-    "home.photo.caption": "Julien Gakpé · Coralie Lolliot · Hervé Gakpé",
+    "home.photo.caption": "Julien Gakpé, Coralie Lolliot, Hervé Gakpé",
     "home.deal.title": "La levée en cours",
     "home.deal.target": "Objectif",
     "home.deal.minTicket": "Ticket minimum",
     "home.deal.lead": "Lead recherché",
     "home.deal.matching": "Matching fund",
     "home.deal.of": "objectif {target}",
-    "home.dataroom.level1": "Data room · Niveau 1",
+    "home.dataroom.level1": "Data room niveau 1",
     "home.dataroom.currentLevel": "votre niveau d'accès actuel",
-    "home.dataroom.level2": "Data room · Niveau 2",
-    "home.dataroom.level2.locked": "Data room · Niveau 2 🔒",
-    "home.dataroom.unlockedInterest": "débloqué · intérêt {tranche}",
+    "home.dataroom.level2": "Data room niveau 2",
+    "home.dataroom.level2.locked": "Data room niveau 2 🔒",
+    "home.dataroom.unlockedInterest": "débloqué, intérêt {tranche}",
     "home.dataroom.unlockedTeam": "débloqué par l'équipe",
     "home.dataroom.lockedIntro":
       "Gestion des risques, table de capitalisation, contrats cadres : ce niveau se débloque en manifestant un intérêt pour une tranche. La démarche est indicative et non engageante.",
@@ -148,7 +148,7 @@ const dict = {
     "dataroom.maintenance.body":
       "The data room is being updated. You will receive an email as soon as the changes are available.",
 
-    "meta.title": "Investor space · Minah",
+    "meta.title": "Minah investor space",
 
     "auth.title": "Investor space",
     "auth.subtitle":
@@ -176,30 +176,30 @@ const dict = {
     "auth.rgpd":
       "By requesting access to the investor space, you agree that Minah SAS records your contact information and your activity in this space (pages viewed, documents opened, time spent) for investor-relations purposes. You can request access to or deletion of this data at",
 
-    "home.banner.overline": "Investor space · Confidential",
+    "home.banner.overline": "Confidential investor space",
     "home.banner.title": "Pre-seed investment opportunity",
-    "home.banner.subtitle": "{target} round · {period}",
-    "home.level1.badge": "Level 1 · you are here",
+    "home.banner.subtitle": "{target} round, {period}",
+    "home.level1.badge": "Level 1 (you are here)",
     "home.level2.unlocked": "Level 2 unlocked ✓",
-    "home.level2.pending": "Level 2 · opening in progress…",
+    "home.level2.pending": "Level 2 opening in progress…",
     "home.level2.locked": "Level 2 locked 🔒",
     "home.pitch.title": "The private debt platform for Africa.",
     "home.pitch.body":
       "African fintech's first generation won payments.\nThe next one wins investment.\nMinah is building its rails: senior secured debt, fixed coupons, on-chain infrastructure.",
     "home.photo.alt":
       "Minah's founding team: Julien Gakpé, Coralie Lolliot and Hervé Gakpé.",
-    "home.photo.caption": "Julien Gakpé · Coralie Lolliot · Hervé Gakpé",
+    "home.photo.caption": "Julien Gakpé, Coralie Lolliot, Hervé Gakpé",
     "home.deal.title": "The current round",
     "home.deal.target": "Target",
     "home.deal.minTicket": "Minimum ticket",
     "home.deal.lead": "Lead wanted",
     "home.deal.matching": "Matching fund",
     "home.deal.of": "target {target}",
-    "home.dataroom.level1": "Data room · Level 1",
+    "home.dataroom.level1": "Data room level 1",
     "home.dataroom.currentLevel": "your current access level",
-    "home.dataroom.level2": "Data room · Level 2",
-    "home.dataroom.level2.locked": "Data room · Level 2 🔒",
-    "home.dataroom.unlockedInterest": "unlocked · interest {tranche}",
+    "home.dataroom.level2": "Data room level 2",
+    "home.dataroom.level2.locked": "Data room level 2 🔒",
+    "home.dataroom.unlockedInterest": "unlocked, interest {tranche}",
     "home.dataroom.unlockedTeam": "unlocked by the team",
     "home.dataroom.lockedIntro":
       "Risk management, cap table, framework agreements: this level unlocks once you express interest in a tranche. The step is indicative and non-binding.",

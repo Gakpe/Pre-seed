@@ -28,22 +28,22 @@ export const INVESTORS: Investor[] = [
     id: "institutionnels",
     title: { fr: "Institutionnels", en: "Institutional investors" },
     subtitle: {
-      fr: "Assureurs, mutuelles · Europe",
-      en: "Insurers, mutuals · Europe",
+      fr: "Assureurs, mutuelles, Europe",
+      en: "Insurers, mutuals, Europe",
     },
   },
   {
     id: "fonds-de-dette",
     title: { fr: "Fonds de dette", en: "Debt funds" },
     subtitle: {
-      fr: "Private credit · Europe, Golfe",
-      en: "Private credit · Europe, Gulf",
+      fr: "Private credit, Europe, Golfe",
+      en: "Private credit, Europe, Gulf",
     },
   },
   {
     id: "hnwi",
     title: { fr: "HNWI & family offices", en: "HNWIs & family offices" },
-    subtitle: { fr: "Golfe · Europe · Afrique", en: "Gulf · Europe · Africa" },
+    subtitle: { fr: "Golfe, Europe, Afrique", en: "Gulf, Europe, Africa" },
   },
   {
     id: "diaspora",
@@ -54,8 +54,8 @@ export const INVESTORS: Investor[] = [
     id: "digital-assets",
     title: { fr: "Digital asset holders", en: "Digital asset holders" },
     subtitle: {
-      fr: "Trésoreries on-chain · International",
-      en: "On-chain treasuries · International",
+      fr: "Trésoreries on-chain, International",
+      en: "On-chain treasuries, International",
     },
   },
 ];
@@ -64,7 +64,7 @@ export const FLOW_NODES: FlowNode[] = [
   {
     id: "institutionnels",
     title: { fr: "Institutionnels", en: "Institutional investors" },
-    tag: { fr: "Assureurs, mutuelles · Europe", en: "Insurers, mutuals · Europe" },
+    tag: { fr: "Assureurs, mutuelles, Europe", en: "Insurers, mutuals, Europe" },
     items: [
       {
         fr: "Souscrivent à une stratégie identifiée, adossée à des contrats déjà signés, pas à un fonds aveugle.",
@@ -83,7 +83,7 @@ export const FLOW_NODES: FlowNode[] = [
   {
     id: "fonds-de-dette",
     title: { fr: "Fonds de dette", en: "Debt funds" },
-    tag: { fr: "Private credit · Europe, Golfe", en: "Private credit · Europe, Gulf" },
+    tag: { fr: "Private credit, Europe, Golfe", en: "Private credit, Europe, Gulf" },
     items: [
       {
         fr: "Cherchent une prime de rendement peu corrélée aux marchés cotés.",
@@ -102,7 +102,7 @@ export const FLOW_NODES: FlowNode[] = [
   {
     id: "hnwi",
     title: { fr: "HNWI & family offices", en: "HNWIs & family offices" },
-    tag: { fr: "Golfe · Europe · Afrique", en: "Gulf · Europe · Africa" },
+    tag: { fr: "Golfe, Europe, Afrique", en: "Gulf, Europe, Africa" },
     items: [
       {
         fr: "Accèdent par leur banquier privé ou leur conseil en gestion de patrimoine.",
@@ -141,8 +141,8 @@ export const FLOW_NODES: FlowNode[] = [
     id: "digital-assets",
     title: { fr: "Digital asset holders", en: "Digital asset holders" },
     tag: {
-      fr: "Trésoreries on-chain · International",
-      en: "On-chain treasuries · International",
+      fr: "Trésoreries on-chain, International",
+      en: "On-chain treasuries, International",
     },
     items: [
       {
@@ -163,8 +163,8 @@ export const FLOW_NODES: FlowNode[] = [
     id: "minah",
     title: { fr: "Minah", en: "Minah" },
     tag: {
-      fr: "Structuration · registre · exécution",
-      en: "Structuring · registry · execution",
+      fr: "Structuration, registre, exécution",
+      en: "Structuring, registry, execution",
     },
     items: [
       {

@@ -24,7 +24,7 @@ const FUNDS = [
 
 const copy = {
   fr: {
-    personalEyebrow: "Volet 1 · Le fondateur",
+    personalEyebrow: "Volet 1. Le fondateur",
     personalTitle: "Un demi-milliard d'euros déployé, avant Minah.",
     personalLead:
       "Julien Gakpé a passé plus de cinq ans du côté institutionnel de la table, chez Bpifrance, en investisseur fonds de fonds. Il ne s'agit pas d'une ligne de CV, mais de la discipline exacte que Minah applique aujourd'hui à ses propres opérations : instruire, structurer, doser le risque et répondre de ses engagements.",
@@ -41,7 +41,7 @@ const copy = {
     fundsNote:
       "Une capacité de structuration éprouvée sur des véhicules de ce calibre.",
 
-    companyEyebrow: "Volet 2 · La société",
+    companyEyebrow: "Volet 2. La société",
     companyTitle: "Deux jalons franchis, et non une promesse.",
     companyLead:
       "Les montants sont sans commune mesure avec le volet précédent, et c'est le sujet : il ne s'agissait pas de déployer, il s'agissait de vérifier que la mécanique tient : juridiquement, opérationnellement, puis financièrement.",
@@ -98,7 +98,7 @@ const copy = {
   },
 
   en: {
-    personalEyebrow: "Part 1 · The founder",
+    personalEyebrow: "Part 1. The founder",
     personalTitle: "Half a billion euros deployed, before Minah.",
     personalLead:
       "Julien Gakpé spent more than five years on the institutional side of the table, at Bpifrance, as a fund-of-funds investor. That is not a CV line: it is exactly the discipline Minah now applies to its own operations: assess, structure, calibrate risk and answer for what has been signed.",
@@ -115,7 +115,7 @@ const copy = {
     fundsNote:
       "A structuring capability proven on vehicles of that calibre.",
 
-    companyEyebrow: "Part 2 · The company",
+    companyEyebrow: "Part 2. The company",
     companyTitle: "Two milestones delivered, not a promise.",
     companyLead:
       "The amounts bear no comparison with the previous section, and that is the point: this was not about deploying, it was about verifying that the mechanics hold: legally, operationally, then financially.",
@@ -194,8 +194,8 @@ export function TrackRecord({ locale }: { locale: Locale }) {
               <p className="text-sm font-semibold text-white">Julien Gakpé</p>
               <p className="mt-0.5 text-[11px] text-white/60">
                 {locale === "en"
-                  ? "Co-founder, CEO · formerly Bpifrance"
-                  : "Co-fondateur, Directeur général · ex-Bpifrance"}
+                  ? "Co-founder, CEO, formerly Bpifrance"
+                  : "Co-fondateur, directeur général, ex-Bpifrance"}
               </p>
             </figcaption>
           </figure>

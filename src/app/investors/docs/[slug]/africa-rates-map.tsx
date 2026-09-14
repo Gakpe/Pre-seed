@@ -24,7 +24,7 @@ const copy = {
     title: "Ce que paie une PME africaine, région par région",
     mapAlt:
       "Carte de l'Afrique en quatre régions, colorées selon le taux moyen payé par les PME",
-    rangesLabel: "Taux moyen · bas → élevé",
+    rangesLabel: "Taux moyen, bas → élevé",
     rangesAlt: "Fourchettes de taux par région, de 0 à 40 pour cent",
     reference: "Kupanda, notre produit de dette actuel : 20 %",
     to: "à",
@@ -34,7 +34,7 @@ const copy = {
     title: "What an African SME pays, region by region",
     mapAlt:
       "Map of Africa in four regions, coloured by the average rate paid by SMEs",
-    rangesLabel: "Average rate · low → high",
+    rangesLabel: "Average rate, low → high",
     rangesAlt: "Rate ranges by region, from 0 to 40 percent",
     reference: "Kupanda, our current debt product: 20%",
     to: "to",

@@ -90,7 +90,7 @@ export default async function InvestorsLayout({
               <span aria-hidden className="h-4 w-px shrink-0 bg-foreground/20" />
               <span className="truncate text-xs text-neutral-500">
                 {investor.full_name ?? investor.email}
-                {investor.entity ? ` · ${investor.entity}` : ""}
+                {investor.entity ? `, ${investor.entity}` : ""}
               </span>
             </>
           )}

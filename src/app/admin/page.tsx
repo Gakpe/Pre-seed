@@ -95,7 +95,7 @@ export default async function AdminPage() {
                     </Link>
                     <div className="text-xs text-neutral-500">{inv.email}</div>
                   </td>
-                  <td className="px-4 py-3">{inv.entity ?? "·"}</td>
+                  <td className="px-4 py-3">{inv.entity ?? ""}</td>
                   <td className="px-4 py-3">
                     <StatusBadge status={inv.status} />
                   </td>
@@ -110,12 +110,12 @@ export default async function AdminPage() {
                         )}
                       </>
                     ) : (
-                      "·"
+                      ""
                     )}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <span>{inv.level2_access ? "✓" : "·"}</span>
+                      <span>{inv.level2_access ? "✓" : ""}</span>
                       <form
                         action={setLevel2Access.bind(
                           null,
@@ -133,7 +133,7 @@ export default async function AdminPage() {
                     {formatDuration(s?.total_duration_ms ?? 0)}
                     {s && s.sessions > 0 && (
                       <div className="text-xs text-neutral-500">
-                        {s.sessions} session{s.sessions > 1 ? "s" : ""} ·{" "}
+                        {s.sessions} session{s.sessions > 1 ? "s" : ""},{" "}
                         {s.docsend_clicks} doc{s.docsend_clicks > 1 ? "s" : ""}
                       </div>
                     )}
