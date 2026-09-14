@@ -39,6 +39,10 @@ export default function Home() {
         <a href="mailto:contact@minah.io" className="hover:underline">
           contact@minah.io
         </a>
+        <span className="mx-2">/</span>
+        <Link href="/admin/login" className="hover:underline">
+          Admin
+        </Link>
       </footer>
     </main>
   );

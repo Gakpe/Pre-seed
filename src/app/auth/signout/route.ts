@@ -7,7 +7,15 @@ export async function POST(request: Request) {
   const supabase = await createClient();
   await supabase.auth.signOut();
 
-  const res = NextResponse.redirect(new URL("/", request.url), { status: 303 });
+  // Destination après la sortie : « / » par défaut, ou le chemin passé par le
+  // formulaire (la barre admin renvoie sur /admin/login, pour se reconnecter
+  // sans chercher l'adresse). Chemin relatif au site uniquement.
+  const next = (await request.formData().catch(() => null))?.get("next");
+  const target =
+    typeof next === "string" && next.startsWith("/") && !next.startsWith("//")
+      ? next
+      : "/";
+  const res = NextResponse.redirect(new URL(target, request.url), { status: 303 });
 
   // Se déconnecter ferme les trois portes, pas seulement la session Supabase.
   // Le cookie admin vit sept jours et le cookie de démonstration quatre heures :

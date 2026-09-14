@@ -103,6 +103,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
             </Link>
           )}
           <form action="/auth/signout" method="post">
+            <input type="hidden" name="next" value="/admin/login" />
             <button type="submit" className="text-xs text-neutral-500 hover:underline">
               Se déconnecter
             </button>
