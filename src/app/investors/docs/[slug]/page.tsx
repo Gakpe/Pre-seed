@@ -96,6 +96,10 @@ export default async function DocPage({
     doc.slug === "term-sheet-kupanda" ||
     doc.slug === "go-to-market";
 
+  // En-tête encadré (voir AGENTS.md). « Pourquoi Minah » garde sa catégorie
+  // derrière le titre : « Overview » dit que la fiche est le point d'entrée.
+  const framedHeader = doc.slug === "la-levee" || doc.slug === "pourquoi-minah";
+
   return (
     <main
       className={`mx-auto w-full flex-1 px-6 py-12 ${
@@ -116,7 +120,7 @@ export default async function DocPage({
           <span aria-hidden>←</span>
           {t(locale, "docs.back")}
         </Link>
-        {doc.slug !== "la-levee" && (
+        {!framedHeader && (
           <>
             <p className="mt-6 text-xs font-medium uppercase tracking-widest text-neutral-400">
               {category}
@@ -128,9 +132,12 @@ export default async function DocPage({
         )}
         {!richOnly && <DocContent text={content ?? ""} />}
       </div>
-      {doc.slug === "la-levee" && (
+      {framedHeader && (
         <header className="mt-6 rounded-xl border border-foreground/10 bg-white/60 px-6 py-9 text-center">
           <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
+          {doc.slug === "pourquoi-minah" && category && (
+            <p className="mt-1.5 text-[15px] text-neutral-500">{category}</p>
+          )}
           <span
             aria-hidden
             className="mx-auto mt-3.5 block h-[3px] w-10 rounded-full bg-brand"
