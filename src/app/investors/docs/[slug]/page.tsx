@@ -99,9 +99,14 @@ export default async function DocPage({
     note;
 
   // En-tête encadré (voir AGENTS.md). « Pourquoi Minah » et la note de marché
-  // gardent leur catégorie, derrière le titre.
+  // gardent leur catégorie, derrière le titre. Le business model non : sa
+  // catégorie répète le titre.
+  const businessModel = doc.slug === "business-model";
   const framedHeader =
-    doc.slug === "la-levee" || doc.slug === "pourquoi-minah" || note;
+    doc.slug === "la-levee" ||
+    doc.slug === "pourquoi-minah" ||
+    note ||
+    businessModel;
   const headerCategory = doc.slug === "pourquoi-minah" || note;
 
   return (
@@ -132,7 +137,7 @@ export default async function DocPage({
             </h1>
           </>
         )}
-        {!richOnly && <DocContent text={content ?? ""} />}
+        {!richOnly && !framedHeader && <DocContent text={content ?? ""} />}
       </div>
       {framedHeader && (
         <header className="mt-6 rounded-xl border border-foreground/10 bg-white/60 px-6 py-9 text-center">
@@ -145,6 +150,11 @@ export default async function DocPage({
             className="mx-auto mt-3.5 block h-[3px] w-10 rounded-full bg-brand"
           />
         </header>
+      )}
+      {/* Chapô d'une fiche encadrée qui en a un : sous l'en-tête, au corps
+          des autres fiches. */}
+      {framedHeader && !richOnly && (
+        <DocContent text={content ?? ""} size="large" />
       )}
 
       {/* Certaines fiches portent un contenu riche en plus de leur texte. */}
@@ -199,9 +209,19 @@ function inline(text: string) {
     );
 }
 
-function DocContent({ text }: { text: string }) {
+function DocContent({
+  text,
+  size = "base",
+}: {
+  text: string;
+  size?: "base" | "large";
+}) {
   return (
-    <div className="mt-6 text-sm leading-7 text-neutral-700 dark:text-neutral-300">
+    <div
+      className={`mt-6 text-neutral-700 dark:text-neutral-300 ${
+        size === "large" ? "text-[15px] leading-[1.8]" : "text-sm leading-7"
+      }`}
+    >
       {text.split("\n\n").map((block, i) => {
         const b = block.trim();
 

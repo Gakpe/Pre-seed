@@ -1,5 +1,6 @@
 import { FEES } from "@/lib/flow-nodes";
 import type { Locale } from "@/lib/i18n";
+import { SectionTitle, type SectionIconName } from "./section-title";
 // Les deux blocs de bas de page de la fiche « business model » : où se place
 // notre risque, et l'ambition de traçabilité de bout en bout.
 // Aucun état, aucune interaction.
@@ -49,7 +50,6 @@ const copy = {
     juniorLabel: "Tranche junior, first loss",
     juniorSub: "Fonds propres Minah, absorbe la première perte",
     traceTitle: "Suivre son argent sur toute la chaîne",
-    badge: "Ambition, en construction",
     traceBody:
       "Aujourd'hui, la traçabilité de votre position repose sur notre reporting. Ce que nous visons est plus exigeant : que chaque étage de la chaîne soit vérifiable sans avoir à nous croire sur parole.",
     stagesLabel: "Les quatre étages visés",
@@ -91,7 +91,6 @@ const copy = {
     juniorLabel: "Junior tranche, first loss",
     juniorSub: "Minah equity, absorbs the first loss",
     traceTitle: "Track your money along the whole chain",
-    badge: "Ambition, in progress",
     traceBody:
       "Today, the traceability of your position rests on our reporting. What we are aiming for is more demanding: that every stage of the chain be verifiable without taking our word for it.",
     stagesLabel: "The four stages targeted",
@@ -122,134 +121,141 @@ const copy = {
   },
 } as const;
 
+// Pictos des titres de section, choisis sur maquette.
+const ICONS: Record<"risk" | "trace" | "fees" | "rotation", SectionIconName> = {
+  risk: "layers",
+  trace: "route",
+  fees: "percent",
+  rotation: "repeat",
+};
+
 export function BusinessModelBlocks({ locale }: { locale: Locale }) {
   const c = copy[locale];
   return (
     <div className="mt-12 grid gap-6 min-[860px]:grid-cols-2">
-      {/* --- Où se place notre risque --- */}
-      <section className="rounded-xl border border-bm-border bg-bm-surface p-6">
-        <h2 className="text-base font-semibold tracking-tight">{c.riskTitle}</h2>
-        <p className="mt-3 text-sm leading-[1.6] text-neutral-700">{c.riskBody}</p>
+      {/* --- Où se place notre risque ---
+          Le schéma occupe la hauteur laissée par la carte voisine, centré,
+          plutôt que de laisser un vide sous lui. */}
+      <section className="flex flex-col rounded-xl border border-bm-border bg-bm-surface p-6">
+        <SectionTitle icon={ICONS.risk}>{c.riskTitle}</SectionTitle>
+        <p className="mt-4 text-[15px] leading-[1.8] text-neutral-700">{c.riskBody}</p>
 
-        <svg
-          viewBox="0 0 560 236"
-          className="mt-6 w-full"
-          role="img"
-          aria-label={c.svgAlt}
-        >
-          <defs>
-            <marker
-              id="bm-down"
-              viewBox="0 0 10 10"
-              refX="5"
-              refY="9"
-              markerWidth="6"
-              markerHeight="6"
-              orient="auto"
-            >
-              <path d="M0 0L5 10L10 0z" fill="var(--bm-muted)" />
-            </marker>
-            <marker
-              id="bm-up"
-              viewBox="0 0 10 10"
-              refX="5"
-              refY="1"
-              markerWidth="6"
-              markerHeight="6"
-              orient="auto"
-            >
-              <path d="M0 10L5 0L10 10z" fill="var(--bm-accent)" />
-            </marker>
-          </defs>
-
-          {/* rail gauche, les paiements descendent */}
-          <path
-            d="M26 34 L26 196"
-            stroke="var(--bm-muted)"
-            strokeWidth="1.2"
-            markerEnd="url(#bm-down)"
-            fill="none"
-          />
-          <text
-            x="18"
-            y="220"
-            className="text-[10px] font-semibold"
-            style={{ letterSpacing: "0.1em" }}
-            fill="var(--bm-muted)"
+        <div className="mt-6 flex flex-1 items-center">
+          <svg
+            viewBox="0 0 560 236"
+            className="w-full"
+            role="img"
+            aria-label={c.svgAlt}
           >
-            {c.payments}
-          </text>
+            <defs>
+              <marker
+                id="bm-down"
+                viewBox="0 0 10 10"
+                refX="9"
+                refY="5"
+                markerWidth="7"
+                markerHeight="7"
+                orient="auto"
+              >
+                {/* Pointe dessinée vers la droite : orient="auto" la tourne
+                    dans le sens du trait. Dessinée vers le bas, elle tournait
+                    deux fois et tombait de côté. */}
+                <path d="M0 0L10 5L0 10z" fill="var(--bm-muted)" />
+              </marker>
+              <marker
+                id="bm-up"
+                viewBox="0 0 10 10"
+                refX="9"
+                refY="5"
+                markerWidth="7"
+                markerHeight="7"
+                orient="auto"
+              >
+                <path d="M0 0L10 5L0 10z" fill="var(--bm-accent)" />
+              </marker>
+            </defs>
 
-          {/* rail droit, les pertes remontent */}
-          <path
-            d="M534 196 L534 34"
-            stroke="var(--bm-accent)"
-            strokeWidth="1.2"
-            markerEnd="url(#bm-up)"
-            fill="none"
-          />
-          <text
-            x="490"
-            y="220"
-            className="text-[10px] font-semibold"
-            style={{ letterSpacing: "0.1em" }}
-            fill="var(--bm-accent)"
-          >
-            {c.losses}
-          </text>
+            {/* rail gauche, les paiements descendent */}
+            <path
+              d="M26 34 L26 196"
+              stroke="var(--bm-muted)"
+              strokeWidth="1.2"
+              markerEnd="url(#bm-down)"
+              fill="none"
+            />
+            <text
+              x="18"
+              y="220"
+              className="text-[10px] font-semibold"
+              style={{ letterSpacing: "0.1em" }}
+              fill="var(--bm-muted)"
+            >
+              {c.payments}
+            </text>
 
-          {/* dette senior */}
-          <rect x="60" y="26" width="440" height="78" rx="10" fill="var(--bm-minah)" />
-          <text x="82" y="58" className="text-[14px] font-semibold" fill="#fff">
-            {c.seniorLabel}
-          </text>
-          <text x="82" y="80" className="text-[11.5px]" fill="rgba(255,255,255,0.72)">
-            {c.seniorSub}
-          </text>
+            {/* rail droit, les pertes remontent */}
+            <path
+              d="M534 196 L534 34"
+              stroke="var(--bm-accent)"
+              strokeWidth="1.2"
+              markerEnd="url(#bm-up)"
+              fill="none"
+            />
+            <text
+              x="490"
+              y="220"
+              className="text-[10px] font-semibold"
+              style={{ letterSpacing: "0.1em" }}
+              fill="var(--bm-accent)"
+            >
+              {c.losses}
+            </text>
 
-          {/* tranche junior */}
-          <rect
-            x="60"
-            y="122"
-            width="440"
-            height="78"
-            rx="10"
-            fill="var(--bm-surface-2)"
-            stroke="var(--bm-accent)"
-            strokeWidth="1.4"
-            strokeDasharray="6 5"
-          />
-          <text x="82" y="154" className="text-[14px] font-semibold" fill="var(--bm-ink)">
-            {c.juniorLabel}
-          </text>
-          <text x="82" y="176" className="text-[11.5px]" fill="var(--bm-muted)">
-            {c.juniorSub}
-          </text>
-        </svg>
+            {/* dette senior */}
+            <rect x="60" y="26" width="440" height="78" rx="10" fill="var(--bm-minah)" />
+            <text x="82" y="58" className="text-[14px] font-semibold" fill="#fff">
+              {c.seniorLabel}
+            </text>
+            <text x="82" y="80" className="text-[11.5px]" fill="rgba(255,255,255,0.72)">
+              {c.seniorSub}
+            </text>
+
+            {/* tranche junior */}
+            <rect
+              x="60"
+              y="122"
+              width="440"
+              height="78"
+              rx="10"
+              fill="var(--bm-surface-2)"
+              stroke="var(--bm-accent)"
+              strokeWidth="1.4"
+              strokeDasharray="6 5"
+            />
+            <text x="82" y="154" className="text-[14px] font-semibold" fill="var(--bm-ink)">
+              {c.juniorLabel}
+            </text>
+            <text x="82" y="176" className="text-[11.5px]" fill="var(--bm-muted)">
+              {c.juniorSub}
+            </text>
+          </svg>
+        </div>
       </section>
 
       {/* --- Suivre son argent sur toute la chaîne --- */}
       <section className="rounded-xl border border-bm-border bg-bm-surface p-6">
-        <div className="flex flex-wrap items-center gap-3">
-          <h2 className="text-base font-semibold tracking-tight">{c.traceTitle}</h2>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-bm-accent px-2.5 py-0.5 text-[11px] font-medium text-bm-accent">
-            <span className="h-1.5 w-1.5 rounded-full bg-bm-accent" />
-            {c.badge}
-          </span>
-        </div>
+        <SectionTitle icon={ICONS.trace}>{c.traceTitle}</SectionTitle>
 
-        <p className="mt-3 text-sm leading-[1.6] text-neutral-700">{c.traceBody}</p>
+        <p className="mt-4 text-[15px] leading-[1.8] text-neutral-700">{c.traceBody}</p>
 
-        <p className="mt-6 text-[10px] font-semibold uppercase tracking-[0.1em] text-bm-muted">
-          {c.stagesLabel}
-        </p>
+        <p className="mt-6 text-sm font-semibold">{c.stagesLabel}</p>
         <ol className="mt-3 space-y-3">
           {TRACEABILITY_STAGES.map((s, i) => (
             <li key={s.title.fr} className="flex gap-3">
               <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-bm-accent-soft text-[11px] font-semibold text-bm-accent">
                 {i + 1}
               </span>
-              <span className="text-sm leading-[1.6] text-neutral-700">
+              <span className="text-[15px] leading-[1.7] text-neutral-700">
                 <strong className="font-semibold text-bm-ink">
                   {s.title[locale]}.
                 </strong>{" "}
@@ -259,7 +265,7 @@ export function BusinessModelBlocks({ locale }: { locale: Locale }) {
           ))}
         </ol>
 
-        <p className="mt-6 border-t border-bm-border pt-4 text-[13px] leading-[1.6] text-bm-muted">
+        <p className="mt-6 border-t border-bm-border pt-4 text-sm leading-[1.7] text-bm-muted">
           {c.traceFootnote}
         </p>
       </section>
@@ -269,43 +275,38 @@ export function BusinessModelBlocks({ locale }: { locale: Locale }) {
           mécanisme de la seconde est le cœur du modèle : il mérite d'être
           expliqué, pas seulement chiffré. */}
       <section className="rounded-xl border border-bm-border bg-bm-surface p-6 min-[860px]:col-span-2">
-        <h2 className="text-base font-semibold tracking-tight">{c.feesTitle}</h2>
+        <SectionTitle icon={ICONS.fees}>{c.feesTitle}</SectionTitle>
 
         <dl className="mt-5 grid gap-5 min-[620px]:grid-cols-2">
           <div className="rounded-lg border border-bm-border bg-bm-accent-soft/40 p-5">
-            <dt className="text-[11px] font-semibold uppercase tracking-[0.12em] text-bm-muted">
-              {c.transactionLabel}
-            </dt>
+            <dt className="text-sm font-semibold">{c.transactionLabel}</dt>
             <dd className="mt-1 text-3xl font-bold tracking-tight tabular-nums text-bm-accent">
               {FEES.transaction[locale]}
             </dd>
-            <dd className="mt-2 text-[13px] leading-[1.6] text-neutral-700">
+            <dd className="mt-2 text-sm leading-[1.7] text-neutral-700">
               {c.transactionBody}
             </dd>
           </div>
 
           <div className="rounded-lg border border-bm-border bg-bm-accent-soft/40 p-5">
-            <dt className="text-[11px] font-semibold uppercase tracking-[0.12em] text-bm-muted">
-              {c.performanceLabel}
-            </dt>
+            <dt className="text-sm font-semibold">{c.performanceLabel}</dt>
             <dd className="mt-1 text-3xl font-bold tracking-tight tabular-nums text-bm-accent">
               {FEES.performance[locale]}
             </dd>
-            <dd className="mt-2 text-[13px] leading-[1.6] text-neutral-700">
+            <dd className="mt-2 text-sm leading-[1.7] text-neutral-700">
               {c.performanceBody}
             </dd>
           </div>
         </dl>
 
-        <p className="mt-6 text-sm leading-[1.7] text-neutral-700">{c.feesLead}</p>
+        <p className="mt-6 text-[15px] leading-[1.8] text-neutral-700">{c.feesLead}</p>
 
         {/* La rotation est le ressort du modèle : sans elle, l'écart entre le
-            coupon servi et le rendement capté n'a pas d'explication. */}
-        <div className="mt-6 rounded-lg border border-bm-border bg-bm-surface p-5">
-          <h3 className="text-sm font-semibold tracking-tight">
-            {c.rotationTitle}
-          </h3>
-          <p className="mt-2 text-sm leading-[1.7] text-neutral-700">
+            coupon servi et le rendement capté n'a pas d'explication. Second
+            titre de la carte, pas une carte dans la carte. */}
+        <div className="mt-10">
+          <SectionTitle icon={ICONS.rotation}>{c.rotationTitle}</SectionTitle>
+          <p className="mt-4 text-[15px] leading-[1.8] text-neutral-700">
             {c.rotationBody}
           </p>
 
@@ -330,12 +331,12 @@ export function BusinessModelBlocks({ locale }: { locale: Locale }) {
             </li>
           </ul>
 
-          <p className="mt-3 text-[12px] leading-5 text-bm-muted">
+          <p className="mt-3 text-[13px] leading-5 text-bm-muted">
             {c.rotationFootnote}
           </p>
         </div>
 
-        <p className="mt-4 border-t border-bm-border pt-4 text-[13px] leading-[1.6] text-bm-muted">
+        <p className="mt-6 border-t border-bm-border pt-4 text-sm leading-[1.7] text-bm-muted">
           {c.feesFootnote}
         </p>
       </section>

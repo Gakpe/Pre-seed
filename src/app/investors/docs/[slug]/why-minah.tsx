@@ -2,6 +2,7 @@ import Link from "next/link";
 import { deal } from "@/lib/deal";
 import type { Locale } from "@/lib/i18n";
 import { ScrollReveal } from "./scroll-reveal";
+import { SectionTitle } from "./section-title";
 
 // Fiche « Pourquoi Minah » : trois temps, et une sortie vers la levée.
 //
@@ -78,42 +79,8 @@ const copy = {
 };
 
 // Pastilles de section : un picto plutôt qu'un numéro, la fiche se lit comme
-// un raisonnement et non comme une liste. Même pastille que la levée.
+// un raisonnement et non comme une liste.
 const CHAPTER_ICONS = ["search", "trend", "chip"] as const;
-
-function ChapterIcon({ kind }: { kind: (typeof CHAPTER_ICONS)[number] }) {
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 24 24"
-      className="h-[18px] w-[18px]"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.75}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      {kind === "search" && (
-        <>
-          <circle cx="11" cy="11" r="7" />
-          <path d="m20 20-3.5-3.5" />
-        </>
-      )}
-      {kind === "trend" && (
-        <>
-          <path d="M3 17l6-6 4 4 8-8" />
-          <path d="M15 7h6v6" />
-        </>
-      )}
-      {kind === "chip" && (
-        <>
-          <rect x="6" y="6" width="12" height="12" rx="2" />
-          <path d="M10 10h4v4h-4zM9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4" />
-        </>
-      )}
-    </svg>
-  );
-}
 
 export function WhyMinah({ locale }: { locale: Locale }) {
   const c = copy[locale];
@@ -136,12 +103,7 @@ export function WhyMinah({ locale }: { locale: Locale }) {
           >
             <div>
               <ScrollReveal>
-                <h2 className="flex items-center gap-3 text-2xl font-semibold leading-tight tracking-tight">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand/10 text-marsala">
-                    <ChapterIcon kind={CHAPTER_ICONS[i]} />
-                  </span>
-                  {ch.eyebrow}
-                </h2>
+                <SectionTitle icon={CHAPTER_ICONS[i]}>{ch.eyebrow}</SectionTitle>
               </ScrollReveal>
               <ScrollReveal delay={70}>
                 <p className="mt-4 text-[15px] leading-[1.8] text-neutral-700">
