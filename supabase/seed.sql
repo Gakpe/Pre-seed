@@ -5,7 +5,7 @@
 
 insert into public.documents (slug, title, docsend_url, visible_to_pending, category, sort_order, access_level, content) values
 
-  ('pourquoi-minah', 'Pourquoi Minah', null, false, 'Overview', 10, 1, 'La première génération de la fintech africaine a gagné la bataille des paiements : M-Pesa, Wave, Flutterwave, Paystack. Les rails sont construits : wallets, KYC, argent mobile-first. La prochaine génération se joue sur l''investissement : comment l''argent travaille, pas seulement comment il circule.
+  ('pourquoi-minah', 'Pourquoi Minah ?', null, false, 'Overview', 10, 1, 'La première génération de la fintech africaine a gagné la bataille des paiements : M-Pesa, Wave, Flutterwave, Paystack. Les rails sont construits : wallets, KYC, argent mobile-first. La prochaine génération se joue sur l''investissement : comment l''argent travaille, pas seulement comment il circule.
 
 L''opportunité est massive. Les taux bancaires moyens dépassent 20 % sur le continent (Zambie 28 %, Ghana 20–30 %, Angola 22 %, Égypte 21 %), pendant que le crédit privé mondial pèse environ 2 000 milliards de dollars (Blackstone, Apollo, Ares) et que les pionniers africains (TLG Capital, Cauris, Enko, AfricInvest) prouvent le modèle.
 
@@ -101,7 +101,7 @@ delete from public.documents where slug in ('memo-kupanda', 'equipe-bios');
 -- Versions anglaises (fallback FR si null)
 -- ---------------------------------------------------------------------------
 
-update public.documents set title_en = 'Why Minah' where slug = 'pourquoi-minah';
+update public.documents set title_en = 'Why Minah?' where slug = 'pourquoi-minah';
 update public.documents set title_en = 'Minah pre-seed deck' where slug = 'deck-preseed';
 update public.documents set title_en = 'Market note' where slug = 'note-marche';
 update public.documents set title_en = 'Minah business model' where slug = 'business-model';
@@ -494,8 +494,8 @@ where slug = 'business-model';
 -- La note de marché devient un objet de lecture : chapô en base, raisonnement
 -- en trois temps et visualisations rendus par des composants.
 update public.documents set
-  title = 'Pourquoi la dette, et pourquoi maintenant',
-  title_en = 'Why debt, and why now',
+  title = 'Pourquoi la dette, et pourquoi maintenant ?',
+  title_en = 'Why debt, and why now?',
   content = $doc$L'Afrique est le continent où le capital est le plus rare et le plus cher. C'est aussi celui où l'on parle le plus d'equity.
 
 Cette note explique pourquoi nous pensons que l'opportunité des dix prochaines années est ailleurs, dans la dette privée structurée, et pourquoi la fenêtre est ouverte maintenant.$doc$,

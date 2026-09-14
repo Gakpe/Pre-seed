@@ -318,20 +318,26 @@ export function CapitalFlow({ locale }: { locale: Locale }) {
         </svg>
       </div>
 
-      {/* panneau de détail, enrichit, ne conditionne rien */}
+      {/* panneau de détail, enrichit, ne conditionne rien. Bandeau orangé
+          pour le nœud pointé (la puce rappelle le schéma), corps gris beige. */}
       <div
         aria-live="polite"
-        className="mt-4 rounded-xl border border-bm-border bg-bm-surface-2 p-6"
+        className="mt-4 overflow-hidden rounded-xl border border-bm-border bg-bm-surface-2"
       >
-        <h3 className="text-sm font-semibold text-bm-ink">{node.title[locale]}</h3>
-        <p className="mt-0.5 text-xs text-bm-muted">{node.tag[locale]}</p>
-        <ul className="mt-4 space-y-2">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 bg-brand/[0.06] px-6 py-3.5">
+          <h3 className="flex items-center gap-2 text-sm font-semibold text-marsala">
+            <span aria-hidden className="h-2 w-2 rounded-full bg-bm-accent" />
+            {node.title[locale]}
+          </h3>
+          <p className="text-xs text-bm-muted">{node.tag[locale]}</p>
+        </div>
+        <ul className="space-y-2 px-6 pt-4 pb-6">
           {node.items.map((item) => (
             <li
               key={item.fr}
-              className="flex gap-3 text-sm leading-[1.6] text-neutral-700"
+              className="flex gap-3 text-[15px] leading-[1.7] text-neutral-700"
             >
-              <span className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-bm-accent" />
+              <span className="mt-3 h-1 w-1 shrink-0 rounded-full bg-bm-accent" />
               <span>{item[locale]}</span>
             </li>
           ))}
