@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { getDataRoomStatus } from "@/lib/dataroom";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { DataRoomSwitch } from "./dataroom-switch";
 
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   const dataRoomStatus = await getDataRoomStatus();
@@ -37,6 +36,22 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
             Accès admin
           </Link>
           <Link
+            href="/admin/dataroom"
+            className="flex items-center gap-1.5 text-xs text-neutral-500 hover:underline"
+          >
+            <span
+              aria-hidden
+              className={`h-1.5 w-1.5 rounded-full ${
+                dataRoomStatus === "open"
+                  ? "bg-salvia"
+                  : dataRoomStatus === "maintenance"
+                    ? "bg-brand"
+                    : "bg-marsala"
+              }`}
+            />
+            Data room
+          </Link>
+          <Link
             href="/admin/validation"
             className="flex items-center gap-1.5 text-xs text-neutral-500 hover:underline"
           >
@@ -49,7 +64,6 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
           </Link>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 sm:gap-x-4">
-          <DataRoomSwitch status={dataRoomStatus} />
           {/* Démo : ouvre un espace investisseur factice pour les calls. */}
           <Link
             href="/investors?demo=1"
