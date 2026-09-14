@@ -174,10 +174,10 @@ const copy = {
 export function MarketReports({ locale }: { locale: Locale }) {
   const c = copy[locale];
   return (
-    <section className="mt-12">
-      <h2 className="text-sm font-semibold uppercase tracking-widest text-neutral-400">
-        {c.heading}
-      </h2>
+    // Fin du papier : les rapports sortent du fil de lecture, dans un cadre
+    // grisé. Plus clair que le gris des contenus verrouillés (AGENTS.md).
+    <section className="mt-12 rounded-xl border border-foreground/10 bg-foreground/[0.03] px-6 py-6">
+      <h2 className="text-base font-semibold">{c.heading}</h2>
       <p className="mt-3 text-sm leading-6 text-neutral-600">{c.intro}</p>
 
       <ul className="mt-6 divide-y divide-neutral-200 border-y border-neutral-200 dark:divide-neutral-800 dark:border-neutral-800">
@@ -187,7 +187,7 @@ export function MarketReports({ locale }: { locale: Locale }) {
               href={r.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex gap-4 py-4 transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900"
+              className="group -mx-3 flex gap-4 rounded-lg px-3 py-4 transition-colors hover:bg-white/60 dark:hover:bg-neutral-900"
             >
               <div className="w-32 shrink-0 pl-1">
                 <p className="text-xs font-medium text-marsala">{r.source}</p>
