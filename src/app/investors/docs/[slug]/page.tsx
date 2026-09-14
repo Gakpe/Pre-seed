@@ -100,8 +100,8 @@ export default async function DocPage({
 
   // En-tête encadré (voir AGENTS.md). « Pourquoi Minah » et la note de marché
   // gardent leur catégorie, derrière le titre. Le business model, la term
-  // sheet, le track record, le go-to-market et l'équipe non : leur catégorie
-  // répète le titre.
+  // sheet, le track record, les deux go-to-market et l'équipe non : leur
+  // catégorie répète le titre.
   const businessModel = doc.slug === "business-model";
   const framedHeader =
     doc.slug === "la-levee" ||
@@ -109,6 +109,7 @@ export default async function DocPage({
     doc.slug === "term-sheet-kupanda" ||
     doc.slug === "track-record" ||
     doc.slug === "go-to-market" ||
+    doc.slug === "go-to-market-apercu" ||
     team ||
     note ||
     businessModel;
@@ -202,8 +203,14 @@ export default async function DocPage({
 // étroit : intertitre « ## », liste « - », filet « --- », et **gras** en ligne.
 // Assez pour structurer une note d'investissement sans imposer un éditeur riche
 // à l'équipe, et sans jamais injecter de HTML brut.
+// Espace insécable entre un nombre et son unité : le texte vient de la base,
+// on le pose au rendu plutôt que de réécrire la production.
+function nbsp(text: string) {
+  return text.replace(/(\d) (M€|K€|Md€|Md\$|M\$|%)/g, "$1\u00a0$2");
+}
+
 function inline(text: string) {
-  return text
+  return nbsp(text)
     .split(/(\*\*[^*]+\*\*)/g)
     .filter(Boolean)
     .map((part, i) =>
