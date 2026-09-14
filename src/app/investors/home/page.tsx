@@ -121,20 +121,32 @@ export default async function InvestorHomePage() {
     lockedTitles = locked ?? [];
   }
 
+  // En attente de validation : aucun document, pas même la liste des titres.
+  // La RLS le garantit déjà en base, on ne s'en remet pas au seul affichage.
   if (investor.status === "pending") {
     return (
       <Main>
-        <h1 className="text-xl font-semibold tracking-tight">
-          {t(locale, "home.pending.title")}
-        </h1>
-        <p className="mt-2 text-sm text-neutral-600">
-          {t(locale, "home.pending.body", { name: investor.full_name ?? "" })}
-        </p>
-        {level1.length > 0 && (
-          <div className="mt-10">
-            <DataRoom docs={level1} locale={locale} />
-          </div>
-        )}
+        <div className="mx-auto max-w-lg py-10 text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-xs font-medium text-marsala">
+            <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+            {t(locale, "home.pending.badge")}
+          </span>
+          <h1 className="mt-5 text-2xl font-semibold leading-tight tracking-tight">
+            {t(locale, "home.pending.title")}
+          </h1>
+          <p className="mt-3 text-sm leading-6 text-neutral-600">
+            {t(locale, "home.pending.body", { name: investor.full_name ?? "" })}
+          </p>
+          <p className="mt-5 rounded-lg border border-foreground/10 bg-white/60 px-4 py-3 text-sm leading-6 text-foreground">
+            {t(locale, "home.pending.delay")}
+          </p>
+          <p className="mt-6 text-xs text-neutral-500">
+            {t(locale, "home.pending.contact")}{" "}
+            <a href="mailto:contact@minah.io" className="underline">
+              contact@minah.io
+            </a>
+          </p>
+        </div>
       </Main>
     );
   }

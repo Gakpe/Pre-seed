@@ -87,9 +87,14 @@ const dict = {
     "home.closing.title": "Parlons-en de vive voix",
     "home.closing.body":
       "Ces documents méritent mieux qu'une lecture seule : l'équipe vous les présente volontiers en amont pour donner le contexte de chacun. Et une fois votre deep dive terminé, n'hésitez pas à prendre rendez-vous. Que vous envisagiez d'investir ou non, vos retours nous sont précieux.",
-    "home.pending.title": "Accès en cours de validation",
+    "home.pending.badge": "Accès en cours de validation",
+    "home.pending.title": "Merci de votre intérêt pour Minah",
     "home.pending.body":
-      "Merci {name}, votre email est confirmé. Nous validons votre accès et vous préviendrons rapidement.",
+      "Votre compte est créé, {name}. Vous aurez accès à la data room, au mémo d'investissement et aux documents de la levée une fois votre accès validé.",
+    "home.pending.delay":
+      "L'équipe revient vers vous pour valider votre accès, sous 24 heures maximum.",
+    "home.pending.contact":
+      "Une question d'ici là ? Écrivez-nous à",
     "home.blocked.title": "Accès indisponible",
     "home.blocked.body":
       "Votre accès à l'espace investisseurs n'est pas actif. Pour toute question :",
@@ -204,9 +209,14 @@ const dict = {
     "home.closing.title": "Let's talk it through",
     "home.closing.body":
       "These documents deserve more than a solo read: the team is happy to walk you through each of them upfront. And once your deep dive is done, do not hesitate to book a meeting. Whether you plan to invest or not, your feedback is valuable to us.",
-    "home.pending.title": "Access being validated",
+    "home.pending.badge": "Access being validated",
+    "home.pending.title": "Thank you for your interest in Minah",
     "home.pending.body":
-      "Thank you {name}, your email is confirmed. We are validating your access and will let you know shortly.",
+      "Your account has been created, {name}. You will have access to the data room, the investment memo and the round documents once your access is validated.",
+    "home.pending.delay":
+      "The team will get back to you to validate your access, within 24 hours at the latest.",
+    "home.pending.contact":
+      "A question in the meantime? Write to us at",
     "home.blocked.title": "Access unavailable",
     "home.blocked.body":
       "Your access to the investor space is not active. For any question:",

@@ -1,9 +1,17 @@
 import Link from "next/link";
 import { getDataRoomStatus } from "@/lib/dataroom";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { DataRoomSwitch } from "./dataroom-switch";
 
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   const dataRoomStatus = await getDataRoomStatus();
+
+  // Compte en attente affiché dans la barre : sans ça, un inscrit peut attendre
+  // simplement parce que personne n'a pensé à ouvrir la page de validation.
+  const { count: pendingCount } = await createAdminClient()
+    .from("investors")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "pending");
 
   return (
     <div className="flex flex-1 flex-col">
@@ -27,6 +35,17 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
             className="text-xs text-neutral-500 hover:underline"
           >
             Accès admin
+          </Link>
+          <Link
+            href="/admin/validation"
+            className="flex items-center gap-1.5 text-xs text-neutral-500 hover:underline"
+          >
+            Validation
+            {pendingCount ? (
+              <span className="rounded-full bg-brand px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white">
+                {pendingCount}
+              </span>
+            ) : null}
           </Link>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 sm:gap-x-4">

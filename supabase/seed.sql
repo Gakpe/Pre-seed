@@ -5,13 +5,13 @@
 
 insert into public.documents (slug, title, docsend_url, visible_to_pending, category, sort_order, access_level, content) values
 
-  ('pourquoi-minah', 'Pourquoi Minah', null, true, 'Overview', 10, 1, 'La première génération de la fintech africaine a gagné la bataille des paiements : M-Pesa, Wave, Flutterwave, Paystack. Les rails sont construits : wallets, KYC, argent mobile-first. La prochaine génération se joue sur l''investissement : comment l''argent travaille, pas seulement comment il circule.
+  ('pourquoi-minah', 'Pourquoi Minah', null, false, 'Overview', 10, 1, 'La première génération de la fintech africaine a gagné la bataille des paiements : M-Pesa, Wave, Flutterwave, Paystack. Les rails sont construits : wallets, KYC, argent mobile-first. La prochaine génération se joue sur l''investissement : comment l''argent travaille, pas seulement comment il circule.
 
 L''opportunité est massive. Les taux bancaires moyens dépassent 20 % sur le continent (Zambie 28 %, Ghana 20–30 %, Angola 22 %, Égypte 21 %), pendant que le crédit privé mondial pèse environ 2 000 milliards de dollars (Blackstone, Apollo, Ares) et que les pionniers africains (TLG Capital, Cauris, Enko, AfricInvest) prouvent le modèle.
 
 Minah construit la plateforme de dette privée pour l''Afrique : dette senior sécurisée, coupons fixes, maturités courtes, protection par construction (assurance, couverture de change, collatéral), sur une infrastructure de ce siècle : registre digital, règlement on-chain, opérations pilotées par l''IA.'),
 
-  ('deck-preseed', 'Deck pré-seed Minah', 'https://docsend.com/view/placeholder-deck', true, 'Overview', 15, 1, null),
+  ('deck-preseed', 'Deck pré-seed Minah', 'https://docsend.com/view/placeholder-deck', false, 'Overview', 15, 1, null),
 
   ('note-marche', 'Note de marché', 'https://docsend.com/view/placeholder-note-marche', false, 'Marché', 20, 1, null),
 
@@ -34,7 +34,7 @@ Dans chaque scénario adverse identifié, les coupons restent inchangés et le p
 
   ('track-record', 'Track record', 'https://docsend.com/view/placeholder-track-record', false, 'Track record', 50, 1, null),
 
-  ('equipe', 'L''équipe', null, true, 'Équipe', 60, 1, 'Julien Gakpé, co-fondateur et directeur général. Ex-Bpifrance, École Polytechnique, Avolta. Pilote la structuration et l''origination.
+  ('equipe', 'L''équipe', null, false, 'Équipe', 60, 1, 'Julien Gakpé, co-fondateur et directeur général. Ex-Bpifrance, École Polytechnique, Avolta. Pilote la structuration et l''origination.
 
 Hervé Gakpé, co-fondateur et directeur financier. ESSEC, SMASH. Débute au Crédit Agricole en financement de projets, puis directeur financier à temps partiel pour plus de 30 startups et PME françaises. Pilote la finance et le reporting investisseurs.
 
