@@ -22,11 +22,39 @@ que `MINAH_GITHUB_*`, pas le Supabase du portail.
 
 ## 1. Alertes — poll de la table `notifications`
 
-Le canal est Telegram, pas WhatsApp : Yao est le capitaine `minah`, et
-`sendCaptainMessage('minah', message)` de GAK_OS fait déjà le travail. Comme
-Yao tourne sur la machine de Julien, le poll se fait par un worker local, sur
-le modèle de `scripts/slack-worker.mjs` et de son plist launchd, plutôt que par
-un cron Vercel dont la granularité est journalière.
+Comme Yao tourne sur la machine de Julien, le poll se fait par un worker local,
+sur le modèle de `scripts/slack-worker.mjs` et de son plist launchd, plutôt que
+par un cron Vercel dont la granularité est journalière.
+
+### Où va chaque alerte
+
+| Alerte | Telegram | Slack |
+| --- | --- | --- |
+| `signup`, `first_login` | oui | **oui** |
+| `interest`, `question` | oui | non |
+| `docsend_click`, `long_session`, `return_visit` | oui | non |
+
+**Telegram** est le canal par défaut, celui de la conversation avec Yao. Il est
+déjà câblé : Yao est le capitaine `minah`, et `sendCaptainMessage('minah',
+message)` de GAK_OS fait le travail.
+
+**Slack** reçoit en plus les deux alertes qui disent qu'un investisseur vient
+d'arriver, `signup` et `first_login` : ce sont les seules que l'équipe doit
+voir sans passer par la conversation privée de Julien. Poste via
+`chat.postMessage` avec le `SLACK_BOT_TOKEN` déjà utilisé par le slack-worker,
+sur le canal défini par `SLACK_INVESTORS_CHANNEL`.
+
+Un investisseur qui s'inscrit puis se connecte dans la foulée produit les deux
+alertes. Les dédoublonner n'a pas d'intérêt : `signup` porte l'entité et le
+`ref`, `first_login` dit qu'il est effectivement entré.
+
+### Règles du worker
+
+- Marquer `processed_at` **après** l'envoi réussi, jamais avant : une panne
+  Telegram ou Slack ne doit pas faire disparaître une alerte.
+- Traiter par `id` croissant, une alerte à la fois, pour garder l'ordre.
+- Machine endormie : les alertes s'accumulent en base et partent au réveil.
+  C'est le comportement voulu, rien ne se perd.
 
 
 Les triggers Postgres remplissent la file `notifications`. Le **débounce est
