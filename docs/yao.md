@@ -9,7 +9,25 @@ possible — par convention Yao ne modifie que `investors.status` et
 API REST : `https://nuzklwegigoykemeznzw.supabase.co/rest/v1/`
 Headers : `apikey: <clé service>` et `Authorization: Bearer <clé service>`.
 
-## 1. Alertes WhatsApp — poll de la table `notifications`
+## État au 14 septembre 2026
+
+Les triggers tournent et remplissent la file depuis le 30 août : 14 alertes ont
+été produites. Aucune n'a jamais été consommée, faute de client côté Yao. Elles
+ont toutes été marquées `processed_at` à cette date, de façon que le premier
+poll ne déverse pas deux semaines d'historique d'un coup. **La file repart de
+zéro : tout ce qui s'y trouvera désormais est du neuf.**
+
+Côté Yao (dépôt GAK_OS), rien n'est encore branché : `.env.local` n'y connaît
+que `MINAH_GITHUB_*`, pas le Supabase du portail.
+
+## 1. Alertes — poll de la table `notifications`
+
+Le canal est Telegram, pas WhatsApp : Yao est le capitaine `minah`, et
+`sendCaptainMessage('minah', message)` de GAK_OS fait déjà le travail. Comme
+Yao tourne sur la machine de Julien, le poll se fait par un worker local, sur
+le modèle de `scripts/slack-worker.mjs` et de son plist launchd, plutôt que par
+un cron Vercel dont la granularité est journalière.
+
 
 Les triggers Postgres remplissent la file `notifications`. Le **débounce est
 déjà géré côté base** (max une alerte « bavarde » par investisseur toutes les
@@ -21,7 +39,7 @@ toujours). Yao n'a qu'à :
    GET /rest/v1/notifications?processed_at=is.null&order=id.asc
    ```
 2. Envoyer chaque `message` (déjà formaté, ex.
-   `📄 Julien Gakpe (w3i.fund) a ouvert « Term sheet Kupanda »`) sur WhatsApp.
+   `📄 Julien Gakpe (w3i.fund) a ouvert « Term sheet Kupanda »`) sur Telegram.
 3. Marquer traité :
    ```
    PATCH /rest/v1/notifications?id=in.(1,2,3)
