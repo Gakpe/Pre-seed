@@ -169,20 +169,6 @@ const copy = {
   },
 };
 
-// Filets du bandeau de chiffres, case par case : une colonne sur mobile, deux
-// sur tablette, quatre au large. Seuls les séparateurs internes sont tracés.
-const STAT_CELL = [
-  "sm:pr-5",
-  "border-t sm:border-t-0 sm:border-l sm:pl-5 lg:pr-5",
-  "border-t sm:pr-5 lg:border-t-0 lg:border-l lg:pl-5",
-  "border-t sm:border-l sm:pl-5 lg:border-t-0",
-];
-
-// Numéro d'appel d'une précision : rang parmi les chiffres qui en portent une.
-function noteNumber(stats: readonly { note?: string }[], index: number) {
-  return stats.slice(0, index + 1).filter((s) => s.note).length;
-}
-
 export function TrackRecord({ locale }: { locale: Locale }) {
   const c = copy[locale];
 
@@ -337,47 +323,30 @@ export function TrackRecord({ locale }: { locale: Locale }) {
           ))}
         </div>
 
-        {/* Chiffres consolidés : bandeau à filets et séparateurs verticaux,
-            le traitement des chiffres mis en avant (AGENTS.md). */}
+        {/* Chiffres consolidés : grille de cases jointives, chaque précision
+            dans la case du chiffre qu'elle qualifie. */}
         <h3 className="mt-12 text-sm font-semibold">{c.statsLabel}</h3>
-        <ul className="mt-3 grid border-y border-foreground/15 sm:grid-cols-2 lg:grid-cols-4">
-          {c.stats.map((s, i) => (
-            <li
-              key={s.label}
-              className={`border-foreground/10 py-5 ${STAT_CELL[i]}`}
-            >
+        <ul className="mt-3 grid gap-px overflow-hidden rounded-xl border border-foreground/10 bg-foreground/10 sm:grid-cols-2 lg:grid-cols-4">
+          {c.stats.map((s) => (
+            <li key={s.label} className="bg-white/70 p-5">
               <p
                 className={`font-bold tracking-tight tabular-nums text-foreground ${
-                  "small" in s && s.small ? "text-xl leading-9" : "text-3xl"
+                  "small" in s && s.small ? "text-lg" : "text-3xl"
                 }`}
               >
                 {s.value}
-                {"note" in s && s.note && (
-                  <sup className="relative -top-3.5 ml-1 font-mono text-xs font-semibold text-neutral-500">
-                    {noteNumber(c.stats, i)}
-                  </sup>
-                )}
               </p>
               <p className="mt-1 text-sm font-medium text-neutral-700">
                 {s.label}
               </p>
+              {"note" in s && s.note && (
+                <p className="mt-2 text-[13px] leading-5 text-neutral-600">
+                  {s.note}
+                </p>
+              )}
             </li>
           ))}
         </ul>
-        {/* Les précisions passent sous le bandeau, appelées par un numéro :
-            dans leur case, elles laissaient les cases voisines à moitié vides. */}
-        <ol className="mt-3 space-y-1">
-          {c.stats.map((s, i) =>
-            "note" in s && s.note ? (
-              <li key={s.label} className="flex gap-2 text-sm leading-6 text-neutral-600">
-                <span className="font-mono text-xs leading-6 text-neutral-500">
-                  {noteNumber(c.stats, i)}
-                </span>
-                <span>{s.note}</span>
-              </li>
-            ) : null
-          )}
-        </ol>
 
         {/* Message de clôture du volet société : carte blanche, comme une
             citation, sans guillemets puisque personne n'est cité. */}
