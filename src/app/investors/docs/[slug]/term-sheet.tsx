@@ -83,21 +83,21 @@ export function TermSheet({ locale }: { locale: Locale }) {
       <section className="mt-12">
         <SectionTitle icon="document">{c.title}</SectionTitle>
 
-        {/* Deux colonnes de quatre lignes au large : le produit à gauche, sa
-            rémunération et ses contraintes à droite. En pleine largeur, le
-            libellé et sa valeur se retrouvaient à 700 px l'un de l'autre. */}
-        <dl className="mt-6 grid rounded-xl border border-foreground/10 bg-white/60 px-6 py-2 md:grid-flow-col md:grid-cols-2 md:grid-rows-4 md:gap-x-12">
+        {/* Une seule colonne, libellé à gauche, valeur à droite en orange de
+            marque. Choix assumé par Hervé le 14/09/2026 : l'orange donne 3,07
+            de contraste sur la carte, sous le seuil AA de 4,5 pour ce corps. */}
+        <dl className="mt-6 rounded-xl border border-foreground/10 bg-white/60 px-6 py-2">
           {ROWS.map((row, i) => (
             <div
               key={row.label.fr}
               className={`flex flex-col gap-0.5 border-foreground/10 py-3.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6 ${
                 i === ROWS.length - 1 ? "" : "border-b"
-              } ${i === 3 ? "md:border-b-0" : ""}`}
+              }`}
             >
               <dt className="text-[15px] leading-snug text-neutral-700">
                 {row.label[locale]}
               </dt>
-              <dd className="text-[15px] font-semibold leading-snug tracking-tight text-foreground sm:text-right">
+              <dd className="text-[15px] font-semibold leading-snug tracking-tight text-brand sm:text-right">
                 {row.value[locale]}
               </dd>
             </div>
