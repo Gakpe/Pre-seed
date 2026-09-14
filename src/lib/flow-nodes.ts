@@ -9,8 +9,8 @@ export type Bi = { fr: string; en: string };
 // Ordres de grandeur des deux commissions. Les modifier ici suffit à les
 // mettre à jour partout : schéma, panneau de détail et légendes.
 export const FEES: { transaction: Bi; performance: Bi } = {
-  transaction: { fr: "3,5 %", en: "3.5%" },
-  performance: { fr: "15 à 40 %", en: "15 to 40%" },
+  transaction: { fr: "3,5\u00a0%", en: "3.5%" },
+  performance: { fr: "15 à 40\u00a0%", en: "15 to 40%" },
 };
 
 export type FlowNode = {

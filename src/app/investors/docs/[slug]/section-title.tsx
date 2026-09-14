@@ -1,6 +1,6 @@
 // Titre de section des fiches investisseurs : pastille orangée à picto et
-// libellé (voir AGENTS.md). Partagé entre « Pourquoi Minah » et le business
-// model, pour qu'un picto ou une taille changés le soient partout.
+// libellé (voir AGENTS.md). Partagé entre les fiches, pour qu'un picto ou une
+// taille changés le soient partout.
 
 export type SectionIconName =
   | "search"
@@ -9,7 +9,8 @@ export type SectionIconName =
   | "layers"
   | "route"
   | "percent"
-  | "repeat";
+  | "repeat"
+  | "document";
 
 export function SectionIcon({ name }: { name: SectionIconName }) {
   return (
@@ -74,6 +75,13 @@ const ICONS: Record<SectionIconName, React.ReactNode> = {
       <path d="M3 11v-1a4 4 0 0 1 4-4h14" />
       <path d="m7 22-4-4 4-4" />
       <path d="M21 13v1a4 4 0 0 1-4 4H3" />
+    </>
+  ),
+  document: (
+    <>
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+      <path d="M14 3v5h5" />
+      <path d="M9 13h6M9 17h4" />
     </>
   ),
 };

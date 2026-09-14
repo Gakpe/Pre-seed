@@ -99,12 +99,13 @@ export default async function DocPage({
     note;
 
   // En-tête encadré (voir AGENTS.md). « Pourquoi Minah » et la note de marché
-  // gardent leur catégorie, derrière le titre. Le business model non : sa
-  // catégorie répète le titre.
+  // gardent leur catégorie, derrière le titre. Le business model et la term
+  // sheet non : leur catégorie répète le titre.
   const businessModel = doc.slug === "business-model";
   const framedHeader =
     doc.slug === "la-levee" ||
     doc.slug === "pourquoi-minah" ||
+    doc.slug === "term-sheet-kupanda" ||
     note ||
     businessModel;
   const headerCategory = doc.slug === "pourquoi-minah" || note;
