@@ -1,9 +1,35 @@
 import Link from "next/link";
 import { getDataRoomStatus } from "@/lib/dataroom";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getDemoSession } from "@/lib/demo";
+import { getAdminEmail } from "@/lib/admin";
+import { DemoBar } from "../investors/demo-bar";
 
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
+  // La page de connexion vit sous /admin : sans ce test, elle hériterait de la
+  // barre de navigation, et surtout de ses requêtes. Le compte de comptes en
+  // attente, lu avec la clé service, s'affichait donc à un visiteur non
+  // authentifié. On ne rend rien, et on n'interroge rien, avant de savoir à qui
+  // on parle. `getAdminEmail` renvoie null au lieu de rediriger, pour que la
+  // page de connexion puisse s'afficher.
+  const admin = await getAdminEmail();
+
+  if (!admin) {
+    return (
+      <div className="flex flex-1 flex-col">
+        <header className="border-b border-neutral-200 px-4 py-3 sm:px-6 sm:py-4 dark:border-neutral-800">
+          <Link href="/" aria-label="Minah">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/brand/logo.png" alt="Minah" className="h-5 w-auto" />
+          </Link>
+        </header>
+        {children}
+      </div>
+    );
+  }
+
   const dataRoomStatus = await getDataRoomStatus();
+  const demo = await getDemoSession();
 
   // Compte en attente affiché dans la barre : sans ça, un inscrit peut attendre
   // simplement parce que personne n'a pensé à ouvrir la page de validation.
@@ -64,13 +90,18 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
           </Link>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 sm:gap-x-4">
-          {/* Démo : ouvre un espace investisseur factice pour les calls. */}
-          <Link
-            href="/investors?demo=1"
-            className="rounded-md border border-brand/40 bg-brand/10 px-2.5 py-1 text-xs font-medium text-marsala transition-colors hover:border-brand"
-          >
-            Démo
-          </Link>
+          {/* Démonstration : elle s'ouvre, se pilote et se quitte d'ici. Rien
+              n'en paraît dans l'espace investisseurs, que l'invité regarde. */}
+          {demo ? (
+            <DemoBar level2={demo.level2} />
+          ) : (
+            <Link
+              href="/investors?demo=1"
+              className="rounded-md border border-brand/40 bg-brand/10 px-2.5 py-1 text-xs font-medium text-marsala transition-colors hover:border-brand"
+            >
+              Démo
+            </Link>
+          )}
           <form action="/auth/signout" method="post">
             <button type="submit" className="text-xs text-neutral-500 hover:underline">
               Se déconnecter

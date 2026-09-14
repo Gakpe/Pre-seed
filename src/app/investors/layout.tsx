@@ -6,7 +6,6 @@ import { TrackingProvider } from "./tracking-provider";
 import { Splash } from "./splash";
 import { QuestionWidget } from "./question-widget";
 import { LanguageSwitch } from "./language-switch";
-import { DemoBar } from "./demo-bar";
 import { getDemoSession } from "@/lib/demo";
 import { getDataRoomStatus } from "@/lib/dataroom";
 import { getAdminEmail } from "@/lib/admin";
@@ -97,9 +96,10 @@ export default async function InvestorsLayout({
         </div>
         <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 sm:gap-x-4">
           <LanguageSwitch locale={locale} />
-          {demo ? (
-            <DemoBar level2={demo.level2} />
-          ) : investor ? (
+          {/* Pendant une démonstration, l'en-tête ne porte rien : le badge et
+              les commandes s'affichaient à l'écran que regarde l'investisseur.
+              Elles vivent maintenant dans la barre admin, voir DemoBar. */}
+          {demo ? null : investor ? (
             <form action="/auth/signout" method="post">
               <button
                 type="submit"
