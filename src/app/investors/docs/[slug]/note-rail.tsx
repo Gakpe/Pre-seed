@@ -8,9 +8,10 @@ import type { Locale } from "@/lib/i18n";
 // la conclusion. Le trait se remplit à mesure qu'on descend, et chaque entrée
 // ramène à sa section.
 //
-// Il vit dans la marge gauche, hors de la colonne de lecture, et n'apparaît
-// qu'au-delà de 1340 px : en deçà, la marge ne suffit pas et il viendrait
-// mordre sur le texte.
+// Il vit dans la marge gauche de la fiche (max-w-5xl), sur un fond blanc, et
+// passe en surbrillance quand la carte sombre pleine page défile dessous. Il
+// n'apparaît qu'au-delà de
+// 1400 px : en deçà, la marge ne suffit pas et il viendrait mordre sur le texte.
 //
 // La position est lue au défilement plutôt que par IntersectionObserver : ce
 // qu'on veut n'est pas « la section est visible » mais « la section que je suis
@@ -25,7 +26,9 @@ export function NoteRail({
 }) {
   const [active, setActive] = useState<string>(CHAPTERS[0].id);
   const [progress, setProgress] = useState(0);
+  const [overDark, setOverDark] = useState(false);
   const frame = useRef<number | null>(null);
+  const nav = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const read = () => {
@@ -38,6 +41,13 @@ export function NoteRail({
         if (el && el.getBoundingClientRect().top <= marker) current = chapter.id;
       }
       setActive(current);
+
+      // Le fil bascule quand son milieu passe sur la section sombre : à
+      // cheval sur les deux fonds, c'est la moitié majoritaire qui décide.
+      const box = nav.current?.getBoundingClientRect();
+      const dark = document.querySelector("[data-note-dark]")?.getBoundingClientRect();
+      const middle = box ? box.top + box.height / 2 : 0;
+      setOverDark(!!box && !!dark && dark.top < middle && dark.bottom > middle);
 
       // Avancée dans la note, bornée : le trait ne recule pas sous zéro et ne
       // déborde pas en fin de page.
@@ -76,10 +86,19 @@ export function NoteRail({
 
   return (
     <nav
+      ref={nav}
       aria-label={title}
-      className="fixed top-1/2 left-[calc((100vw-880px)/2-206px)] z-20 hidden w-[182px] -translate-y-1/2 min-[1340px]:block"
+      className={`fixed top-1/2 left-[calc((100vw-1024px)/2-170px)] z-20 hidden w-[170px] -translate-y-1/2 rounded-xl border p-4 transition-[background-color,border-color] duration-150 min-[1400px]:block ${
+        overDark
+          ? "border-white/15 bg-white/[0.08] backdrop-blur-md"
+          : "border-foreground/10 bg-white/35 backdrop-blur-md"
+      }`}
     >
-      <p className="font-[family-name:var(--font-serif)] text-[13px] leading-snug font-semibold text-note-ink">
+      <p
+        className={`text-[13px] leading-snug font-semibold transition-colors duration-150 ${
+          overDark ? "text-note-dark-ink" : "text-foreground"
+        }`}
+      >
         {title}
       </p>
 
@@ -87,7 +106,9 @@ export function NoteRail({
         {/* Rail : un trait clair, et par-dessus le trait accent qui descend. */}
         <span
           aria-hidden
-          className="absolute top-1 bottom-1 left-0 w-px bg-note-border-strong"
+          className={`absolute top-1 bottom-1 left-0 w-px transition-colors duration-150 ${
+            overDark ? "bg-white/20" : "bg-note-border-strong"
+          }`}
         />
         <span
           aria-hidden
@@ -118,7 +139,11 @@ export function NoteRail({
                 >
                   <span
                     className={`block font-mono text-[10px] tracking-widest transition-colors ${
-                      on ? "text-note-accent" : "text-note-muted"
+                      on
+                        ? "text-note-accent"
+                        : overDark
+                          ? "text-note-dark-muted"
+                          : "text-note-muted"
                     }`}
                   >
                     {chapter.num}
@@ -126,8 +151,12 @@ export function NoteRail({
                   <span
                     className={`mt-0.5 block text-[12px] leading-[1.35] transition-colors ${
                       on
-                        ? "font-medium text-note-ink"
-                        : "text-note-muted group-hover:text-note-ink"
+                        ? overDark
+                          ? "font-medium text-note-dark-ink"
+                          : "font-medium text-note-ink"
+                        : overDark
+                          ? "text-note-dark-muted group-hover:text-note-dark-ink"
+                          : "text-note-muted group-hover:text-note-ink"
                     }`}
                   >
                     {chapter.title[locale]}

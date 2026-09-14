@@ -4,32 +4,36 @@ import { AfricaRatesMap } from "./africa-rates-map";
 import { PrivateDebtLandscape } from "./private-debt-landscape";
 import { NoteRail } from "./note-rail";
 
-// Corps de la note de marché. Le rythme de la page tient à l'alternance des
-// largeurs : prose en colonne étroite, visuels débordant du texte, et un seul
-// bloc sombre d'un bord à l'autre de l'écran.
-const serif = "font-[family-name:var(--font-serif)]";
+// Corps de la note de marché. Texte et visuels prennent la largeur de la fiche
+// (max-w-5xl), comme les autres. Seule la carte des taux sort d'un bord à
+// l'autre de l'écran : le fil d'Ariane passe alors en surbrillance.
 
 // Copie de la note, dans les deux langues. Le corps vit ici plutôt qu'en base :
 // c'est une note de recherche arrêtée mot à mot, pas de la prose éditable.
 const copy = {
   fr: {
-    readingTime:
-      "Temps de lecture : 8 minutes. Document destiné à des investisseurs professionnels.",
+    // Chapô : il vivait en base, il est repris ici avec la note (le texte en
+    // base reste pour la liste de la data room, voir `richOnly`).
+    intro: [
+      "L'Afrique est le continent où le capital est le plus rare et le plus cher. C'est aussi celui où l'on parle le plus d'equity.",
+      "Cette note de marché explique pourquoi nous pensons que l'opportunité des dix prochaines années est davantage dans la dette privée structurée que dans l'equity, et pourquoi la fenêtre est ouverte maintenant.",
+    ],
+    readingTime: "Temps de lecture : 8 minutes.",
     c1: {
       statLabel: "Crédit au secteur privé, en % du PIB, Afrique subsaharienne",
-      statValue: "~28 %",
+      statValue: "~28\u00a0%",
       statBody:
-        "Contre plus de 140 % en moyenne mondiale et près de 180 % en Asie de l'Est. Le rapport est de un à cinq.",
+        "Contre plus de 140\u00a0% en moyenne mondiale et près de 180\u00a0% en Asie de l'Est. Le rapport est de un à cinq.",
       p1: "Une économie où le crédit privé pèse moins d'un tiers du PIB n'est pas sous-bancarisée à la marge : l'essentiel de l'activité s'y finance sur fonds propres, sur la trésorerie, ou pas du tout.",
       p2: "Pour un investisseur, la conséquence est souvent mal comprise. Le manque de liquidité ne se voit pas à l'entrée, il se voit à la sortie.",
       stats: [
         { value: "81", label: "exits en 2025, second plus haut niveau historique" },
-        { value: "5,9 ans", label: "durée de détention moyenne, la plus courte depuis 2018" },
-        { value: "38 %", label: "des sorties réalisées auprès d'acheteurs industriels" },
+        { value: "5,9\u00a0ans", label: "durée de détention moyenne, la plus courte depuis 2018" },
+        { value: "38\u00a0%", label: "des sorties réalisées auprès d'acheteurs industriels" },
         { value: "4", label: "introductions en bourse sur tout le continent en 2025" },
       ],
       source: "Source : AVCA, 2025.",
-      p3: "Le marché des sorties s'améliore, mais il reste étroit et concentré : fenêtre boursière fermée hors d'Afrique du Sud, acheteurs industriels dominants, et 27 % des LPs qui déclarent vouloir ralentir leurs engagements, par doute sur la plomberie des sorties, non sur la classe d'actifs.",
+      p3: "Le marché des sorties s'améliore, mais il reste étroit et concentré : fenêtre boursière fermée hors d'Afrique du Sud, acheteurs industriels dominants, et 27\u00a0% des LPs qui déclarent vouloir ralentir leurs engagements, par doute sur la plomberie des sorties, non sur la classe d'actifs.",
       quote:
         "En equity, la performance est réelle mais la liquidité est otage de la sortie. En dette, le calendrier de retour est écrit dans le contrat.",
       p4: "L'argument est structurel : dans un marché où la sortie est le maillon faible, l'instrument qui n'en dépend pas prend mécaniquement de la valeur. La dette senior capte la surperformance de l'économie réelle africaine sans faire porter à l'investisseur le risque d'exécution d'un exit à cinq ou sept ans.",
@@ -43,17 +47,17 @@ const copy = {
     },
     c3: {
       s1Label: "Dette privée, 2025",
-      s1Value: "+57 %",
+      s1Value: "+57\u00a0%",
       s1Body: "de croissance du nombre d'opérations de dette privée en Afrique, un record.",
       s2Label: "Venture debt, 2025",
-      s2Value: "1,8 Md $",
+      s2Value: "1,8\u00a0Md $",
       s2Body: "levés sur l'année, un quasi-doublement en douze mois.",
       s3Label: "Capital privé, 2025",
-      s3Value: "5,1 Md $",
-      s3Body: "investis sur 530 opérations, en hausse de 8 % malgré le ralentissement mondial.",
+      s3Value: "5,1\u00a0Md $",
+      s3Body: "investis sur 530 opérations, en hausse de 8\u00a0% malgré le ralentissement mondial.",
       source: "Source : AVCA, 2025.",
       p1: "Le mouvement a commencé. La dette est passée d'instrument d'appoint à composante centrale du financement, en particulier pour les entreprises en croissance qui cherchent à allonger leur horizon sans se diluer. Et pour 2026, les investisseurs déclarent augmenter leurs allocations à la dette privée, pour la visibilité de revenu, la protection à la baisse, et l'alignement avec des horizons de sortie qui s'allongent.",
-      p2: "Les rendements se hiérarchisent proprement : private equity au-dessus de 16 %, mezzanine entre 12 et 16 %, dette senior entre 4 et 10 %, et une poche de dette senior sécurisée qui tient 12 à 14 % grâce aux garanties et aux protections contractuelles.",
+      p2: "Les rendements se hiérarchisent proprement : private equity au-dessus de 16\u00a0%, mezzanine entre 12 et 16\u00a0%, dette senior entre 4 et 10\u00a0%, et une poche de dette senior sécurisée qui tient 12 à 14\u00a0% grâce aux garanties et aux protections contractuelles.",
       p3: "C'est dans cette dernière poche que se trouvent les acteurs qui nous ressemblent le plus, TLG Capital, Enko Capital, Cauris Finance. Elle est encore peu peuplée, et c'est précisément ce qui la rend intéressante.",
     },
     c4: {
@@ -72,8 +76,11 @@ const copy = {
   },
 
   en: {
-    readingTime:
-      "Reading time: 8 minutes. Document intended for professional investors.",
+    intro: [
+      "Africa is the continent where capital is scarcest and most expensive. It is also the one where equity is discussed the most.",
+      "This market note sets out why we believe the opportunity of the next ten years lies more in structured private debt than in equity, and why the window is open now.",
+    ],
+    readingTime: "Reading time: 8 minutes.",
     c1: {
       statLabel: "Credit to the private sector, as % of GDP, sub-Saharan Africa",
       statValue: "~28%",
@@ -145,10 +152,10 @@ function Chapter({
   return (
     // scroll-mt : le fil d'Ariane amène le titre sous l'en-tête, pas dessous.
     <section id={id} className="mt-20 scroll-mt-24">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-note-accent">
-        {num}
-      </p>
-      <h2 className={`${serif} mt-2 text-[27px] leading-tight tracking-tight`}>
+      <h2 className="flex items-center gap-3 text-2xl font-semibold leading-tight tracking-tight">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand/10 font-mono text-sm font-semibold text-marsala">
+          {num}
+        </span>
         {title[locale]}
       </h2>
       {children}
@@ -158,13 +165,13 @@ function Chapter({
 
 function P({ children }: { children: React.ReactNode }) {
   return (
-    <p className={`${serif} mt-6 text-[17px] leading-[1.75] text-note-ink`}>
+    <p className="mt-5 text-[15px] leading-[1.8] text-neutral-700">
       {children}
     </p>
   );
 }
 
-// Existe pour être vu avant d'être lu.
+// Existe pour être vu avant d'être lu. Centré entre deux filets courts.
 function BigStat({
   label,
   value,
@@ -175,33 +182,38 @@ function BigStat({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mt-8">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-note-muted">
-        {label}
-      </p>
+    <div className="mt-10 text-center">
+      <span aria-hidden className="mx-auto block h-px w-2/3 bg-note-border-strong" />
+      <p className="mt-8 text-sm font-semibold">{label}</p>
       <p
-        className="mt-1 font-bold tabular-nums leading-none text-note-accent"
+        className="mt-2 font-bold tabular-nums leading-none text-note-accent"
         style={{ fontSize: "clamp(58px, 8vw, 96px)" }}
       >
         {value}
       </p>
-      <p className={`${serif} mt-3 text-[17px] leading-[1.75] text-note-ink`}>
+      <p className="mx-auto mt-3 max-w-2xl text-[15px] leading-[1.8] text-neutral-700">
         {children}
       </p>
+      <span aria-hidden className="mx-auto mt-8 block h-px w-2/3 bg-note-border-strong" />
     </div>
   );
 }
 
-// Notre thèse sortie du flux, ni guillemets ni italique : ce n'est pas une
-// citation d'un tiers.
-function PullQuote({ children }: { children: React.ReactNode }) {
+// Notre thèse sortie du flux, dans la même carte que les citations de
+// « Pourquoi Minah » : guillemets orange dans la ligne, insécables.
+function PullQuote({
+  children,
+  locale,
+}: {
+  children: React.ReactNode;
+  locale: Locale;
+}) {
   return (
-    <p
-      className={`${serif} mt-10 border-l-[3px] border-note-accent pl-6 font-medium text-note-ink`}
-      style={{ fontSize: "clamp(23px, 2.4vw, 31px)", lineHeight: 1.34 }}
-    >
+    <blockquote className="mt-10 rounded-xl border border-foreground/10 bg-white/60 px-7 py-6 text-center text-xl font-semibold leading-snug tracking-tight text-foreground">
+      <span className="text-brand">{locale === "fr" ? "«\u00a0" : "“"}</span>
       {children}
-    </p>
+      <span className="text-brand">{locale === "fr" ? "\u00a0»" : "”"}</span>
+    </blockquote>
   );
 }
 
@@ -229,15 +241,6 @@ function StatRow({
   );
 }
 
-// Les visuels débordent de la colonne de lecture.
-function Wide({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="relative left-1/2 w-[min(1120px,calc(100vw-3rem))] -translate-x-1/2">
-      {children}
-    </div>
-  );
-}
-
 export function MarketNote({
   title,
   locale,
@@ -249,7 +252,18 @@ export function MarketNote({
   return (
     <div>
       <NoteRail title={title} locale={locale} />
-      <p className="mt-6 text-xs text-note-muted">{c.readingTime}</p>
+
+      <div className="mt-6 rounded-xl border border-foreground/10 bg-white/60 px-6 py-6">
+        {c.intro.map((para, i) => (
+          <p
+            key={i}
+            className={`text-[15px] leading-[1.8] text-neutral-700 ${i ? "mt-4" : ""}`}
+          >
+            {para}
+          </p>
+        ))}
+        <p className="mt-5 text-xs text-neutral-500">{c.readingTime}</p>
+      </div>
 
       <Chapter chapter={CHAPTERS[0]} locale={locale}>
         <BigStat label={c.c1.statLabel} value={c.c1.statValue}>
@@ -267,7 +281,7 @@ export function MarketNote({
         </p>
 
         <P>{c.c1.p3}</P>
-        <PullQuote>{c.c1.quote}</PullQuote>
+        <PullQuote locale={locale}>{c.c1.quote}</PullQuote>
         <P>{c.c1.p4}</P>
       </Chapter>
 
@@ -280,21 +294,22 @@ export function MarketNote({
         </P>
         <P>{c.c2.p2}</P>
 
-        <PullQuote>{c.c2.quote}</PullQuote>
+        <PullQuote locale={locale}>{c.c2.quote}</PullQuote>
 
         <P>{c.c2.p3}</P>
         <P>{c.c2.p4}</P>
       </Chapter>
 
       <Chapter chapter={CHAPTERS[2]} locale={locale}>
-        <div className="grid gap-8 min-[780px]:grid-cols-3">
+        {/* Même bandeau fileté que les chiffres de sortie du chapitre 1. */}
+        <div className="mt-10 grid gap-y-6 border-y border-note-border py-7 min-[780px]:grid-cols-3">
           <SmallStat label={c.c3.s1Label} value={c.c3.s1Value}>
             {c.c3.s1Body}
           </SmallStat>
-          <SmallStat label={c.c3.s2Label} value={c.c3.s2Value}>
+          <SmallStat label={c.c3.s2Label} value={c.c3.s2Value} divided>
             {c.c3.s2Body}
           </SmallStat>
-          <SmallStat label={c.c3.s3Label} value={c.c3.s3Value}>
+          <SmallStat label={c.c3.s3Label} value={c.c3.s3Value} divided>
             {c.c3.s3Body}
           </SmallStat>
         </div>
@@ -305,9 +320,7 @@ export function MarketNote({
 
         <P>{c.c3.p1}</P>
 
-        <Wide>
-          <PrivateDebtLandscape locale={locale} />
-        </Wide>
+        <PrivateDebtLandscape locale={locale} />
 
         <P>
           {c.c3.p2}
@@ -327,10 +340,8 @@ export function MarketNote({
         <P>{c.c4.p3}</P>
       </Chapter>
 
-      <section className="mt-20 border-t border-note-border pt-6">
-        <h3 className="text-[11px] font-semibold uppercase tracking-[0.12em] text-note-muted">
-          {c.sourcesTitle}
-        </h3>
+      <section className="mt-20 border-t border-note-border pt-6 italic">
+        <h3 className="text-sm font-semibold">{c.sourcesTitle}</h3>
         <ol className="mt-4 space-y-2.5">
           {SOURCES.map((s, i) => (
             <li key={s.text.fr} className="text-xs leading-5 text-note-muted">
@@ -356,21 +367,25 @@ export function MarketNote({
 function SmallStat({
   label,
   value,
+  divided,
   children,
 }: {
   label: string;
   value: string;
+  divided?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <div>
-      <p className="text-[10.5px] font-semibold uppercase tracking-[0.12em] text-note-muted">
-        {label}
-      </p>
-      <p className="mt-1 text-[42px] font-bold leading-none tabular-nums text-note-accent">
+    <div
+      className={`min-[780px]:px-6 min-[780px]:first:pl-0 ${
+        divided ? "min-[780px]:border-l min-[780px]:border-note-border" : ""
+      }`}
+    >
+      <p className="text-sm font-semibold">{label}</p>
+      <p className="mt-2 text-[42px] font-bold leading-none tabular-nums text-note-accent">
         {value}
       </p>
-      <p className={`${serif} mt-2 text-[15px] leading-[1.6] text-note-ink`}>
+      <p className="mt-2 text-sm leading-[1.7] text-neutral-700">
         {children}
       </p>
     </div>
@@ -386,10 +401,8 @@ function Point({
 }) {
   return (
     <div className="mt-8">
-      <h3 className={`${serif} text-[19px] font-semibold leading-snug`}>
-        {title}
-      </h3>
-      <p className={`${serif} mt-2 text-[17px] leading-[1.75] text-note-ink`}>
+      <h3 className="text-base font-semibold leading-snug">{title}</h3>
+      <p className="mt-2 text-[15px] leading-[1.8] text-neutral-700">
         {children}
       </p>
     </div>

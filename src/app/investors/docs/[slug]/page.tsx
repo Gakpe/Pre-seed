@@ -73,7 +73,8 @@ export default async function DocPage({
     doc.slug === "la-levee" ||
     doc.slug === "pourquoi-minah" ||
     doc.slug === "term-sheet-kupanda" ||
-    doc.slug === "go-to-market";
+    doc.slug === "go-to-market" ||
+    note;
 
   // Ces fiches débordent en largeur, mais leur chapô reste dans une colonne
   // de lecture normale, sinon le texte court sur toute la page.
@@ -94,22 +95,23 @@ export default async function DocPage({
     doc.slug === "la-levee" ||
     doc.slug === "pourquoi-minah" ||
     doc.slug === "term-sheet-kupanda" ||
-    doc.slug === "go-to-market";
+    doc.slug === "go-to-market" ||
+    note;
 
-  // En-tête encadré (voir AGENTS.md). « Pourquoi Minah » garde sa catégorie
-  // derrière le titre : « Overview » dit que la fiche est le point d'entrée.
-  const framedHeader = doc.slug === "la-levee" || doc.slug === "pourquoi-minah";
+  // En-tête encadré (voir AGENTS.md). « Pourquoi Minah » et la note de marché
+  // gardent leur catégorie, derrière le titre.
+  const framedHeader =
+    doc.slug === "la-levee" || doc.slug === "pourquoi-minah" || note;
+  const headerCategory = doc.slug === "pourquoi-minah" || note;
 
   return (
     <main
       className={`mx-auto w-full flex-1 px-6 py-12 ${
-        note
-          ? "max-w-[880px]"
-          : team
+        team
             ? "max-w-6xl"
-            : extraWide
-              ? "max-w-5xl"
-              : "max-w-2xl"
+          : extraWide
+            ? "max-w-5xl"
+            : "max-w-2xl"
       }`}
     >
       <div className={proseWidth}>
@@ -135,7 +137,7 @@ export default async function DocPage({
       {framedHeader && (
         <header className="mt-6 rounded-xl border border-foreground/10 bg-white/60 px-6 py-9 text-center">
           <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
-          {doc.slug === "pourquoi-minah" && category && (
+          {headerCategory && category && (
             <p className="mt-1.5 text-[15px] text-neutral-500">{category}</p>
           )}
           <span
