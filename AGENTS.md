@@ -38,9 +38,10 @@ d'ouverture de la data room est séparé par environnement
 
 Conventions arrêtées le 11/09/2026 sur l'accueil et la fiche « La levée en
 cours », étendues le 14/09/2026 à « Pourquoi Minah ? », à la note de marché et
-au business model. Les autres fiches (term sheet Kupanda, go-to-market, équipe,
-track record, gestion du risque) n'y sont pas encore alignées : s'y conformer en
-passant dessus, plutôt que d'inventer un traitement de plus.
+au business model, puis à la term sheet Kupanda, au track record, au
+go-to-market et à l'équipe (PR 48). Seule la gestion du risque n'y est pas
+encore alignée : s'y conformer en passant dessus, plutôt que d'inventer un
+traitement de plus.
 
 ## Titres
 
@@ -54,18 +55,25 @@ Pastille numérotée : `grid h-9 w-9 place-items-center rounded-lg bg-brand/10
 font-mono text-sm font-semibold text-marsala`. En `h-6 w-6` et `text-[11px]`
 dans les listes de la data room.
 
-Les titres de section à picto passent par `SectionTitle`
+Les titres de section passent par `SectionTitle`
 (`src/app/investors/docs/[slug]/section-title.tsx`) : pastille orangée
-`h-9 w-9` en marsala, pictos au trait dans le même fichier. Picto quand la
-fiche se lit comme un raisonnement (Pourquoi Minah, business model), numéro
-quand elle se lit comme une suite de chapitres (la levée, la note de marché).
-Choisir un nouveau picto sur une planche de variantes, pas au jugé.
+`h-9 w-9` en marsala, `icon` pour un picto au trait (définis dans le même
+fichier), `n` pour un numéro. Picto quand la fiche se lit comme un raisonnement
+(Pourquoi Minah, business model, term sheet), numéro quand elle se lit comme
+une suite de chapitres (la levée, la note de marché, le track record, le
+go-to-market). La levée et la note de marché ont encore leur propre copie du
+titre numéroté : les rebrancher sur `SectionTitle` en passant dessus. Choisir
+un nouveau picto sur une planche de variantes, pas au jugé ; le picto
+« document » de la term sheet a été posé sans planche.
 
 L'en-tête encadré est géré par `framedHeader` dans `page.tsx` : la levée,
-Pourquoi Minah, la note de marché, le business model. La catégorie s'affiche
-sous le titre (`headerCategory`), sauf quand elle répète le titre (« Business
-model » sous « Business model Minah »). Le chapô d'une fiche encadrée vient
-sous l'en-tête, en 15 px. Les titres en question finissent par « ? » en base
+Pourquoi Minah, la note de marché, le business model, la term sheet, le track
+record, le go-to-market, l'équipe. La catégorie s'affiche sous le titre
+(`headerCategory`), sauf quand elle répète le titre (« Business model » sous
+« Business model Minah », « Kupanda » sous « Term sheet Kupanda », et de même
+pour le track record, le go-to-market et l'équipe). Le chapô d'une fiche
+encadrée vient sous l'en-tête, en 15 px ; sur l'équipe, fiche très large, il
+reste dans une colonne `max-w-3xl`. Les titres en question finissent par « ? » en base
 (« Pourquoi Minah ? », avec espace insécable en français).
 
 Un titre de section ne porte pas de sous-titre. L'intitulé numéroté suffit,
@@ -101,7 +109,21 @@ d'une carte devient un second `SectionTitle` dans la carte.
 Citations : carte blanche encadrée, texte en encre, guillemets en `text-brand`
 dans la ligne, avec espaces insécables (`«\u00a0…\u00a0»` en français, “…” en
 anglais). Chiffre mis en avant : centré, entre deux filets courts, ou dans un
-bandeau `border-y` avec séparateurs verticaux.
+bandeau `border-y` avec séparateurs verticaux. Une grille de chiffres qui porte
+des précisions (chiffres consolidés du track record) garde ses cases jointives
+(`gap-px` sur fond `bg-foreground/10`), chaque précision dans sa case : Hervé
+a préféré ce format à un bandeau avec précisions renvoyées en note. Une phrase
+de clôture qui ne cite personne prend la carte blanche des citations, sans
+guillemets.
+
+Une rangée de cartes dont les textes ont des longueurs très inégales laisse des
+cartes à moitié vides : passer en colonnes séparées par des filets (`border-y`
+et séparateurs verticaux, chemin vers 100 M€ du go-to-market). Une grille à
+deux colonnes au nombre de cartes impair : la dernière prend toute la largeur.
+
+Les pastilles arrondies restant réservées aux statuts, un lien ou un bouton
+prend des angles `rounded-lg` (liens vers les fonds du track record, bouton du
+bandeau photos du go-to-market).
 
 Corps de texte des fiches en `text-[15px] leading-[1.8] text-neutral-700`,
 texte secondaire en `text-sm`. Pas de police à empattements dans les fiches.
@@ -115,6 +137,15 @@ orangé à 10 %, en dessous du plancher WCAG AA large de 3,0. La combinaison
 validée est le chiffre en `text-marsala` sur `bg-brand/10`, à 11,42.
 
 Calculer le ratio avant de proposer une couleur, pas après.
+
+Exception assumée : les valeurs de la term sheet Kupanda sont en `text-brand`,
+en 15 px sur carte blanche (3,07, sous le seuil AA de 4,5). Hervé l'a choisi
+en connaissance de cause le 14/09/2026, face à un orange assombri `#c2410c` à
+5,00. Ne pas en faire une règle pour les autres fiches.
+
+Le texte en `text-neutral-400` échoue aussi (2,29 sur le fond) : `neutral-500`
+est à 4,31, `neutral-600` à 7,11. Préférer `neutral-600` pour le texte
+secondaire en 14 px et moins.
 
 Le CSS du projet pose qu'il n'y a **qu'une seule tache orange par écran**
 (halo du layout). Le filet de l'en-tête de fiche en est une seconde : en tenir
@@ -142,6 +173,13 @@ compte en généralisant l'en-tête à toutes les fiches.
   Dessinée dans le sens du trait, elle tourne deux fois et tombe de côté.
 - Le chapô de la note de marché et de Pourquoi Minah vit dans le code, pas en
   base : la base est la production, un texte modifié y part en ligne aussitôt.
+  Celui de l'équipe, lui, est en base.
+- Portraits de l'équipe : la carte a une hauteur fixe au large, le panneau du
+  profil doit tenir dedans. Mesurer au survol la hauteur du contenu contre celle
+  de la carte, pour chacun des trois : celui de Coralie débordait à 1440 px, il
+  tient depuis la PR 48 à partir de 1 150 px et déborde encore en dessous.
+- Le go-to-market est une fiche de niveau 2 : une session démo de niveau 1
+  tombe sur une 404.
 
 ## Voix éditoriale
 
