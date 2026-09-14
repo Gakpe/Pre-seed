@@ -100,8 +100,8 @@ export default async function DocPage({
 
   // En-tête encadré (voir AGENTS.md). « Pourquoi Minah » et la note de marché
   // gardent leur catégorie, derrière le titre. Le business model, la term
-  // sheet, le track record et le go-to-market non : leur catégorie répète le
-  // titre.
+  // sheet, le track record, le go-to-market et l'équipe non : leur catégorie
+  // répète le titre.
   const businessModel = doc.slug === "business-model";
   const framedHeader =
     doc.slug === "la-levee" ||
@@ -109,6 +109,7 @@ export default async function DocPage({
     doc.slug === "term-sheet-kupanda" ||
     doc.slug === "track-record" ||
     doc.slug === "go-to-market" ||
+    team ||
     note ||
     businessModel;
   const headerCategory = doc.slug === "pourquoi-minah" || note;
@@ -158,7 +159,10 @@ export default async function DocPage({
       {/* Chapô d'une fiche encadrée qui en a un : sous l'en-tête, au corps
           des autres fiches. */}
       {framedHeader && !richOnly && (
-        <DocContent text={content ?? ""} size="large" />
+        // L'équipe va très large : son chapô reste dans une colonne de lecture.
+        <div className={team ? "max-w-3xl" : ""}>
+          <DocContent text={content ?? ""} size="large" />
+        </div>
       )}
 
       {/* Certaines fiches portent un contenu riche en plus de leur texte. */}
