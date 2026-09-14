@@ -269,7 +269,7 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
 
   return (
     <section className="mt-10">
-      <p className="text-sm leading-6 text-neutral-500">{c.intro}</p>
+      <p className="text-sm leading-6 text-neutral-600">{c.intro}</p>
 
       <ul className="mt-6 flex flex-col gap-4 lg:h-[min(560px,calc((100vw-80px)/2))] lg:flex-row">
         {PEOPLE.map((p) => {
@@ -347,10 +347,10 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                       <h3 className="text-base font-semibold leading-tight tracking-tight text-foreground">
                         {p.name}
                       </h3>
-                      <p className="mt-0.5 text-[11px] font-medium leading-snug text-neutral-600">
+                      <p className="mt-0.5 text-xs font-medium leading-snug text-neutral-700">
                         {p.role[locale]}
                       </p>
-                      <p className="mt-1.5 text-[11px] italic leading-snug text-neutral-500">
+                      <p className="mt-1.5 text-xs italic leading-snug text-neutral-600">
                         {p.tagline[locale]}
                       </p>
                     </div>
@@ -360,14 +360,14 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                       autres portraits : à côté du portrait au large, dépliées
                       sous lui au doigt, pour ne pas masquer le visage. */}
                   <div className="tp-panel">
-                    <div className="space-y-3 p-4 lg:space-y-5 lg:p-9">
+                    <div className="space-y-3 p-4 lg:space-y-3 lg:px-8 lg:py-4 xl:space-y-4 xl:px-9 xl:py-6">
                       <div className="tp-field tp-field-1">
                         <Label>{c.academic}</Label>
-                        <ul className="mt-1 space-y-1">
+                        <ul className="mt-1.5 space-y-1">
                           {p.academic[locale].map((line) => (
                             <li
                               key={line}
-                              className="border-l border-neutral-300 pl-3 text-[11.5px] leading-snug text-neutral-700 lg:text-sm lg:leading-6"
+                              className="text-sm leading-snug text-neutral-700 lg:leading-[1.5]"
                             >
                               {line}
                             </li>
@@ -377,11 +377,11 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
 
                       <div className="tp-field tp-field-2">
                         <Label>{c.career}</Label>
-                        <ul className="mt-1 space-y-1">
+                        <ul className="mt-1.5 space-y-1">
                           {p.career[locale].map((line) => (
                             <li
                               key={line}
-                              className="border-l border-neutral-300 pl-3 text-[11.5px] leading-snug text-neutral-700 lg:text-sm lg:leading-6"
+                              className="text-sm leading-snug text-neutral-700 lg:leading-[1.5]"
                             >
                               {line}
                             </li>
@@ -392,11 +392,11 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                       <div className="tp-field tp-field-3 grid max-w-2xl grid-cols-2 gap-3 lg:gap-10">
                         <div>
                           <Label>{c.likes}</Label>
-                          <ul className="mt-1 space-y-0.5">
+                          <ul className="mt-1.5 space-y-0.5">
                             {p.likes[locale].map((l) => (
                               <li
                                 key={l}
-                                className="text-[11px] leading-snug text-neutral-700 lg:text-[13px] lg:leading-6"
+                                className="text-sm leading-snug text-neutral-700 lg:leading-[1.6]"
                               >
                                 {l}
                               </li>
@@ -405,11 +405,11 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                         </div>
                         <div>
                           <Label>{c.dislikes}</Label>
-                          <ul className="mt-1 space-y-0.5">
+                          <ul className="mt-1.5 space-y-0.5">
                             {p.dislikes[locale].map((d) => (
                               <li
                                 key={d}
-                                className="text-[11px] leading-snug text-neutral-500 lg:text-[13px] lg:leading-6"
+                                className="text-sm leading-snug text-neutral-600 lg:leading-[1.6]"
                               >
                                 {d}
                               </li>
@@ -426,15 +426,12 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
         })}
       </ul>
 
-      <p className="mt-8 text-sm leading-6 text-neutral-500">{c.support}</p>
+      <p className="mt-8 text-sm leading-6 text-neutral-600">{c.support}</p>
     </section>
   );
 }
 
+// Intitulé d'un bloc du profil : titre de carte, en casse normale (AGENTS.md).
 function Label({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-500">
-      {children}
-    </p>
-  );
+  return <p className="text-sm font-semibold text-foreground">{children}</p>;
 }
