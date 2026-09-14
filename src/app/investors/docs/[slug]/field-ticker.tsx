@@ -76,7 +76,7 @@ export function FieldTicker({
           onPointerUp={() => (speed.current = SLOW)}
           onPointerLeave={() => (speed.current = SLOW)}
           onPointerCancel={() => (speed.current = SLOW)}
-          className="halo-hover inline-flex items-center gap-1.5 rounded-full bg-brand/10 px-3 py-1.5 text-[12px] font-semibold text-marsala transition-colors hover:bg-brand/15 active:bg-brand/20"
+          className="halo-hover inline-flex items-center gap-1.5 rounded-lg bg-brand/10 px-3 py-1.5 text-sm font-semibold text-marsala transition-colors hover:bg-brand/15 active:bg-brand/20"
         >
           {advanceLabel}
           <span aria-hidden className="text-sm">
@@ -113,7 +113,7 @@ export function FieldTicker({
                 className="relative h-full w-full object-contain"
               />
             </div>
-            <figcaption className="mt-1.5 w-64 break-words text-[11px] leading-4 text-neutral-500">
+            <figcaption className="mt-2 w-64 break-words text-xs leading-5 text-neutral-600">
               <span className="font-semibold text-neutral-700">{it.t}</span>
               {it.d ? <>, {it.d}</> : null}
             </figcaption>

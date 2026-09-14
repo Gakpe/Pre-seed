@@ -1,10 +1,12 @@
 import type { Locale } from "@/lib/i18n";
 import { FieldTicker } from "./field-ticker";
+import { SectionTitle } from "./section-title";
 
 // Fiche « Go-to-market » : portée entièrement par ce composant (richOnly, le
 // texte de la base ne s'affiche pas). Deux visuels, la machine à réseau à
-// double détente et la frise 500 K€ → 100 M€, et le reste en cards, en
-// suivant le langage visuel de la zone investisseurs (AGENTS.md).
+// double détente et la frise 500 K€ → 100 M€, et le reste en cartes, en
+// suivant le langage visuel de la zone investisseurs (AGENTS.md). Titres de
+// section numérotés : la fiche se lit comme une suite de chapitres.
 
 type Card = { h: string; b: string; href?: string };
 type Founder = { side: string; h: string; b: string };
@@ -31,7 +33,7 @@ const copy = {
       {
         side: "Capital institutionnel & on-chain",
         h: "Julien",
-        b: "Connecté aux écosystèmes blockchain et aux institutionnels européens et nord-américains : il a investi 500 M€ en fonds de fonds chez Bpifrance.",
+        b: "Connecté aux écosystèmes blockchain et aux institutionnels européens et nord-américains : il a investi 500\u00a0M€ en fonds de fonds chez Bpifrance.",
       },
     ] as Founder[],
     machineTitle: "La machine à réseau",
@@ -48,8 +50,8 @@ const copy = {
       "États & banques",
       "Fonds de private credit partenaires",
     ],
-    capitalAnchor: "100 M€ de capital-in d'ici fin 2027",
-    assetsAnchor: "80 M€ de pipeline d'actifs (live)",
+    capitalAnchor: "100\u00a0M€ de capital-in d'ici fin 2027",
+    assetsAnchor: "80\u00a0M€ de pipeline d'actifs (live)",
     loop: "La boucle qui compose : chaque deal honoré recrute l'investisseur suivant, chaque investisseur finance le deal suivant.",
     capitalTitle: "Côté capital : qui finance",
     capitalCards: [
@@ -64,15 +66,15 @@ const copy = {
       },
       {
         h: "Les tables clés",
-        b: "Nous sommes invités là où se concentre le capital africain et international : Davos en parallèle du World Economic Forum, l'Africa CEO Forum où les CEO doivent justifier d'un minimum de 10 M€ de chiffre d'affaires annuel, l'Africa Financial Industry Summit, Choiseul Afrique, TLG Capital, le Web Summit, le Financial Times Africa Summit et ChangeNOW. C'est lors de l'un de ces rendez-vous, au Qatar, qu'un fonds américain nous a rejoints pour co-structurer le déploiement de Kupanda.",
+        b: "Nous sommes invités là où se concentre le capital africain et international : Davos en parallèle du World Economic Forum, l'Africa CEO Forum où les CEO doivent justifier d'un minimum de 10\u00a0M€ de chiffre d'affaires annuel, l'Africa Financial Industry Summit, Choiseul Afrique, TLG Capital, le Web Summit, le Financial Times Africa Summit et ChangeNOW. C'est lors de l'un de ces rendez-vous, au Qatar, qu'un fonds américain nous a rejoints pour co-structurer le déploiement de Kupanda.",
       },
       {
         h: "Discussions en cours",
-        b: "Plusieurs pistes avancent en parallèle : Atlantic Financials étudie une ligne de 1 à 4 M€ dans Kupanda, aux côtés de Black Manta et d'un réseau d'institutionnels et de brokers internationaux. Notre stratégie en Afrique de l'Ouest a déjà suscité de l'intérêt pour des lignes de crédit d'au moins 5 M€, au même titre que Kupanda II.",
+        b: "Plusieurs pistes avancent en parallèle : Atlantic Financials étudie une ligne de 1 à 4\u00a0M€ dans Kupanda, aux côtés de Black Manta et d'un réseau d'institutionnels et de brokers internationaux. Notre stratégie en Afrique de l'Ouest a déjà suscité de l'intérêt pour des lignes de crédit d'au moins 5\u00a0M€, au même titre que Kupanda II.",
       },
       {
         h: "Écosystème blockchain",
-        b: "La liquidité on-chain cherche du rendement réel : près de 30 Md$ d'actifs réels sont déjà tokenisés, dont environ 17 Md$ de crédit privé, mais presque rien n'est connecté à des sous-jacents africains. C'est précisément le pont que nous construisons, avec Canton Network, Ubuntu Tribe et la Stellar Foundation, qui nous subventionne déjà.",
+        b: "La liquidité on-chain cherche du rendement réel : près de 30\u00a0Md$ d'actifs réels sont déjà tokenisés, dont environ 17\u00a0Md$ de crédit privé, mais presque rien n'est connecté à des sous-jacents africains. C'est précisément le pont que nous construisons, avec Canton Network, Ubuntu Tribe et la Stellar Foundation, qui nous subventionne déjà.",
       },
     ] as Card[],
     osSides: "Des deux côtés, capital-in & assets-out",
@@ -87,16 +89,16 @@ const copy = {
         h: "Wave",
         tag: "Paiements mobiles",
         figs: [
-          "Unicorne, 1,7 Md$",
-          "~38 % de la valeur mobile UEMOA (~267 Md$/an)",
-          "10 M+ d'utilisateurs",
+          "Unicorne, 1,7\u00a0Md$",
+          "~38\u00a0% de la valeur mobile UEMOA (~267\u00a0Md$/an)",
+          "10\u00a0M+ d'utilisateurs",
         ],
       },
       {
         h: "Yango",
         tag: "Super-app",
         figs: [
-          "~4 Md$ générés par ses chauffeurs (2024)",
+          "~4\u00a0Md$ générés par ses chauffeurs (2024)",
           "13+ pays africains",
           "mobilité → paiements & fintech",
         ],
@@ -117,34 +119,34 @@ const copy = {
     proof: [
       { k: "4 HNWI", v: "ont déjà souscrit (1er closing Kupanda)" },
       { k: "Qatar", v: "un fonds américain a permis la structuration & le déploiement de Kupanda" },
-      { k: "~500 K€", v: "déployés par Minah" },
+      { k: "~500\u00a0K€", v: "déployés par Minah" },
     ] as Proof[],
     roadmapTitle: "La trajectoire",
     milestones: [
-      { t: "Aujourd'hui", v: "~500 K€", d: "déployés, 1 stratégie live et 2 en structuration (~30 M€ de pipeline)" },
-      { t: "Phase 1, MVP", v: "~15 M€", d: "de volume, H2 2026 → H2 2027" },
-      { t: "Accélération", v: "~50 M€", d: "nouvelles stratégies & géographies" },
-      { t: "Fin 2027, Scale", v: "100 M€", d: "d'AUM, licence de crédit" },
+      { t: "Aujourd'hui", v: "~500\u00a0K€", d: "déployés, 1 stratégie live et 2 en structuration (~30\u00a0M€ de pipeline)" },
+      { t: "Phase 1, MVP", v: "~15\u00a0M€", d: "de volume, H2 2026 → H2 2027" },
+      { t: "Accélération", v: "~50\u00a0M€", d: "nouvelles stratégies & géographies" },
+      { t: "Fin 2027, Scale", v: "100\u00a0M€", d: "d'AUM, licence de crédit" },
     ] as Milestone[],
-    pathTitle: "Le chemin vers 100 M€",
+    pathTitle: "Le chemin vers 100\u00a0M€",
     pathLead:
-      "100 M€ ne se conquiert pas au retail : c'est une poignée de lignes institutionnelles, fonds de dette, fonds de fonds, DFI, trésoreries on-chain, de 5 à 20 M€ chacune, en complément de tickets d'HNWI à 300 K€.",
+      "100\u00a0M€ ne se conquiert pas au retail : c'est une poignée de lignes institutionnelles, fonds de dette, fonds de fonds, DFI, trésoreries on-chain, de 5 à 20\u00a0M€ chacune, en complément de tickets d'HNWI à 300\u00a0K€.",
     pathSteps: [
       {
-        h: "500 K€ → 15 M€",
-        b: "Les HNWI, les Network Builders et une première ligne institutionnelle (Atlantic Financials, fonds américain) commencent à financer le pipeline à bonne visibilité : Kupanda 2/3 (~15 M€) et Esgni, notre stratégie scale-up ouest-africaine (~15 M€), soit ~30 M€.",
+        h: "500\u00a0K€ → 15\u00a0M€",
+        b: "Les HNWI, les Network Builders et une première ligne institutionnelle (Atlantic Financials, fonds américain) commencent à financer le pipeline à bonne visibilité : Kupanda 2/3 (~15\u00a0M€) et Esgni, notre stratégie scale-up ouest-africaine (~15\u00a0M€), soit ~30\u00a0M€.",
       },
       {
-        h: "15 → 50 M€",
-        b: "Notre prospection structure ~20 M€ de plus, un véhicule adossé aux gouvernements ouest-africains, en logique de partenariat public-privé (PPP), appuyé par deux à trois lignes institutionnelles de 5 à 15 M€.",
+        h: "15 → 50\u00a0M€",
+        b: "Notre prospection structure ~20\u00a0M€ de plus, un véhicule adossé aux gouvernements ouest-africains, en logique de partenariat public-privé (PPP), appuyé par deux à trois lignes institutionnelles de 5 à 15\u00a0M€.",
       },
       {
-        h: "50 → 100 M€",
+        h: "50 → 100\u00a0M€",
         b: "Une ancre DFI ou fonds de fonds, la liquidité on-chain, et les licences supplémentaires qui débloquent les plus gros tickets.",
       },
     ] as Card[],
     pathComparables:
-      "Ce n'est pas inédit : TLG Capital (~120 M$, adossé à IFC et Proparco), Cauris et Enko ont atteint 100 M€+ dans cette même classe d'actifs. Le chemin est connu ; notre différence est la distribution.",
+      "Ce n'est pas inédit : TLG Capital (~120\u00a0M$, adossé à IFC et Proparco), Cauris et Enko ont atteint 100\u00a0M€+ dans cette même classe d'actifs. Le chemin est connu ; notre différence est la distribution.",
     scaleTitle: "Ce que la levée met à l'échelle",
     scale: [
       {
@@ -157,11 +159,11 @@ const copy = {
       },
       {
         h: "Renforcer l'équipe",
-        b: "Fondateurs à plein temps pour faire tourner la machine relationnelle à l'échelle et capter les tickets institutionnels, pour passer de deals de 2 M€ à un pipeline de 50 M€+ et renforcer notre capacité de structuration institutionnelle.",
+        b: "Fondateurs à plein temps pour faire tourner la machine relationnelle à l'échelle et capter les tickets institutionnels, pour passer de deals de 2\u00a0M€ à un pipeline de 50\u00a0M€+ et renforcer notre capacité de structuration institutionnelle.",
       },
     ] as Card[],
     closer:
-      "Des premières souscriptions honorées à 100 M€ de capital-in d'ici fin 2027 : l'extension d'un moteur qui tourne déjà.",
+      "Des premières souscriptions honorées à 100\u00a0M€ de capital-in d'ici fin 2027 : l'extension d'un moteur qui tourne déjà.",
     fieldTitle: "La machine à réseau, sur le terrain",
     fieldCaption:
       "Quelques exemples de sommets présidentiels, forums d'investisseurs et institutions : une partie de la machine à réseau.",
@@ -527,139 +529,97 @@ const copy = {
   },
 } as const;
 
-function SectionTitle({ n, children }: { n: string; children: React.ReactNode }) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand/10 font-mono text-sm font-semibold text-marsala">
-        {n}
-      </span>
-      <h2 className="text-2xl font-semibold leading-tight tracking-tight">
-        {children}
-      </h2>
-    </div>
-  );
-}
+// Corps et texte secondaire des fiches (AGENTS.md).
+const BODY = "text-[15px] leading-[1.8] text-neutral-700";
+const CARD = "rounded-xl border border-foreground/10 bg-white/60";
 
 export function GoToMarket({ locale }: { locale: Locale }) {
   const c = copy[locale];
   return (
-    <div className="mt-8 space-y-14">
-      {/* Chapô */}
-      <section>
-        <p className="text-lg font-semibold tracking-tight text-foreground">
-          {c.lead}
-        </p>
-        <p className="mt-2 max-w-2xl text-sm leading-7 text-neutral-700">
-          {c.leadBody}
-        </p>
-      </section>
+    <div className="mt-6 space-y-16">
+      {/* Chapô, sous l'en-tête encadré : l'accroche ouvre le paragraphe en
+          gras plutôt que de faire un titre de plus. */}
+      <p className={`max-w-3xl ${BODY}`}>
+        <strong className="font-semibold text-foreground">{c.lead}</strong>{" "}
+        {c.leadBody}
+      </p>
 
-      {/* D'où vient le go-to-market, six ans de terrain des fondateurs */}
+      {/* 01, d'où vient le go-to-market : six ans de terrain des fondateurs */}
       <section>
-        <h3 className="text-xl font-semibold tracking-tight text-foreground">
-          {c.originTitle}
-        </h3>
-        <p className="mt-2 max-w-2xl text-sm leading-7 text-neutral-700">
-          {c.originBody}
-        </p>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        <SectionTitle n="01">{c.originTitle}</SectionTitle>
+        <p className={`mt-4 max-w-3xl ${BODY}`}>{c.originBody}</p>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {c.founders.map((f) => (
-            <div
-              key={f.h}
-              className="rounded-xl border border-foreground/10 bg-white/60 p-5"
-            >
-              <p className="text-base font-semibold text-foreground">{f.h}</p>
-              <p className="mt-1.5 text-[13px] leading-6 text-neutral-600">
-                {f.b}
-              </p>
+            <div key={f.h} className={`${CARD} p-6`}>
+              <h3 className="text-sm font-semibold text-foreground">{f.h}</h3>
+              <p className={`mt-2 ${BODY}`}>{f.b}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 01, la machine à réseau, à double détente */}
+      {/* 02, la machine à réseau, à double détente */}
       <section>
-        <SectionTitle n="01">{c.machineTitle}</SectionTitle>
-        <div className="mt-5 grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr]">
-          <div className="rounded-xl border border-foreground/10 bg-white/60 p-5">
-            <p className="text-sm font-semibold text-foreground">
-              {c.capitalLabel}
-            </p>
-            <p className="mt-0.5 text-xs text-neutral-500">{c.capitalSub}</p>
-            <ul className="mt-4 space-y-2">
-              {c.capIn.map((x) => (
-                <li
-                  key={x}
-                  className="rounded-md border-l-2 border-marsala/40 bg-white px-3 py-2 text-sm font-medium text-foreground"
-                >
-                  {x}
-                </li>
-              ))}
-            </ul>
-          </div>
+        <SectionTitle n="02">{c.machineTitle}</SectionTitle>
+        <div className="mt-6 grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr]">
+          <MachineSide
+            label={c.capitalLabel}
+            sub={c.capitalSub}
+            items={c.capIn}
+          />
 
-          <div className="flex flex-col items-center justify-center gap-1 rounded-xl bg-marsala px-6 py-6 text-center text-white md:w-44">
-            <span aria-hidden className="text-white/45">
-              →, →
+          <div className="flex flex-col items-center justify-center gap-1 rounded-xl bg-marsala px-6 py-6 text-center text-white md:w-48">
+            <span aria-hidden className="text-lg leading-none text-white/60">
+              →
             </span>
-            <p className="mt-1 text-lg font-semibold">{c.centerName}</p>
-            <p className="text-xs text-white/80">{c.centerSub}</p>
-            <p className="mt-1 text-[11px] leading-snug text-white/60">
+            <p className="mt-2 text-lg font-semibold">{c.centerName}</p>
+            <p className="text-sm text-white/85">{c.centerSub}</p>
+            <p className="mt-1 text-xs leading-snug text-white/70">
               {c.centerLine}
             </p>
-            <span aria-hidden className="mt-1 text-white/45">
-              ←, ←
+            <span aria-hidden className="mt-2 text-lg leading-none text-white/60">
+              ←
             </span>
           </div>
 
-          <div className="rounded-xl border border-foreground/10 bg-white/60 p-5">
-            <p className="text-sm font-semibold text-foreground">
-              {c.assetsLabel}
-            </p>
-            <p className="mt-0.5 text-xs text-neutral-500">{c.assetsSub}</p>
-            <ul className="mt-4 space-y-2">
-              {c.capOut.map((x) => (
-                <li
-                  key={x}
-                  className="rounded-md border-l-2 border-salvia bg-white px-3 py-2 text-sm font-medium text-foreground"
-                >
-                  {x}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <MachineSide
+            label={c.assetsLabel}
+            sub={c.assetsSub}
+            items={c.capOut}
+          />
         </div>
-        <div className="mt-4 flex flex-col gap-1 border-t border-foreground/10 pt-4 text-sm font-semibold text-foreground sm:flex-row sm:justify-between">
+        <div className="mt-4 flex flex-col gap-1 border-t border-foreground/10 pt-4 text-[15px] font-semibold text-foreground sm:flex-row sm:justify-between">
           <span>{c.capitalAnchor}</span>
           <span className="sm:text-right">{c.assetsAnchor}</span>
         </div>
-        <p className="mt-3 text-xs leading-5 text-neutral-500">{c.loop}</p>
+        <p className="mt-3 text-sm leading-6 text-neutral-600">{c.loop}</p>
       </section>
 
-      {/* 02, côté capital */}
+      {/* 03, côté capital. Cinq cartes : la dernière prend toute la largeur,
+          sinon elle laisse une case vide à côté d'elle. */}
       <section>
-        <SectionTitle n="02">{c.capitalTitle}</SectionTitle>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          {c.capitalCards.map((card) => (
+        <SectionTitle n="03">{c.capitalTitle}</SectionTitle>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          {c.capitalCards.map((card, i) => (
             <div
               key={card.h}
-              className="rounded-xl border border-foreground/10 bg-white/60 p-5"
+              className={`${CARD} p-6 ${
+                i === c.capitalCards.length - 1 && i % 2 === 0
+                  ? "sm:col-span-2"
+                  : ""
+              }`}
             >
-              <p className="text-sm font-semibold text-foreground">{card.h}</p>
-              <p className="mt-1 text-[13px] leading-6 text-neutral-600">
-                {card.b}
-              </p>
+              <h3 className="text-sm font-semibold text-foreground">{card.h}</h3>
+              <p className={`mt-2 ${BODY}`}>{card.b}</p>
               {card.href && (
                 <a
                   href={card.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="halo-hover mt-3 inline-flex items-center gap-1.5 rounded-lg bg-brand/10 px-3 py-1.5 text-[13px] font-semibold text-marsala transition-colors hover:bg-brand/15"
+                  className="halo-hover mt-4 inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg bg-brand/10 px-3 py-1.5 text-sm font-semibold text-marsala transition-colors hover:bg-brand/15"
                 >
                   {c.circleCta}
-                  <span aria-hidden className="whitespace-nowrap">
-                    →
-                  </span>
+                  <span aria-hidden>→</span>
                 </a>
               )}
             </div>
@@ -667,29 +627,24 @@ export function GoToMarket({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* 03, côté actifs */}
+      {/* 04, côté actifs */}
       <section>
-        <SectionTitle n="03">{c.assetsTitle}</SectionTitle>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-700">
-          {c.assetsIntro}
-        </p>
-        <div className="mt-5 grid gap-4 sm:grid-cols-3">
+        <SectionTitle n="04">{c.assetsTitle}</SectionTitle>
+        <p className={`mt-4 max-w-3xl ${BODY}`}>{c.assetsIntro}</p>
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
           {c.champions.map((ch) => (
-            <div
-              key={ch.h}
-              className="rounded-xl border border-foreground/10 bg-white/60 p-5"
-            >
-              <p className="text-base font-semibold text-foreground">{ch.h}</p>
-              <p className="mt-0.5 text-[12px] text-neutral-500">{ch.tag}</p>
-              <ul className="mt-3 space-y-1.5">
+            <div key={ch.h} className={`${CARD} p-6`}>
+              <h3 className="text-sm font-semibold text-foreground">{ch.h}</h3>
+              <p className="mt-0.5 text-sm text-neutral-600">{ch.tag}</p>
+              <ul className="mt-4 space-y-2">
                 {ch.figs.map((f) => (
                   <li
                     key={f}
-                    className="flex gap-2 text-[12.5px] leading-snug text-neutral-700"
+                    className="flex gap-2.5 text-sm leading-6 text-neutral-700"
                   >
                     <span
                       aria-hidden
-                      className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-marsala"
+                      className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-marsala"
                     />
                     {f}
                   </li>
@@ -698,53 +653,46 @@ export function GoToMarket({ locale }: { locale: Locale }) {
             </div>
           ))}
         </div>
-        <p className="mt-4 border-l-2 border-marsala pl-4 text-[13px] leading-6 text-neutral-700">
-          {c.cabinets}
-        </p>
-      </section>
+        <p className={`mt-5 ${BODY}`}>{c.cabinets}</p>
 
-      {/* Minah OS, transversal : alimente les deux côtés (capital-in &
-          assets-out), donc hors des sections 02/03 plutôt que rangé dans l'une. */}
-      <section>
-        <div className="rounded-xl border border-foreground/10 bg-white/60 p-5">
-          <span className="inline-block rounded-md bg-brand/10 px-2 py-0.5 text-[11px] font-semibold text-marsala">
-            {c.osSides}
-          </span>
-          <p className="mt-2 text-sm font-semibold text-foreground">
+        {/* Minah OS, transversal : alimente les deux côtés (capital-in &
+            assets-out), d'où sa carte pleine largeur au bout des deux côtés
+            plutôt qu'un rangement dans l'un. */}
+        <div className={`mt-10 ${CARD} p-6`}>
+          <p className="text-sm text-neutral-600">{c.osSides}</p>
+          <h3 className="mt-1 text-sm font-semibold text-foreground">
             {c.osTitle}
-          </p>
-          <p className="mt-1 text-[13px] leading-6 text-neutral-600">
-            {c.osBody}
-          </p>
+          </h3>
+          <p className={`mt-2 ${BODY}`}>{c.osBody}</p>
         </div>
       </section>
 
-      {/* 04, la preuve */}
+      {/* 05, la preuve : chiffres mis en avant, en bandeau à filets */}
       <section>
-        <SectionTitle n="04">{c.proofTitle}</SectionTitle>
-        <div className="mt-5 grid gap-4 sm:grid-cols-3">
-          {c.proof.map((p) => (
-            <div
+        <SectionTitle n="05">{c.proofTitle}</SectionTitle>
+        <ul className="mt-6 grid border-y border-foreground/15 sm:grid-cols-3">
+          {c.proof.map((p, i) => (
+            <li
               key={p.k}
-              className="rounded-xl border border-foreground/10 bg-white/60 p-4"
+              className={`border-foreground/10 py-5 ${
+                i > 0 ? "border-t sm:border-t-0 sm:border-l sm:pl-6" : ""
+              } ${i < c.proof.length - 1 ? "sm:pr-6" : ""}`}
             >
-              <p className="text-xl font-bold tracking-tight text-marsala">
+              <p className="text-2xl font-bold tracking-tight text-marsala">
                 {p.k}
               </p>
-              <p className="mt-1 text-[12.5px] leading-5 text-neutral-600">
-                {p.v}
-              </p>
-            </div>
+              <p className="mt-1 text-sm leading-6 text-neutral-700">{p.v}</p>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
-      {/* 05, la frise 500 K€ → 100 M€ */}
+      {/* 06, la frise 500 K€ → 100 M€ */}
       <section>
-        <SectionTitle n="05">{c.roadmapTitle}</SectionTitle>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <SectionTitle n="06">{c.roadmapTitle}</SectionTitle>
+        <ol className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
           {c.milestones.map((m) => (
-            <div key={m.t}>
+            <li key={m.t}>
               <div className="flex items-center gap-2">
                 <span
                   aria-hidden
@@ -755,80 +703,114 @@ export function GoToMarket({ locale }: { locale: Locale }) {
                   className="h-px flex-1 bg-gradient-to-r from-foreground/25 to-transparent"
                 />
               </div>
-              <p className="mt-2 text-xs font-medium text-neutral-500">{m.t}</p>
+              <p className="mt-2 text-sm font-medium text-neutral-600">{m.t}</p>
               <p className="mt-0.5 text-2xl font-bold tracking-tight text-foreground">
                 {m.v}
               </p>
-              <p className="text-[12.5px] leading-snug text-neutral-600">{m.d}</p>
-            </div>
+              <p className="mt-0.5 text-sm leading-6 text-neutral-700">{m.d}</p>
+            </li>
           ))}
-        </div>
+        </ol>
       </section>
 
-      {/* 06, le chemin vers 100 M€ */}
+      {/* 07, le chemin vers 100 M€ */}
       <section>
-        <SectionTitle n="06">{c.pathTitle}</SectionTitle>
-        <p className="mt-3 max-w-2xl text-sm leading-7 text-neutral-700">
-          {c.pathLead}
-        </p>
-        <div className="mt-5 grid gap-4 sm:grid-cols-3">
-          {c.pathSteps.map((s) => (
-            <div
-              key={s.h}
-              className="rounded-xl border border-foreground/10 bg-white/60 p-5"
-            >
-              <p className="text-sm font-bold tracking-tight text-marsala">
-                {s.h}
-              </p>
-              <p className="mt-1.5 text-[13px] leading-6 text-neutral-600">
-                {s.b}
-              </p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-4 border-l-2 border-marsala pl-4 text-[13px] leading-6 text-neutral-700">
-          {c.pathComparables}
-        </p>
+        <SectionTitle n="07">{c.pathTitle}</SectionTitle>
+        <p className={`mt-4 max-w-3xl ${BODY}`}>{c.pathLead}</p>
+        <Columns items={c.pathSteps} accent />
+        <p className={`mt-5 ${BODY}`}>{c.pathComparables}</p>
       </section>
 
-      {/* 07, ce que la levée met à l'échelle */}
+      {/* 08, ce que la levée met à l'échelle */}
       <section>
-        <SectionTitle n="07">{c.scaleTitle}</SectionTitle>
-        <div className="mt-5 grid gap-4 sm:grid-cols-3">
-          {c.scale.map((s) => (
-            <div
-              key={s.h}
-              className="rounded-xl border border-foreground/10 bg-white/60 p-5"
-            >
-              <p className="text-sm font-semibold text-foreground">{s.h}</p>
-              <p className="mt-1.5 text-[13px] leading-6 text-neutral-600">{s.b}</p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-6 border-l-2 border-marsala pl-4 text-[15px] font-medium leading-7 text-foreground">
+        <SectionTitle n="08">{c.scaleTitle}</SectionTitle>
+        <Columns items={c.scale} />
+        {/* Phrase de clôture : carte blanche, comme une citation, sans
+            guillemets puisque personne n'est cité. */}
+        <p className={`mt-6 ${CARD} p-6 text-[17px] font-semibold leading-[1.5] tracking-tight text-foreground`}>
           {c.closer}
         </p>
       </section>
 
-      {/* Bandeau photos « sur le terrain », preuve visuelle du réseau, en
+      {/* 09, bandeau photos « sur le terrain », preuve visuelle du réseau, en
           couleur, avec la légende de l'événement sous chaque cliché. Défilé
           auto + flèche pour avancer : cf. FieldTicker (client). */}
       <section>
-        <p className="text-sm font-semibold text-foreground">{c.fieldTitle}</p>
-        <p className="mt-1 max-w-2xl text-[13px] leading-6 text-neutral-600">
-          {c.fieldCaption}
-        </p>
+        <SectionTitle n="09">{c.fieldTitle}</SectionTitle>
+        <p className={`mt-4 max-w-3xl ${BODY}`}>{c.fieldCaption}</p>
         <FieldTicker
           advanceLabel={c.fieldAdvance}
           items={[...c.fieldCaps]}
         />
       </section>
 
-      <p className="text-[11px] leading-5 text-neutral-400">{c.sources}</p>
+      <p className="text-xs leading-5 text-neutral-600">{c.sources}</p>
     </div>
   );
 }
 
-// Les photos de terrain (couleur) vivent désormais dans c.fieldCaps, chacune
-// avec son chemin (src) et sa légende (t : titre en gras, d : détail). L'ordre
+// Trois temps côte à côte, séparés par des filets plutôt qu'encartés : en
+// cartes, les textes de longueurs inégales laissaient des cartes à moitié
+// vides.
+function Columns({
+  items,
+  accent = false,
+}: {
+  items: readonly Card[];
+  accent?: boolean;
+}) {
+  return (
+    <ol className="mt-6 grid border-y border-foreground/15 sm:grid-cols-3">
+      {items.map((s, i) => (
+        <li
+          key={s.h}
+          className={`border-foreground/10 py-6 ${
+            i > 0 ? "border-t sm:border-t-0 sm:border-l sm:pl-6" : ""
+          } ${i < items.length - 1 ? "sm:pr-6" : ""}`}
+        >
+          <h3
+            className={`text-sm tracking-tight ${
+              accent ? "font-bold text-marsala" : "font-semibold text-foreground"
+            }`}
+          >
+            {s.h}
+          </h3>
+          <p className={`mt-2 ${BODY}`}>{s.b}</p>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+// Un côté de la machine : liste simple à filets dans sa carte, sans sous-cartes
+// ni liseré gauche.
+function MachineSide({
+  label,
+  sub,
+  items,
+}: {
+  label: string;
+  sub: string;
+  items: readonly string[];
+}) {
+  return (
+    <div className={`${CARD} p-6`}>
+      <h3 className="text-sm font-semibold text-foreground">{label}</h3>
+      <p className="mt-0.5 text-sm text-neutral-600">{sub}</p>
+      <ul className="mt-4 divide-y divide-foreground/10 border-t border-foreground/10">
+        {items.map((x) => (
+          <li
+            key={x}
+            className="py-2.5 text-[15px] font-medium text-foreground"
+          >
+            {x}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// Les photos de terrain (couleur) vivent dans c.fieldCaps, chacune avec son
+// chemin (src) et sa légende (t : titre en gras, d : détail). L'ordre
 // d'affichage du bandeau est simplement l'ordre du tableau.
