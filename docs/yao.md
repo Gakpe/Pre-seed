@@ -31,18 +31,26 @@ par un cron Vercel dont la granularité est journalière.
 | Alerte | Telegram | Slack |
 | --- | --- | --- |
 | `signup`, `first_login` | oui | **oui** |
-| `interest`, `question` | oui | non |
+| `question` | oui | **oui** |
+| `interest` | oui | non |
 | `docsend_click`, `long_session`, `return_visit` | oui | non |
 
 **Telegram** est le canal par défaut, celui de la conversation avec Yao. Il est
 déjà câblé : Yao est le capitaine `minah`, et `sendCaptainMessage('minah',
 message)` de GAK_OS fait le travail.
 
-**Slack** reçoit en plus les deux alertes qui disent qu'un investisseur vient
-d'arriver, `signup` et `first_login` : ce sont les seules que l'équipe doit
-voir sans passer par la conversation privée de Julien. Poste via
-`chat.postMessage` avec le `SLACK_BOT_TOKEN` déjà utilisé par le slack-worker,
-sur le canal défini par `SLACK_INVESTORS_CHANNEL`.
+**Slack** reçoit en plus les alertes que l'équipe doit voir sans passer par
+la conversation privée de Julien : les deux qui disent qu'un investisseur vient
+d'arriver, `signup` et `first_login`, et les questions, `question`. Pour une
+question, le worker relit le texte complet dans la table `questions` (le
+message de la file est tronqué à 300 caractères) et ajoute le lien vers la
+fiche admin. Poste via `chat.postMessage` avec le `SLACK_BOT_TOKEN` déjà
+utilisé par le slack-worker, sur le canal défini par `SLACK_INVESTORS_CHANNEL`.
+
+**Email** : indépendamment de la file, le portail envoie lui-même chaque
+question aux fondateurs (socle `ADMIN_EMAILS`), texte complet et brief de la
+personne (statut, inscription, visites, temps passé, documents ouverts,
+intérêt). Voir `src/lib/question-mail.ts`. Yao n'a rien à faire pour l'email.
 
 Un investisseur qui s'inscrit puis se connecte dans la foulée produit les deux
 alertes. Les dédoublonner n'a pas d'intérêt : `signup` porte l'entité et le

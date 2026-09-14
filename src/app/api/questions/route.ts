@@ -1,10 +1,14 @@
+import { after } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getDemoSession } from "@/lib/demo";
 import { dataRoomBlocked } from "@/lib/dataroom";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { mailQuestionsToTeam } from "@/lib/question-mail";
 
 // Reçoit une liste de questions distinctes ({questions: string[]}),
-// une ligne par question, chaque insert déclenche une alerte Yao.
+// une ligne par question, chaque insert déclenche une alerte Yao (Telegram
+// et Slack). Les fondateurs reçoivent en plus un email avec le texte complet
+// et un brief de la personne, envoyé après la réponse pour ne pas la retarder.
 export async function POST(request: Request) {
   // Une question posée en démo ne doit pas alerter l'équipe.
   if (await getDemoSession()) return new Response(null, { status: 403 });
@@ -40,6 +44,8 @@ export async function POST(request: Request) {
     .from("questions")
     .insert(questions.map((q) => ({ investor_id: user.id, body: q })));
   if (error) return new Response(null, { status: 500 });
+
+  after(() => mailQuestionsToTeam(user.id, questions));
 
   return new Response(null, { status: 204 });
 }
