@@ -19,17 +19,20 @@ const FOUNDERS = [
   {
     name: "Julien Gakpé",
     email: "jgakpe@minah.io",
-    role: { fr: "Directeur général", en: "CEO" },
+    role: { fr: "Co-fondateur, Directeur général", en: "Co-founder, CEO" },
   },
   {
     name: "Coralie Lolliot",
     email: "coralie.lolliot@minah.io",
-    role: { fr: "Ecosystems & Partnerships", en: "Ecosystems & Partnerships" },
+    role: {
+      fr: "Co-fondatrice, Chief Ecosystems & Partnerships",
+      en: "Co-founder, Chief Ecosystems & Partnerships",
+    },
   },
   {
     name: "Hervé Gakpé",
     email: "hgakpe@minah.io",
-    role: { fr: "Directeur financier", en: "CFO" },
+    role: { fr: "Co-fondateur, Directeur financier", en: "Co-founder, CFO" },
   },
 ];
 
