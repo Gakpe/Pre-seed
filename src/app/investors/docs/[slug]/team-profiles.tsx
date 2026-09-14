@@ -48,18 +48,20 @@ const PEOPLE: Person[] = [
       en: "Public financing, seen from the inside.",
     },
     academic: {
-      fr: ["École Polytechnique (X)"],
-      en: ["École Polytechnique (X)"],
+      fr: ["Toulouse Business School", "École 42", "École Polytechnique (X)"],
+      en: ["Toulouse Business School", "École 42", "École Polytechnique (X)"],
     },
     career: {
       fr: [
-        "Bpifrance, financement d'entreprise",
-        "Avolta, corporate finance",
+        "Bpifrance, fonds de fonds, expert capital-risque et blockchain",
+        "Avolta Partners, fusions-acquisitions tech",
+        "Alantra, fusions-acquisitions généralistes",
         "Minah, direction générale, structuration et origination",
       ],
       en: [
-        "Bpifrance, corporate financing",
-        "Avolta, corporate finance",
+        "Bpifrance, fund of funds, VC and blockchain expert",
+        "Avolta Partners, tech M&A",
+        "Alantra, generalist M&A",
         "Minah, general management, structuring and origination",
       ],
     },
