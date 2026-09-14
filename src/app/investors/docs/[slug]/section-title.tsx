@@ -86,23 +86,28 @@ const ICONS: Record<SectionIconName, React.ReactNode> = {
   ),
 };
 
+// Picto quand la fiche se lit comme un raisonnement, numéro quand elle se lit
+// comme une suite de chapitres : passer `icon` ou `n`, pas les deux.
 export function SectionTitle({
   icon,
+  n,
   children,
   as: Tag = "h2",
   className = "",
 }: {
-  icon: SectionIconName;
   children: React.ReactNode;
   as?: "h2" | "h3";
   className?: string;
-}) {
+} & (
+  | { icon: SectionIconName; n?: never }
+  | { n: string; icon?: never }
+)) {
   return (
     <Tag
       className={`flex items-center gap-3 text-2xl font-semibold leading-tight tracking-tight ${className}`}
     >
-      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand/10 text-marsala">
-        <SectionIcon name={icon} />
+      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand/10 font-mono text-sm font-semibold text-marsala">
+        {icon ? <SectionIcon name={icon} /> : n}
       </span>
       {children}
     </Tag>
