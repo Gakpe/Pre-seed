@@ -156,16 +156,16 @@ export function WhyMinah({ locale }: { locale: Locale }) {
             <div className="md:self-center">
               {"quote" in ch && ch.quote && (
                 <ScrollReveal delay={140}>
-                  <blockquote className="rounded-xl border border-foreground/10 bg-white/60 px-6 pb-6 pt-5 text-[17px] font-semibold leading-[1.4] tracking-tight text-foreground">
-                    {/* Guillemet décoratif : seule tache orange de la
-                        colonne, la citation elle-même reste en onyx. */}
-                    <span
-                      aria-hidden
-                      className="block h-9 font-serif text-[64px] leading-[0.9] text-brand"
-                    >
-                      {locale === "fr" ? "«" : "“"}
+                  <blockquote className="rounded-xl border border-foreground/10 bg-white/60 p-6 text-[17px] font-semibold leading-[1.4] tracking-tight text-foreground">
+                    {/* Guillemets en orange, dans la ligne : les espaces
+                        insécables empêchent le dernier de tomber seul. */}
+                    <span className="text-brand">
+                      {locale === "fr" ? "«\u00a0" : "“"}
                     </span>
-                    <p className="mt-2">{ch.quote}</p>
+                    {ch.quote}
+                    <span className="text-brand">
+                      {locale === "fr" ? "\u00a0»" : "”"}
+                    </span>
                   </blockquote>
                 </ScrollReveal>
               )}
