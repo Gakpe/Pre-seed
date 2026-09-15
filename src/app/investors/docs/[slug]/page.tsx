@@ -141,6 +141,7 @@ export default async function DocPage({
   // base ferait doublon avec, et par endroits contredirait, les chiffres
   // qu'elles détaillent. Il reste en base, simplement plus affiché ici.
   const richOnly =
+    team ||
     doc.slug === "track-record" ||
     doc.slug === "la-levee" ||
     doc.slug === "pourquoi-minah" ||
