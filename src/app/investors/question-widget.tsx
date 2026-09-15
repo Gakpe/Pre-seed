@@ -4,6 +4,7 @@ import { useState } from "react";
 import { deal } from "@/lib/deal";
 import { track } from "@/lib/tracking";
 import { t, type Locale } from "@/lib/i18n";
+import { useOverDark } from "@/lib/use-over-dark";
 
 const MAX_QUESTIONS = 8;
 
@@ -18,6 +19,9 @@ export function QuestionWidget({
   demo?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  // Infobulle en crème sur la section sombre de la note de marché : en brun,
+  // elle s'y fondait.
+  const overDark = useOverDark(42);
   const [questions, setQuestions] = useState<string[]>([""]);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
@@ -59,14 +63,22 @@ export function QuestionWidget({
 
   return (
     <>
-      <div className="group fixed right-4 bottom-4 z-40 flex items-center gap-2 sm:right-5 sm:bottom-5">
-        <span className="pointer-events-none translate-x-1 rounded-md bg-foreground px-2.5 py-1 text-xs text-background opacity-0 shadow transition-all group-hover:translate-x-0 group-hover:opacity-100">
+      {/* z-50 : son infobulle passe devant le bouton retour en haut (z-40), posé
+          sur la même ligne dans la marge. Le conteneur laisse passer les clics
+          (pointer-events-none) : sa zone couvre aussi l'infobulle invisible, et
+          rendait le bouton retour en haut incliquable. */}
+      <div className="group pointer-events-none fixed right-4 bottom-4 z-50 flex items-center gap-2 sm:right-5 sm:bottom-5">
+        <span
+          className={`pointer-events-none translate-x-1 rounded-md px-2.5 py-1 text-xs opacity-0 shadow transition-all group-hover:translate-x-0 group-hover:opacity-100 ${
+            overDark ? "bg-background text-foreground" : "bg-foreground text-background"
+          }`}
+        >
           {t(locale, "widget.hover")}
         </span>
         <button
           onClick={() => setOpen(true)}
           aria-label={t(locale, "widget.hover")}
-          className="rounded-full shadow-md transition-transform hover:scale-105"
+          className="pointer-events-auto rounded-full shadow-md transition-transform hover:scale-105"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/icon.png" alt="" className="h-9 w-9 rounded-full sm:h-11 sm:w-11" />
