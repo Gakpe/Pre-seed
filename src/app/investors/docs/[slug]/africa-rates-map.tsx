@@ -116,30 +116,57 @@ export function AfricaRatesMap({ locale }: { locale: Locale }) {
                 />
               ))}
 
-              {/* villes repères : seulement sur la région active, sinon surcharge */}
-              {region?.cities.map((c) => (
-                <g key={c.n[locale]} aria-hidden>
-                  <circle cx={c.x} cy={c.y} r="3.5" fill="var(--note-dark-ink)" />
-                  <text
-                    x={c.side === "left" ? c.x - 8 : c.x + 8}
-                    y={c.y + 1}
-                    textAnchor={c.side === "left" ? "end" : "start"}
-                    className="text-[11px] font-semibold"
-                    fill="var(--note-dark-ink)"
-                  >
-                    {c.n[locale]}
-                  </text>
-                  <text
-                    x={c.side === "left" ? c.x - 8 : c.x + 8}
-                    y={c.y + 14}
-                    textAnchor={c.side === "left" ? "end" : "start"}
-                    className="text-[10.5px]"
-                    fill="var(--note-dark-muted)"
-                  >
-                    {c.r}
-                  </text>
-                </g>
-              ))}
+              {/* villes repères : seulement sur la région active, sinon surcharge.
+                  La carte est rendue à 80 % de son viewBox : les tailles sont
+                  posées en unités SVG pour tomber à ~13 px à l'écran. Le taux
+                  sort dans un petit cadre sombre, lisible sur toutes les
+                  couleurs de région ; le nom est détouré du fond pour la même
+                  raison. */}
+              {region?.cities.map((c) => {
+                const left = c.side === "left";
+                const tx = left ? c.x - 9 : c.x + 9;
+                const w = c.r.length * 8 + 12;
+                const bx = left ? tx - w : tx;
+                return (
+                  // pointer-events à none : posée sur la région survolée,
+                  // l'étiquette lui volait le survol et la carte clignotait.
+                  <g key={c.n[locale]} aria-hidden pointerEvents="none">
+                    <circle cx={c.x} cy={c.y} r="4" fill="var(--note-dark-ink)" />
+                    <text
+                      x={tx}
+                      y={c.y + 5}
+                      textAnchor={left ? "end" : "start"}
+                      className="text-[16px] font-semibold"
+                      fill="var(--note-dark-ink)"
+                      stroke="var(--note-dark-bg)"
+                      strokeWidth="3"
+                      strokeLinejoin="round"
+                      style={{ paintOrder: "stroke" }}
+                    >
+                      {c.n[locale]}
+                    </text>
+                    <rect
+                      x={bx}
+                      y={c.y + 11}
+                      width={w}
+                      height="21"
+                      rx="4"
+                      fill="var(--note-dark-bg)"
+                      stroke="var(--note-dark-ink)"
+                      strokeOpacity="0.35"
+                    />
+                    <text
+                      x={bx + w / 2}
+                      y={c.y + 26}
+                      textAnchor="middle"
+                      className="text-[14px] font-semibold tabular-nums"
+                      fill="var(--note-dark-ink)"
+                    >
+                      {c.r.replace(" ", "\u00a0")}
+                    </text>
+                  </g>
+                );
+              })}
             </svg>
           </div>
 
@@ -178,7 +205,9 @@ export function AfricaRatesMap({ locale }: { locale: Locale }) {
                       </>
                     ) : (
                       <>
-                        {MAP_RESTING_NOTE[locale]}{" "}
+                        {MAP_RESTING_NOTE[locale]
+                          .replace("{low}", String(ALL_LOW))
+                          .replace("{high}", String(ALL_HIGH))}{" "}
                         <span className="text-note-dark-ink">{t.hint}</span>
                       </>
                     )}
