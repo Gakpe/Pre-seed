@@ -17,13 +17,13 @@ const copy = {
     chapters: [
       {
         eyebrow: "Le constat",
-        body: "Le continent concentre la démographie et la croissance des trente prochaines années, mais sa finance est restée calibrée pour un autre marché. Le capital existe, les projets existent ; ce qui manque, c'est la couche qui les rend lisibles l'un pour l'autre. La première génération de fintech africaine (M-Pesa, Wave, Flutterwave, Paystack) a résolu le mouvement de l'argent. La deuxième résoudra son usage : le structurer, le tarifer, l'allouer, le tracer. À l'inverse des rails de transfert d'argent, Minah se positionne comme une couche de structuration : elle permet au capital international d'atteindre l'économie réelle africaine avec les standards de traçabilité et de reporting qu'exige un investisseur institutionnel.",
+        body: "Le continent concentre la démographie et la croissance des trente prochaines années, mais sa finance est restée calibrée pour un autre marché. Le capital existe, les projets aussi ; ce qui manque, c'est la couche qui les rend lisibles l'un pour l'autre. La première génération de fintechs africaines (M-Pesa, Wave, Flutterwave, Paystack) a résolu la question des flux de capitaux sur le continent. La seconde, dont Minah fait partie, résoudra l'usage de ce capital, et permettra de le structurer, de le tarifer, de l'allouer et de le tracer. À l'inverse des rails de transfert d'argent, Minah se positionne comme une couche de structuration : elle permet au capital international d'atteindre l'économie réelle africaine avec les standards de traçabilité et de reporting qu'exige un investisseur institutionnel.",
         quote:
-          "La première génération de fintech a résolu le problème de la circulation des capitaux. La seconde résoudra le sujet de leur investissement.",
+          "La première génération de fintechs africaines a résolu les flux de capitaux. La seconde résoudra leur usage.",
       },
       {
         eyebrow: "L'opportunité",
-        body: "Les PME africaines empruntent à ~20 % en moyenne, bien au-dessus du risque réel des meilleurs dossiers. Cet écart rémunère surtout l'opacité : sans données fiables, le prêteur international évite ou surtarife. Notre métier est de produire cette information (structuration, scoring sur données locales, suivi continu, traçabilité on-chain) avec une gestion du risque de niveau institutionnel. La convergence des taux aura lieu ; la question est qui aura construit l'infrastructure qui la déclenche et capté la valeur de l'écart pendant qu'il se referme.",
+        body: "Les PME africaines empruntent à ~20 % en moyenne, bien au-dessus du risque réel des meilleurs dossiers. Cet écart rémunère surtout l'opacité : sans données fiables, le prêteur international évite ou surtarife. Notre métier est de produire cette information (structuration, scoring sur données locales, suivi continu, traçabilité on-chain) avec une gestion du risque de niveau institutionnel. La convergence des taux aura bien lieu ; le sujet est d'identifier qui sera en mesure de construire l'infrastructure qui la déclenche et de capter la valeur du spread pendant qu'il se referme.",
         stat: { value: "~20 %", label: "le taux d'emprunt moyen des PME africaines" },
       },
       {
@@ -33,8 +33,11 @@ const copy = {
     ],
 
     ctaTitle: "Investir au capital de Minah.",
-    ctaBody:
-      "Le tour de pre-seed est ouvert. Il porte sur le capital de la société qui construit cette couche de structuration, et non sur les stratégies d'investissement obligataires de la plateforme.",
+    // Une phrase par ligne, le SIREN renvoie à la fiche Pappers de la société.
+    ctaRound: "Le tour de pre-seed est ouvert.",
+    ctaEquity: ["Il porte sur le capital de Minah SAS (", ")."],
+    ctaScope:
+      "Il ne concerne pas les stratégies d'investissement obligataires proposées sur la plateforme.",
     ctaTerms: [
       { label: "Objectif", value: deal.target },
       { label: "Ticket minimum", value: deal.minTicket },
@@ -50,13 +53,13 @@ const copy = {
     chapters: [
       {
         eyebrow: "The diagnosis",
-        body: "The continent holds the demographics and the growth of the next thirty years, but its finance is still calibrated for another market. The capital exists, the projects exist; what is missing is the layer that makes them legible to one another. African fintech's first generation (M-Pesa, Wave, Flutterwave, Paystack) solved the movement of money. The second will solve its use: structuring it, pricing it, allocating it, tracing it. Unlike money transfer rails, Minah positions itself as a structuring layer: it lets international capital reach the African real economy with the traceability and reporting standards an institutional investor requires.",
+        body: "The continent holds the demographics and the growth of the next thirty years, but its finance is still calibrated for another market. The capital exists, and so do the projects; what is missing is the layer that makes them legible to one another. The first generation of African fintechs (M-Pesa, Wave, Flutterwave, Paystack) solved the question of capital flows across the continent. The second, which Minah is part of, will solve how that capital is used, making it possible to structure it, price it, allocate it and trace it. Unlike money transfer rails, Minah positions itself as a structuring layer: it lets international capital reach the African real economy with the traceability and reporting standards an institutional investor requires.",
         quote:
-          "The first generation of fintech solved the circulation of capital. The second will solve how that capital is invested.",
+          "The first generation of African fintechs solved capital flows. The second will solve how that capital is used.",
       },
       {
         eyebrow: "The opportunity",
-        body: "African SMEs borrow at around 20% on average, well above the actual risk of the best files. That spread mostly pays for opacity: without reliable data, the international lender avoids or overprices. Our business is to produce that information (structuring, scoring on local data, continuous monitoring, on-chain traceability) with institutional-grade risk management. Rate convergence will happen; the question is who will have built the infrastructure that triggers it, and captured the value of the spread while it closes.",
+        body: "African SMEs borrow at around 20% on average, well above the actual risk of the best files. That spread mostly pays for opacity: without reliable data, the international lender avoids or overprices. Our business is to produce that information (structuring, scoring on local data, continuous monitoring, on-chain traceability) with institutional-grade risk management. Rate convergence will happen; the question is who will be able to build the infrastructure that triggers it and capture the value of the spread while it closes.",
         stat: { value: "~20%", label: "the average borrowing rate for African SMEs" },
       },
       {
@@ -66,8 +69,10 @@ const copy = {
     ],
 
     ctaTitle: "Invest in Minah's equity.",
-    ctaBody:
-      "The pre-seed round is open. It concerns equity in the company building that structuring layer, not the platform's bond investment strategies.",
+    ctaRound: "The pre-seed round is open.",
+    ctaEquity: ["It concerns equity in Minah SAS (", ")."],
+    ctaScope:
+      "It does not concern the bond investment strategies offered on the platform.",
     ctaTerms: [
       { label: "Target", value: deal.target },
       { label: "Minimum ticket", value: deal.minTicket },
@@ -77,6 +82,8 @@ const copy = {
     ctaSecondary: "Book a meeting",
   },
 };
+
+const MINAH_PAPPERS_URL = "https://www.pappers.fr/entreprise/minah-sas-931561708";
 
 // Pastilles de section : un picto plutôt qu'un numéro, la fiche se lit comme
 // un raisonnement et non comme une liste.
@@ -155,9 +162,22 @@ export function WhyMinah({ locale }: { locale: Locale }) {
           <h2 className="text-2xl font-semibold leading-tight tracking-tight">
             {c.ctaTitle}
           </h2>
-          <p className="mt-3 max-w-2xl text-[15px] leading-[1.8] text-neutral-700">
-            {c.ctaBody}
-          </p>
+          <div className="mt-3 max-w-2xl text-[15px] leading-[1.8] text-neutral-700">
+            <p>{c.ctaRound}</p>
+            <p>
+              {c.ctaEquity[0]}
+              <a
+                href={MINAH_PAPPERS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="halo-hover rounded font-medium whitespace-nowrap text-marsala underline decoration-marsala/30 underline-offset-4 transition-colors hover:decoration-marsala"
+              >
+                SIREN 931{"\u00a0"}561{"\u00a0"}708 ↗
+              </a>
+              {c.ctaEquity[1]}
+            </p>
+            <p>{c.ctaScope}</p>
+          </div>
 
           <dl className="mt-6 grid grid-cols-3 gap-x-6 gap-y-4 border-t border-brand/20 pt-5 sm:max-w-lg">
             {c.ctaTerms.map((term) => (
