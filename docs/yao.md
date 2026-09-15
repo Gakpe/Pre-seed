@@ -9,16 +9,22 @@ possible — par convention Yao ne modifie que `investors.status` et
 API REST : `https://nuzklwegigoykemeznzw.supabase.co/rest/v1/`
 Headers : `apikey: <clé service>` et `Authorization: Bearer <clé service>`.
 
-## État au 14 septembre 2026
+## État au 15 septembre 2026
 
-Les triggers tournent et remplissent la file depuis le 30 août : 14 alertes ont
-été produites. Aucune n'a jamais été consommée, faute de client côté Yao. Elles
-ont toutes été marquées `processed_at` à cette date, de façon que le premier
-poll ne déverse pas deux semaines d'historique d'un coup. **La file repart de
-zéro : tout ce qui s'y trouvera désormais est du neuf.**
+Le worker tourne sur le MacBook Air depuis le 14 septembre (`ssh meta_gak`,
+dossier `~/minah-notifications/`, service launchd `com.gakos.minah-notifications`,
+log `worker.log`, heartbeat `~/.openclaw/heartbeats/minah-notifications.json`
+surveillé par le gateway-watchdog). Il a été mis à jour le 15 septembre avec le
+routage Slack des questions et des intérêts. Son code vit dans GAK_OS, `main`,
+`scripts/minah-notifications-worker.mjs`.
 
-Côté Yao (dépôt GAK_OS), rien n'est encore branché : `.env.local` n'y connaît
-que `MINAH_GITHUB_*`, pas le Supabase du portail.
+Pour livrer une nouvelle version : copier le script dans
+`~/minah-notifications/` sur l'Air, puis
+`launchctl kickstart -k gui/$(id -u)/com.gakos.minah-notifications`, puis
+vérifier `worker.log`. Le `.env` y contient déjà les six variables.
+
+La file avait été remise à zéro le 14 septembre (14 alertes historiques
+marquées traitées) avant le premier démarrage.
 
 ## 1. Alertes — poll de la table `notifications`
 
