@@ -4,13 +4,13 @@ import { sendBatch } from "@/lib/email";
 import { formatDuration } from "@/lib/format";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Investor, InvestorStats } from "@/lib/types";
+import { SITE_URL } from "@/lib/site";
 
 // Une question posée depuis le widget part aussi par email aux fondateurs
 // (socle ADMIN_EMAILS), avec le texte complet et un brief de la personne :
 // qui elle est, depuis quand elle est là, ce qu'elle a regardé. Slack et
 // Telegram reçoivent l'alerte courte par la file notifications, voir docs/yao.md.
 
-const PORTAL = "https://portail.minah.io";
 
 const dateFmt = new Intl.DateTimeFormat("fr-FR", {
   day: "numeric",
@@ -111,7 +111,7 @@ export function buildQuestionMail(
     )
     .join("");
 
-  const fiche = `${PORTAL}/admin/investors/${investor.id}`;
+  const fiche = `${SITE_URL}/admin/investors/${investor.id}`;
 
   return {
     subject:

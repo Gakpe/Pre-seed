@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { deal } from "@/lib/deal";
+import { SITE_URL } from "@/lib/site";
 
 // Mails types du back-office : des textes à copier-coller dans un vrai client
 // mail, pas des envois automatiques. Rangés dans app_settings sous une seule
@@ -18,7 +19,7 @@ export type EmailTemplate = {
 };
 
 const SETTING_KEY = "email_templates";
-const PORTAL = "https://portail.minah.io/investors/home";
+const PORTAL = `${SITE_URL}/investors/home`;
 // Deck pré-seed sur DocSend, le même que la fiche « Deck pré-seed Minah ».
 const DECK = "https://docsend.com/view/qcid4q2ik98tkr82";
 

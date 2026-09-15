@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendBatch } from "@/lib/email";
+import { SITE_URL } from "@/lib/site";
 import { getAdminEmail, requireAdmin } from "@/lib/admin";
 import type { InvestorStatus, NoteKind } from "@/lib/types";
 
@@ -40,7 +41,7 @@ export async function approveInvestor(investorId: string) {
 
   // Rien mis à jour : le compte n'était pas en attente, pas d'email.
   if (data?.email) {
-    const url = "https://portail.minah.io/investors/home";
+    const url = `${SITE_URL}/investors/home`;
     await sendBatch([
       {
         to: data.email,
