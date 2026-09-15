@@ -19,6 +19,7 @@ import { Fundraise } from "./fundraise";
 import { WhyMinah } from "./why-minah";
 import { GoToMarket } from "./go-to-market";
 import { TermSheet } from "./term-sheet";
+import { KupandaInterest } from "./kupanda-interest";
 import { RiskCascade } from "./risk-cascade";
 import { ResilienceBar } from "./resilience-bar";
 import { RiskClosing } from "./risk-closing";
@@ -32,6 +33,8 @@ export default async function DocPage({
   const demo = await getDemoSession();
 
   let doc: DocumentRow | null;
+  // Dernier intérêt Kupanda de la personne, pour le bas de la term sheet.
+  let kupandaInterest: { tranche: string; created_at: string } | null = null;
   if (demo) {
     // Pas de session Supabase en démo : service role + filtrage de niveau à la main.
     const { data } = await createAdminClient()
@@ -55,6 +58,18 @@ export default async function DocPage({
       .eq("slug", slug)
       .maybeSingle();
     doc = data as DocumentRow | null;
+
+    if (slug === "term-sheet-kupanda") {
+      // Table sans policy : lecture avec la clé service, filtrée sur la personne.
+      const { data: last } = await createAdminClient()
+        .from("kupanda_interests")
+        .select("tranche, created_at")
+        .eq("investor_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      kupandaInterest = last;
+    }
   }
   if (!doc) notFound();
 
@@ -177,7 +192,16 @@ export default async function DocPage({
       {/* Certaines fiches portent un contenu riche en plus de leur texte. */}
       {doc.slug === "pourquoi-minah" && <WhyMinah locale={locale} />}
       {doc.slug === "go-to-market" && <GoToMarket locale={locale} />}
-      {doc.slug === "term-sheet-kupanda" && <TermSheet locale={locale} />}
+      {doc.slug === "term-sheet-kupanda" && (
+        <>
+          <TermSheet locale={locale} />
+          <KupandaInterest
+            locale={locale}
+            existing={kupandaInterest}
+            demo={Boolean(demo)}
+          />
+        </>
+      )}
       {doc.slug === "note-marche" && (
         <>
           <MarketNote title={title} locale={locale} />

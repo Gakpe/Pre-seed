@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
-import type { Investor, InvestorStats } from "@/lib/types";
+import type { Investor, InvestorStats, KupandaInterest } from "@/lib/types";
 import { formatDuration } from "@/lib/format";
 import { buildDailyBuckets } from "@/lib/activity";
 import { approveInvestor, setInvestorStatus, setLevel2Access } from "./actions";
@@ -23,7 +23,7 @@ export default async function AdminPage() {
 
   const admin = createAdminClient();
   const since = new Date(Date.now() - 13 * 86_400_000).toISOString().slice(0, 10);
-  const [{ data }, { data: statsData }, { data: leavesData }] =
+  const [{ data }, { data: statsData }, { data: leavesData }, { data: kupandaData }] =
     await Promise.all([
       admin
         .from("investors")
@@ -35,11 +35,21 @@ export default async function AdminPage() {
         .select("investor_id, duration_ms, created_at")
         .eq("type", "page_leave")
         .gte("created_at", since),
+      admin
+        .from("kupanda_interests")
+        .select("*")
+        .order("created_at", { ascending: false }),
     ]);
   const investors = (data ?? []) as Investor[];
   const stats = new Map(
     ((statsData ?? []) as InvestorStats[]).map((s) => [s.investor_id, s])
   );
+  // Dernier intérêt Kupanda par investisseur : la liste arrive triée, la
+  // première ligne rencontrée est la plus récente.
+  const kupandaByInvestor = new Map<string, KupandaInterest>();
+  for (const k of (kupandaData ?? []) as KupandaInterest[]) {
+    if (!kupandaByInvestor.has(k.investor_id)) kupandaByInvestor.set(k.investor_id, k);
+  }
 
   // Minutes par jour (14 j) par investisseur, pour les mini-histogrammes
   const leavesByInvestor = new Map<
@@ -121,6 +131,16 @@ export default async function AdminPage() {
                       </>
                     ) : (
                       ""
+                    )}
+                    {kupandaByInvestor.has(inv.id) && (
+                      <div className={inv.interest_tranche ? "mt-1.5" : ""}>
+                        <div className="font-medium">
+                          Kupanda : {kupandaByInvestor.get(inv.id)!.tranche}
+                        </div>
+                        <div className="text-xs text-neutral-500">
+                          {dateFmt.format(new Date(kupandaByInvestor.get(inv.id)!.created_at))}
+                        </div>
+                      </div>
                     )}
                   </td>
                   <td className="px-4 py-3">

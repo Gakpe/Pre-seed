@@ -73,6 +73,7 @@ export default async function InvestorDetailPage({
     { data: clicks },
     { data: sessionRows },
     { data: noteRows },
+    { data: kupandaRow },
   ] = await Promise.all([
       admin.from("investors").select("*").eq("id", id).maybeSingle(),
       admin.from("investor_stats").select("*").eq("investor_id", id).maybeSingle(),
@@ -105,6 +106,13 @@ export default async function InvestorDetailPage({
         .select("*")
         .eq("investor_id", id)
         .order("created_at", { ascending: false }),
+      admin
+        .from("kupanda_interests")
+        .select("tranche, created_at")
+        .eq("investor_id", id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
     ]);
 
   const investor = data as Investor | null;
@@ -133,6 +141,7 @@ export default async function InvestorDetailPage({
     (sessionRows ?? []) as { session_id: string | null; created_at: string }[]
   );
   const notes = (noteRows ?? []) as InvestorNote[];
+  const kupandaInterest = kupandaRow as { tranche: string; created_at: string } | null;
   const remarks = notes.filter((n) => n.kind === "note");
   const fomos = notes.filter((n) => n.kind === "fomo");
 
@@ -163,6 +172,12 @@ export default async function InvestorDetailPage({
                 intention : {investor.interest_tranche}
                 {investor.interest_expressed_at &&
                   ` (${dateFmt.format(new Date(investor.interest_expressed_at))})`}
+              </span>
+            )}
+            {kupandaInterest && (
+              <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600 dark:bg-neutral-900 dark:text-neutral-400">
+                Kupanda : {kupandaInterest.tranche}
+                {` (${dateFmt.format(new Date(kupandaInterest.created_at))})`}
               </span>
             )}
             <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600 dark:bg-neutral-900 dark:text-neutral-400">

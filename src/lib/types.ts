@@ -60,3 +60,11 @@ export type EventType =
   | "page_leave"
   | "docsend_click"
   | "cta_click";
+
+// Intérêt pour l'obligation Kupanda, une ligne par manifestation.
+export type KupandaInterest = {
+  id: number;
+  investor_id: string;
+  tranche: string;
+  created_at: string;
+};

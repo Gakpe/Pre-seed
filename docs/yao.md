@@ -32,7 +32,7 @@ par un cron Vercel dont la granularité est journalière.
 | --- | --- | --- |
 | `signup`, `first_login` | oui | **oui** |
 | `question` | oui | **oui** |
-| `interest` | oui | non |
+| `interest`, `kupanda_interest` | oui | **oui** |
 | `docsend_click`, `long_session`, `return_visit` | oui | non |
 
 **Telegram** est le canal par défaut, celui de la conversation avec Yao. Il est
@@ -41,10 +41,12 @@ message)` de GAK_OS fait le travail.
 
 **Slack** reçoit en plus les alertes que l'équipe doit voir sans passer par
 la conversation privée de Julien : les deux qui disent qu'un investisseur vient
-d'arriver, `signup` et `first_login`, et les questions, `question`. Pour une
-question, le worker relit le texte complet dans la table `questions` (le
-message de la file est tronqué à 300 caractères) et ajoute le lien vers la
-fiche admin. Poste via `chat.postMessage` avec le `SLACK_BOT_TOKEN` déjà
+d'arriver, `signup` et `first_login`, les questions, `question`, et les
+intérêts, `interest` (tour pre-seed, ouvre le niveau 2 après validation) et
+`kupanda_interest` (obligation Kupanda, depuis le bas de la term sheet, tranche
+dans le payload). Pour une question, le worker relit le texte complet dans la
+table `questions` (le message de la file est tronqué à 300 caractères) ; pour
+une question ou un intérêt, il ajoute le lien vers la fiche admin. Poste via `chat.postMessage` avec le `SLACK_BOT_TOKEN` déjà
 utilisé par le slack-worker, sur le canal défini par `SLACK_INVESTORS_CHANNEL`.
 
 **Email** : indépendamment de la file, le portail envoie lui-même chaque
@@ -87,8 +89,9 @@ domaine email, ref), `interest` (manifestation d'intérêt pour une tranche →
 débloque le niveau 2 de la data room), `question` (question posée via le
 widget — texte complet dans la table `questions`), `first_login`,
 `docsend_click`, `long_session` (session > 5 min, une alerte par session),
-`return_visit` (retour après plus de 7 jours). `payload` (jsonb) contient le
-détail brut.
+`return_visit` (retour après plus de 7 jours), `kupanda_interest` (intérêt pour
+l'obligation Kupanda, tranche dans le payload, historique dans la table
+`kupanda_interests`). `payload` (jsonb) contient le détail brut.
 
 ## 2. Actions — bloquer un accès, ouvrir le niveau 2
 

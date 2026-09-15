@@ -112,6 +112,20 @@ const dict = {
     "interest.submit": "Valider mon intérêt",
     "interest.sending": "Envoi…",
     "interest.error": "Échec, réessayez.",
+
+    // intérêt pour Kupanda (bas de la term sheet)
+    "kupanda.title": "Vous êtes intéressé par Kupanda ?",
+    "kupanda.body":
+      "Dites-nous le montant que vous envisagez. La démarche est indicative et non engageante, l'équipe revient vers vous pour la suite.",
+    "kupanda.cta": "Je suis intéressé par Kupanda",
+    "kupanda.modalBody":
+      "Chaque obligation vaut 10 000 €, la souscription minimale est de trois obligations, soit 30 000 €.",
+    "kupanda.tranche": "Montant envisagé",
+    "kupanda.minimum": "Minimum : 3 obligations, soit 30 000 €.",
+    "kupanda.submit": "Transmettre mon intérêt",
+    "kupanda.done": "Intérêt transmis :",
+    "kupanda.doneBody": "L'équipe revient vers vous rapidement.",
+    "kupanda.change": "Modifier le montant",
     "common.cancel": "Annuler",
     "common.close": "Fermer",
 
@@ -235,6 +249,19 @@ const dict = {
     "interest.submit": "Confirm my interest",
     "interest.sending": "Sending…",
     "interest.error": "Failed, please retry.",
+
+    "kupanda.title": "Interested in Kupanda?",
+    "kupanda.body":
+      "Tell us the amount you have in mind. The step is indicative and non-binding, the team will get back to you on next steps.",
+    "kupanda.cta": "I am interested in Kupanda",
+    "kupanda.modalBody":
+      "Each bond is worth €10,000; the minimum subscription is three bonds, that is €30,000.",
+    "kupanda.tranche": "Amount in mind",
+    "kupanda.minimum": "Minimum: 3 bonds, that is €30,000.",
+    "kupanda.submit": "Send my interest",
+    "kupanda.done": "Interest sent:",
+    "kupanda.doneBody": "The team will get back to you shortly.",
+    "kupanda.change": "Change the amount",
     "common.cancel": "Cancel",
     "common.close": "Close",
 
