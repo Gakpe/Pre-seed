@@ -22,6 +22,7 @@ import { TermSheet } from "./term-sheet";
 import { RiskCascade } from "./risk-cascade";
 import { ResilienceBar } from "./resilience-bar";
 import { RiskClosing } from "./risk-closing";
+import { BackToTop } from "./back-to-top";
 
 export default async function DocPage({
   params,
@@ -115,6 +116,11 @@ export default async function DocPage({
     businessModel;
   const headerCategory = doc.slug === "pourquoi-minah" || note;
 
+  // Retour en haut sur les fiches vraiment longues : la note de marché, près de
+  // sept écrans. La levée, Pourquoi Minah et le track record tiennent en moins
+  // de deux, le business model en moins de trois : pas de bouton pour le bouton.
+  const backToTop = note;
+
   return (
     <main
       className={`mx-auto w-full flex-1 px-6 py-12 ${
@@ -165,6 +171,8 @@ export default async function DocPage({
           <DocContent text={content ?? ""} size="large" />
         </div>
       )}
+
+      {backToTop && <BackToTop locale={locale} />}
 
       {/* Certaines fiches portent un contenu riche en plus de leur texte. */}
       {doc.slug === "pourquoi-minah" && <WhyMinah locale={locale} />}

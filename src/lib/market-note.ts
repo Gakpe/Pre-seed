@@ -13,8 +13,8 @@ export const CHAPTERS = [
     id: "note-02",
     num: "02",
     title: {
-      fr: "Des taux qui devraient converger, et qui ne convergent pas",
-      en: "Rates that ought to converge, and do not",
+      fr: "Des taux qui peinent à converger",
+      en: "Rates that struggle to converge",
     },
   },
   {
@@ -65,7 +65,7 @@ export const REGIONS: Region[] = [
     path: "M 161.0 230.9 L 160.4 221.6 L 153.9 218.4 L 140.9 220.0 L 134.3 209.7 L 126.2 208.6 L 114.3 210.2 L 96.9 217.3 L 83.3 215.1 L 67.0 219.4 L 56.2 214.0 L 45.8 205.9 L 36.1 197.2 L 27.9 185.8 L 17.1 176.0 L 14.9 163.5 L 18.7 155.4 L 20.3 143.4 L 18.1 137.5 L 15.4 129.3 L 42.6 126.6 L 80.6 121.2 L 124.0 137.5 L 172.9 121.2 L 227.2 137.5 L 189.2 178.2 L 186.5 216.2 Z",
     cities: [
       { n: { fr: "Abuja", en: "Abuja" }, r: "21,5 %", x: 148.5, y: 193.9 },
-      { n: { fr: "Accra", en: "Accra" }, r: "25 %", x: 106.7, y: 212.9 },
+      { n: { fr: "Accra", en: "Accra" }, r: "25 %", x: 106.7, y: 212.9, side: "left" },
     ],
     note: {
       lead: {
@@ -137,9 +137,11 @@ export const REGIONS: Region[] = [
   },
 ];
 
+// Synthèse de la carte au repos. La fourchette est lue dans REGIONS au rendu
+// ({low}, {high}) : écrite en dur, elle disait 8 % quand la carte affichait 5 %.
 export const MAP_RESTING_NOTE: Bi = {
-  fr: "Une PME africaine emprunte entre 8 % et 30 % selon la région et l'accès qu'elle a à un prêteur. La dispersion à l'intérieur d'une même zone est souvent plus forte qu'entre deux continents.",
-  en: "An African SME borrows at between 8% and 30% depending on the region and the access it has to a lender. Dispersion within a single zone is often wider than between two continents.",
+  fr: "Une PME africaine emprunte entre {low}\u00a0% et {high}\u00a0%, en fonction de sa région d'implantation et de son accès à un prêteur. D'ailleurs, la dispersion à l'intérieur d'une même zone est souvent plus forte qu'entre deux continents.",
+  en: "An African SME borrows at between {low}% and {high}%, depending on where it operates and its access to a lender. In fact, dispersion within a single zone is often wider than between two continents.",
 };
 
 // --- Paysage de la dette privée : positionnement par classe d'instrument ---
@@ -151,6 +153,33 @@ export type PeerGroup = {
   ry: number;
   names: string[];
   muted?: string;
+  // Nom mis en avant en dernière ligne de la bulle (Minah parmi ses pairs).
+  highlight?: { name: string; url: string };
+};
+
+// Sites des acteurs cités dans le paysage, vérifiés à la main le 15/09/2026
+// (titre de page lu, homonymes écartés : bluepeakpartners.com est une foncière,
+// xsml.com un domaine à vendre). Ninety One bloque les robots mais répond.
+export const PEER_URLS: Record<string, string> = {
+  AfricInvest: "https://www.africinvest.com",
+  Helios: "https://www.heliosinvestment.com",
+  DPI: "https://dpi-llp.com",
+  Partech: "https://partechpartners.com",
+  "SPE Capital": "https://www.spe-capital.com",
+  BluePeak: "https://www.bluepeakpc.com",
+  "Vantage Capital": "https://www.vantagecapital.co.za",
+  Lendable: "https://lendable.io",
+  "Verdant Capital": "https://verdant-cap.com",
+  Gemcorp: "https://gemcorpcapital.com",
+  "Triple Jump": "https://triplejump.eu",
+  Symbiotics: "https://symbioticsgroup.com",
+  XSML: "https://www.xsmlcapital.com",
+  Scipion: "https://www.scipion-capital.com",
+  "Ninety One": "https://ninetyone.com",
+  Mirova: "https://www.mirova.com",
+  "TLG Capital": "https://www.tlgcapital.com",
+  "Enko Capital": "https://enkocapital.com",
+  "Cauris Finance": "https://www.caurisfinance.com",
 };
 
 export const LANDSCAPE = {
@@ -176,9 +205,16 @@ export const LANDSCAPE = {
     { cx: 490, cy: 187, rx: 62, ry: 26, names: ["Lendable"], muted: "venture debt" },
     { cx: 490, cy: 288, rx: 70, ry: 46, names: ["Verdant Capital", "Gemcorp", "Triple Jump"] },
     { cx: 650, cy: 292, rx: 76, ry: 58, names: ["Symbiotics", "XSML", "Scipion", "Ninety One", "Mirova"] },
-    { cx: 810, cy: 150, rx: 74, ry: 46, names: ["TLG Capital", "Enko Capital", "Cauris Finance"] },
+    // Centrée sur 13 %, milieu de la fourchette 12 à 14 % citée dans le texte.
+    {
+      cx: 810,
+      cy: 191,
+      rx: 78,
+      ry: 56,
+      names: ["TLG Capital", "Enko Capital", "Cauris Finance"],
+      highlight: { name: "Minah", url: "https://www.minah.io" },
+    },
   ] as PeerGroup[],
-  minah: { x: 758, y: 208, w: 104, h: 30 },
 };
 
 // --- Sources : la traçabilité des chiffres fait partie de la crédibilité.
@@ -188,12 +224,8 @@ export type Source = { text: Bi; toVerify?: Bi };
 export const SOURCES: Source[] = [
   {
     text: {
-      fr: "Crédit intérieur au secteur privé (% du PIB), Banque mondiale, indicateur FS.AST.PRVT.GD.ZS.",
-      en: "Domestic credit to the private sector (% of GDP), World Bank, indicator FS.AST.PRVT.GD.ZS.",
-    },
-    toVerify: {
-      fr: "confirmer la valeur exacte pour l'Afrique subsaharienne sur le dernier millésime disponible, ainsi que les comparatifs monde et Asie de l'Est, avant publication.",
-      en: "confirm the exact figure for sub-Saharan Africa on the latest available vintage, along with the world and East Asia comparators, before publication.",
+      fr: "Crédit intérieur au secteur privé (% du PIB), Banque mondiale, indicateur FS.AST.PRVT.GD.ZS : Afrique subsaharienne 29,4\u00a0% en 2022 (dernière année publiée), monde 140,3\u00a0% et Asie de l'Est et Pacifique 175,4\u00a0% en 2024.",
+      en: "Domestic credit to the private sector (% of GDP), World Bank, indicator FS.AST.PRVT.GD.ZS: sub-Saharan Africa 29.4% in 2022 (latest year published), world 140.3% and East Asia and the Pacific 175.4% in 2024.",
     },
   },
   {
@@ -210,22 +242,14 @@ export const SOURCES: Source[] = [
   },
   {
     text: {
-      fr: "Taux d'intérêt PME par région et par ville, compilation interne Minah.",
-      en: "SME interest rates by region and city, Minah internal compilation.",
-    },
-    toVerify: {
-      fr: "préciser la méthodologie et la date de collecte, sans quoi ces chiffres seront contestés en due diligence.",
-      en: "state the methodology and the collection date, failing which these figures will be challenged in due diligence.",
+      fr: "Taux débiteurs moyens des banques commerciales par pays, compilés par Minah à partir des publications des banques centrales (Central Bank of Kenya, Bank of Ghana, Bank of Zambia, Banque nationale du Rwanda, South African Reserve Bank, Central Bank of Nigeria, Banque centrale d'Égypte) et de la Banque mondiale, 2024 à 2026. Fourchettes régionales indicatives.",
+      en: "Average commercial bank lending rates by country, compiled by Minah from central bank publications (Central Bank of Kenya, Bank of Ghana, Bank of Zambia, National Bank of Rwanda, South African Reserve Bank, Central Bank of Nigeria, Central Bank of Egypt) and the World Bank, 2024 to 2026. Indicative regional ranges.",
     },
   },
   {
     text: {
-      fr: "Fourchettes de rendement par classe d'instrument et positionnement des acteurs, issu d'une cartographie de marché de type AGIF II.",
-      en: "Return ranges by instrument class and player positioning, from an AGIF II-style market mapping.",
-    },
-    toVerify: {
-      fr: "confirmer les droits de reproduction, ou reconstruire nos propres fourchettes à partir de sources publiques.",
-      en: "confirm reproduction rights, or rebuild our own ranges from public sources.",
+      fr: "Positionnement établi par Minah à partir des informations publiques des gérants cités ; fourchettes de rendement indicatives, par classe d'instrument.",
+      en: "Positioning compiled by Minah from the public information of the managers cited; indicative return ranges, by instrument class.",
     },
   },
 ];

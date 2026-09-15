@@ -1,4 +1,4 @@
-import { LANDSCAPE } from "@/lib/market-note";
+import { LANDSCAPE, PEER_URLS } from "@/lib/market-note";
 import type { Locale } from "@/lib/i18n";
 
 // Positionnement par classe d'instrument. Noms en texte et non en logos :
@@ -7,14 +7,16 @@ const copy = {
   fr: {
     alt: "Positionnement des acteurs de la dette privée africaine par classe d'instrument et rendement cible",
     axis: "Rendement cible brut (%)",
+    visit: "site de la société, nouvel onglet",
     caption:
-      "Positionnement indicatif par classe d'instrument. Les fourchettes de rendement sont des ordres de grandeur de marché, à confirmer avant diffusion.",
+      "Positionnement indicatif par classe d'instrument. Les fourchettes de rendement sont des ordres de grandeur de marché.",
   },
   en: {
     alt: "Positioning of African private debt players by instrument class and target return",
     axis: "Gross target return (%)",
+    visit: "company website, opens in a new tab",
     caption:
-      "Indicative positioning by instrument class. The return ranges are market orders of magnitude, to be confirmed before circulation.",
+      "Indicative positioning by instrument class. The return ranges are market orders of magnitude.",
   },
 };
 
@@ -78,27 +80,85 @@ export function PrivateDebtLandscape({ locale }: { locale: Locale }) {
         {/* groupes de pairs */}
         {LANDSCAPE.groups.map((g) => (
           <g key={`${g.cx}-${g.cy}`}>
+            {/* Bulle pleine, du blanc des cartes : le quadrillage ne passe
+                plus sous les noms. */}
             <ellipse
               cx={g.cx}
               cy={g.cy}
               rx={g.rx}
               ry={g.ry}
-              fill="none"
+              fill="#fbfaf7"
               stroke="var(--note-border-strong)"
               strokeWidth="1.2"
             />
-            {g.names.map((n, i) => (
-              <text
-                key={n}
-                x={g.cx}
-                y={g.cy - ((g.names.length - 1) * 18) / 2 + i * 18 + 4}
-                textAnchor="middle"
-                className="text-[12px]"
-                fill="var(--note-ink)"
-              >
-                {n}
-              </text>
-            ))}
+            {/* Chaque nom renvoie au site de la société, dans un nouvel
+                onglet. Soulignement discret au repos pour dire que c'est
+                cliquable, orange au survol. */}
+            {g.names.map((n, i) => {
+              const lines = g.names.length + (g.highlight ? 1 : 0);
+              const y = g.cy - ((lines - 1) * 18) / 2 + i * 18 + 4;
+              const label = (
+                <text
+                  x={g.cx}
+                  y={y}
+                  textAnchor="middle"
+                  className="text-[12px]"
+                  fill="var(--note-ink)"
+                >
+                  {n}
+                </text>
+              );
+              const url = PEER_URLS[n];
+              return url ? (
+                <a
+                  key={n}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${n}, ${t.visit}`}
+                  className="cursor-pointer underline decoration-note-muted/40 underline-offset-2 transition-colors hover:fill-note-accent hover:decoration-note-accent [&:hover_text]:fill-note-accent"
+                >
+                  {label}
+                </a>
+              ) : (
+                <g key={n}>{label}</g>
+              );
+            })}
+            {/* Minah dans la bulle de ses pairs, en orange et en gras, avec
+                un lien vers son site. */}
+            {g.highlight && (() => {
+              const y = g.cy - (g.names.length * 18) / 2 + g.names.length * 18 + 4;
+              // Largeur estimée du nom en 13 px gras : le soulignement CSS sort
+              // en noir dans un SVG, il est donc tracé à la main, en orange.
+              const half = g.highlight.name.length * 4.2;
+              return (
+                <a
+                  href={g.highlight.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${g.highlight.name}, ${t.visit}`}
+                  className="cursor-pointer"
+                >
+                  <text
+                    x={g.cx}
+                    y={y}
+                    textAnchor="middle"
+                    className="text-[13px] font-bold"
+                    fill="var(--note-accent)"
+                  >
+                    {g.highlight.name}
+                  </text>
+                  <line
+                    x1={g.cx - half}
+                    y1={y + 4}
+                    x2={g.cx + half}
+                    y2={y + 4}
+                    stroke="var(--note-accent)"
+                    strokeWidth="1.2"
+                  />
+                </a>
+              );
+            })()}
             {g.muted && (
               <text
                 x={g.cx}
@@ -112,33 +172,6 @@ export function PrivateDebtLandscape({ locale }: { locale: Locale }) {
             )}
           </g>
         ))}
-
-        {/* Minah, rattachée par un trait au groupe de ses pairs */}
-        <line
-          x1={LANDSCAPE.minah.x + LANDSCAPE.minah.w / 2}
-          y1={LANDSCAPE.minah.y}
-          x2={LANDSCAPE.minah.x + LANDSCAPE.minah.w / 2}
-          y2={LANDSCAPE.minah.y - 12}
-          stroke="var(--note-accent)"
-          strokeWidth="1.4"
-        />
-        <rect
-          x={LANDSCAPE.minah.x}
-          y={LANDSCAPE.minah.y}
-          width={LANDSCAPE.minah.w}
-          height={LANDSCAPE.minah.h}
-          rx="15"
-          fill="var(--marsala)"
-        />
-        <text
-          x={LANDSCAPE.minah.x + LANDSCAPE.minah.w / 2}
-          y={LANDSCAPE.minah.y + 20}
-          textAnchor="middle"
-          className="text-[13px] font-bold"
-          fill="#fdf2ee"
-        >
-          Minah
-        </text>
 
         {/* bandes d'instrument */}
         {LANDSCAPE.bands.map((b) => (
