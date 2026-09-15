@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { ADMIN_COOKIE } from "@/lib/admin";
 import { DEMO_COOKIE } from "@/lib/demo";
+import { requestOrigin } from "@/lib/request-origin";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -15,7 +16,9 @@ export async function POST(request: Request) {
     typeof next === "string" && next.startsWith("/") && !next.startsWith("//")
       ? next
       : "/";
-  const res = NextResponse.redirect(new URL(target, request.url), { status: 303 });
+  const res = NextResponse.redirect(new URL(target, requestOrigin(request)), {
+    status: 303,
+  });
 
   // Se déconnecter ferme les trois portes, pas seulement la session Supabase.
   // Le cookie admin vit sept jours et le cookie de démonstration quatre heures :

@@ -1,4 +1,5 @@
 import { getAdminEmail } from "@/lib/admin";
+import { requestOrigin } from "@/lib/request-origin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendBatch, type Mail } from "@/lib/email";
 import {
@@ -54,7 +55,7 @@ export async function POST(request: Request) {
       .from("investors")
       .select("email")
       .eq("status", "approved");
-    const origin = new URL(request.url).origin;
+    const origin = requestOrigin(request);
     const mails = (data ?? [])
       .map((i) => i.email as string | null)
       .filter((e): e is string => !!e)

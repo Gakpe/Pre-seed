@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requestOrigin } from "@/lib/request-origin";
 
 async function recordLogin() {
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return;
@@ -20,7 +21,8 @@ async function recordLogin() {
 }
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
+  const origin = requestOrigin(request);
   const code = searchParams.get("code");
   const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
