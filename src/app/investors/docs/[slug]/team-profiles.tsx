@@ -26,8 +26,10 @@ type Person = {
   tagline: Bilingual;
   academic: BilingualList;
   career: BilingualList;
-  likes: BilingualList;
-  dislikes: BilingualList;
+  /** Une phrase de la personne, à la place des « aime / n'aime pas ». */
+  quote?: Bilingual;
+  likes?: BilingualList;
+  dislikes?: BilingualList;
 };
 
 // ⚠️ À VALIDER PAR LES INTÉRESSÉS avant mise en ligne : les « aime / n'aime pas »
@@ -65,33 +67,9 @@ const PEOPLE: Person[] = [
         "Minah, general management, structuring and origination",
       ],
     },
-    likes: {
-      fr: [
-        "Les montages qui tiennent sur une page",
-        "Les échéanciers connus",
-        "Le risque nommé",
-        "Les partenaires qui répondent vite",
-      ],
-      en: [
-        "Structures that fit on one page",
-        "Known repayment schedules",
-        "Risk that is named",
-        "Counterparts who answer fast",
-      ],
-    },
-    dislikes: {
-      fr: [
-        "Le mot « disruption »",
-        "Un rendement sans son risque",
-        "Les audits menés trop tard",
-        "L'optimisme non chiffré",
-      ],
-      en: [
-        "The word “disruption”",
-        "A yield without its risk",
-        "Due diligence run too late",
-        "Optimism with no numbers under it",
-      ],
+    quote: {
+      fr: "Token maximaliste par conviction, investi dans le renouveau africain par nécessité. La technologie sera le levier, la confiance humaine restera le socle.",
+      en: "Token maximalist by conviction, invested in Africa's renewal by necessity. Technology will be the lever, human trust will remain the foundation.",
     },
   },
   {
@@ -389,11 +367,20 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                         </ul>
                       </div>
 
+                      {p.quote ? (
+                        <blockquote className="tp-field tp-field-3 max-w-2xl text-center">
+                          <p className="text-[15px] italic leading-relaxed text-neutral-700">
+                            {locale === "en" ? "“" : "« "}
+                            {p.quote[locale]}
+                            {locale === "en" ? "”" : " »"}
+                          </p>
+                        </blockquote>
+                      ) : (
                       <div className="tp-field tp-field-3 grid max-w-2xl grid-cols-2 gap-3 lg:gap-10">
                         <div>
                           <Label>{c.likes}</Label>
                           <ul className="mt-1.5 space-y-0.5">
-                            {p.likes[locale].map((l) => (
+                            {(p.likes?.[locale] ?? []).map((l) => (
                               <li
                                 key={l}
                                 className="text-sm leading-snug text-neutral-700 lg:leading-[1.6]"
@@ -406,7 +393,7 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                         <div>
                           <Label>{c.dislikes}</Label>
                           <ul className="mt-1.5 space-y-0.5">
-                            {p.dislikes[locale].map((d) => (
+                            {(p.dislikes?.[locale] ?? []).map((d) => (
                               <li
                                 key={d}
                                 className="text-sm leading-snug text-neutral-600 lg:leading-[1.6]"
@@ -417,6 +404,7 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                           </ul>
                         </div>
                       </div>
+                      )}
                     </div>
                   </div>
                 </div>
