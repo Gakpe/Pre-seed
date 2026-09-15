@@ -88,6 +88,12 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
               </span>
             ) : null}
           </Link>
+          <Link
+            href="/admin/emails"
+            className="text-xs text-neutral-500 hover:underline"
+          >
+            Mails types
+          </Link>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 sm:gap-x-4">
           {/* Démonstration : elle s'ouvre, se pilote et se quitte d'ici. Rien
