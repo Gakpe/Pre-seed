@@ -5,6 +5,15 @@ export const LOCALE_COOKIE = "minah_locale";
 // Clés plates par section : layout.*, auth.*, home.*, docs.*, widget.*
 const dict = {
   fr: {
+    // page d'accueil publique
+    "landing.tagline":
+      "La plateforme de dette privée pour l'Afrique. Dette senior sécurisée, coupons fixes, infrastructure on-chain.",
+    "landing.cta": "Espace investisseurs",
+    "landing.scope": "Data room du tour pre-seed 2026",
+    "landing.note":
+      "Vous y trouverez les informations nécessaires pour prendre une décision d'investissement dans ce tour. Elles restent confidentielles.",
+    "landing.privacy": "Confidentialité",
+
     // layout / chrome
     "layout.signout": "Se déconnecter",
     "layout.admin": "Admin",
@@ -151,6 +160,14 @@ const dict = {
     "docs.captable": "Cap table interactive Minah",
   },
   en: {
+    "landing.tagline":
+      "The private debt platform for Africa. Secured senior debt, fixed coupons, on-chain infrastructure.",
+    "landing.cta": "Investor space",
+    "landing.scope": "Data room of the 2026 pre-seed round",
+    "landing.note":
+      "There you will find the information needed to make an investment decision in this round. It remains confidential.",
+    "landing.privacy": "Privacy",
+
     "layout.signout": "Sign out",
     "layout.admin": "Admin",
     "layout.confidential": "Confidential space",
