@@ -121,6 +121,14 @@ L'`investor_id` est dans chaque notification.
 
 ## 3. Questions en contexte
 
+Branché le 24 septembre 2026 : skill `minah-portail` dans le workspace de Yao
+sur l'Air (`~/.openclaw/workspace/skills/minah-portail/`, code dans GAK_OS
+`scripts/yao-skills/minah-portail/`). Script Python en lecture seule, mêmes
+credentials que le worker. Commandes : `visites [jours]`, `inscrits [jours]`,
+`attente`, `interets`, `questions [jours]`, `fiche <nom|email>`. Les requêtes
+ci-dessous restent la référence de ce que le script lit.
+
+
 Tables lisibles : `investors` (profil, statut, tags, ref, intérêt,
 last_seen_at), `events` (navigation : page_view / page_leave avec duration_ms
 et scroll_depth / docsend_click / cta_click / login), `documents`.
