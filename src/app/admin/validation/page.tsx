@@ -51,7 +51,12 @@ export default async function ValidationPage() {
       </h1>
       <p className="mt-2 text-sm text-neutral-500">
         Un compte validé reçoit un email lui annonçant l&apos;ouverture de son
-        accès. Un compte refusé ne voit rien et n&apos;est pas prévenu.
+        accès. Un compte refusé ne voit rien et n&apos;est pas prévenu. Les
+        adresses{" "}
+        <Link href="/admin/pre-approuves" className="underline">
+          pré-approuvées
+        </Link>{" "}
+        ne passent pas par ici.
       </p>
 
       {pending.length === 0 ? (
