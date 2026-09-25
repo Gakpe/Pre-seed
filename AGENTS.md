@@ -26,6 +26,13 @@ les trois autres, ne pas toucher aux réglages de l'organisation ni à la
 facturation. En cas de doute sur le périmètre d'une opération, demander avant
 d'agir.
 
+Exception accordée par Julien le 25/09/2026, **ponctuelle et en lecture
+seule** : lire les emails de `fundraising_prospects` dans Minah_OS pour
+alimenter la liste des pré-approuvés du portail (`preapproved_investors`,
+`source = 'minah_os'`). Fait ce jour-là, 132 adresses. Toute nouvelle lecture
+de Minah_OS, y compris une synchronisation récurrente, demande un nouvel
+accord explicite.
+
 # Pas de base de développement
 
 Les clés de `.env.local` pointent sur la base de **production**. Un
