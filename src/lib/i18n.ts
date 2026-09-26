@@ -158,6 +158,9 @@ const dict = {
     "docs.back": "Accueil data room",
     "docs.docsend": "DocSend ↗",
     "docs.captable": "Cap table interactive Minah",
+    "docs.captable.fullscreen": "Plein écran",
+    "docs.captable.exitFullscreen": "Quitter le plein écran",
+    "docs.captable.newtab": "Ouvrir dans un onglet",
   },
   en: {
     "landing.tagline":
@@ -300,6 +303,9 @@ const dict = {
     "docs.back": "Data room home",
     "docs.docsend": "DocSend ↗",
     "docs.captable": "Minah interactive cap table",
+    "docs.captable.fullscreen": "Full screen",
+    "docs.captable.exitFullscreen": "Exit full screen",
+    "docs.captable.newtab": "Open in a new tab",
   },
 } as const;
 

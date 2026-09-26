@@ -83,6 +83,7 @@ export default async function DocPage({
   const note = doc.slug === "note-marche";
   const team = doc.slug === "equipe";
   const extraWide =
+    doc.slug === "cap-table" ||
     doc.slug === "gestion-du-risque" ||
     doc.slug === "business-model" ||
     doc.slug === "track-record" ||
@@ -225,7 +226,7 @@ export default async function DocPage({
         </>
       )}
       {doc.slug === "cap-table" && (
-        <CapTableInteractive title={t(locale, "docs.captable")} />
+        <CapTableInteractive title={t(locale, "docs.captable")} locale={locale} />
       )}
     </main>
   );
