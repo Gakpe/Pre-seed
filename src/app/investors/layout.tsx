@@ -6,6 +6,7 @@ import { TrackingProvider } from "./tracking-provider";
 import { Splash } from "./splash";
 import { QuestionWidget } from "./question-widget";
 import { LanguageSwitch } from "./language-switch";
+import { DemoHotkeys } from "./demo-hotkeys";
 import { getDemoSession } from "@/lib/demo";
 import { getDataRoomStatus } from "@/lib/dataroom";
 import { getAdminEmail } from "@/lib/admin";
@@ -61,6 +62,7 @@ export default async function InvestorsLayout({
     <div className="relative flex flex-1 flex-col overflow-x-clip">
       {/* Aucune visite tracée pendant une démo. */}
       {investor && !demo && !gated && <TrackingProvider investor={investor} />}
+      {demo && <DemoHotkeys level2={demo.level2} />}
       {investor && !gated && <Splash />}
 
       {/* Touche de marque : halo orange discret, bas droite */}

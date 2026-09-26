@@ -45,6 +45,12 @@ export function DemoBar({ level2 }: { level2: boolean }) {
       >
         Quitter la démo
       </button>
+      <span
+        className="text-neutral-400"
+        title="Depuis l'espace investisseurs, sans rien afficher à l'invité : ⌥⇧2 ouvre ou reverrouille le niveau 2, ⌥⇧Q quitte la démo. Manifester l'intérêt en démo ouvre aussi le niveau 2."
+      >
+        clavier : ⌥⇧2, ⌥⇧Q
+      </span>
     </div>
   );
 }

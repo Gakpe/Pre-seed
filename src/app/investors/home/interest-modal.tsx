@@ -25,11 +25,13 @@ export function InterestModal({
   async function submit() {
     setStatus("sending");
     // En démo, l'intérêt vit dans le cookie de démo : rien en base, aucune
-    // notification à l'équipe, mais le parcours reste identique à l'écran.
+    // notification à l'équipe, mais le parcours reste identique à l'écran. Et
+    // le niveau 2 s'ouvre dans la foulée : en vrai l'équipe le fait à la main
+    // dans l'heure, en démo on montre tout de suite ce que ça ouvre.
     const res = await fetch(demo ? "/api/demo" : "/api/interest", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tranche }),
+      body: JSON.stringify(demo ? { tranche, level2: true } : { tranche }),
     }).catch(() => null);
     if (res?.ok) {
       setOpen(false);
