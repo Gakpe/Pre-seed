@@ -503,3 +503,24 @@ Cette note explique pourquoi nous pensons que l'opportunité des dix prochaines 
 
 This note sets out why we believe the opportunity of the next ten years lies elsewhere, in structured private debt, and why the window is open now.$doc$
 where slug = 'note-marche';
+-- Fiche « Roadmap technique » (niveau 2) : la frise, les briques, les partenaires
+-- sont rendus par des composants portés depuis l'admin Minah le 02/10/2026
+-- (src/lib/roadmap). Seul le chapô vit ici.
+insert into public.documents
+  (slug, title, title_en, category, category_en, access_level, sort_order,
+   visible_to_pending, docsend_url, content, content_en)
+values (
+  'vision-technique',
+  'Roadmap technique',
+  'Technical roadmap',
+  'Technologie', 'Technology',
+  2, 60, false, null,
+  $doc$Ce qui est construit, où va Minah, et pourquoi l'infrastructure est défendable. Déplacez le curseur pour voir la plateforme évoluer, des fondations à la vision.$doc$,
+  $doc$What is built, where Minah is going, and why the infrastructure is defensible. Move the cursor to see the platform evolve, from the foundations to the vision.$doc$
+)
+on conflict (slug) do update set
+  title = excluded.title, title_en = excluded.title_en,
+  category = excluded.category, category_en = excluded.category_en,
+  access_level = excluded.access_level, sort_order = excluded.sort_order,
+  docsend_url = excluded.docsend_url, content = excluded.content,
+  content_en = excluded.content_en;

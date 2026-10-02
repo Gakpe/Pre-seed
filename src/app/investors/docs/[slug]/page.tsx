@@ -20,6 +20,8 @@ import { WhyMinah } from "./why-minah";
 import { GoToMarket } from "./go-to-market";
 import { TermSheet } from "./term-sheet";
 import { KupandaInterest } from "./kupanda-interest";
+import { VisionTechnique } from "./roadmap/VisionTechnique";
+import { getPublicRoadmap } from "@/lib/roadmap/public";
 import { RiskCascade } from "./risk-cascade";
 import { ResilienceBar } from "./resilience-bar";
 import { RiskClosing } from "./risk-closing";
@@ -82,6 +84,8 @@ export default async function DocPage({
   // (trois portraits verticaux de front).
   const note = doc.slug === "note-marche";
   const team = doc.slug === "equipe";
+  // La roadmap technique a une vue d'ensemble à six colonnes : aussi large que l'équipe.
+  const roadmap = doc.slug === "vision-technique";
   const extraWide =
     doc.slug === "cap-table" ||
     doc.slug === "gestion-du-risque" ||
@@ -97,6 +101,7 @@ export default async function DocPage({
   // de lecture normale, sinon le texte court sur toute la page.
   const proseWidth =
     team ||
+    roadmap ||
     doc.slug === "track-record" ||
     doc.slug === "la-levee" ||
     doc.slug === "pourquoi-minah" ||
@@ -128,6 +133,7 @@ export default async function DocPage({
     doc.slug === "go-to-market" ||
     doc.slug === "go-to-market-apercu" ||
     team ||
+    roadmap ||
     note ||
     businessModel;
   const headerCategory = doc.slug === "pourquoi-minah" || note;
@@ -140,7 +146,7 @@ export default async function DocPage({
   return (
     <main
       className={`mx-auto w-full flex-1 px-6 py-12 ${
-        team
+        team || roadmap
             ? "max-w-6xl"
           : extraWide
             ? "max-w-5xl"
@@ -183,7 +189,7 @@ export default async function DocPage({
           des autres fiches. */}
       {framedHeader && !richOnly && (
         // L'équipe va très large : son chapô reste dans une colonne de lecture.
-        <div className={team ? "max-w-3xl" : ""}>
+        <div className={team || roadmap ? "max-w-3xl" : ""}>
           <DocContent text={content ?? ""} size="large" />
         </div>
       )}
@@ -228,6 +234,7 @@ export default async function DocPage({
       {doc.slug === "cap-table" && (
         <CapTableInteractive title={t(locale, "docs.captable")} locale={locale} />
       )}
+      {roadmap && <VisionTechnique data={getPublicRoadmap(null)} locale={locale} />}
     </main>
   );
 }
