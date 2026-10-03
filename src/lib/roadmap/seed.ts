@@ -266,7 +266,7 @@ const RAW: Raw[] = [
   },
   {
     id: "liquidite-permissionnee", slug: "liquidite-permissionnee", titre: "Premiers souscripteurs on-chain", couche: "liquidite", moteur: "transverse", ordre: 0.5,
-    livreEn: "api_v1", owner: null, dependances: ["api-v1"], note: "Permissionné — security token", aConfirmer: true,
+    livreEn: "b2b", statutsForces: { b2b: "en_cours" }, owner: null, dependances: ["api-v1"], note: "Permissionné — security token", aConfirmer: true,
     briefTheorique: draft(
       "Ouvrir la souscription à des porteurs on-chain, dans un cadre permissionné.",
       "[Security token permissionné, liste d'adresses autorisées, règlement]",
@@ -382,7 +382,9 @@ const RAW: Raw[] = [
   {
     id: "plateforme-minah", slug: "plateforme-b2b", titre: "Plateforme B2B minah.io", couche: "produits", moteur: "dette_privee", ordre: 2,
     miseEnAvant: true,
-    livreEn: "b2b", owner: null, dependances: ["espace-b2c"], note: "Lancée fin sept. 2026", aConfirmer: false,
+    // Côté data room, la plateforme reste « en développement » sur la période B2B :
+    // elle est en production, mais le périmètre B2B se construit encore (03/10/2026).
+    livreEn: "b2b", statutsForces: { b2b: "en_cours" }, owner: null, dependances: ["espace-b2c"], note: "Lancée fin sept. 2026", aConfirmer: false,
     dateDebut: "2026-06-01", dateFinCible: "2026-09-30",
     briefTheorique: draft(
       "Le point d'entrée des investisseurs professionnels : accès, KYC, souscription en ligne, portefeuille. Tout le reste de la roadmap s'y raccorde.",

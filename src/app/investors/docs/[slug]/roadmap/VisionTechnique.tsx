@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import type { Phase, PublicRoadmap } from "@/lib/roadmap/types";
 import { roadmapCopy } from "@/lib/roadmap/i18n";
+import { STATUS_STYLE } from "@/lib/roadmap/labels";
 import { ArchitectureBoard, CapacityLine, DefendableList } from "./ArchitectureBoard";
 import { PartnerStrip } from "./PartnerStrip";
 import { InvestorCardModal } from "./InvestorCard";
@@ -30,6 +31,21 @@ export function VisionTechnique({ data, locale }: { data: PublicRoadmap; locale:
       <p style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 30, fontWeight: 400, color: INK, lineHeight: 1.2, letterSpacing: "-0.02em", margin: "0 0 32px", maxWidth: 760 }}>
         {data.meta.vision}
       </p>
+
+      {/* Légende du code couleur, lisible avant la frise : chaque brique
+          reprend exactement ces trois traitements. */}
+      <ul style={{ listStyle: "none", margin: "0 0 14px", padding: 0, display: "flex", flexWrap: "wrap", gap: "8px 18px", fontSize: 12.5, color: MUTED }}>
+        {(["livre", "en_cours", "prevu"] as const).map((status) => {
+          const st = STATUS_STYLE[status];
+          return (
+            <li key={status} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span aria-hidden style={{ width: 22, height: 14, borderRadius: 4, background: st.bg, border: `1px ${status === "prevu" ? "dashed" : "solid"} ${st.border}`, display: "inline-block" }} />
+              <span style={{ color: INK, fontWeight: 600 }}>{c.labels.statuses[status]}</span>
+              <span>{c.legend[status]}</span>
+            </li>
+          );
+        })}
+      </ul>
 
       <section style={{ background: "#FFFFFE", border: `1px solid ${LINE}`, borderRadius: 16, padding: "26px 28px 26px" }}>
         <ArchitectureBoard

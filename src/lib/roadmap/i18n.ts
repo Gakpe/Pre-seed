@@ -29,13 +29,15 @@ export type RoadmapCopy = {
   partnerStatuses: Record<Partner["statut"], string>;
   partnerLink: string;
   card: CardLabels;
+  /** Légende du code couleur, un mot d'explication par état. */
+  legend: Record<"livre" | "en_cours" | "prevu", string>;
 };
 
 const fr: RoadmapCopy = {
   labels: {
     phases: { fondations: "Fondations", b2c: "Plateforme minah.io B2C", b2b: "Plateforme B2B", api_v1: "API v1", api_v2: "API v2", vision: "Vision" },
     layers: { liquidite: "Liquidité", produits: "Produits et moteurs", api: "API", admin: "Admin, Web3 et sécurité", rails: "Rails et custody" },
-    statuses: { prevu: "Prévu", en_cours: "En cours", livre: "Livré" },
+    statuses: { prevu: "En projet", en_cours: "En développement", livre: "Intégré" },
     lanes: { web3: "Smart contracts et web3", backend: "Backend et API", front: "Front et admin", securite: "Sécurité et conformité", partenaires: "Intégrations partenaires" },
     taskStatuses: { a_faire: "à faire", en_cours: "en cours", fait: "fait" },
     moteurs: { dette_privee: "Dette privée", dette_souveraine: "Dette souveraine", liquidite_crypto: "Liquidité crypto", transverse: "Transverse" },
@@ -62,6 +64,7 @@ const fr: RoadmapCopy = {
     "Minah ne refait pas les rails : elle s'y branche. Chaque intégration élargit la distribution et prouve que l'infrastructure est ouverte.",
   partnerStatuses: { actif: "En production", en_cours: "Intégration en cours", pressenti: "Pressenti" },
   partnerLink: "ouvrir le site (nouvel onglet)",
+  legend: { livre: "en production", en_cours: "en cours sur la période", prevu: "prévu plus tard" },
   card: { quarter: "Livré en", moteur: "Moteur", what: "Ce que c'est", why: "Pourquoi c'est important", capacity: "Capacité débloquée", partner: "Partenaire", partnerLink: "Voir le site", close: "Fermer" },
 };
 
@@ -69,7 +72,7 @@ const en: RoadmapCopy = {
   labels: {
     phases: { fondations: "Foundations", b2c: "minah.io B2C platform", b2b: "B2B platform", api_v1: "API v1", api_v2: "API v2", vision: "Vision" },
     layers: { liquidite: "Liquidity", produits: "Products & engines", api: "API", admin: "Admin, Web3 & security", rails: "Rails & custody" },
-    statuses: { prevu: "Planned", en_cours: "In progress", livre: "Delivered" },
+    statuses: { prevu: "Planned", en_cours: "In development", livre: "Integrated" },
     lanes: { web3: "Smart contracts & web3", backend: "Backend & API", front: "Front & admin", securite: "Security & compliance", partenaires: "Partner integrations" },
     taskStatuses: { a_faire: "to do", en_cours: "in progress", fait: "done" },
     moteurs: { dette_privee: "Private debt", dette_souveraine: "Sovereign debt", liquidite_crypto: "Crypto liquidity", transverse: "Cross-cutting" },
@@ -96,6 +99,7 @@ const en: RoadmapCopy = {
     "Minah does not rebuild the rails, it plugs into them. Every integration widens distribution and proves the infrastructure is open.",
   partnerStatuses: { actif: "Live", en_cours: "Integration under way", pressenti: "Prospective" },
   partnerLink: "open website (new tab)",
+  legend: { livre: "in production", en_cours: "under way in the period", prevu: "planned for later" },
   card: { quarter: "Delivered in", moteur: "Engine", what: "What it is", why: "Why it matters", capacity: "Capability unlocked", partner: "Partner", partnerLink: "Visit website", close: "Close" },
 };
 

@@ -28,10 +28,15 @@ export const HEALTH_DOT: Record<Health, string> = {
   off_track: "#8A2620",
 };
 
+// Code couleur des briques, le même partout (briques, carte, légende) :
+//   intégré          vert, plein
+//   en développement orange, plein
+//   en projet        gris, bord en pointillé
+// Contrastes texte / fond calculés : 7,9 (vert), 7,6 (orange), 6,1 (gris).
 export const STATUS_STYLE: Record<Status, { bg: string; border: string; color: string; dot: string }> = {
-  livre: { bg: "#E6EEE6", border: "#C9DACB", color: "#2F4F36", dot: "#6E8A72" },
-  en_cours: { bg: "#FCE6D3", border: "#F0C9A0", color: "#7A4514", dot: "#E27B30" },
-  prevu: { bg: "#FFFFFE", border: "#E6E1D4", color: "#A39A8E", dot: "#C9C1B3" },
+  livre: { bg: "#DCEBDD", border: "#9FC4A5", color: "#1F3F27", dot: "#2F7A43" },
+  en_cours: { bg: "#FBE3CF", border: "#EDB27B", color: "#6B3A0E", dot: "#E27B30" },
+  prevu: { bg: "#F5F3EE", border: "#CFC8B9", color: "#5F574E", dot: "#B5AC9D" },
 };
 
 export const TASK_STATUS_DOT: Record<TaskStatus, string> = {

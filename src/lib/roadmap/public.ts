@@ -6,7 +6,26 @@
 
 import { partnersByIds } from "./partners";
 import { ROADMAP_META, ROADMAP_OBJECTIVES } from "./seed";
-import type { Objective, PhaseProof, Phase, PublicObjective, PublicRoadmap } from "./types";
+import { PHASES, currentPhase, type Objective, type PhaseProof, type Phase, type PublicObjective, type PublicRoadmap, type Status } from "./types";
+
+/**
+ * Règle data room (03/10/2026) : rien de ce qui se livre dans le futur n'est montré
+ * comme intégré ni en développement, quelle que soit la période sous le curseur.
+ * Une brique livrée après la période courante est « en projet » partout ; les
+ * briques passées et courantes gardent leurs statuts (forçages compris). Sans ça,
+ * placer le curseur sur « API v1 » peignait en vert des choses qui n'existent pas.
+ */
+// Chantiers réellement ouverts aujourd'hui bien que livrés plus tard : montrés
+// « en développement » à partir de la période courante, « en projet » avant.
+// Liste arrêtée avec Julien le 03/10/2026.
+const IN_DEVELOPMENT = new Set(["api-v1", "integration-sereel", "web3-admin", "cross-chain-stellar"]);
+
+function dataroomStatuses(o: Objective): Record<Phase, Status> {
+  const now = PHASES.indexOf(currentPhase());
+  if (PHASES.indexOf(o.livreEn) <= now) return o.statutsParPhase;
+  const later: Status = IN_DEVELOPMENT.has(o.id) ? "en_cours" : "prevu";
+  return Object.fromEntries(PHASES.map((p, i) => [p, i >= now ? later : "prevu"])) as Record<Phase, Status>;
+}
 
 /**
  * `dataroom` vaut true pour la vue investisseurs : un partenaire non signé
@@ -23,7 +42,7 @@ export function toPublicObjective(o: Objective, dataroom = true): PublicObjectiv
     ordre: o.ordre,
     livreEn: o.livreEn,
     miseEnAvant: o.miseEnAvant,
-    statutsParPhase: o.statutsParPhase,
+    statutsParPhase: dataroom ? dataroomStatuses(o) : o.statutsParPhase,
     capaciteDebloquee: o.capaciteDebloquee,
     briefInvestisseur: o.briefInvestisseur,
     partenaires: partnersByIds(o.partenaires, dataroom).map((p) => p.id),
