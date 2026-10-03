@@ -14,8 +14,8 @@ import {
   approveInvestor,
   deleteInvestorNote,
   setInvestorStatus,
-  setLevel2Access,
 } from "../../actions";
+import { Level2Toggle } from "../../level2-toggle";
 import { StatusBadge } from "../../status-badge";
 import { ActivityHistogram } from "../../activity-histogram";
 
@@ -208,11 +208,11 @@ export default async function InvestorDetailPage({
               </button>
             </form>
           )}
-          <form action={setLevel2Access.bind(null, investor.id, !investor.level2_access)}>
-            <button className="rounded-md border border-neutral-300 px-3 py-1.5 text-xs text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-900">
-              {investor.level2_access ? "Retirer le niveau 2" : "Donner le niveau 2"}
-            </button>
-          </form>
+          <Level2Toggle
+            investorId={investor.id}
+            name={investor.full_name ?? investor.email}
+            granted={investor.level2_access}
+          />
           {posthogUrl && (
             <a
               href={`${posthogUrl}/person/${investor.id}#activeTab=sessionRecordings`}

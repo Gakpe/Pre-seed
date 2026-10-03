@@ -4,7 +4,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import type { Investor, InvestorStats, KupandaInterest } from "@/lib/types";
 import { formatDuration } from "@/lib/format";
 import { buildDailyBuckets } from "@/lib/activity";
-import { approveInvestor, setInvestorStatus, setLevel2Access } from "./actions";
+import { approveInvestor, setInvestorStatus } from "./actions";
+import { Level2Toggle } from "./level2-toggle";
 import { StatusBadge } from "./status-badge";
 import { InvestorRow } from "./investor-row";
 import { ActivityHistogram } from "./activity-histogram";
@@ -146,17 +147,12 @@ export default async function AdminPage() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <span>{inv.level2_access ? "✓" : ""}</span>
-                      <form
-                        action={setLevel2Access.bind(
-                          null,
-                          inv.id,
-                          !inv.level2_access
-                        )}
-                      >
-                        <button className="text-xs text-neutral-500 hover:underline">
-                          {inv.level2_access ? "retirer" : "donner"}
-                        </button>
-                      </form>
+                      <Level2Toggle
+                        investorId={inv.id}
+                        name={inv.full_name ?? inv.email}
+                        granted={inv.level2_access}
+                        compact
+                      />
                     </div>
                   </td>
                   <td className="px-4 py-3">
