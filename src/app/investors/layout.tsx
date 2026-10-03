@@ -7,6 +7,7 @@ import { Splash } from "./splash";
 import { QuestionWidget } from "./question-widget";
 import { LanguageSwitch } from "./language-switch";
 import { DemoHotkeys } from "./demo-hotkeys";
+import { DemoBar } from "./demo-bar";
 import { getDemoSession } from "@/lib/demo";
 import { getDataRoomStatus } from "@/lib/dataroom";
 import { getAdminEmail } from "@/lib/admin";
@@ -98,10 +99,14 @@ export default async function InvestorsLayout({
         </div>
         <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 sm:gap-x-4">
           <LanguageSwitch locale={locale} />
-          {/* Pendant une démonstration, l'en-tête ne porte rien : le badge et
-              les commandes s'affichaient à l'écran que regarde l'investisseur.
-              Elles vivent maintenant dans la barre admin, voir DemoBar. */}
-          {demo ? null : investor ? (
+          {/* Pendant une démonstration, les commandes (niveau 2, sortie) sont
+              dans l'en-tête, visibles en partage d'écran : Julien préfère les
+              avoir sous la main plutôt que cachées (décision du 03/10/2026).
+              Elles n'existent que si le cookie de démo est posé, donc pour un
+              admin. Les raccourcis ⌥⇧2 et ⌥⇧Q font la même chose au clavier. */}
+          {demo ? (
+            <DemoBar level2={demo.level2} />
+          ) : investor ? (
             <form action="/auth/signout" method="post">
               <button
                 type="submit"
