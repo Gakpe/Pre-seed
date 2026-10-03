@@ -242,7 +242,7 @@ export default async function DocPage({
       )}
       {roadmap && (
         <VisionTechnique
-          data={getPublicRoadmap(null, roadmapOverrides)}
+          data={getPublicRoadmap(null, roadmapOverrides, locale)}
           locale={locale}
           canEdit={roadmapOwner}
           overrides={roadmapOverrides}

@@ -1,6 +1,5 @@
-// Porté le 02/10/2026 depuis minah_interface, voir types.ts. Les textes sont en
-// français seulement : la version anglaise de la fiche affiche les libellés traduits
-// autour de contenus français.
+// Porté le 02/10/2026 depuis minah_interface, voir types.ts. Textes en français ;
+// la version anglaise vit en surcouche dans seed.en.ts, à tenir à jour avec celui-ci.
 // src/lib/roadmap/seed.ts
 // Données d'amorçage (phase A), structure v2. Sources : brief « Roadmap technique Minah »
 // (1er oct.), brief d'update v2 (1er oct.) et feuille de route de la proposition de

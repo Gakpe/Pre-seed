@@ -6,6 +6,7 @@
 
 import { partnersByIds } from "./partners";
 import { ROADMAP_META, ROADMAP_OBJECTIVES } from "./seed";
+import { META_EN, OBJECTIVES_EN } from "./seed.en";
 import { PHASES, currentPhase, type Objective, type PhaseProof, type Phase, type PublicObjective, type PublicRoadmap, type Status } from "./types";
 
 /**
@@ -59,21 +60,29 @@ export function toPublicObjective(o: Objective, dataroom = true, override?: Stat
   };
 }
 
+// Textes anglais en surcouche (seed.en.ts) ; une entrée absente garde le français.
+function localize(o: PublicObjective, locale: "fr" | "en"): PublicObjective {
+  const en = locale === "en" ? OBJECTIVES_EN[o.id] : undefined;
+  return en ? { ...o, titre: en.titre, capaciteDebloquee: en.capaciteDebloquee, briefInvestisseur: en.brief } : o;
+}
+
 export function getPublicRoadmap(
   preuves: Partial<Record<Phase, PhaseProof>> | null,
-  overrides: Partial<Record<string, Status>> = {}
+  overrides: Partial<Record<string, Status>> = {},
+  locale: "fr" | "en" = "fr"
 ): PublicRoadmap {
+  const m = locale === "en" ? META_EN : ROADMAP_META;
   return {
     meta: {
-      vision: ROADMAP_META.vision,
-      defendableParPhase: ROADMAP_META.defendableParPhase,
+      vision: m.vision,
+      defendableParPhase: m.defendableParPhase,
       misAJourLe: ROADMAP_META.misAJourLe,
-      experienceParPhase: ROADMAP_META.experienceParPhase,
-      capacitesParPhase: ROADMAP_META.capacitesParPhase,
-      apprentissagesParPhase: ROADMAP_META.apprentissagesParPhase,
-      preuveLibreParPhase: ROADMAP_META.preuveLibreParPhase,
+      experienceParPhase: m.experienceParPhase,
+      capacitesParPhase: m.capacitesParPhase,
+      apprentissagesParPhase: m.apprentissagesParPhase,
+      preuveLibreParPhase: m.preuveLibreParPhase,
     },
     preuves,
-    objectifs: ROADMAP_OBJECTIVES.filter((o) => o.visibleDataroom).map((o) => toPublicObjective(o, true, overrides[o.id])),
+    objectifs: ROADMAP_OBJECTIVES.filter((o) => o.visibleDataroom).map((o) => localize(toPublicObjective(o, true, overrides[o.id]), locale)),
   };
 }
