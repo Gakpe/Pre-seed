@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { requireAdmin } from "@/lib/admin";
+import { isOwner, requireAdmin } from "@/lib/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Investor, InvestorStats, KupandaInterest } from "@/lib/types";
 import { formatDuration } from "@/lib/format";
@@ -21,6 +21,7 @@ const dateFmt = new Intl.DateTimeFormat("fr-FR", {
 
 export default async function AdminPage() {
   await requireAdmin();
+  const owner = await isOwner();
 
   const admin = createAdminClient();
   const since = new Date(Date.now() - 13 * 86_400_000).toISOString().slice(0, 10);
@@ -152,6 +153,7 @@ export default async function AdminPage() {
                         name={inv.full_name ?? inv.email}
                         granted={inv.level2_access}
                         compact
+                        canGrant={owner}
                       />
                     </div>
                   </td>

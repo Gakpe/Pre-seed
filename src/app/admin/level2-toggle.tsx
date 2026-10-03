@@ -11,12 +11,15 @@ export function Level2Toggle({
   name,
   granted,
   compact = false,
+  canGrant,
 }: {
   investorId: string;
   name: string;
   granted: boolean;
   /** Dans la liste : libellé court, sans cadre. */
   compact?: boolean;
+  /** Seul Julien ouvre le niveau 2 ; les autres admins voient l'état, sans bouton. */
+  canGrant: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [pending, start] = useTransition();
@@ -34,6 +37,17 @@ export function Level2Toggle({
   const buttonClass = compact
     ? "text-xs text-neutral-500 hover:underline disabled:opacity-50"
     : "rounded-md border border-neutral-300 px-3 py-1.5 text-xs text-neutral-700 hover:bg-neutral-50 disabled:opacity-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-900";
+
+  if (!granted && !canGrant) {
+    return (
+      <span
+        className="text-xs text-neutral-400"
+        title="L'ouverture du niveau 2 est réservée à Julien."
+      >
+        {compact ? "Julien" : "Ouverture réservée à Julien"}
+      </span>
+    );
+  }
 
   return (
     <>

@@ -120,7 +120,7 @@ export function InvestorCardBody({
 }
 
 export function InvestorCardModal({
-  objectif, phase, labels, t, onClose, lang = "fr",
+  objectif, phase, labels, t, onClose, lang = "fr", extra,
 }: {
   objectif: PublicObjective;
   phase: Phase;
@@ -128,11 +128,14 @@ export function InvestorCardModal({
   t: { quarter: string; moteur: string; what: string; why: string; capacity: string; partner: string; partnerLink: string; close: string };
   onClose: () => void;
   lang?: "fr" | "en";
+  /** Bloc supplémentaire sous la carte (éditeur d'état réservé à Julien). */
+  extra?: React.ReactNode;
 }) {
   return (
     <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(44,23,22,.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
       <div onClick={(e) => e.stopPropagation()} style={{ background: "#FFFFFE", borderRadius: 16, width: "100%", maxWidth: 560, padding: "26px 28px 22px", boxShadow: "0 8px 40px rgba(44,23,22,.18)" }}>
         <InvestorCardBody objectif={objectif} phase={phase} labels={labels} t={t} lang={lang} />
+        {extra}
         <div style={{ marginTop: 22, paddingTop: 14, borderTop: `1px solid ${LINE}`, textAlign: "right" }}>
           <button type="button" onClick={onClose} style={{ background: "none", border: `1px solid ${LINE}`, borderRadius: 8, padding: "7px 14px", fontSize: 12.5, color: MUTED, cursor: "pointer" }}>
             {t.close}

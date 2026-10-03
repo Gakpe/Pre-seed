@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendBatch } from "@/lib/email";
 import { SITE_URL } from "@/lib/site";
-import { getAdminEmail, requireAdmin } from "@/lib/admin";
+import { getAdminEmail, isOwner, requireAdmin } from "@/lib/admin";
 import type { InvestorStatus, NoteKind } from "@/lib/types";
 
 export async function setInvestorStatus(
@@ -68,6 +68,10 @@ export async function approveInvestor(investorId: string) {
 
 export async function setLevel2Access(investorId: string, granted: boolean) {
   await requireAdmin();
+  // Ouvrir est réservé à Julien ; retirer reste possible à tout admin.
+  if (granted && !(await isOwner())) {
+    throw new Error("L'ouverture du niveau 2 est réservée à Julien.");
+  }
 
   const admin = createAdminClient();
   await admin

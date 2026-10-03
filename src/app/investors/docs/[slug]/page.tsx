@@ -22,6 +22,8 @@ import { TermSheet } from "./term-sheet";
 import { KupandaInterest } from "./kupanda-interest";
 import { VisionTechnique } from "./roadmap/VisionTechnique";
 import { getPublicRoadmap } from "@/lib/roadmap/public";
+import { listStatusOverrides } from "@/lib/roadmap/overrides";
+import { isOwner } from "@/lib/admin";
 import { RiskCascade } from "./risk-cascade";
 import { ResilienceBar } from "./resilience-bar";
 import { RiskClosing } from "./risk-closing";
@@ -86,6 +88,10 @@ export default async function DocPage({
   const team = doc.slug === "equipe";
   // La roadmap technique a une vue d'ensemble à six colonnes : aussi large que l'équipe.
   const roadmap = doc.slug === "vision-technique";
+  // Les états forcés par Julien, et le droit de les changer depuis la fiche.
+  const [roadmapOverrides, roadmapOwner] = roadmap
+    ? await Promise.all([listStatusOverrides(), isOwner()])
+    : [{}, false];
   const extraWide =
     doc.slug === "cap-table" ||
     doc.slug === "gestion-du-risque" ||
@@ -234,7 +240,14 @@ export default async function DocPage({
       {doc.slug === "cap-table" && (
         <CapTableInteractive title={t(locale, "docs.captable")} locale={locale} />
       )}
-      {roadmap && <VisionTechnique data={getPublicRoadmap(null)} locale={locale} />}
+      {roadmap && (
+        <VisionTechnique
+          data={getPublicRoadmap(null, roadmapOverrides)}
+          locale={locale}
+          canEdit={roadmapOwner}
+          overrides={roadmapOverrides}
+        />
+      )}
     </main>
   );
 }

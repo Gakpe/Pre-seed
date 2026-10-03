@@ -8,6 +8,8 @@ import { STATUS_STYLE } from "@/lib/roadmap/labels";
 import { ArchitectureBoard, CapacityLine, DefendableList } from "./ArchitectureBoard";
 import { PartnerStrip } from "./PartnerStrip";
 import { InvestorCardModal } from "./InvestorCard";
+import { StatusEditor } from "./StatusEditor";
+import type { Status } from "@/lib/roadmap/types";
 
 // Fiche « Roadmap technique », vue investisseurs. Portée le 02/10/2026 depuis la
 // page /vision-technique de l'admin Minah (minah_interface). Ici la donnée arrive
@@ -19,7 +21,18 @@ const MUTED = "#766962";
 const FAINT = "#A39A8E";
 const LINE = "#E6E1D4";
 
-export function VisionTechnique({ data, locale }: { data: PublicRoadmap; locale: Locale }) {
+export function VisionTechnique({
+  data,
+  locale,
+  canEdit = false,
+  overrides = {},
+}: {
+  data: PublicRoadmap;
+  locale: Locale;
+  /** Julien seulement : l'éditeur d'état apparaît dans la carte d'une brique. */
+  canEdit?: boolean;
+  overrides?: Partial<Record<string, Status>>;
+}) {
   const c = roadmapCopy(locale);
   const [phase, setPhase] = useState<Phase>("fondations");
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -95,7 +108,15 @@ export function VisionTechnique({ data, locale }: { data: PublicRoadmap; locale:
       <p style={{ marginTop: 44, fontSize: 12, color: FAINT }}>{c.footer}</p>
 
       {selected && (
-        <InvestorCardModal objectif={selected} phase={phase} labels={c.labels} t={c.card} lang={locale} onClose={() => setSelectedId(null)} />
+        <InvestorCardModal
+          objectif={selected}
+          phase={phase}
+          labels={c.labels}
+          t={c.card}
+          lang={locale}
+          onClose={() => setSelectedId(null)}
+          extra={canEdit ? <StatusEditor id={selected.id} current={overrides[selected.id] ?? null} labels={c.labels.statuses} /> : undefined}
+        />
       )}
     </div>
   );

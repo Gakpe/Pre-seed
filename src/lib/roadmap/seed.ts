@@ -266,7 +266,7 @@ const RAW: Raw[] = [
   },
   {
     id: "liquidite-permissionnee", slug: "liquidite-permissionnee", titre: "Premiers souscripteurs on-chain", couche: "liquidite", moteur: "transverse", ordre: 0.5,
-    livreEn: "b2b", statutsForces: { b2b: "en_cours" }, owner: null, dependances: ["api-v1"], note: "Permissionné — security token", aConfirmer: true,
+    livreEn: "b2b", statutsForces: { b2c: "prevu", b2b: "en_cours" }, owner: null, dependances: ["api-v1"], note: "Permissionné — security token", aConfirmer: true,
     briefTheorique: draft(
       "Ouvrir la souscription à des porteurs on-chain, dans un cadre permissionné.",
       "[Security token permissionné, liste d'adresses autorisées, règlement]",

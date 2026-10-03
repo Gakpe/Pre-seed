@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requireAdmin } from "@/lib/admin";
+import { isOwner, requireAdmin } from "@/lib/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatDuration } from "@/lib/format";
 import {
@@ -62,6 +62,7 @@ export default async function InvestorDetailPage({
   params,
 }: PageProps<"/admin/investors/[id]">) {
   await requireAdmin();
+  const owner = await isOwner();
   const { id } = await params;
 
   const admin = createAdminClient();
@@ -212,6 +213,7 @@ export default async function InvestorDetailPage({
             investorId={investor.id}
             name={investor.full_name ?? investor.email}
             granted={investor.level2_access}
+            canGrant={owner}
           />
           {posthogUrl && (
             <a

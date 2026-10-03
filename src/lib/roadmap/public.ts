@@ -20,8 +20,18 @@ import { PHASES, currentPhase, type Objective, type PhaseProof, type Phase, type
 // Liste arrêtée avec Julien le 03/10/2026.
 const IN_DEVELOPMENT = new Set(["api-v1", "integration-sereel", "web3-admin", "cross-chain-stellar"]);
 
-function dataroomStatuses(o: Objective): Record<Phase, Status> {
+/**
+ * État forcé par Julien (voir overrides.ts) : il s'applique de la période courante
+ * à la fin. Avant, « intégré » garde l'historique calculé (en développement puis
+ * livré), les deux autres sont « en projet ».
+ */
+function dataroomStatuses(o: Objective, override?: Status): Record<Phase, Status> {
   const now = PHASES.indexOf(currentPhase());
+  if (override) {
+    return Object.fromEntries(
+      PHASES.map((p, i) => [p, i >= now ? override : override === "livre" ? o.statutsParPhase[p] : "prevu"])
+    ) as Record<Phase, Status>;
+  }
   if (PHASES.indexOf(o.livreEn) <= now) return o.statutsParPhase;
   const later: Status = IN_DEVELOPMENT.has(o.id) ? "en_cours" : "prevu";
   return Object.fromEntries(PHASES.map((p, i) => [p, i >= now ? later : "prevu"])) as Record<Phase, Status>;
@@ -32,7 +42,7 @@ function dataroomStatuses(o: Objective): Record<Phase, Status> {
  * (`visibleDataroom: false`) ne doit pas sortir d'ici. La vue équipe passe false et
  * garde la liste complète — c'est le seul écart entre les deux projections.
  */
-export function toPublicObjective(o: Objective, dataroom = true): PublicObjective {
+export function toPublicObjective(o: Objective, dataroom = true, override?: Status): PublicObjective {
   return {
     id: o.id,
     slug: o.slug,
@@ -42,14 +52,17 @@ export function toPublicObjective(o: Objective, dataroom = true): PublicObjectiv
     ordre: o.ordre,
     livreEn: o.livreEn,
     miseEnAvant: o.miseEnAvant,
-    statutsParPhase: dataroom ? dataroomStatuses(o) : o.statutsParPhase,
+    statutsParPhase: dataroom ? dataroomStatuses(o, override) : o.statutsParPhase,
     capaciteDebloquee: o.capaciteDebloquee,
     briefInvestisseur: o.briefInvestisseur,
     partenaires: partnersByIds(o.partenaires, dataroom).map((p) => p.id),
   };
 }
 
-export function getPublicRoadmap(preuves: Partial<Record<Phase, PhaseProof>> | null): PublicRoadmap {
+export function getPublicRoadmap(
+  preuves: Partial<Record<Phase, PhaseProof>> | null,
+  overrides: Partial<Record<string, Status>> = {}
+): PublicRoadmap {
   return {
     meta: {
       vision: ROADMAP_META.vision,
@@ -61,6 +74,6 @@ export function getPublicRoadmap(preuves: Partial<Record<Phase, PhaseProof>> | n
       preuveLibreParPhase: ROADMAP_META.preuveLibreParPhase,
     },
     preuves,
-    objectifs: ROADMAP_OBJECTIVES.filter((o) => o.visibleDataroom).map((o) => toPublicObjective(o)),
+    objectifs: ROADMAP_OBJECTIVES.filter((o) => o.visibleDataroom).map((o) => toPublicObjective(o, true, overrides[o.id])),
   };
 }

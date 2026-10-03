@@ -139,6 +139,15 @@ export async function getAdminEmail(): Promise<string | null> {
   return email && (await isAdminEmail(email)) ? normalizeEmail(email) : null;
 }
 
+// Certains gestes sont réservés à Julien, quel que soit le nombre d'admins :
+// ouvrir le niveau 2 à un investisseur, changer l'état d'une brique de la
+// roadmap. Les autres admins voient, ils ne décident pas.
+export const OWNER_EMAIL = "jgakpe@minah.io";
+
+export async function isOwner(): Promise<boolean> {
+  return (await getAdminEmail()) === OWNER_EMAIL;
+}
+
 // Garde des pages /admin : renvoie vers la connexion admin dédiée.
 export async function requireAdmin(): Promise<string> {
   const email = await getAdminEmail();
