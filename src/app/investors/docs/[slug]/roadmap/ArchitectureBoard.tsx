@@ -15,8 +15,23 @@
 // défile plutôt que d'écraser le texte. Aucune dépendance au layout admin.
 
 import { useMemo, useRef, useState } from "react";
-import { LAYERS, PHASES, PHASE_WINDOWS, TODAY, type Phase, type PhaseCapacity, type PhaseProof, type PublicObjective } from "@/lib/roadmap/types";
+import { LAYERS, PHASES, PHASE_WINDOWS, TODAY, type Moteur, type Phase, type PhaseCapacity, type PhaseProof, type Status } from "@/lib/roadmap/types";
 import { STATUS_STYLE, type RoadmapLabels } from "@/lib/roadmap/labels";
+
+/**
+ * Le minimum qu'une brique doit porter pour être posée sur la frise. La roadmap
+ * technique passe ses PublicObjective ; la roadmap écosystème (04/10/2026) passe
+ * ses partenaires, avec d'autres couches : d'où `layers` et `layerLabels` en props.
+ */
+export type BoardItem = {
+  id: string;
+  titre: string;
+  couche: string;
+  moteur?: Moteur;
+  ordre: number;
+  livreEn: Phase;
+  statutsParPhase: Record<Phase, Status>;
+};
 
 const INK = "#2C1716";
 const MUTED = "#766962";
@@ -61,8 +76,13 @@ function fmtEur(n: number, locale: string) {
 
 export function ArchitectureBoard({
   objectifs, phase, onPhaseChange, onSelect, selectedId, dimmedIds, labels, experience, proofs, proofLabels, locale, dark, todayLabel, highlightExperience,
+  layers = LAYERS, layerLabels,
 }: {
-  objectifs: PublicObjective[];
+  objectifs: BoardItem[];
+  /** Couches affichées, de haut en bas. Par défaut celles de la roadmap technique. */
+  layers?: readonly string[];
+  /** Libellés des couches, si différents de `labels.layers`. */
+  layerLabels?: Record<string, string>;
   phase: Phase;
   onPhaseChange: (p: Phase) => void;
   onSelect?: (id: string) => void;
@@ -166,12 +186,14 @@ export function ArchitectureBoard({
     fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: faint,
   };
 
-  const renderBrick = (o: PublicObjective) => {
+  const layerLabel = (layer: string) => layerLabels?.[layer] ?? (labels.layers as Record<string, string>)[layer] ?? layer;
+
+  const renderBrick = (o: BoardItem) => {
     const status = o.statutsParPhase[phase];
     const st = STATUS_STYLE[status];
     const selected = selectedId === o.id;
     const dimmed = dimmedIds ? dimmedIds.has(o.id) : false;
-    const showMoteur = o.couche === "produits" && o.moteur !== "transverse";
+    const showMoteur = o.couche === "produits" && o.moteur !== undefined && o.moteur !== "transverse";
     return (
       <button
         key={o.id}
@@ -192,7 +214,7 @@ export function ArchitectureBoard({
         <span style={{ fontSize: 10, display: "flex", alignItems: "center", gap: 6, opacity: .9, flexWrap: "wrap" }}>
           <span style={{ width: 6, height: 6, borderRadius: 3, background: st.dot, display: "inline-block", flexShrink: 0 }} />
           {labels.statuses[status]}
-          {showMoteur && <span style={{ letterSpacing: "0.04em", textTransform: "uppercase", opacity: .75 }}>· {labels.moteurs[o.moteur]}</span>}
+          {showMoteur && <span style={{ letterSpacing: "0.04em", textTransform: "uppercase", opacity: .75 }}>· {labels.moteurs[o.moteur!]}</span>}
         </span>
       </button>
     );
@@ -204,7 +226,7 @@ export function ArchitectureBoard({
 
   const proofLabel = proofLabels?.[phase];
   const proof = proofs?.[phase];
-  const rienLivre = LAYERS.every((l) => bricksOf(l, phase).length === 0);
+  const rienLivre = layers.every((l) => bricksOf(l, phase).length === 0);
 
   return (
     <div>
@@ -342,12 +364,12 @@ export function ArchitectureBoard({
           <div style={{ ...smallCaps, margin: "10px 0 2px" }}>{labels.deliveredHere}</div>
           {/* Les cinq couches sont toujours là, même vides : c'est l'architecture qui se lit,
               et voir qu'une couche ne bouge pas sur une période est une information. */}
-          {LAYERS.map((layer) => {
+          {layers.map((layer) => {
             const shown = bricksOf(layer, phase);
             const vide = shown.length === 0;
             return (
               <div key={layer} style={{ display: "grid", gridTemplateColumns: `${LABEL_W}px 1fr`, gap: 12, borderBottom: `1px solid ${hairline}`, padding: "9px 0", minHeight: 42 }}>
-                <div style={{ ...smallCaps, display: "flex", alignItems: "center", paddingRight: 12, opacity: vide ? .45 : 1 }}>{labels.layers[layer]}</div>
+                <div style={{ ...smallCaps, display: "flex", alignItems: "center", paddingRight: 12, opacity: vide ? .45 : 1 }}>{layerLabel(layer)}</div>
                 {vide ? (
                   <div style={{ display: "flex", alignItems: "center", fontSize: 12, color: faint, opacity: .6 }}>—</div>
                 ) : (
@@ -369,6 +391,8 @@ export function ArchitectureBoard({
           selectedIdx={selectedIdx}
           onPhaseChange={onPhaseChange}
           labels={labels}
+          layers={layers}
+          layerLabel={layerLabel}
           locale={locale}
           bricksOf={bricksOf}
           renderBrick={renderBrick}
@@ -385,15 +409,17 @@ export function ArchitectureBoard({
  * sélectionnée est déjà au-dessus, inutile d'empiler six paragraphes.
  */
 function OverviewTable({
-  periods, selectedIdx, onPhaseChange, labels, locale, bricksOf, renderBrick, colors, todayLabel,
+  periods, selectedIdx, onPhaseChange, labels, layers, layerLabel, locale, bricksOf, renderBrick, colors, todayLabel,
 }: {
   periods: Array<{ id: Phase; start: string; end: string; days: number }>;
   selectedIdx: number;
   onPhaseChange: (p: Phase) => void;
   labels: RoadmapLabels;
+  layers: readonly string[];
+  layerLabel: (layer: string) => string;
   locale: string;
-  bricksOf: (layer: string, p: Phase) => PublicObjective[];
-  renderBrick: (o: PublicObjective) => React.ReactNode;
+  bricksOf: (layer: string, p: Phase) => BoardItem[];
+  renderBrick: (o: BoardItem) => React.ReactNode;
   colors: { faint: string; muted: string; ink: string; line: string; hairline: string; selectedBg: string; surface: string };
   todayLabel?: string;
 }) {
@@ -448,12 +474,12 @@ function OverviewTable({
             );
           })}
 
-          {LAYERS.map((layer, li) => {
-            const isLast = li === LAYERS.length - 1;
+          {layers.map((layer, li) => {
+            const isLast = li === layers.length - 1;
             return (
               <div key={layer} style={{ display: "contents" }}>
                 <div style={stickyLabel({ borderBottom: isLast ? "none" : `1px solid ${hairline}`, padding: "8px 12px 8px 0" })}>
-                  {labels.layers[layer]}
+                  {layerLabel(layer)}
                 </div>
                 {periods.map((p, i) => {
                   const shown = bricksOf(layer, p.id);
