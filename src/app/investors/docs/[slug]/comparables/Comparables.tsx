@@ -97,11 +97,10 @@ export function Comparables({ locale }: { locale: Locale }) {
         <span className="ml-auto text-xs text-neutral-500">{t.hint}</span>
       </div>
 
-      {/* Sans groupe choisi, la matrice prend toute la largeur. Au clic, elle
-          se resserre à gauche et laisse la place au texte, qui entre par la
-          gauche. La colonne de droite se referme à zéro quand on ferme. */}
-      <div className={`mt-4 grid gap-6 transition-[grid-template-columns] duration-300 ${detail ? "lg:grid-cols-[1fr_1fr]" : "lg:grid-cols-[1fr_0fr]"}`}>
-        <div className={`relative rounded-xl border border-foreground/10 bg-white/60 lg:-ml-6 ${detail ? "aspect-[4/3]" : "aspect-[2/1]"}`}>
+      <div className="mt-4 grid gap-6 lg:grid-cols-[5fr_3fr]">
+        {/* ── La matrice, grande, qui déborde un peu à gauche. Sa taille ne
+            change pas quand on choisit un groupe. ── */}
+        <div className="relative aspect-[4/3] rounded-xl border border-foreground/10 bg-white/60 lg:-ml-6">
           <span className="absolute top-2 left-1/2 -translate-x-1/2 text-xs font-medium text-neutral-500">{AXES.top[l]}</span>
           <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs font-medium text-neutral-500">{AXES.bottom[l]}</span>
           <span className="absolute top-1/2 whitespace-nowrap text-xs font-medium text-neutral-500" style={{ transform: "translateY(-50%) rotate(-90deg)", transformOrigin: "left center", left: 16 }}>{AXES.left[l]}</span>
@@ -118,9 +117,22 @@ export function Comparables({ locale }: { locale: Locale }) {
           </div>
         </div>
 
-        {/* ── À droite, seulement quand un groupe est choisi : son détail ── */}
-        <div className="min-w-0 overflow-hidden">
-          {detail && (
+        {/* ── À droite, fixe : le positionnement de Minah ; dessous, le détail
+            du groupe choisi, qui entre par la gauche. ── */}
+        <div className="space-y-4 self-start lg:sticky lg:top-6">
+          <div className="rounded-xl bg-foreground px-6 py-6 text-background">
+            <h2 className="text-sm font-semibold text-brand">{MINAH_POSITION.title[l]}</h2>
+            <ul className="mt-3 space-y-2 text-sm leading-6 text-background/85">
+              {MINAH_POSITION.lines.map((line, i) => <li key={i}>{line[l]}</li>)}
+            </ul>
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {MINAH_POSITION.traits.map((tr) => (
+                <span key={tr.fr} className="rounded-md border border-background/20 px-2 py-1 text-xs text-background">{tr[l]}</span>
+              ))}
+            </div>
+          </div>
+
+          {detail ? (
             // key sur le groupe : l'entrée par la gauche rejoue à chaque choix.
             <div key={detail.id} className="slide-in-left rounded-xl border-2 border-dashed bg-white/60 px-5 py-4" style={{ borderColor: GROUP_COLOR[detail.id] }}>
               <div className="flex items-start gap-3">
@@ -147,25 +159,10 @@ export function Comparables({ locale }: { locale: Locale }) {
                 </div>
               </div>
             </div>
+          ) : (
+            <p className="rounded-xl border border-dashed border-foreground/15 px-5 py-6 text-center text-sm text-neutral-500">{t.hint}</p>
           )}
         </div>
-      </div>
-
-      {/* ── Sous la matrice : le positionnement de Minah ─────────────────── */}
-      <div className="mt-6 grid gap-4 lg:grid-cols-[2fr_1fr]">
-        <div className="rounded-xl bg-foreground px-6 py-6 text-background">
-          <h2 className="text-sm font-semibold text-brand">{MINAH_POSITION.title[l]}</h2>
-          <ul className="mt-3 space-y-2 text-sm leading-6 text-background/85">
-            {MINAH_POSITION.lines.map((line, i) => <li key={i}>{line[l]}</li>)}
-          </ul>
-          <div className="mt-4 flex flex-wrap gap-1.5">
-            {MINAH_POSITION.traits.map((tr) => (
-              <span key={tr.fr} className="rounded-md border border-background/20 px-2 py-1 text-xs text-background">{tr[l]}</span>
-            ))}
-          </div>
-        </div>
-
-        <p className="self-center rounded-xl border border-dashed border-foreground/15 px-5 py-6 text-center text-sm text-neutral-500">{t.hint}</p>
       </div>
     </div>
   );
