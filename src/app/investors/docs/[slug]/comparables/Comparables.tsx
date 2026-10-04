@@ -10,8 +10,8 @@ import { AXES, GROUPS, MINAH_POSITION, type Group, type GroupId, type Player } f
 // autres s'estompent. Au toucher, un clic fait la même chose.
 
 const copy = {
-  fr: { hint: "Cliquez un groupe pour lire ce qui le caractérise.", all: "Tous les groupes", close: "Fermer", traits: "Ce qui les caractérise", gaps: "Ce qui leur manque", players: "Acteurs", minahTraits: "Ce que Minah combine", size: "Taille indicative" },
-  en: { hint: "Click a group to read what characterises it.", all: "All groups", close: "Close", traits: "What characterises them", gaps: "What they lack", players: "Players", minahTraits: "What Minah combines", size: "Indicative size" },
+  fr: { all: "Tous les groupes", close: "Fermer", traits: "Ce qui les caractérise", gaps: "Ce qui leur manque", players: "Acteurs", minahTraits: "Ce que Minah combine", size: "Taille indicative" },
+  en: { all: "All groups", close: "Close", traits: "What characterises them", gaps: "What they lack", players: "Players", minahTraits: "What Minah combines", size: "Indicative size" },
 };
 
 const GROUP_COLOR: Record<GroupId, string> = { A: "#8A2620", B: "#E27B30", C: "#C9A227" };
@@ -94,7 +94,6 @@ export function Comparables({ locale }: { locale: Locale }) {
             </button>
           );
         })}
-        <span className="ml-auto text-xs text-neutral-500">{t.hint}</span>
       </div>
 
       <div className="mt-4 grid gap-6 lg:grid-cols-[5fr_3fr]">
@@ -159,9 +158,7 @@ export function Comparables({ locale }: { locale: Locale }) {
                 </div>
               </div>
             </div>
-          ) : (
-            <p className="rounded-xl border border-dashed border-foreground/15 px-5 py-6 text-center text-sm text-neutral-500">{t.hint}</p>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
