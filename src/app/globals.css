@@ -695,3 +695,12 @@ body {
 .field-scroll::-webkit-scrollbar {
   display: none;
 }
+
+/* Comparables : le détail d'un groupe entre par la gauche quand on le choisit. */
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-28px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.slide-in-left {
+  animation: slide-in-left 0.32s ease-out both;
+}
