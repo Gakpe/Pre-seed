@@ -25,15 +25,15 @@ export const GROWTH_PHASES: Array<{
   tagline: Bilingual;
 }> = [
   { id: "amorcage", start: "2025-01-01", end: "2026-01-31", label: { fr: "Amorçage", en: "Seeding" }, volume: { fr: "< 100 K€", en: "< €100K" }, volumeMEur: 0.1,
-    tagline: { fr: "Prouver qu'une obligation africaine peut être émise, gardée et souscrite on-chain, avec de vrais investisseurs.", en: "Prove that an African bond can be issued, held and subscribed on-chain, with real investors." } },
+    tagline: { fr: "L'écosystème commence par les rails : custody, KYC et chaîne sont contractualisés avant d'avoir le volume, pour que la première obligation tienne dès le premier jour.", en: "The ecosystem starts with the rails: custody, KYC and chain are contracted before there is volume, so that the first bond holds from day one." } },
   { id: "traction", start: "2026-02-01", end: "2027-03-31", label: { fr: "Traction", en: "Traction" }, volume: { fr: "2 à 15 M€", en: "€2M to €15M" }, volumeMEur: 15,
-    tagline: { fr: "Un État sous contrat, des investisseurs professionnels qui souscrivent en ligne, un réseau qui amène les suivants.", en: "A State under contract, professional investors subscribing online, a network bringing the next ones." } },
+    tagline: { fr: "Pendant que Kupanda se place, l'écosystème prépare déjà la suite : des apporteurs, des Circles et un premier protocole, dimensionnés pour quinze millions, pas pour deux.", en: "While Kupanda is being placed, the ecosystem is already preparing what comes next: introducers, Circles and a first protocol, sized for fifteen million, not two." } },
   { id: "distribution", start: "2027-04-01", end: "2027-12-31", label: { fr: "Distribution", en: "Distribution" }, volume: { fr: "15 à 20 M€ par stratégie", en: "€15M to €20M per strategy" }, volumeMEur: 50,
-    tagline: { fr: "Minah n'est plus le seul guichet : des protocoles et des institutions distribuent les stratégies à leurs propres clients.", en: "Minah is no longer the only counter: protocols and institutions distribute the strategies to their own clients." } },
+    tagline: { fr: "Les tiers qui distribueront cent millions se branchent dès maintenant : protocoles, banque de règlement, second rail. L'écosystème garde une phase d'avance sur le volume.", en: "The third parties that will distribute one hundred million plug in now: protocols, settlement bank, second rail. The ecosystem stays one phase ahead of volume." } },
   { id: "echelle", start: "2028-01-01", end: "2028-12-31", label: { fr: "Échelle", en: "Scale" }, volume: { fr: "100 M€", en: "€100M" }, volumeMEur: 100,
-    tagline: { fr: "Trois moteurs, dette privée, dette souveraine, liquidité crypto, sur la même infrastructure.", en: "Three engines, private debt, sovereign debt, crypto liquidity, on the same infrastructure." } },
+    tagline: { fr: "Trois écosystèmes nourrissent trois moteurs, dette privée, dette souveraine, liquidité crypto ; chacun a été ouvert une période avant d'être nécessaire.", en: "Three ecosystems feed three engines, private debt, sovereign debt, crypto liquidity; each was opened one period before it was needed." } },
   { id: "marche", start: "2029-01-01", end: "2029-12-31", label: { fr: "Marché", en: "Market" }, volume: { fr: "Road to 1 Md€", en: "Road to €1B" }, volumeMEur: 1000,
-    tagline: { fr: "Financer l'économie réelle africaine devient aussi liquide qu'un marché coté.", en: "Financing Africa's real economy becomes as liquid as a listed market." } },
+    tagline: { fr: "L'écosystème devient le marché : des places de liquidité et des institutions branchées en direct, préparées pendant l'échelle, portent le milliard.", en: "The ecosystem becomes the market: liquidity venues and institutions plugged in directly, prepared during scale, carry the billion." } },
 ];
 
 export const STREAM_META: Record<Stream, { label: Bilingual; sub: Bilingual }> = {
@@ -193,3 +193,98 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
     },
   },
 };
+
+// ── Les acteurs, par fil et par catégorie ────────────────────────────────────
+// Cumulatifs : un acteur arrivé en traction est encore là à l'échelle. Les logos
+// sont servis en local (public/partners), jamais depuis un tiers ; sans fichier,
+// le nom s'affiche en typographie. `named: false` = catégorie, pas de nom.
+
+export type Category =
+  | "hnwi" | "reseaux" | "fonds" | "protocoles" | "institutions" | "crypto" | "agents"
+  | "gouvernements" | "pme" | "fintech" | "souverain" | "infrastructure"
+  | "sommets" | "rencontres" | "nos_evenements" | "prix";
+
+export const CATEGORIES: Record<Stream, Category[]> = {
+  distribution: ["hnwi", "reseaux", "fonds", "protocoles", "institutions", "crypto", "agents"],
+  sous_jacents: ["gouvernements", "pme", "fintech", "souverain", "infrastructure"],
+  marche: ["sommets", "rencontres", "nos_evenements", "prix"],
+};
+
+export const CATEGORY_LABEL: Record<Category, Bilingual> = {
+  hnwi: { fr: "Particuliers fortunés et diaspora", en: "Wealthy individuals and diaspora" },
+  reseaux: { fr: "Apporteurs et réseaux", en: "Introducers and networks" },
+  fonds: { fr: "Fonds", en: "Funds" },
+  protocoles: { fr: "Protocoles et plateformes", en: "Protocols and platforms" },
+  institutions: { fr: "Institutions financières", en: "Financial institutions" },
+  crypto: { fr: "Allocataires crypto", en: "Crypto allocators" },
+  agents: { fr: "Agents IA", en: "AI agents" },
+  gouvernements: { fr: "Gouvernements", en: "Governments" },
+  pme: { fr: "PME et contrats publics", en: "SMEs and public contracts" },
+  fintech: { fr: "Fintechs", en: "Fintechs" },
+  souverain: { fr: "Dette souveraine", en: "Sovereign debt" },
+  infrastructure: { fr: "Rails, custody, KYC", en: "Rails, custody, KYC" },
+  sommets: { fr: "Sommets", en: "Summits" },
+  rencontres: { fr: "Rencontres privées", en: "Private meetings" },
+  nos_evenements: { fr: "Nos événements", en: "Our events" },
+  prix: { fr: "Prix", en: "Awards" },
+};
+
+export type Actor = {
+  id: string;
+  stream: Stream;
+  category: Category;
+  name: Bilingual;
+  depuis: GrowthPhase;
+  logo?: string;
+  url?: string;
+  /** false : une catégorie d'acteurs, pas un nom (partenaire en discussion). */
+  named?: boolean;
+  aConfirmer?: boolean;
+};
+
+const MINAH = "/brand/logo.png";
+
+export const ACTORS: Actor[] = [
+  // Distribution
+  { id: "reseau-direct", stream: "distribution", category: "hnwi", name: { fr: "Réseau direct des fondateurs", en: "Founders' direct network" }, depuis: "amorcage", named: false },
+  { id: "network-builders", stream: "distribution", category: "reseaux", name: { fr: "Network Builders", en: "Network Builders" }, depuis: "traction", logo: MINAH },
+  { id: "minah-circles", stream: "distribution", category: "reseaux", name: { fr: "Minah Circles", en: "Minah Circles" }, depuis: "traction", logo: MINAH },
+  { id: "fonds-us", stream: "distribution", category: "fonds", name: { fr: "Fonds américain, co-structuration Kupanda", en: "US fund, Kupanda co-structuring" }, depuis: "traction", named: false, aConfirmer: true },
+  { id: "sereel", stream: "distribution", category: "protocoles", name: { fr: "Sereel", en: "Sereel" }, depuis: "traction" },
+  { id: "protocoles-suivants", stream: "distribution", category: "protocoles", name: { fr: "Trois protocoles de plus", en: "Three more protocols" }, depuis: "distribution", named: false, aConfirmer: true },
+  { id: "banque", stream: "distribution", category: "institutions", name: { fr: "Partenaire bancaire, règlement en euros", en: "Banking partner, euro settlement" }, depuis: "distribution", named: false, aConfirmer: true },
+  { id: "institutions-api", stream: "distribution", category: "institutions", name: { fr: "Fonds et institutions par l'API", en: "Funds and institutions through the API" }, depuis: "echelle", named: false, aConfirmer: true },
+  { id: "allocataires-crypto", stream: "distribution", category: "crypto", name: { fr: "Allocataires crypto-natifs", en: "Crypto-native allocators" }, depuis: "echelle", named: false, aConfirmer: true },
+  { id: "agents-ia", stream: "distribution", category: "agents", name: { fr: "Agents IA", en: "AI agents" }, depuis: "echelle", named: false },
+  { id: "places-liquidite", stream: "distribution", category: "protocoles", name: { fr: "Places de liquidité et teneurs de marché", en: "Liquidity venues and market makers" }, depuis: "marche", named: false, aConfirmer: true },
+  // Sous-jacents
+  { id: "stellar", stream: "sous_jacents", category: "infrastructure", name: { fr: "Stellar", en: "Stellar" }, depuis: "amorcage", logo: "/partners/stellar.png", url: "https://stellar.org" },
+  { id: "fireblocks", stream: "sous_jacents", category: "infrastructure", name: { fr: "Fireblocks", en: "Fireblocks" }, depuis: "amorcage", logo: "/partners/fireblocks.png", url: "https://www.fireblocks.com" },
+  { id: "sumsub", stream: "sous_jacents", category: "infrastructure", name: { fr: "Sumsub", en: "Sumsub" }, depuis: "amorcage", logo: "/partners/sumsub.png", url: "https://sumsub.com" },
+  { id: "premier-projet", stream: "sous_jacents", category: "pme", name: { fr: "Premier projet ouest-africain", en: "First West African project" }, depuis: "amorcage", named: false },
+  { id: "zambie", stream: "sous_jacents", category: "gouvernements", name: { fr: "République de Zambie", en: "Republic of Zambia" }, depuis: "traction" },
+  { id: "kupanda", stream: "sous_jacents", category: "pme", name: { fr: "Kupanda, 2 M€", en: "Kupanda, €2M" }, depuis: "traction" },
+  { id: "contrats-publics", stream: "sous_jacents", category: "pme", name: { fr: "Pipeline de contrats publics, 15 à 20 M€", en: "Public contract pipeline, €15M to €20M" }, depuis: "distribution", named: false, aConfirmer: true },
+  { id: "canton", stream: "sous_jacents", category: "infrastructure", name: { fr: "Canton Network", en: "Canton Network" }, depuis: "distribution", logo: "/partners/canton.png", url: "https://www.canton.network" },
+  { id: "souverain", stream: "sous_jacents", category: "souverain", name: { fr: "Émetteur de dette souveraine tokenisée", en: "Tokenised sovereign debt issuer" }, depuis: "distribution", named: false, aConfirmer: true },
+  { id: "tbills", stream: "sous_jacents", category: "souverain", name: { fr: "T-bills tokenisés", en: "Tokenised T-bills" }, depuis: "echelle", named: false, aConfirmer: true },
+  { id: "fintechs", stream: "sous_jacents", category: "fintech", name: { fr: "Fintechs africaines", en: "African fintechs" }, depuis: "echelle", named: false, aConfirmer: true },
+  { id: "etats-pays", stream: "sous_jacents", category: "gouvernements", name: { fr: "Plusieurs États, plusieurs devises", en: "Several States, several currencies" }, depuis: "marche", named: false, aConfirmer: true },
+  // Marché
+  { id: "afis", stream: "marche", category: "sommets", name: { fr: "Africa Financial Industry Summit", en: "Africa Financial Industry Summit" }, depuis: "amorcage", logo: "/partners/afis.png" },
+  { id: "congres-lome", stream: "marche", category: "sommets", name: { fr: "Congrès panafricain, Lomé", en: "Pan-African Congress, Lomé" }, depuis: "amorcage" },
+  { id: "50days", stream: "marche", category: "sommets", name: { fr: "50 Days on Chain", en: "50 Days on Chain" }, depuis: "amorcage" },
+  { id: "rencontres-amorcage", stream: "marche", category: "rencontres", name: { fr: "Cotonou, Conakry, Marrakech", en: "Cotonou, Conakry, Marrakech" }, depuis: "amorcage" },
+  { id: "delubac", stream: "marche", category: "prix", name: { fr: "Prix Cyrille Bialkiewicz, Banque Delubac", en: "Cyrille Bialkiewicz Prize, Banque Delubac" }, depuis: "amorcage" },
+  { id: "wef", stream: "marche", category: "sommets", name: { fr: "World Economic Forum, Davos", en: "World Economic Forum, Davos" }, depuis: "traction", logo: "/partners/wef.png", url: "https://www.weforum.org" },
+  { id: "africa-ceo-forum", stream: "marche", category: "sommets", name: { fr: "Africa CEO Forum", en: "Africa CEO Forum" }, depuis: "traction", url: "https://www.theafricaceoforum.com" },
+  { id: "changenow", stream: "marche", category: "sommets", name: { fr: "ChangeNOW", en: "ChangeNOW" }, depuis: "traction", logo: "/partners/changenow.png", url: "https://www.changenow.world" },
+  { id: "websummit", stream: "marche", category: "sommets", name: { fr: "Web Summit", en: "Web Summit" }, depuis: "traction", logo: "/partners/websummit.png", url: "https://websummit.com" },
+  { id: "africa-forward", stream: "marche", category: "sommets", name: { fr: "Africa Forward, Nairobi", en: "Africa Forward, Nairobi" }, depuis: "traction" },
+  { id: "elysee", stream: "marche", category: "rencontres", name: { fr: "Palais de l'Élysée", en: "Élysée Palace" }, depuis: "traction" },
+  { id: "premiere-dame", stream: "marche", category: "rencontres", name: { fr: "Première dame de Côte d'Ivoire", en: "First Lady of Côte d'Ivoire" }, depuis: "traction" },
+  { id: "circles-tenus", stream: "marche", category: "nos_evenements", name: { fr: "Minah Circle : Paris, Grand Palais, Lomé", en: "Minah Circle: Paris, Grand Palais, Lomé" }, depuis: "traction", logo: MINAH },
+  { id: "paloneo", stream: "marche", category: "sommets", name: { fr: "Sommet Paloneo, Hambourg", en: "Paloneo Summit, Hamburg" }, depuis: "distribution" },
+  { id: "circles-hubs", stream: "marche", category: "nos_evenements", name: { fr: "Minah Circle : Abidjan, Davos", en: "Minah Circle: Abidjan, Davos" }, depuis: "distribution", logo: MINAH, aConfirmer: true },
+  { id: "circle-trimestriel", stream: "marche", category: "nos_evenements", name: { fr: "Un Circle par trimestre", en: "One Circle per quarter" }, depuis: "echelle", logo: MINAH, aConfirmer: true },
+];

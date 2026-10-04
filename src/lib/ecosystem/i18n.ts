@@ -10,10 +10,12 @@ export type EcoCopy = {
   draftBanner: string;
   toConfirm: string;
   footer: string;
+  actorsTitle: string;
+  newHere: string;
 };
 
 const fr: EcoCopy = {
-  intro: "Avec qui Minah avance, période par période, et pour quel volume. Déplacez le curseur : chaque période raconte qui finance, d'où viennent les actifs, et où Minah est vue.",
+  intro: "L'écosystème que Minah construit autour d'elle, période par période, toujours une phase en avance sur le volume de la suivante. Déplacez le curseur : chaque période dit qui finance, d'où viennent les actifs, et où Minah est vue.",
   today: "Aujourd'hui",
   viewPhase: "Cette période",
   viewOverview: "Vue d'ensemble",
@@ -21,11 +23,13 @@ const fr: EcoCopy = {
   volumesTitle: "Le volume, période par période",
   draftBanner: "Brouillon du 04/10/2026. Les passages marqués « à confirmer » sont des hypothèses à valider par l'équipe avant publication.",
   toConfirm: "à confirmer",
+  actorsTitle: "Qui, par catégorie",
+  newHere: "nouveau sur cette période",
   footer: "Les noms écrits sont ceux de partenaires signés ou publics. Un partenaire en discussion n'est pas nommé.",
 };
 
 const en: EcoCopy = {
-  intro: "Who Minah moves forward with, period by period, and for what volume. Move the cursor: each period tells who funds, where the assets come from, and where Minah is seen.",
+  intro: "The ecosystem Minah builds around itself, period by period, always one phase ahead of the next period's volume. Move the cursor: each period tells who funds, where the assets come from, and where Minah is seen.",
   today: "Today",
   viewPhase: "This period",
   viewOverview: "Whole picture",
@@ -33,6 +37,8 @@ const en: EcoCopy = {
   volumesTitle: "Volume, period by period",
   draftBanner: "Draft of 04/10/2026. Passages marked “to confirm” are assumptions to be validated by the team before publication.",
   toConfirm: "to confirm",
+  actorsTitle: "Who, by category",
+  newHere: "new in this period",
   footer: "Names written are those of signed or public partners. A partner in discussion is not named.",
 };
 

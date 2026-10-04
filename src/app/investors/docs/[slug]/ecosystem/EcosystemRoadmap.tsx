@@ -2,7 +2,8 @@
 
 import { useMemo, useRef, useState } from "react";
 import type { Locale } from "@/lib/i18n";
-import { ECO_TODAY, GROWTH_PHASES, NARRATIVE, STREAMS, STREAM_META, type GrowthPhase, type Photo } from "@/lib/ecosystem/seed";
+import { ACTORS, CATEGORIES, CATEGORY_LABEL, ECO_TODAY, GROWTH_PHASES, NARRATIVE, STREAMS, STREAM_META, type Actor, type GrowthPhase, type Photo, type Stream } from "@/lib/ecosystem/seed";
+import { useState as useLocalState } from "react";
 import { ecoCopy } from "@/lib/ecosystem/i18n";
 
 // Roadmap écosystème, v3 (04/10/2026). Un récit par période : la frise des
@@ -80,6 +81,30 @@ export function EcosystemRoadmap({ locale, draft = false }: { locale: Locale; dr
   // Courbe des volumes : échelle log, de 100 K€ à 1 Md€.
   const maxLog = Math.log10(GROWTH_PHASES[GROWTH_PHASES.length - 1].volumeMEur) + 1;
   const barH = (v: number) => clamp01((Math.log10(v) + 1) / maxLog);
+
+  // Les acteurs du fil sur la période, par catégorie, cumulés depuis le début.
+  const actorGrid = (stream: Stream) => {
+    const cats = CATEGORIES[stream].map((cat) => ({
+      cat,
+      actors: ACTORS.filter((a) => a.stream === stream && a.category === cat && phaseIdx(a.depuis) <= idx),
+    })).filter((g) => g.actors.length > 0);
+    if (cats.length === 0) return null;
+    return (
+      <div style={{ marginTop: 16 }}>
+        <div style={{ ...smallCaps, marginBottom: 8 }}>{c.actorsTitle}</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "10px 18px" }}>
+          {cats.map(({ cat, actors }) => (
+            <div key={cat}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: MUTED, marginBottom: 5 }}>{CATEGORY_LABEL[cat][l]}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                {actors.map((a) => <ActorRow key={a.id} a={a} lang={l} isNew={a.depuis === phase} newLabel={c.newHere} toConfirm={c.toConfirm} />)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   const photoStrip = (photos: Photo[]) => (
     <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(3, photos.length)}, 1fr)`, gap: 10, marginTop: 14 }}>
@@ -185,6 +210,7 @@ export function EcosystemRoadmap({ locale, draft = false }: { locale: Locale; dr
                   </div>
                   <div style={{ minWidth: 0 }}>
                     <p style={{ margin: 0, fontSize: 15, lineHeight: 1.8, color: "#4B4039", maxWidth: 760 }}>{rich(ch.text[l])}</p>
+                    {actorGrid(s)}
                     {ch.photos && ch.photos.length > 0 && photoStrip(ch.photos)}
                   </div>
                 </div>
@@ -224,4 +250,31 @@ export function EcosystemRoadmap({ locale, draft = false }: { locale: Locale; dr
       <p style={{ marginTop: 28, fontSize: 12, color: FAINT }}>{c.footer}</p>
     </div>
   );
+}
+
+
+// Une ligne d'acteur : logo local s'il existe, sinon une pastille typographique.
+// Un acteur « nouveau sur cette période » porte un point orange.
+function ActorRow({ a, lang, isNew, newLabel, toConfirm }: { a: Actor; lang: Lang; isNew: boolean; newLabel: string; toConfirm: string }) {
+  const [broken, setBroken] = useLocalState(false);
+  const showLogo = a.logo && !broken;
+  const inner = (
+    <>
+      <span style={{ width: 22, height: 22, borderRadius: 6, flexShrink: 0, display: "inline-flex", alignItems: "center", justifyContent: "center", background: showLogo ? SURFACE : HAIRLINE, border: `1px solid ${LINE}`, overflow: "hidden" }}>
+        {showLogo ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={a.logo} alt="" onError={() => setBroken(true)} style={{ width: 16, height: 16, objectFit: "contain", display: "block" }} />
+        ) : (
+          <span style={{ fontFamily: SERIF, fontSize: 11, color: a.named === false ? FAINT : INK }}>{a.named === false ? "·" : a.name[lang].slice(0, 1)}</span>
+        )}
+      </span>
+      <span style={{ fontSize: 12.5, lineHeight: 1.35, color: a.named === false ? MUTED : INK, fontStyle: a.named === false ? "italic" : "normal" }}>
+        {a.name[lang]}
+        {isNew && <span title={newLabel} style={{ color: ACCENT, marginLeft: 6 }}>●</span>}
+        {a.aConfirmer && <span style={{ marginLeft: 6, fontSize: 10, color: FAINT }}>({toConfirm})</span>}
+      </span>
+    </>
+  );
+  const style: React.CSSProperties = { display: "flex", alignItems: "center", gap: 8, textDecoration: "none" };
+  return a.url ? <a href={a.url} target="_blank" rel="noreferrer noopener" style={style}>{inner}</a> : <div style={style}>{inner}</div>;
 }
