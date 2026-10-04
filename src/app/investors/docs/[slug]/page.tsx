@@ -21,6 +21,7 @@ import { GoToMarket } from "./go-to-market";
 import { TermSheet } from "./term-sheet";
 import { KupandaInterest } from "./kupanda-interest";
 import { VisionTechnique } from "./roadmap/VisionTechnique";
+import { Comparables } from "./comparables/Comparables";
 import { getPublicRoadmap } from "@/lib/roadmap/public";
 import { listStatusOverrides } from "@/lib/roadmap/overrides";
 import { isOwner } from "@/lib/admin";
@@ -88,6 +89,9 @@ export default async function DocPage({
   const team = doc.slug === "equipe";
   // La roadmap technique a une vue d'ensemble à six colonnes : aussi large que l'équipe.
   const roadmap = doc.slug === "vision-technique";
+  // Les comparables : une matrice et une colonne de texte côte à côte, plus
+  // large encore, avec des marges un peu plus généreuses.
+  const comparables = doc.slug === "comparables";
   // Les états forcés par Julien, et le droit de les changer depuis la fiche.
   const [roadmapOverrides, roadmapOwner] = roadmap
     ? await Promise.all([listStatusOverrides(), isOwner()])
@@ -108,6 +112,7 @@ export default async function DocPage({
   const proseWidth =
     team ||
     roadmap ||
+    comparables ||
     doc.slug === "track-record" ||
     doc.slug === "la-levee" ||
     doc.slug === "pourquoi-minah" ||
@@ -140,9 +145,10 @@ export default async function DocPage({
     doc.slug === "go-to-market-apercu" ||
     team ||
     roadmap ||
+    comparables ||
     note ||
     businessModel;
-  const headerCategory = doc.slug === "pourquoi-minah" || note;
+  const headerCategory = doc.slug === "pourquoi-minah" || note || comparables;
 
   // Retour en haut sur les fiches vraiment longues : la note de marché, près de
   // sept écrans. La levée, Pourquoi Minah et le track record tiennent en moins
@@ -151,7 +157,7 @@ export default async function DocPage({
 
   return (
     <main
-      className={`mx-auto w-full flex-1 px-6 py-12 ${
+      className={`mx-auto w-full flex-1 py-12 ${comparables ? "max-w-[84rem] px-10" : "px-6"} ${
         team || roadmap
             ? "max-w-6xl"
           : extraWide
@@ -195,7 +201,7 @@ export default async function DocPage({
           des autres fiches. */}
       {framedHeader && !richOnly && (
         // L'équipe va très large : son chapô reste dans une colonne de lecture.
-        <div className={team || roadmap ? "max-w-3xl" : ""}>
+        <div className={team || roadmap || comparables ? "max-w-3xl" : ""}>
           <DocContent text={content ?? ""} size="large" />
         </div>
       )}
@@ -240,6 +246,7 @@ export default async function DocPage({
       {doc.slug === "cap-table" && (
         <CapTableInteractive title={t(locale, "docs.captable")} locale={locale} />
       )}
+      {comparables && <Comparables locale={locale} />}
       {roadmap && (
         <VisionTechnique
           data={getPublicRoadmap(null, roadmapOverrides, locale)}

@@ -524,3 +524,23 @@ on conflict (slug) do update set
   access_level = excluded.access_level, sort_order = excluded.sort_order,
   docsend_url = excluded.docsend_url, content = excluded.content,
   content_en = excluded.content_en;
+-- Fiche « Comparables et positionnement » (niveau 1) : la matrice du deck,
+-- rendue par un composant (src/lib/comparables.ts). Seul le chapô vit ici.
+insert into public.documents
+  (slug, title, title_en, category, category_en, access_level, sort_order,
+   visible_to_pending, docsend_url, content, content_en)
+values (
+  'comparables',
+  'Comparables et positionnement',
+  'Comparables and positioning',
+  'Marché', 'Market',
+  1, 21, false, null,
+  $doc$Deux axes suffisent à lire le marché : la finance on-chain ou hors chaîne, et le périmètre, global ou africain. Trois groupes occupent trois quadrants. Le quatrième, on-chain et africain, est celui de Minah.$doc$,
+  $doc$Two axes are enough to read the market: on-chain or off-chain finance, and the scope, global or African. Three groups occupy three quadrants. The fourth, on-chain and African, is Minah's.$doc$
+)
+on conflict (slug) do update set
+  title = excluded.title, title_en = excluded.title_en,
+  category = excluded.category, category_en = excluded.category_en,
+  access_level = excluded.access_level, sort_order = excluded.sort_order,
+  docsend_url = excluded.docsend_url, content = excluded.content,
+  content_en = excluded.content_en;
