@@ -53,6 +53,9 @@ export function EcosystemRoadmap({ locale, draft = false }: { locale: Locale; dr
   const [overview, setOverview] = useState(false);
   const idx = phaseIdx(phase);
   const current = GROWTH_PHASES[idx];
+  const todayIdx = Math.max(0, GROWTH_PHASES.findIndex((g) => g.start <= ECO_TODAY && ECO_TODAY <= g.end));
+  const today = GROWTH_PHASES[todayIdx];
+  const last = GROWTH_PHASES[GROWTH_PHASES.length - 1];
 
   // ── Frise ────────────────────────────────────────────────────────────────
   const T0 = ms(GROWTH_PHASES[0].start), T1 = ms(GROWTH_PHASES[GROWTH_PHASES.length - 1].end);
@@ -127,6 +130,35 @@ export function EcosystemRoadmap({ locale, draft = false }: { locale: Locale; dr
     <div className="mt-8">
       {draft && <p style={{ margin: "0 0 20px", padding: "10px 14px", borderRadius: 8, background: "#FCE6D3", color: "#6B3A0E", fontSize: 13 }}>{c.draftBanner}</p>}
       <p style={{ fontSize: 15, color: MUTED, margin: "0 0 24px", maxWidth: 680, lineHeight: 1.6 }}>{c.intro}</p>
+
+      {/* ── Bandeau collant : où l'on est, ce qu'on regarde, où l'on va ──
+          Reste visible en défilant, pour ne jamais perdre la période et les
+          volumes de vue au milieu des photos et des récits. */}
+      <div style={{ position: "sticky", top: 0, zIndex: 20, margin: "0 -4px 10px", padding: "8px 4px", background: "rgba(246,244,239,.92)", backdropFilter: "blur(6px)" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px 22px", padding: "9px 14px", borderRadius: 10, border: `1px solid ${LINE}`, background: SURFACE, fontSize: 12.5 }}>
+          <span style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+            <span style={smallCaps}>{c.stickyToday}</span>
+            <span style={{ color: INK, fontWeight: 600 }}>{today.label[l]}</span>
+            <span style={{ color: MUTED }}>{today.volume[l]}</span>
+          </span>
+          {idx !== todayIdx && (
+            <span style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+              <span style={smallCaps}>{c.stickyShown}</span>
+              <span style={{ color: ACCENT, fontWeight: 600 }}>{current.label[l]}</span>
+              <span style={{ color: MUTED }}>{current.volume[l]}</span>
+            </span>
+          )}
+          <span style={{ display: "flex", alignItems: "baseline", gap: 8, marginLeft: "auto" }}>
+            <span style={smallCaps}>{c.stickyTarget}</span>
+            <span style={{ fontFamily: SERIF, color: INK, fontSize: 14 }}>{last.volume[l]}</span>
+          </span>
+          {/* la progression : la période affichée sur le chemin vers la cible */}
+          <span aria-hidden style={{ flexBasis: "100%", height: 3, borderRadius: 2, background: HAIRLINE, position: "relative", overflow: "hidden" }}>
+            <span style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${((todayIdx + 1) / GROWTH_PHASES.length) * 100}%`, background: "#D9D2C2" }} />
+            <span style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${((idx + 1) / GROWTH_PHASES.length) * 100}%`, background: ACCENT, opacity: .85 }} />
+          </span>
+        </div>
+      </div>
 
       <section style={{ background: SURFACE, border: `1px solid ${LINE}`, borderRadius: 16, padding: "26px 28px 28px" }}>
         {/* ── Frise des périodes ─────────────────────────────────────────── */}
