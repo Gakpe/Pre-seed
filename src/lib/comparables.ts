@@ -122,3 +122,58 @@ export const AXES = {
   left: { fr: "Global et marchés émergents", en: "Global and emerging markets" },
   right: { fr: "Afrique", en: "Africa-focused" },
 };
+
+// ── Comparables de valorisation ───────────────────────────────────────────────
+// Deux grilles de lecture, et Minah entre les deux : la trajectoire d'une
+// plateforme on-chain, le modèle de revenus d'un gérant de dette privée.
+export const VALUATION: {
+  title: Bilingual;
+  lead: Bilingual;
+  columns: Array<{ id: "onchain" | "funds" | "minah"; title: Bilingual; sub: Bilingual; points: Bilingual[]; verdict: Bilingual }>;
+  closing: Bilingual;
+} = {
+  title: { fr: "Comparables de valorisation", en: "Valuation comparables" },
+  lead: {
+    fr: "Minah se lit avec deux grilles à la fois. Par sa structure de coûts et sa distribution, c'est une plateforme on-chain : le marché valorise ces acteurs pour leur croissance. Par son modèle de revenus et la nature de ses actifs, c'est un gérant de dette privée : le marché valorise ceux-là pour leur résilience. Nous avons les deux moteurs, et nous demandons à être lus avec les deux grilles.",
+    en: "Minah reads through two lenses at once. By its cost structure and distribution, it is an on-chain platform: the market values those players for growth. By its revenue model and the nature of its assets, it is a private debt manager: the market values those for resilience. We have both engines, and we ask to be read through both lenses.",
+  },
+  columns: [
+    {
+      id: "onchain",
+      title: { fr: "Prêteurs on-chain des marchés émergents", en: "On-chain lenders in emerging markets" },
+      sub: { fr: "La grille de la croissance", en: "The growth lens" },
+      points: [
+        { fr: "Rails tokenisés : émission, règlement et suivi sans infrastructure propre", en: "Tokenised rails: issuance, settlement and tracking without proprietary infrastructure" },
+        { fr: "Distribution par API : chaque partenaire branché élargit le réseau sans coût marginal notable", en: "Distribution through APIs: every connected partner widens the network at little marginal cost" },
+        { fr: "Capital crypto-natif, liquidité de marché, croissance rapide des encours", en: "Crypto-native capital, market liquidity, fast growth in assets" },
+      ],
+      verdict: { fr: "Ce que Minah partage avec eux : la scalabilité.", en: "What Minah shares with them: scalability." },
+    },
+    {
+      id: "funds",
+      title: { fr: "Fonds de dette privée traditionnels", en: "Traditional private debt funds" },
+      sub: { fr: "La grille de la résilience", en: "The resilience lens" },
+      points: [
+        { fr: "Revenus récurrents et prévisibles : frais à la souscription, frais de performance sur les flux de retour", en: "Recurring, predictable revenue: subscription fees, performance fees on return flows" },
+        { fr: "Actifs sécurisés, horizon long, contreparties connues, cascade de protections", en: "Secured assets, long horizon, known counterparties, a cascade of protections" },
+        { fr: "Un modèle éprouvé sur plusieurs cycles de crédit", en: "A model proven over several credit cycles" },
+      ],
+      verdict: { fr: "Ce que Minah partage avec eux : le modèle de revenus et la discipline de risque.", en: "What Minah shares with them: the revenue model and the risk discipline." },
+    },
+    {
+      id: "minah",
+      title: { fr: "Minah", en: "Minah" },
+      sub: { fr: "Les deux moteurs", en: "Both engines" },
+      points: [
+        { fr: "La base de coûts et la distribution d'une plateforme on-chain", en: "The cost base and distribution of an on-chain platform" },
+        { fr: "Le modèle de revenus et les actifs d'un gérant de dette privée", en: "The revenue model and assets of a private debt manager" },
+        { fr: "Une origination africaine que ni les uns ni les autres n'ont", en: "African origination that neither of the two has" },
+      ],
+      verdict: { fr: "La scalabilité de l'un, la résilience de l'autre : c'est la thèse de valorisation.", en: "The scalability of one, the resilience of the other: that is the valuation thesis." },
+    },
+  ],
+  closing: {
+    fr: "Concrètement : une fintech d'infrastructure dont les revenus se comportent comme ceux d'un gérant d'actifs. Le premier terme justifie un multiple de plateforme ; le second en réduit le risque.",
+    en: "Concretely: an infrastructure fintech whose revenue behaves like an asset manager's. The first term supports a platform multiple; the second lowers its risk.",
+  },
+};

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Locale } from "@/lib/i18n";
-import { AXES, GROUPS, MINAH_POSITION, type Group, type GroupId, type Player } from "@/lib/comparables";
+import { AXES, GROUPS, MINAH_POSITION, VALUATION, type Group, type GroupId, type Player } from "@/lib/comparables";
 
 // Matrice des comparables : deux axes, trois groupes, Minah seule dans le
 // quadrant on-chain Afrique. Survoler un groupe (dans la matrice ou dans la
@@ -164,6 +164,36 @@ export function Comparables({ locale }: { locale: Locale }) {
           ) : null}
         </div>
       </div>
+
+      {/* ── Comparables de valorisation : deux grilles de lecture, et Minah ── */}
+      <section className="mt-14">
+        <div className="flex items-center gap-3">
+          <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand/10 font-mono text-sm font-semibold text-marsala">€</span>
+          <h2 className="text-2xl font-semibold leading-tight tracking-tight">{VALUATION.title[l]}</h2>
+        </div>
+        <p className="mt-5 max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{VALUATION.lead[l]}</p>
+
+        <div className="mt-8 grid gap-4 lg:grid-cols-3">
+          {VALUATION.columns.map((col) => {
+            const minah = col.id === "minah";
+            return (
+              <div
+                key={col.id}
+                className={`flex flex-col rounded-xl border px-6 py-6 ${minah ? "border-brand/40 bg-brand/5" : "border-foreground/10 bg-white/50"}`}
+              >
+                <div className="text-sm font-semibold">{col.title[l]}</div>
+                <div className="mt-0.5 text-sm text-neutral-500">{col.sub[l]}</div>
+                <ul className="mt-4 flex-1 space-y-2 text-sm leading-6 text-neutral-700">
+                  {col.points.map((pt) => <li key={pt.fr} className="flex gap-2"><span aria-hidden className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-marsala" />{pt[l]}</li>)}
+                </ul>
+                <p className={`mt-5 border-t pt-4 text-sm font-medium leading-6 ${minah ? "border-brand/30 text-marsala" : "border-foreground/10 text-foreground"}`}>{col.verdict[l]}</p>
+              </div>
+            );
+          })}
+        </div>
+
+        <p className="mt-6 max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{VALUATION.closing[l]}</p>
+      </section>
     </div>
   );
 }
