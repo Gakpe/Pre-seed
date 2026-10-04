@@ -97,9 +97,10 @@ export function Comparables({ locale }: { locale: Locale }) {
       </div>
 
       <div className="mt-4 grid gap-6 lg:grid-cols-[5fr_3fr]">
-        {/* ── La matrice, grande, qui déborde un peu à gauche. Sa taille ne
-            change pas quand on choisit un groupe. ── */}
-        <div className="relative aspect-[4/3] rounded-xl border border-foreground/10 bg-white/60 lg:-ml-6">
+        {/* ── La matrice, grande, qui déborde un peu à gauche. `self-start` :
+            sans lui, la grille l'étire à la hauteur de la colonne de droite dès
+            que le détail d'un groupe s'y ajoute, et elle grandit au clic. ── */}
+        <div className="relative aspect-[4/3] self-start rounded-xl border border-foreground/10 bg-white/60 lg:-ml-6">
           <span className="absolute top-2 left-1/2 -translate-x-1/2 text-xs font-medium text-neutral-500">{AXES.top[l]}</span>
           <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs font-medium text-neutral-500">{AXES.bottom[l]}</span>
           <span className="absolute top-1/2 whitespace-nowrap text-xs font-medium text-neutral-500" style={{ transform: "translateY(-50%) rotate(-90deg)", transformOrigin: "left center", left: 16 }}>{AXES.left[l]}</span>
