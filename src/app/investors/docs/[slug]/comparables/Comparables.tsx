@@ -46,9 +46,9 @@ export function Comparables({ locale }: { locale: Locale }) {
         onMouseLeave={() => setActive(null)}
         onClick={() => setPinned((p) => (p === g.id ? null : g.id))}
         className={`absolute cursor-pointer rounded-[48%] border-2 border-dashed p-5 transition-all duration-300 ${dim(g.id)} ${
-          g.quadrant.onChain ? "top-[8%]" : "bottom-[8%]"
-        } ${g.quadrant.africa ? "right-[6%]" : "left-[6%]"} ${on ? "bg-white/70 shadow-lg" : "bg-white/30"}`}
-        style={{ borderColor: on ? GROUP_COLOR[g.id] : "#E27B30", width: "42%", minHeight: "36%" }}
+          g.quadrant.onChain ? "top-[7%]" : "bottom-[7%]"
+        } ${g.quadrant.africa ? "right-[4%]" : "left-[4%]"} ${on ? "bg-white/70 shadow-lg" : "bg-white/30"}`}
+        style={{ borderColor: on ? GROUP_COLOR[g.id] : "#E27B30", width: "44%", minHeight: "36%" }}
       >
         <span
           className="absolute -top-3 -left-3 grid h-9 w-9 place-items-center rounded-full border-2 border-dashed bg-background font-mono text-sm font-semibold"
@@ -69,7 +69,7 @@ export function Comparables({ locale }: { locale: Locale }) {
   return (
     <div className="mt-8">
       {/* ── Onglets, compacts, au-dessus de la matrice ───────────────────── */}
-      <div className="flex flex-wrap items-center gap-2 lg:-ml-6">
+      <div className="flex flex-wrap items-center gap-2 lg:-mx-10">
         <button
           type="button"
           onClick={() => setPinned(null)}
@@ -96,17 +96,17 @@ export function Comparables({ locale }: { locale: Locale }) {
         })}
       </div>
 
-      <div className="mt-4 grid gap-6 lg:grid-cols-[5fr_3fr]">
+      <div className="mt-4 grid gap-6 lg:-mx-10 lg:grid-cols-[11fr_9fr]">
         {/* ── La matrice, grande, qui déborde un peu à gauche. `self-start` :
             sans lui, la grille l'étire à la hauteur de la colonne de droite dès
             que le détail d'un groupe s'y ajoute, et elle grandit au clic. ── */}
-        <div className="relative aspect-[4/3] self-start rounded-xl border border-foreground/10 bg-white/60 lg:-ml-6">
+        <div className="relative aspect-[4/3] self-start rounded-xl border border-foreground/10 bg-white/60">
           <span className="absolute top-2 left-1/2 -translate-x-1/2 text-xs font-medium text-neutral-500">{AXES.top[l]}</span>
           <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs font-medium text-neutral-500">{AXES.bottom[l]}</span>
           <span className="absolute top-1/2 whitespace-nowrap text-xs font-medium text-neutral-500" style={{ transform: "translateY(-50%) rotate(-90deg)", transformOrigin: "left center", left: 16 }}>{AXES.left[l]}</span>
           <span className="absolute top-1/2 whitespace-nowrap text-xs font-medium text-neutral-500" style={{ transform: "translateY(-50%) rotate(90deg)", transformOrigin: "right center", right: 16 }}>{AXES.right[l]}</span>
           <div className="absolute top-8 bottom-8 left-1/2 w-px bg-foreground/15" />
-          <div className="absolute left-9 right-9 top-1/2 h-px bg-foreground/15" />
+          <div className="absolute left-7 right-7 top-1/2 h-px bg-foreground/15" />
 
           {GROUPS.map(cluster)}
 
