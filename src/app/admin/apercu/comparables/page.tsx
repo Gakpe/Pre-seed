@@ -15,7 +15,7 @@ export default async function ComparablesPreviewPage() {
   return (
     // Plus large que les autres fiches : la matrice a besoin de la place, et le
     // texte à droite aussi. Le chapô, lui, reste dans une colonne de lecture.
-    <main className="mx-auto w-full max-w-[90rem] flex-1 px-6 py-12">
+    <main className="mx-auto w-full max-w-[84rem] flex-1 px-10 py-12">
       <div className="flex items-center justify-between">
         <p className="text-sm text-neutral-500">Aperçu admin, pas encore dans la data room</p>
         <LanguageSwitch locale={locale} />
