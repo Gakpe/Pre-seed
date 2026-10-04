@@ -69,7 +69,7 @@ export function Comparables({ locale }: { locale: Locale }) {
   return (
     <div className="mt-8">
       {/* ── Onglets, compacts, au-dessus de la matrice ───────────────────── */}
-      <div className="flex flex-wrap items-center gap-2 lg:-mx-10">
+      <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
           onClick={() => setPinned(null)}
@@ -96,7 +96,7 @@ export function Comparables({ locale }: { locale: Locale }) {
         })}
       </div>
 
-      <div className="mt-4 grid gap-6 lg:-mx-10 lg:grid-cols-[11fr_9fr]">
+      <div className="mt-4 grid gap-8 lg:grid-cols-[11fr_9fr]">
         {/* ── La matrice, grande, qui déborde un peu à gauche. `self-start` :
             sans lui, la grille l'étire à la hauteur de la colonne de droite dès
             que le détail d'un groupe s'y ajoute, et elle grandit au clic. ── */}
