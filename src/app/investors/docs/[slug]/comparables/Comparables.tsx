@@ -144,13 +144,15 @@ export function Comparables({ locale }: { locale: Locale }) {
                 <button type="button" onClick={() => setPinned(null)} className="shrink-0 text-xs text-neutral-500 hover:underline">{t.close}</button>
               </div>
               <div className="mt-4 grid gap-4">
-                <div>
-                  <div className="text-xs font-semibold text-neutral-600">{t.traits}</div>
-                  <ul className="mt-1.5 space-y-1 text-sm leading-6 text-neutral-700">{detail.traits.map((x) => <li key={x.fr}>{x[l]}</li>)}</ul>
-                </div>
-                <div>
-                  <div className="text-xs font-semibold text-neutral-600">{t.gaps}</div>
-                  <ul className="mt-1.5 space-y-1 text-sm leading-6 text-neutral-700">{detail.gaps.map((x) => <li key={x.fr}>{x[l]}</li>)}</ul>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <div className="text-xs font-semibold text-neutral-600">{t.traits}</div>
+                    <ul className="mt-1.5 space-y-1 text-sm leading-6 text-neutral-700">{detail.traits.map((x) => <li key={x.fr}>{x[l]}</li>)}</ul>
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold text-neutral-600">{t.gaps}</div>
+                    <ul className="mt-1.5 space-y-1 text-sm leading-6 text-neutral-700">{detail.gaps.map((x) => <li key={x.fr}>{x[l]}</li>)}</ul>
+                  </div>
                 </div>
                 <div className="text-xs text-neutral-600">
                   <span className="font-semibold">{t.players} : </span>
