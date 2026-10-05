@@ -18,6 +18,7 @@ import { TrackRecord } from "./track-record";
 import { Fundraise } from "./fundraise";
 import { WhyMinah } from "./why-minah";
 import { GoToMarket } from "./go-to-market";
+import { GtmMachine } from "./gtm-machine";
 import { TermSheet } from "./term-sheet";
 import { KupandaInterest } from "./kupanda-interest";
 import { VisionTechnique } from "./roadmap/VisionTechnique";
@@ -93,6 +94,10 @@ export default async function DocPage({
   // Les comparables : une matrice et une colonne de texte côte à côte, plus
   // large encore, avec des marges un peu plus généreuses.
   const comparables = doc.slug === "comparables";
+  // L'aperçu du go-to-market (niveau 1) porte la machine à réseau de la slide :
+  // deux côtés et un centre, aussi large que l'équipe. Son chapô vit dans le
+  // composant, celui de la base n'est plus affiché.
+  const gtmApercu = doc.slug === "go-to-market-apercu";
   // Les états forcés par Julien, et le droit de les changer depuis la fiche.
   const [roadmapOverrides, roadmapOwner] = doc.slug === "vision-technique"
     ? await Promise.all([listStatusOverrides(), isOwner()])
@@ -130,6 +135,7 @@ export default async function DocPage({
     doc.slug === "pourquoi-minah" ||
     doc.slug === "term-sheet-kupanda" ||
     doc.slug === "go-to-market" ||
+    gtmApercu ||
     note;
 
   // En-tête encadré (voir AGENTS.md). « Pourquoi Minah » et la note de marché
@@ -159,7 +165,7 @@ export default async function DocPage({
   return (
     <main
       className={`mx-auto w-full flex-1 py-12 ${comparables ? "max-w-[84rem] px-10" : "px-6"} ${
-        team || roadmap
+        team || roadmap || gtmApercu
             ? "max-w-6xl"
           : extraWide
             ? "max-w-5xl"
@@ -212,6 +218,7 @@ export default async function DocPage({
       {/* Certaines fiches portent un contenu riche en plus de leur texte. */}
       {doc.slug === "pourquoi-minah" && <WhyMinah locale={locale} />}
       {doc.slug === "go-to-market" && <GoToMarket locale={locale} />}
+      {gtmApercu && <GtmMachine locale={locale} />}
       {doc.slug === "term-sheet-kupanda" && (
         <>
           <TermSheet locale={locale} />
