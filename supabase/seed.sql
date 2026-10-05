@@ -544,3 +544,23 @@ on conflict (slug) do update set
   access_level = excluded.access_level, sort_order = excluded.sort_order,
   docsend_url = excluded.docsend_url, content = excluded.content,
   content_en = excluded.content_en;
+-- Fiche « Roadmap écosystème » (niveau 2), sous le go-to-market : un récit par
+-- période de croissance, rendu par un composant (src/lib/ecosystem). Chapô ici.
+insert into public.documents
+  (slug, title, title_en, category, category_en, access_level, sort_order,
+   visible_to_pending, docsend_url, content, content_en)
+values (
+  'roadmap-ecosysteme',
+  'Roadmap écosystème',
+  'Ecosystem roadmap',
+  'Go-to-market', 'Go-to-market',
+  2, 56, false, null,
+  $doc$Un écosystème se construit avant d'en avoir besoin. Le nôtre est aligné sur deux choses : les produits que nous distribuerons demain, et la distribution que nous serons capables d'opérer. Chaque période prépare donc la suivante, côté pipeline comme côté capital.$doc$,
+  $doc$An ecosystem is built before it is needed. Ours is aligned on two things: the products we will distribute tomorrow, and the distribution we will be able to run. Each period therefore prepares the next, on the pipeline side as on the capital side.$doc$
+)
+on conflict (slug) do update set
+  title = excluded.title, title_en = excluded.title_en,
+  category = excluded.category, category_en = excluded.category_en,
+  access_level = excluded.access_level, sort_order = excluded.sort_order,
+  docsend_url = excluded.docsend_url, content = excluded.content,
+  content_en = excluded.content_en;

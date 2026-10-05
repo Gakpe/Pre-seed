@@ -45,7 +45,7 @@ function rich(text: string) {
 
 const smallCaps: React.CSSProperties = { fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT };
 
-export function EcosystemRoadmap({ locale, draft = false }: { locale: Locale; draft?: boolean }) {
+export function EcosystemRoadmap({ locale, draft = false }: { locale: Locale; /** Aperçu admin : bandeau et mentions « à confirmer ». */ draft?: boolean }) {
   const c = ecoCopy(locale);
   const l: Lang = locale === "en" ? "en" : "fr";
   const dateLocale = l === "fr" ? "fr-FR" : "en-US";
@@ -112,7 +112,7 @@ export function EcosystemRoadmap({ locale, draft = false }: { locale: Locale; dr
             <div key={cat}>
               <div style={{ fontSize: 11, fontWeight: 600, color: MUTED, marginBottom: 5 }}>{CATEGORY_LABEL[cat][l]}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                {actors.map((a) => <ActorRow key={a.id} a={a} lang={l} isNew={a.depuis === phase} newLabel={c.newHere} toConfirm={c.toConfirm} />)}
+                {actors.map((a) => <ActorRow key={a.id} a={a} lang={l} isNew={a.depuis === phase} newLabel={c.newHere} toConfirm={draft ? c.toConfirm : null} />)}
               </div>
             </div>
           ))}
@@ -260,7 +260,7 @@ export function EcosystemRoadmap({ locale, draft = false }: { locale: Locale; dr
                   <div>
                     <div style={{ fontFamily: SERIF, fontSize: 18, color: INK, lineHeight: 1.2 }}>{STREAM_META[s].label[l]}</div>
                     <div style={{ fontSize: 12, color: FAINT, marginTop: 4, lineHeight: 1.45 }}>{STREAM_META[s].sub[l]}</div>
-                    {ch.aConfirmer && <div style={{ marginTop: 8, display: "inline-block", fontSize: 10.5, padding: "2px 8px", borderRadius: 999, border: "1px dashed #C9C1B3", color: MUTED }}>{c.toConfirm}</div>}
+                    {draft && ch.aConfirmer && <div style={{ marginTop: 8, display: "inline-block", fontSize: 10.5, padding: "2px 8px", borderRadius: 999, border: "1px dashed #C9C1B3", color: MUTED }}>{c.toConfirm}</div>}
                   </div>
                   <div style={{ minWidth: 0 }}>
                     <p style={{ margin: 0, fontSize: 15, lineHeight: 1.8, color: "#4B4039", maxWidth: 760 }}>{rich(ch.text[l])}</p>
@@ -309,7 +309,7 @@ export function EcosystemRoadmap({ locale, draft = false }: { locale: Locale; dr
 
 // Une ligne d'acteur : logo local s'il existe, sinon une pastille typographique.
 // Un acteur « nouveau sur cette période » porte un point orange.
-function ActorRow({ a, lang, isNew, newLabel, toConfirm }: { a: Actor; lang: Lang; isNew: boolean; newLabel: string; toConfirm: string }) {
+function ActorRow({ a, lang, isNew, newLabel, toConfirm }: { a: Actor; lang: Lang; isNew: boolean; newLabel: string; toConfirm: string | null }) {
   const [broken, setBroken] = useLocalState(false);
   const showLogo = a.logo && !broken;
   const inner = (
@@ -325,7 +325,7 @@ function ActorRow({ a, lang, isNew, newLabel, toConfirm }: { a: Actor; lang: Lan
       <span style={{ fontSize: 12.5, lineHeight: 1.35, color: a.named === false ? MUTED : INK, fontStyle: a.named === false ? "italic" : "normal" }}>
         {a.name[lang]}
         {isNew && <span title={newLabel} style={{ color: ACCENT, marginLeft: 6 }}>●</span>}
-        {a.aConfirmer && <span style={{ marginLeft: 6, fontSize: 10, color: FAINT }}>({toConfirm})</span>}
+        {toConfirm && a.aConfirmer && <span style={{ marginLeft: 6, fontSize: 10, color: FAINT }}>({toConfirm})</span>}
       </span>
     </>
   );

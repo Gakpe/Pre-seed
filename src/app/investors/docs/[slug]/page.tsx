@@ -22,6 +22,7 @@ import { TermSheet } from "./term-sheet";
 import { KupandaInterest } from "./kupanda-interest";
 import { VisionTechnique } from "./roadmap/VisionTechnique";
 import { Comparables } from "./comparables/Comparables";
+import { EcosystemRoadmap } from "./ecosystem/EcosystemRoadmap";
 import { getPublicRoadmap } from "@/lib/roadmap/public";
 import { listStatusOverrides } from "@/lib/roadmap/overrides";
 import { isOwner } from "@/lib/admin";
@@ -88,12 +89,12 @@ export default async function DocPage({
   const note = doc.slug === "note-marche";
   const team = doc.slug === "equipe";
   // La roadmap technique a une vue d'ensemble à six colonnes : aussi large que l'équipe.
-  const roadmap = doc.slug === "vision-technique";
+  const roadmap = doc.slug === "vision-technique" || doc.slug === "roadmap-ecosysteme";
   // Les comparables : une matrice et une colonne de texte côte à côte, plus
   // large encore, avec des marges un peu plus généreuses.
   const comparables = doc.slug === "comparables";
   // Les états forcés par Julien, et le droit de les changer depuis la fiche.
-  const [roadmapOverrides, roadmapOwner] = roadmap
+  const [roadmapOverrides, roadmapOwner] = doc.slug === "vision-technique"
     ? await Promise.all([listStatusOverrides(), isOwner()])
     : [{}, false];
   const extraWide =
@@ -247,7 +248,11 @@ export default async function DocPage({
         <CapTableInteractive title={t(locale, "docs.captable")} locale={locale} />
       )}
       {comparables && <Comparables locale={locale} />}
-      {roadmap && (
+      {/* Encore en brouillon (décision du 05/10/2026) : bandeau et mentions
+          « à confirmer » restent visibles, le temps que Coralie la retravaille.
+          Personne n'a le niveau 2 hors de l'équipe. Retirer `draft` pour publier. */}
+      {doc.slug === "roadmap-ecosysteme" && <EcosystemRoadmap locale={locale} draft />}
+      {doc.slug === "vision-technique" && (
         <VisionTechnique
           data={getPublicRoadmap(null, roadmapOverrides, locale)}
           locale={locale}
