@@ -95,6 +95,12 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
             Pré-approuvés
           </Link>
           <Link
+            href="/admin/onboarding"
+            className="text-xs text-neutral-500 hover:underline"
+          >
+            Onboarding
+          </Link>
+          <Link
             href="/admin/emails"
             className="text-xs text-neutral-500 hover:underline"
           >

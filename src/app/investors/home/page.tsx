@@ -11,6 +11,8 @@ import type { DocumentRow, Investor } from "@/lib/types";
 import { DataRoom } from "./data-room";
 import { InterestModal } from "./interest-modal";
 import { MeetingButton } from "./meeting-button";
+import { Welcome } from "./welcome";
+import { getOnboarding, onboardingMessage, welcomeSteps } from "@/lib/onboarding";
 import { MatchingFundTooltip } from "../matching-fund-tooltip";
 
 // Contacts directs proposés à un investisseur en attente. Mêmes adresses que
@@ -125,11 +127,19 @@ export default async function InvestorHomePage() {
     documents = data as DocumentRow[] | null;
   }
   const docs = documents ?? [];
-  const level1 = docs.filter((d) => d.access_level === 1);
-  const level2 = docs.filter((d) => d.access_level === 2);
   const level2Unlocked = investor.level2_access;
+  // Onboarding sur mesure s'il en existe un pour cette adresse (jamais en
+  // démo). Les fiches qu'il ouvre au-dessus du niveau de la personne arrivent
+  // déjà par la RLS ; on les range avec le niveau 1, qui est le sien.
+  const onboarding = demo ? null : await getOnboarding(investor.email);
+  const openedForYou = new Set(level2Unlocked ? [] : (onboarding?.unlocked_slugs ?? []));
+  const level1 = docs.filter(
+    (d) => d.access_level === 1 || openedForYou.has(d.slug)
+  );
+  const level2 = docs.filter((d) => d.access_level === 2);
 
   let lockedTitles: {
+    slug: string;
     title: string;
     title_en: string | null;
     category: string;
@@ -138,10 +148,10 @@ export default async function InvestorHomePage() {
   if (!level2Unlocked && process.env.SUPABASE_SERVICE_ROLE_KEY) {
     const { data: locked } = await createAdminClient()
       .from("documents")
-      .select("title, title_en, category, category_en, sort_order")
+      .select("slug, title, title_en, category, category_en, sort_order")
       .eq("access_level", 2)
       .order("sort_order");
-    lockedTitles = locked ?? [];
+    lockedTitles = (locked ?? []).filter((d) => !openedForYou.has(d.slug));
   }
 
   // En attente de validation : aucun document, pas même la liste des titres.
@@ -266,8 +276,25 @@ export default async function InvestorHomePage() {
           </div>
         </div>
 
+        {/* Accueil : par où commencer, par défaut ou sur mesure. */}
+        <div className="mt-10">
+          <Welcome
+            locale={locale}
+            message={onboardingMessage(onboarding, locale)}
+            steps={welcomeSteps(docs, onboarding, level2Unlocked, locale)}
+            interest={
+              level2Unlocked
+                ? "unlocked"
+                : investor.interest_expressed_at
+                  ? "recorded"
+                  : "open"
+            }
+            demo={!!demo}
+          />
+        </div>
+
         {/* Présentation */}
-        <section className="mt-10 grid gap-8 md:grid-cols-[1fr_300px] md:items-start">
+        <section className="mt-12 grid gap-8 md:grid-cols-[1fr_300px] md:items-start">
           <div>
             <h2 className="text-2xl font-semibold leading-tight tracking-tight">
               {t(locale, "home.pitch.title")}
@@ -403,6 +430,7 @@ export default async function InvestorHomePage() {
 
         {/* Niveau 2 */}
         <section
+          id="niveau-2"
           className={`mt-10 rounded-lg border p-6 ${
             level2Unlocked
               ? "border-foreground/10 bg-white/50"
