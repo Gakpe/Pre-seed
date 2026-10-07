@@ -42,6 +42,7 @@ export function Welcome({
   firstName = null,
   demo = false,
   preview = false,
+  autoStart = true,
   tourKey = null,
 }: {
   locale: Locale;
@@ -53,6 +54,8 @@ export function Welcome({
   demo?: boolean;
   /** Aperçu depuis l'admin : les étapes à plat, sans visite. */
   preview?: boolean;
+  /** Lancer la visite d'elle-même si elle n'a pas encore été vue. */
+  autoStart?: boolean;
   /** Clé de la visite déjà vue ; change quand le message est modifié. */
   tourKey?: string | null;
 }) {
@@ -63,7 +66,11 @@ export function Welcome({
     .map((p) => p.trim())
     .filter(Boolean);
   const custom = paragraphs.length > 0;
-  const tour = useTourAutostart(preview ? null : tourKey, demo ? "session" : "local");
+  const tour = useTourAutostart(
+    preview ? null : tourKey,
+    demo ? "session" : "local",
+    autoStart
+  );
 
   // Aperçu admin d'un onboarding sur mesure : ses étapes, dans l'ordre.
   if (preview) {

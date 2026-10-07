@@ -29,11 +29,15 @@ const SECONDARY = `rounded-lg border border-foreground/15 px-3 py-1.5 text-sm te
 // Ouverture automatique à la première visite. `storage` : local pour un vrai
 // investisseur (une fois par navigateur), session en démo (une fois par
 // démo ouverte).
-export function useTourAutostart(storageKey: string | null, storage: "local" | "session") {
+export function useTourAutostart(
+  storageKey: string | null,
+  storage: "local" | "session",
+  enabled = true
+) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (!storageKey) return;
+    if (!storageKey || !enabled) return;
     const store = storage === "local" ? window.localStorage : window.sessionStorage;
     if (store.getItem(storageKey)) return;
     // La cinématique d'entrée passe devant : on attend qu'elle ait disparu.
@@ -52,7 +56,7 @@ export function useTourAutostart(storageKey: string | null, storage: "local" | "
     };
     wait();
     return () => clearTimeout(timer);
-  }, [storageKey, storage]);
+  }, [storageKey, storage, enabled]);
 
   const close = useCallback(() => {
     setOpen(false);
@@ -158,7 +162,17 @@ export function GuidedTour({
   // Rendue dans body : la page crée des contextes d'empilement qui la
   // laisseraient sous la bulle de questions.
   return createPortal(
-    <div className="fixed inset-0 z-[90]" role="dialog" aria-modal="true" aria-live="polite">
+    // Un clic hors de la carte ferme la visite : le voile, comme la cible mise
+    // en lumière, sont sous ce conteneur.
+    <div
+      className="fixed inset-0 z-[90]"
+      role="dialog"
+      aria-modal="true"
+      aria-live="polite"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       {rect ? (
         // Le halo sombre est l'ombre de la découpe : la cible reste nette.
         <div
@@ -173,14 +187,23 @@ export function GuidedTour({
           }}
         />
       ) : (
-        <div aria-hidden className="fixed inset-0 bg-[rgba(28,15,12,0.55)]" />
+        <div aria-hidden className="pointer-events-none fixed inset-0 bg-[rgba(28,15,12,0.55)]" />
       )}
 
       <div
-        className="fixed rounded-xl border border-foreground/10 bg-white p-5 shadow-xl transition-all duration-300 ease-out"
-        style={cardStyle}
+        className="fixed overflow-y-auto rounded-xl border border-foreground/10 bg-white p-5 shadow-xl transition-all duration-300 ease-out"
+        style={{ ...cardStyle, maxHeight: `calc(100dvh - ${GAP * 2}px)` }}
       >
-        <p className="whitespace-pre-line text-[15px] leading-[1.8] text-neutral-700">
+        <button
+          onClick={onClose}
+          aria-label={c.close}
+          className={`absolute top-2.5 right-2.5 grid h-8 w-8 place-items-center rounded-lg text-neutral-500 transition-colors hover:bg-foreground/5 hover:text-foreground ${FOCUS}`}
+        >
+          <svg aria-hidden viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+            <path d="M3.5 3.5l9 9M12.5 3.5l-9 9" />
+          </svg>
+        </button>
+        <p className="whitespace-pre-line pr-7 text-[15px] leading-[1.8] text-neutral-700">
           {steps[index]?.text}
         </p>
 

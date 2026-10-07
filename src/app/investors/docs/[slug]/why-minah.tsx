@@ -19,7 +19,7 @@ const copy = {
         eyebrow: "Le constat",
         body: "Le continent concentre la démographie et la croissance des trente prochaines années, mais sa finance est restée calibrée pour un autre marché. Le capital existe, les projets aussi ; ce qui manque, c'est la couche qui les rend lisibles l'un pour l'autre. La première génération de fintechs africaines (M-Pesa, Wave, Flutterwave, Paystack) a résolu la question des flux de capitaux sur le continent. La seconde, dont Minah fait partie, résoudra l'usage de ce capital, et permettra de le structurer, de le tarifer, de l'allouer et de le tracer. À l'inverse des rails de transfert d'argent, Minah se positionne comme une couche de structuration : elle permet au capital international d'atteindre l'économie réelle africaine avec les standards de traçabilité et de reporting qu'exige un investisseur institutionnel.",
         quote:
-          "La première génération de fintechs africaines a construit le paiement. La nouvelle se concentrera sur l'investissement.",
+          "La première génération de fintechs africaines a construit l'infrastructure de transfert de fonds. La nouvelle se concentrera sur l'investissement.",
         author: { name: "Julien Gakpé", role: "CEO de Minah" },
       },
       {
@@ -29,7 +29,7 @@ const copy = {
       },
       {
         eyebrow: "La conviction technologique",
-        body: "On ne construit pas l'infrastructure financière de 2035 avec les outils de 2010. Notre architecture repose sur deux choix : la blockchain, pour qu'un investisseur puisse vérifier plutôt que croire, et l'IA, intégrée à l'analyse, au scoring et à l'exécution, pour collecter et actualiser en continu la donnée d'un marché fragmenté avec une équipe resserrée. Ces derniers rendent l'économie du modèle possible : un coût marginal de structuration assez bas pour servir un marché que la finance traditionnelle juge trop coûteux. Ce sont aussi eux qui permettent à Minah de se brancher à de nombreux acteurs à la fois, et d'aller chercher un volume de 1\u00a0Md€.",
+        body: "On ne construit pas l'infrastructure financière de 2035 avec les outils de 2010. Notre architecture repose sur deux choix : la blockchain, pour qu'un investisseur puisse vérifier plutôt que croire, et l'IA, intégrée à l'analyse, au scoring et à l'exécution, pour collecter et actualiser en continu la donnée d'un marché fragmenté avec une équipe resserrée. Ces derniers rendent l'économie du modèle possible : un coût marginal de structuration assez bas pour servir un marché que la finance traditionnelle juge trop coûteux. Ce sont aussi eux qui permettent à Minah de se brancher à de nombreux acteurs à la fois : **en devenant une infrastructure technologique de la dette privée, Minah passe à l'échelle** et peut aller chercher un volume de 1\u00a0Md€.",
       },
     ],
 
@@ -56,7 +56,7 @@ const copy = {
         eyebrow: "The diagnosis",
         body: "The continent holds the demographics and the growth of the next thirty years, but its finance is still calibrated for another market. The capital exists, and so do the projects; what is missing is the layer that makes them legible to one another. The first generation of African fintechs (M-Pesa, Wave, Flutterwave, Paystack) solved the question of capital flows across the continent. The second, which Minah is part of, will solve how that capital is used, making it possible to structure it, price it, allocate it and trace it. Unlike money transfer rails, Minah positions itself as a structuring layer: it lets international capital reach the African real economy with the traceability and reporting standards an institutional investor requires.",
         quote:
-          "The first generation of African fintechs built payments. The new one will focus on investment.",
+          "The first generation of African fintechs built the money transfer infrastructure. The new one will focus on investment.",
         author: { name: "Julien Gakpé", role: "CEO of Minah" },
       },
       {
@@ -66,7 +66,7 @@ const copy = {
       },
       {
         eyebrow: "The technology conviction",
-        body: "You do not build the financial infrastructure of 2035 with the tools of 2010. Our architecture rests on two choices: blockchain, so that an investor can verify rather than believe, and AI, embedded in analysis, scoring and execution, to collect and continuously refresh the data of a fragmented market with a small team. Together they make the model's economics work: a marginal structuring cost low enough to serve a market traditional finance considers too expensive. They are also what lets Minah plug into many players at once, and go after €1B in volume.",
+        body: "You do not build the financial infrastructure of 2035 with the tools of 2010. Our architecture rests on two choices: blockchain, so that an investor can verify rather than believe, and AI, embedded in analysis, scoring and execution, to collect and continuously refresh the data of a fragmented market with a small team. Together they make the model's economics work: a marginal structuring cost low enough to serve a market traditional finance considers too expensive. They are also what lets Minah plug into many players at once: **by becoming a technology infrastructure for private debt, Minah scales** and can go after €1B in volume.",
       },
     ],
 
@@ -84,6 +84,19 @@ const copy = {
     ctaSecondary: "Book a meeting",
   },
 };
+
+// **gras** dans le texte d'un chapitre : la phrase qui porte la thèse.
+function withBold(text: string) {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+    part.startsWith("**") && part.endsWith("**") ? (
+      <strong key={i} className="font-semibold text-foreground">
+        {part.slice(2, -2)}
+      </strong>
+    ) : (
+      part
+    )
+  );
+}
 
 const MINAH_PAPPERS_URL = "https://www.pappers.fr/entreprise/minah-sas-931561708";
 
@@ -116,7 +129,7 @@ export function WhyMinah({ locale }: { locale: Locale }) {
               </ScrollReveal>
               <ScrollReveal delay={70}>
                 <p className="mt-4 text-[15px] leading-[1.8] text-neutral-700">
-                  {ch.body}
+                  {withBold(ch.body)}
                 </p>
               </ScrollReveal>
             </div>

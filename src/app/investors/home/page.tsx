@@ -12,7 +12,12 @@ import { DataRoom } from "./data-room";
 import { InterestModal } from "./interest-modal";
 import { MeetingButton } from "./meeting-button";
 import { Welcome } from "./welcome";
-import { getOnboarding, onboardingMessage, welcomeSteps } from "@/lib/onboarding";
+import {
+  getOnboarding,
+  hasExploredDataRoom,
+  onboardingMessage,
+  welcomeSteps,
+} from "@/lib/onboarding";
 import { MatchingFundTooltip } from "../matching-fund-tooltip";
 
 // Contacts directs proposés à un investisseur en attente. Mêmes adresses que
@@ -148,6 +153,11 @@ export default async function InvestorHomePage() {
   // en lumière dans la data room.
   const steps = welcomeSteps(docs, onboarding, level2Unlocked, locale);
   const welcomeMessage = onboardingMessage(onboarding, locale);
+  // La visite se lance d'elle-même à la première vraie connexion. Un accueil
+  // sur mesure, préparé pour la personne, se lance quoi qu'il arrive (une
+  // fois par version du message) ; une démo aussi, c'est ce qu'on y montre.
+  const autoTour =
+    Boolean(demo) || Boolean(welcomeMessage) || !(await hasExploredDataRoom(investor.id));
 
   let lockedTitles: {
     slug: string;
@@ -299,6 +309,7 @@ export default async function InvestorHomePage() {
             steps={steps}
             firstName={investor.full_name?.trim().split(/\s+/)[0] || null}
             demo={!!demo}
+            autoStart={autoTour}
             tourKey={
               onboarding && welcomeMessage
                 ? `minah_tour:${onboarding.updated_at}`

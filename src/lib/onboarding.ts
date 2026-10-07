@@ -47,6 +47,23 @@ export async function getOnboarding(email: string): Promise<Onboarding | null> {
   return (data as Onboarding | null) ?? null;
 }
 
+// Vrai si la personne a déjà parcouru la data room : une fiche ouverte ou un
+// DocSend cliqué. La visite guidée par défaut ne se lance qu'à la première
+// vraie connexion, quand ce n'est pas le cas. Les vues de /investors/home ne
+// comptent pas : un compte en attente de validation y voit l'écran d'attente.
+// Dans le doute (erreur de lecture), on considère la data room parcourue :
+// mieux vaut une visite manquée qu'imposée à un habitué.
+export async function hasExploredDataRoom(investorId: string): Promise<boolean> {
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return true;
+  const { count, error } = await createAdminClient()
+    .from("events")
+    .select("id", { count: "exact", head: true })
+    .eq("investor_id", investorId)
+    .or("type.eq.docsend_click,path.like./investors/docs/%");
+  if (error) return true;
+  return (count ?? 0) > 0;
+}
+
 export async function listOnboardings(): Promise<Onboarding[]> {
   const { data } = await createAdminClient()
     .from("onboardings")
