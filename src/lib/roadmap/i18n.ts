@@ -61,7 +61,7 @@ const fr: RoadmapCopy = {
   learnedLabel: "Ce qu'on a appris",
   partnersTitle: "Écosystème et partenaires",
   partnersIntro:
-    "Minah ne refait pas les rails : elle s'y branche. Chaque intégration élargit la distribution et prouve que l'infrastructure est ouverte.",
+    "Les rails et les fournisseurs sur lesquels Minah émet, garde et distribue ses stratégies, et ceux avec qui nous sommes en discussion.",
   partnerStatuses: { actif: "En production", en_cours: "Intégration en cours", pressenti: "Pressenti" },
   partnerLink: "ouvrir le site (nouvel onglet)",
   legend: { livre: "en production", en_cours: "en cours sur la période", prevu: "prévu plus tard" },
@@ -96,7 +96,7 @@ const en: RoadmapCopy = {
   learnedLabel: "What we learned",
   partnersTitle: "Ecosystem and partners",
   partnersIntro:
-    "Minah does not rebuild the rails, it plugs into them. Every integration widens distribution and proves the infrastructure is open.",
+    "The rails and providers Minah uses to issue, hold and distribute its strategies, and those we are in discussions with.",
   partnerStatuses: { actif: "Live", en_cours: "Integration under way", pressenti: "Prospective" },
   partnerLink: "open website (new tab)",
   legend: { livre: "in production", en_cours: "under way in the period", prevu: "planned for later" },

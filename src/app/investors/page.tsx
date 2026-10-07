@@ -7,6 +7,7 @@ import { RequestAccessForm } from "./request-access-form";
 import { DemoStartForm } from "./demo-start-form";
 import { getAdminEmail } from "@/lib/admin";
 import { getDemoSession } from "@/lib/demo";
+import { listOnboardings } from "@/lib/onboarding";
 
 export async function generateMetadata() {
   return { title: t(await getLocale(), "meta.title") };
@@ -57,7 +58,12 @@ export default async function InvestorsPage({
         </p>
       )}
       {demo ? (
-        <DemoStartForm />
+        <DemoStartForm
+          onboardings={(await listOnboardings()).map((o) => ({
+            email: o.email,
+            note: o.note,
+          }))}
+        />
       ) : (
         <RequestAccessForm refCode={ref} nextPath={next} locale={locale} />
       )}

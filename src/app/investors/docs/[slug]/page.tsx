@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getDemoSession } from "@/lib/demo";
+import { getOnboarding } from "@/lib/onboarding";
 import { OWN_PAGE_SLUGS } from "@/lib/own-pages";
 import { getLocale } from "@/lib/i18n-server";
 import { docFields, t } from "@/lib/i18n";
@@ -43,14 +44,19 @@ export default async function DocPage({
   // Dernier intérêt Kupanda de la personne, pour le bas de la term sheet.
   let kupandaInterest: { tranche: string; created_at: string } | null = null;
   if (demo) {
-    // Pas de session Supabase en démo : service role + filtrage de niveau à la main.
-    const { data } = await createAdminClient()
-      .from("documents")
-      .select("*")
-      .eq("slug", slug)
-      .lte("access_level", demo.level2 ? 2 : 1)
-      .maybeSingle();
-    doc = data as DocumentRow | null;
+    // Pas de session Supabase en démo : service role + filtrage de niveau à la
+    // main, ouvertures de l'onboarding rejoué comprises.
+    const [{ data }, onboarding] = await Promise.all([
+      createAdminClient().from("documents").select("*").eq("slug", slug).maybeSingle(),
+      demo.onboarding ? getOnboarding(demo.onboarding) : null,
+    ]);
+    const row = data as DocumentRow | null;
+    doc =
+      row &&
+      (row.access_level <= (demo.level2 ? 2 : 1) ||
+        onboarding?.unlocked_slugs.includes(slug))
+        ? row
+        : null;
   } else {
     const supabase = await createClient();
     const {

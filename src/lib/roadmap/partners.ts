@@ -1,7 +1,7 @@
 // Porté le 02/10/2026 depuis minah_interface, voir types.ts.
 // src/lib/roadmap/partners.ts
 // Écosystème : les rails, protocoles et fournisseurs auxquels Minah se branche.
-// Sert la démonstration de versatilité — Minah ne refait pas ce qui existe, elle s'y connecte.
+// Sert la démonstration de versatilité : Minah ne refait pas ce qui existe, elle s'y connecte.
 //
 // Logos : déposer le fichier dans `public/partners/` puis renseigner `logo` ci-dessous
 // (ex. `logo: "/partners/stellar.svg"`). Tant que le champ est vide, la carte affiche le nom
@@ -62,8 +62,8 @@ export const PARTNERS: Partner[] = [
     id: "starknet",
     nom: "Starknet",
     url: "https://www.starknet.io",
-    role: { fr: "Rail alternatif évalué pour l'émission, à confirmer.", en: "Alternative issuance rail under evaluation, to be confirmed." },
-    statut: "pressenti", depuis: "fondations", visibleDataroom: true,
+    role: { fr: "Second rail d'émission pour les stratégies Minah.", en: "Second issuance rail for Minah strategies." },
+    statut: "en_cours", depuis: "b2b", visibleDataroom: true,
   },
   {
     id: "sereel",
@@ -76,7 +76,7 @@ export const PARTNERS: Partner[] = [
     id: "etherfuse",
     nom: "Etherfuse",
     url: "https://www.etherfuse.com",
-    role: { fr: "Obligations souveraines tokenisées — moteur de dette souveraine.", en: "Tokenised sovereign bonds — sovereign debt engine." },
+    role: { fr: "Obligations souveraines tokenisées, pour le moteur de dette souveraine.", en: "Tokenised sovereign bonds, for the sovereign debt engine." },
     statut: "pressenti", depuis: "api_v1", visibleDataroom: true,
   },
   {
@@ -94,10 +94,17 @@ export const PARTNERS: Partner[] = [
     statut: "pressenti", depuis: "api_v1", visibleDataroom: true,
   },
   {
+    id: "tranched",
+    nom: "Tranched",
+    url: "https://tranched.fi",
+    role: { fr: "Titrisation on-chain avec découpage automatique en tranches senior et junior.", en: "On-chain securitisation with automatic senior and junior tranching." },
+    statut: "pressenti", depuis: "api_v1", visibleDataroom: true,
+  },
+  {
     id: "pendle",
     nom: "Pendle",
     url: "https://www.pendle.finance",
-    role: { fr: "Référence du découpage principal / rendement (PT, YT) — partenaire pressenti.", en: "Reference for principal / yield splitting (PT, YT) — prospective partner." },
+    role: { fr: "Référence du découpage principal / rendement (PT, YT).", en: "Reference for principal / yield splitting (PT, YT)." },
     statut: "pressenti", depuis: "vision", visibleDataroom: true,
   },
   {
@@ -111,7 +118,7 @@ export const PARTNERS: Partner[] = [
     id: "tradable",
     nom: "Tradable",
     url: "https://tradable.xyz",
-    role: { fr: "Place de marché pour actifs privés tokenisés — piste pour le secondaire.", en: "Marketplace for tokenised private assets — secondary market lead." },
+    role: { fr: "Place de marché pour actifs privés tokenisés, piste pour le secondaire.", en: "Marketplace for tokenised private assets, a lead for the secondary market." },
     statut: "pressenti", depuis: "vision", visibleDataroom: true,
   },
   {

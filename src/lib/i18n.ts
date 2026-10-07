@@ -93,6 +93,7 @@ const dict = {
     "home.dataroom.adding": "Documents en cours d'ajout.",
     "home.docs.empty": "Aucun document disponible pour le moment.",
     "home.docs.read": "Lire →",
+    "home.docs.openedForYou": "Ouvert pour vous",
     "home.closing.title": "Parlons-en de vive voix",
     "home.closing.body":
       "Ces documents méritent mieux qu'une lecture seule : l'équipe vous les présente volontiers en amont pour donner le contexte de chacun. Et une fois votre deep dive terminé, n'hésitez pas à prendre rendez-vous. Que vous envisagiez d'investir ou non, vos retours nous sont précieux.",
@@ -242,6 +243,7 @@ const dict = {
     "home.dataroom.adding": "Documents being added.",
     "home.docs.empty": "No documents available yet.",
     "home.docs.read": "Read →",
+    "home.docs.openedForYou": "Opened for you",
     "home.closing.title": "Let's talk it through",
     "home.closing.body":
       "These documents deserve more than a solo read: the team is happy to walk you through each of them upfront. And once your deep dive is done, do not hesitate to book a meeting. Whether you plan to invest or not, your feedback is valuable to us.",

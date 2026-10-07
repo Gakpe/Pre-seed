@@ -6,12 +6,14 @@ import { track } from "@/lib/tracking";
 import type { Locale } from "@/lib/i18n";
 import type { InterestState, WelcomeStep } from "@/lib/onboarding";
 import { InterestModal } from "./interest-modal";
+import { GuidedTour, useTourAutostart } from "./guided-tour";
 
 // Accueil de la data room, en tête de /investors/home : par où commencer.
 // Le contenu (message, fiches) est décidé côté serveur, voir lib/onboarding :
 // l'accueil par défaut, ou celui préparé pour la personne. Ici, l'affichage
 // seulement. Pas de cadre autour du bloc : les étapes sont déjà des cartes.
-
+// Un onboarding sur mesure remplace le bloc par une visite guidée (voir
+// guided-tour), et l'accueil ne garde qu'un lien pour la revoir.
 
 const copy = {
   fr: {
@@ -25,6 +27,8 @@ const copy = {
       "Indicatif et non engageant. Il ouvre le niveau\u00a02 : go-to-market complet, gestion du risque, documents clés.",
     interestRecorded: "Intérêt enregistré : l'équipe vous ouvre le niveau\u00a02.",
     interestUnlocked: "Niveau\u00a02 ouvert ↓",
+    replay: "Revoir la présentation",
+    tourActions: "Bouton : ouvrir {doc}.",
   },
   en: {
     title: "Where to start",
@@ -37,6 +41,8 @@ const copy = {
       "Indicative and non-binding. It opens level\u00a02: the full go-to-market, risk management, key documents.",
     interestRecorded: "Interest recorded: the team is opening level 2 for you.",
     interestUnlocked: "Level 2 open ↓",
+    replay: "Replay the introduction",
+    tourActions: "Button: open {doc}.",
   },
 } as const;
 
@@ -59,6 +65,7 @@ export function Welcome({
   interest,
   demo = false,
   preview = false,
+  tourKey = null,
 }: {
   locale: Locale;
   /** Message sur mesure ; absent, l'accueil par défaut. */
@@ -68,10 +75,60 @@ export function Welcome({
   demo?: boolean;
   /** Aperçu depuis l'admin : rien n'est tracé, l'intérêt n'est pas cliquable. */
   preview?: boolean;
+  /** Clé de la visite guidée déjà vue ; change quand le message est modifié. */
+  tourKey?: string | null;
 }) {
   const c = copy[locale];
   const pathname = usePathname();
   const total = steps.length + (interest === "unlocked" ? 0 : 1);
+  const paragraphs = (message ?? "")
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  const guided = paragraphs.length > 0 && !preview;
+  const tour = useTourAutostart(guided ? tourKey : null, demo ? "session" : "local");
+
+  // Onboarding sur mesure : la visite guidée tient lieu d'accueil.
+  if (guided) {
+    return (
+      <>
+        <button
+          onClick={tour.start}
+          className="inline-flex items-center gap-1.5 rounded-lg text-[15px] text-marsala underline decoration-marsala/30 underline-offset-4 hover:decoration-marsala"
+        >
+          {c.replay}
+          <span aria-hidden>↺</span>
+        </button>
+        {tour.open && (
+          <GuidedTour
+            paragraphs={paragraphs}
+            focus={steps[0] ?? null}
+            locale={locale}
+            onClose={tour.close}
+          />
+        )}
+      </>
+    );
+  }
+
+  // Aperçu admin d'une visite : ses étapes, dans l'ordre.
+  if (preview && paragraphs.length > 0) {
+    return (
+      <ol className="grid gap-3 sm:grid-cols-2">
+        {paragraphs.map((p, i) => (
+          <li key={i} className="rounded-lg border border-foreground/10 bg-white/60 p-4">
+            <StepHead n={i + 1} badge={null} />
+            <p className="mt-3 whitespace-pre-line text-sm leading-6 text-neutral-700">{p}</p>
+            {i === paragraphs.length - 1 && (
+              <p className="mt-2 text-xs leading-5 text-neutral-600">
+                {c.tourActions.replace("{doc}", steps[0]?.title ?? "")}
+              </p>
+            )}
+          </li>
+        ))}
+      </ol>
+    );
+  }
 
   return (
     <section>

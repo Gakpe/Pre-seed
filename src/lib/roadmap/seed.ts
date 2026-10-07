@@ -45,10 +45,10 @@ export const ROADMAP_META: RoadmapMeta = {
       "Stellar comme premier rail : des frais et des délais de règlement compatibles avec des tickets africains.",
     ],
     b2c: [
-      "Le parcours complet — accès, vérification, souscription, règlement — a tourné de bout en bout avec de vrais investisseurs.",
+      "Le parcours complet (accès, vérification, souscription, règlement) a tourné de bout en bout avec de vrais investisseurs.",
       "L'équipe a mesuré ce que coûte un particulier (ticket faible, KYC lourd) et a pivoté vite plutôt que d'insister.",
       "La plateforme est opérée par Minah, pas sous-traitée : chaque brique du parcours est modifiable sans dépendre d'un éditeur.",
-      "Tout le fonctionnel pour assumer du B2C : connexion, KYC, signature d'un titre financier, souscription, suivi — et un Q&A live tenu sur la plateforme.",
+      "Tout le fonctionnel pour assumer du B2C : connexion, KYC, signature d'un titre financier, souscription, suivi, et un Q&A live tenu sur la plateforme.",
       "La couche on-chain est déjà présente dans le produit, même si elle n'est pas encore branchée de bout en bout pour l'utilisateur final.",
     ],
     b2b: [
@@ -58,27 +58,26 @@ export const ROADMAP_META: RoadmapMeta = {
       "La custody Fireblocks passe à l'échelle : la sécurité suit la taille des tickets, elle ne la subit pas.",
     ],
     api_v1: [
-      "Une API unique devant plusieurs rails — Stellar aujourd'hui, Canton Network et Fireblocks — : un partenaire se branche une fois et accède à toutes les stratégies.",
+      "Une API unique devant plusieurs rails (Stellar aujourd'hui, Canton Network et Fireblocks) : un partenaire se branche une fois et accède à toutes les stratégies.",
       "La distribution ne dépend plus de l'équipe : chaque protocole branché élargit le réseau sans développement spécifique.",
       "L'admin et le Web3 sont unifiés : ce que voit l'équipe et ce qui est sur la chaîne sont la même chose.",
     ],
     api_v2: [
       "Les flux ne dorment plus : la trésorerie en attente se place en T-bills et le vault déploie vers les fintechs, automatiquement.",
       "Construit pour les agents : API entièrement documentée et serveur MCP, pour que les prochains utilisateurs de Minah soient aussi des machines.",
-      "Trois moteurs de volume — dette privée, dette souveraine, liquidité crypto — sur la même infrastructure : croître ne multiplie pas les systèmes.",
+      "Trois moteurs de volume (dette privée, dette souveraine, liquidité crypto) sur la même infrastructure : croître ne multiplie pas les systèmes.",
     ],
-    // Quatre états finaux, un par couche — ce que Minah est devenue quand la vision est atteinte.
+    // Ce qui rend Minah défendable passé le milliard (Julien, 07/10/2026) :
+    // la liquidité aux institutionnels, l'API qui s'ouvre, l'infrastructure.
     vision: [
-      "Rails — l'ensemble du flux de sortie est on-chain : on voit en temps réel où est l'argent et comment il remonte.",
-      "Produit — l'investissement cesse d'être froid. Une vraie expérience sociale, qui reproduit l'usage de la monnaie : une plateforme d'investissement next gen.",
-      "API — 100 % seamless sur la partie on-chain.",
-      "Admin — un espace qui s'adapte aux institutionnels : produire et gérer leurs souscriptions en se branchant directement sur leurs systèmes.",
-      "Une position Minah devient liquide : principal et rendement séparés, marché secondaire, sortie avant l'échéance.",
+      "Passé le milliard d'euros, le volume vient des institutionnels, à qui il faut apporter de la liquidité. Minah le fait en tech enabler, on-chain : c'est là que se joue notre avantage.",
+      "Fintechs et partenaires se branchent d'abord via une API gated, qui s'ouvre ensuite à la libre circulation des actifs.",
+      "À cette échelle, Minah devient une infrastructure financière, au-delà de la création et de la distribution de stratégies. La polyvalence de ses connexions fait la différence.",
     ],
   },
   experienceParPhase: {
     fondations: "Avant toute interface, la preuve : un premier MVP techno-financier. une obligation africaine devient un actif on-chain, gardé par une custody institutionnelle et adossé à un vrai KYC. Le socle sur lequel tout le reste viendra se brancher.",
-    b2c: "Une plateforme all-in-one : l'utilisateur se connecte, réalise son KYC et investit dans un projet ouest-africain unique, de bout en bout — et l'on découvre ce que ce marché demande réellement.",
+    b2c: "Une plateforme all-in-one : l'utilisateur se connecte, réalise son KYC et investit dans un projet ouest-africain unique, de bout en bout, et l'on découvre ce que ce marché demande réellement.",
     b2b: "La plateforme bascule vers un public d'investisseurs professionnels : accès vérifié, questionnaire, souscription en ligne. Une expérience d'investisseur qualifié, avec un suivi augmenté à chaque étape.",
     api_v1: "L'expérience devient seamless pour les acteurs digitaux : les principales fonctions de la plateforme s'automatisent via API ou agent IA. Un partenaire distribue les stratégies à ses propres clients sans passer par l'équipe.",
     api_v2: "Le capital circule seul : les fintechs sont financées, la trésorerie en attente travaille en T-bills, des agents consultent et souscrivent, chacun suit ses positions en temps réel.",
@@ -221,7 +220,7 @@ const RAW: Raw[] = [
     id: "suivi-automatise", slug: "suivi-automatise", titre: "Suivi automatisé du cycle de souscription", couche: "produits", moteur: "dette_privee", ordre: 2.5,
     livreEn: "b2b", owner: null, dependances: ["plateforme-minah"], note: "Les montants montent : chaque étape doit être suivie et relancée sans traitement manuel", aConfirmer: false,
     briefTheorique: draft(
-      "Quand le montant des stratégies augmente, chaque étape de la souscription demande un suivi — l'automatiser est la condition pour tenir le volume.",
+      "Quand le montant des stratégies augmente, chaque étape de la souscription demande un suivi : l'automatiser est la condition pour tenir le volume.",
       "Suivi d'étape, relances, états de souscription, traçabilité de bout en bout.",
     ),
     capaciteDebloquee: "Un suivi à chaque étape, sans traitement manuel.",
@@ -250,7 +249,7 @@ const RAW: Raw[] = [
   },
   {
     id: "minah-os", slug: "minah-os", titre: "Minah OS", couche: "api", moteur: "transverse", ordre: 0.5,
-    livreEn: "b2b", owner: null, dependances: [], note: "Operating system interne — objectifs, tâches, contexte, agents", aConfirmer: false,
+    livreEn: "b2b", owner: null, dependances: [], note: "Operating system interne : objectifs, tâches, contexte, agents", aConfirmer: false,
     briefTheorique: draft(
       "Donner à Minah une tour de contrôle : une source de vérité unique sur les objectifs, les flux et le contexte, lisible par l'équipe comme par les agents.",
       "Référentiel des objectifs et des tâches, contexte stratégique, premiers agents branchés dessus.",
@@ -265,7 +264,7 @@ const RAW: Raw[] = [
   },
   {
     id: "liquidite-permissionnee", slug: "liquidite-permissionnee", titre: "Premiers souscripteurs on-chain", couche: "liquidite", moteur: "transverse", ordre: 0.5,
-    livreEn: "b2b", statutsForces: { b2c: "prevu", b2b: "en_cours" }, owner: null, dependances: ["api-v1"], note: "Permissionné — security token", aConfirmer: true,
+    livreEn: "b2b", statutsForces: { b2c: "prevu", b2b: "en_cours" }, owner: null, dependances: ["api-v1"], note: "Permissionné, security token", aConfirmer: true,
     briefTheorique: draft(
       "Ouvrir la souscription à des porteurs on-chain, dans un cadre permissionné.",
       "[Security token permissionné, liste d'adresses autorisées, règlement]",
@@ -288,7 +287,7 @@ const RAW: Raw[] = [
     capaciteDebloquee: "Un vault dont les parts circulent.",
     briefInvestisseur: {
       quoi: "Un vault dont les parts sont des utility tokens, sur le modèle PT / YT.",
-      pourquoi: "L'exposition devient transférable sans toucher au sous-jacent — première marche vers la liquidité.",
+      pourquoi: "L'exposition devient transférable sans toucher au sous-jacent : c'est la première marche vers la liquidité.",
       capacite: "Des parts de vault qui circulent.",
     },
     partenaires: ["pendle", "spectra"],
@@ -373,7 +372,7 @@ const RAW: Raw[] = [
     capaciteDebloquee: "Souscription de bout en bout.",
     briefInvestisseur: {
       quoi: "La première version de l'espace investisseur, avec une souscription de bout en bout.",
-      pourquoi: "Le parcours complet — accès, vérification, souscription, règlement — a été exécuté sur de premières stratégies.",
+      pourquoi: "Le parcours complet (accès, vérification, souscription, règlement) a été exécuté sur de premières stratégies.",
       capacite: "Souscription de bout en bout, premières stratégies exécutées.",
     },
     visibleDataroom: true,
@@ -467,9 +466,9 @@ const RAW: Raw[] = [
     id: "tbills-tokenises", slug: "tbills-tokenises", titre: "Accès aux T-bills tokenisés", couche: "liquidite", moteur: "dette_souveraine", ordre: 4,
     miseEnAvant: true,
     livreEn: "api_v2", owner: null, dependances: ["api-v2"],
-    note: "Nouveau (v2) · partenaires pressentis : Spiko (en contact) et Zeno — ne pas nommer côté dataroom tant que ce n'est pas signé", aConfirmer: true,
+    note: "Nouveau (v2) · partenaires pressentis : Spiko (en contact) et Zeno, ne pas nommer côté dataroom tant que ce n'est pas signé", aConfirmer: true,
     briefTheorique: draft(
-      "Placer la trésorerie en attente — et ouvrir un moteur de dette souveraine — via des T-bills tokenisés, en s'appuyant sur un partenaire spécialisé.",
+      "Placer la trésorerie en attente, et ouvrir un moteur de dette souveraine, via des T-bills tokenisés, en s'appuyant sur un partenaire spécialisé.",
       "Connexion à un fournisseur de T-bills tokenisés via l'API v2 ; placement automatique de la trésorerie en attente.",
       { risques: ["[choix et contractualisation du partenaire]", "[cadre réglementaire du placement de trésorerie]"] }
     ),
@@ -526,7 +525,7 @@ const RAW: Raw[] = [
     dateDebut: "2026-10-01", dateFinCible: "2026-12-15",
     briefTheorique: draft(
       "L'entrée : une API ouverte par laquelle des partenaires et protocoles consultent les stratégies et souscrivent. Elle centralise les interactions web3 (Stellar aujourd'hui, Canton Network et Fireblocks) et sert aussi les applications internes.",
-      "Routes classées par usage — interne, agents, externe — avec les niveaux d'accès correspondants ; premier périmètre : ce dont Sereel a besoin.",
+      "Routes classées par usage (interne, agents, externe), avec les niveaux d'accès correspondants ; premier périmètre : ce dont Sereel a besoin.",
       { risques: ["[versionnage et compatibilité ascendante dès la v1]"] }
     ),
     capaciteDebloquee: "Des partenaires consultent les stratégies et souscrivent via API.",
@@ -577,7 +576,7 @@ const RAW: Raw[] = [
     id: "documentation-publique", slug: "documentation-publique", titre: "Documentation publique", couche: "api", moteur: "transverse", ordre: 4,
     livreEn: "api_v2", owner: "Erwan", dependances: ["api-v1"], note: "Change de phase (v2) · routes documentées visées jan-fév 2027", aConfirmer: false,
     briefTheorique: draft(
-      "Une API documentée à 100 % — spécification, exemples, cas d'erreur — lisible par un développeur comme par un agent. C'est la condition de l'ouverture aux agents et aux partenaires sans accompagnement manuel.",
+      "Une API documentée à 100 % (spécification, exemples, cas d'erreur), lisible par un développeur comme par un agent. C'est la condition de l'ouverture aux agents et aux partenaires sans accompagnement manuel.",
       "Spécification complète, exemples par route, catalogue des erreurs, publication publique.",
     ),
     capaciteDebloquee: "Un partenaire ou un agent s'intègre sans accompagnement.",
@@ -649,7 +648,7 @@ const RAW: Raw[] = [
     livreEn: "api_v1", owner: "Erwan", dependances: ["api-v1", "multi-providers-web3"], note: "Renommé et élargi (v2) · mission 2, à partir de nov. 2026", aConfirmer: false,
     briefTheorique: draft(
       "Un espace Web3 unifié dans l'admin, sur le modèle de ce qui a été fait pour l'admin elle-même : émission, custody, règlement et cross-chain pilotés au même endroit que les investisseurs et les stratégies, via l'API.",
-      "Espace Web3 dans l'admin (émission, custody, règlement, cross-chain) ; infrastructure de test — unitaires, intégration, simulation — avec une base de mocks : providers web3, protocoles partenaires, données investisseurs.",
+      "Espace Web3 dans l'admin (émission, custody, règlement, cross-chain) ; infrastructure de test (unitaires, intégration, simulation) avec une base de mocks : providers web3, protocoles partenaires, données investisseurs.",
       { risques: ["[traçabilité des actions sensibles depuis l'admin]"] }
     ),
     capaciteDebloquee: "L'on-chain se pilote depuis l'admin.",
@@ -667,7 +666,7 @@ const RAW: Raw[] = [
     note: "Renommé (v2) · à confirmer · visible dataroom sans détail · pentest visé mars-avr 2027", aConfirmer: true,
     briefTheorique: {
       pourquoi: "L'ouverture aux partenaires et aux agents ne doit pas fragiliser la plateforme. Deux temps, repris de la feuille de route envoyée à Erwan : solidifier l'admin (mission 2, dès nov. 2026), puis valider l'ouverture aux agents (mission 3, dès jan. 2027).",
-      perimetre: "Tests de cybersécurité — gestion des secrets, traçabilité des actions sensibles, revue des dépendances — puis remédiation et re-test. Ensuite, pentests : simulations d'attaque et de pénétration sur l'API, l'espace admin et le serveur MCP, y compris via des agents.",
+      perimetre: "Tests de cybersécurité (gestion des secrets, traçabilité des actions sensibles, revue des dépendances), puis remédiation et re-test. Ensuite, pentests : simulations d'attaque et de pénétration sur l'API, l'espace admin et le serveur MCP, y compris via des agents.",
       horsPerimetre: "[à préciser : périmètre exclu, prestataire externe ou interne]",
       comment: "[séquencement tests → remédiation → re-test → pentest ; prestataire de pentest à choisir]",
       autonomie: ["Inventaire des secrets et de leur rotation", "Accès aux environnements de test", "[Prestataire de pentest et calendrier]"],
@@ -712,14 +711,16 @@ const RAW: Raw[] = [
   },
   {
     id: "starknet", slug: "starknet", titre: "Starknet", couche: "rails", moteur: "transverse", ordre: 2,
-    livreEn: "fondations", owner: null, dependances: [], note: "À confirmer", aConfirmer: true,
+    // Intégration en cours (Julien, 07/10/2026) : livrée en API v1, montrée « en
+    // développement » dès la période courante (IN_DEVELOPMENT, public.ts).
+    livreEn: "api_v1", owner: null, dependances: [], note: "À confirmer", aConfirmer: true,
     briefTheorique: draft(
       "[Périmètre réel de Starknet à confirmer avec Erwan : rail d'émission secondaire ? expérimentation ?]",
       "[à préciser]",
     ),
     capaciteDebloquee: "Un second rail disponible.",
     briefInvestisseur: {
-      quoi: "Un second rail blockchain disponible pour les stratégies Minah.",
+      quoi: "Un second rail blockchain pour les stratégies Minah.",
       pourquoi: "Minah choisit le rail le plus adapté à chaque stratégie.",
       capacite: "Choix du rail par stratégie.",
     },

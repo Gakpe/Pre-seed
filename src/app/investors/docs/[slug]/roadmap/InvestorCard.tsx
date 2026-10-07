@@ -52,7 +52,7 @@ function PartnerChips({ partners, label, linkLabel, lang }: { partners: Partner[
                   href={p.url}
                   target="_blank"
                   rel="noreferrer noopener"
-                  aria-label={`${p.nom} — ${linkLabel}`}
+                  aria-label={`${p.nom}, ${linkLabel}`}
                   style={{ ...base, width: "100%" }}
                   onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#D9D2C2"; e.currentTarget.style.boxShadow = "0 1px 3px rgba(44,23,22,.07)"; }}
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = LINE; e.currentTarget.style.boxShadow = "none"; }}

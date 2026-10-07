@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAdminEmail } from "@/lib/admin";
+import { getAdminEmail, isEmailShaped, normalizeEmail } from "@/lib/admin";
 import {
   DEMO_COOKIE,
   getDemoSession,
@@ -25,6 +25,8 @@ export async function POST(request: Request) {
   let session: DemoSession;
   if (name) {
     // Nouvelle démo : on repart d'un investisseur qui arrive pour la première fois.
+    const onboarding =
+      typeof body.onboarding === "string" ? normalizeEmail(body.onboarding) : "";
     session = {
       name,
       entity:
@@ -33,6 +35,7 @@ export async function POST(request: Request) {
           : null,
       tranche: null,
       level2: false,
+      onboarding: isEmailShaped(onboarding) ? onboarding : null,
     };
   } else if (current) {
     session = {

@@ -13,11 +13,17 @@ export function DataRoom({
   locale,
   startIndex = 1,
   columns = 1,
+  opened = [],
+  tourSlug = null,
 }: {
   docs: DocumentRow[];
   locale: Locale;
   startIndex?: number;
   columns?: 1 | 2;
+  /** Fiches ouvertes à la personne au-dessus de son niveau (onboarding). */
+  opened?: string[];
+  /** Fiche mise en lumière par la visite guidée. */
+  tourSlug?: string | null;
 }) {
   const pathname = usePathname();
 
@@ -58,7 +64,7 @@ export function DataRoom({
                 ? null
                 : fields.docsendUrl;
               return docsendUrl ? (
-                <li key={doc.slug}>
+                <li key={doc.slug} data-tour={doc.slug === tourSlug ? "focus" : undefined}>
                   <a
                     href={docsendUrl}
                     target="_blank"
@@ -79,13 +85,20 @@ export function DataRoom({
                   </a>
                 </li>
               ) : (
-                <li key={doc.slug}>
+                <li key={doc.slug} data-tour={doc.slug === tourSlug ? "focus" : undefined}>
                   <Link
                     href={`/investors/docs/${doc.slug}`}
                     className="halo-hover flex items-center justify-between px-4 py-3 text-sm transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900"
                   >
-                    <span>{title}</span>
-                    <span className="text-xs text-neutral-400">
+                    <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                      {title}
+                      {opened.includes(doc.slug) && (
+                        <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[11px] font-medium text-marsala">
+                          {t(locale, "home.docs.openedForYou")}
+                        </span>
+                      )}
+                    </span>
+                    <span className="shrink-0 text-xs text-neutral-400">
                       {t(locale, "home.docs.read")}
                     </span>
                   </Link>

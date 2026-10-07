@@ -26,14 +26,16 @@ const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
 const phaseIdx = (p: GrowthPhase) => GROWTH_PHASES.findIndex((g) => g.id === p);
 
 function fmtPeriod(start: string, end: string, locale: string, isLast: boolean) {
+  // Pas de tiret long entre deux dates : « à », ou « to » en anglais.
+  const to = locale.startsWith("en") ? " to " : " à ";
   const y0 = start.slice(0, 4), y1 = end.slice(0, 4);
   if (isLast) return `${y0}+`;
   if (start <= ECO_TODAY) {
     const f = (d: string) => new Date(d).toLocaleDateString(locale, { month: "short", year: "numeric" });
-    return `${f(start)} – ${f(end)}`;
+    return `${f(start)}${to}${f(end)}`;
   }
   const q = (d: string) => `Q${Math.floor((Number(d.slice(5, 7)) - 1) / 3) + 1}`;
-  return y0 === y1 ? (start.endsWith("-01-01") && end.endsWith("-12-31") ? y0 : `${q(start)} – ${q(end)} ${y0}`) : `${q(start)} ${y0} – ${q(end)} ${y1}`;
+  return y0 === y1 ? (start.endsWith("-01-01") && end.endsWith("-12-31") ? y0 : `${q(start)}${to}${q(end)} ${y0}`) : `${q(start)} ${y0}${to}${q(end)} ${y1}`;
 }
 
 /** Les **gras** du récit deviennent des noms mis en évidence. */

@@ -15,6 +15,10 @@ export type DemoSession = {
   // les deux étapes restent distinctes, comme pour un vrai investisseur.
   tranche: string | null;
   level2: boolean;
+  // Adresse dont on rejoue l'onboarding sur mesure (message, fiches mises en
+  // avant, fiches ouvertes au-dessus du niveau), pour voir l'accueil tel que
+  // cette personne le verra. Nulle : l'accueil par défaut.
+  onboarding: string | null;
 };
 
 function secret(): string {
@@ -45,6 +49,7 @@ export function verifyDemoToken(token: string | undefined): DemoSession | null {
       entity: typeof parsed.entity === "string" ? parsed.entity : null,
       tranche: typeof parsed.tranche === "string" ? parsed.tranche : null,
       level2: parsed.level2 === true,
+      onboarding: typeof parsed.onboarding === "string" ? parsed.onboarding : null,
     };
   } catch {
     return null;

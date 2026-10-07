@@ -71,11 +71,9 @@ export const META_EN: {
       "Three volume engines, private debt, sovereign debt, crypto liquidity, on the same infrastructure: growing does not multiply systems.",
     ],
     vision: [
-      "Rails: the whole outbound flow is on-chain; you see in real time where the money is and how it comes back.",
-      "Product: investing stops being cold. A real social experience that mirrors how money is used: a next-generation investment platform.",
-      "API: 100% seamless on the on-chain side.",
-      "Admin: a space that adapts to institutions, producing and managing their subscriptions by plugging directly into their systems.",
-      "A Minah position becomes liquid: principal and yield separated, secondary market, exit before maturity.",
+      "Beyond €1B, volume comes from institutions, which need liquidity. Minah delivers it as a tech enabler, on-chain: that is where our edge lies.",
+      "Fintechs and partners first plug in through a gated API, which then opens up to the free flow of assets.",
+      "At that scale, Minah becomes financial infrastructure, beyond creating and distributing strategies. The versatility of its connections makes the difference.",
     ],
   },
   apprentissagesParPhase: {
@@ -121,7 +119,7 @@ export const OBJECTIVES_EN: Record<string, { titre: string; capaciteDebloquee: s
   "web3-admin": { titre: "Web3 space integrated into the admin", capaciteDebloquee: "On-chain activity is steered from the admin.", brief: { quoi: "On-chain activity, cross-chain included, visible and steerable from the administration space.", pourquoi: "Issuance, custody and settlement are tracked in the same place as investors and strategies.", capacite: "Admin and Web3 unified." } },
   "durcissement-securite": { titre: "Security and pentests", capaciteDebloquee: "An open and hardened platform.", brief: { quoi: "A programme to strengthen the platform's security.", pourquoi: "Opening up to partners and agents comes with security verified by third parties.", capacite: "An open and hardened platform." } },
   "stellar-soroban": { titre: "Stellar Soroban", capaciteDebloquee: "Bonds exist as tokens.", brief: { quoi: "The bond tokenisation contracts, on Stellar.", pourquoi: "Every subscribed bond exists as a token, traceable and transferable.", capacite: "Tokenised bonds.", partenaire: "Stellar" } },
-  "starknet": { titre: "Starknet", capaciteDebloquee: "A second rail available.", brief: { quoi: "A second blockchain rail available for Minah strategies.", pourquoi: "Minah picks the most suitable rail for each strategy.", capacite: "Rail chosen per strategy." } },
+  "starknet": { titre: "Starknet", capaciteDebloquee: "A second rail available.", brief: { quoi: "A second blockchain rail for Minah strategies.", pourquoi: "Minah picks the most suitable rail for each strategy.", capacite: "Rail chosen per strategy." } },
   "fireblocks": { titre: "Fireblocks custody and KYT", capaciteDebloquee: "Institutional custody of assets.", brief: { quoi: "Asset custody and transaction screening, operated with Fireblocks.", pourquoi: "Assets are held by an institutional infrastructure, with flow controls.", capacite: "Institutional custody.", partenaire: "Fireblocks" } },
   "canton-network": { titre: "Canton Network", capaciteDebloquee: "One more institutional rail.", brief: { quoi: "An additional institutional rail connected to the Minah API.", pourquoi: "Strategies can rely on a network designed for financial institutions.", capacite: "One more institutional rail." } },
   "cross-chain-stellar": { titre: "Cross-chain via Stellar", capaciteDebloquee: "The rails talk to each other.", brief: { quoi: "A bridge between the rails, with Stellar as the pivot.", pourquoi: "A position is no longer locked on the chain where it was issued.", capacite: "Interoperability between rails." } },

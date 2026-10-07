@@ -19,7 +19,8 @@ import { PHASES, currentPhase, type Objective, type PhaseProof, type Phase, type
 // Chantiers réellement ouverts aujourd'hui bien que livrés plus tard : montrés
 // « en développement » à partir de la période courante, « en projet » avant.
 // Liste arrêtée avec Julien le 03/10/2026.
-const IN_DEVELOPMENT = new Set(["api-v1", "integration-sereel", "web3-admin", "cross-chain-stellar"]);
+// Starknet ajouté le 07/10/2026.
+const IN_DEVELOPMENT = new Set(["api-v1", "integration-sereel", "web3-admin", "cross-chain-stellar", "starknet"]);
 
 /**
  * État forcé par Julien (voir overrides.ts) : il s'applique de la période courante

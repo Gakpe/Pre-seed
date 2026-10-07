@@ -3,11 +3,18 @@
 import { useState } from "react";
 
 // Entrée en démo : pas de code, pas d'email, juste de quoi personnaliser
-// l'en-tête devant l'investisseur, puis on entre avec la cinématique.
-export function DemoStartForm() {
+// l'en-tête devant l'investisseur, puis on entre avec la cinématique. Un
+// onboarding sur mesure peut être rejoué, pour voir l'accueil d'une personne
+// précise avant sa première connexion.
+export function DemoStartForm({
+  onboardings,
+}: {
+  onboardings: { email: string; note: string | null }[];
+}) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [entity, setEntity] = useState("");
+  const [onboarding, setOnboarding] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,6 +32,7 @@ export function DemoStartForm() {
       body: JSON.stringify({
         name: `${firstName.trim()} ${lastName.trim()}`.trim(),
         entity: entity.trim(),
+        onboarding,
       }),
     }).catch(() => null);
 
@@ -79,6 +87,28 @@ export function DemoStartForm() {
           className={inputClass}
         />
       </div>
+
+      {onboardings.length > 0 && (
+        <div>
+          <label htmlFor="demo_onboarding" className="mb-1 block text-sm font-medium">
+            Onboarding
+          </label>
+          <select
+            id="demo_onboarding"
+            value={onboarding}
+            onChange={(e) => setOnboarding(e.target.value)}
+            className={inputClass}
+          >
+            <option value="">Par défaut</option>
+            {onboardings.map((o) => (
+              <option key={o.email} value={o.email}>
+                {o.email}
+                {o.note ? `, ${o.note}` : ""}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 

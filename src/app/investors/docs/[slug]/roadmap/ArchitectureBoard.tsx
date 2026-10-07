@@ -56,18 +56,20 @@ const ms = (d: string) => new Date(d).getTime();
  * « 2028+ » sur la dernière période. Évite la fausse précision sur ce qui reste à faire.
  */
 function fmtPeriod(start: string, end: string, locale: string, isLast: boolean) {
+  // Pas de tiret long entre deux dates : « à », ou « to » en anglais.
+  const to = locale.startsWith("en") ? " to " : " à ";
   if (end <= TODAY || start <= TODAY) {
     const f = (d: string) => new Date(d).toLocaleDateString(locale, { month: "short", year: "numeric" });
-    return `${f(start)} – ${f(end)}`;
+    return `${f(start)}${to}${f(end)}`;
   }
   const y0 = start.slice(0, 4), y1 = end.slice(0, 4);
   if (isLast) return `${y0}+`;
   const q = (d: string) => `Q${Math.floor((Number(d.slice(5, 7)) - 1) / 3) + 1}`;
   if (y0 === y1) {
     const full = start.endsWith("-01-01") && end.endsWith("-12-31");
-    return full ? y0 : `${q(start)} – ${q(end)} ${y0}`;
+    return full ? y0 : `${q(start)}${to}${q(end)} ${y0}`;
   }
-  return `${q(start)} ${y0} – ${q(end)} ${y1}`;
+  return `${q(start)} ${y0}${to}${q(end)} ${y1}`;
 }
 
 function fmtEur(n: number, locale: string) {
@@ -371,7 +373,7 @@ export function ArchitectureBoard({
               <div key={layer} style={{ display: "grid", gridTemplateColumns: `${LABEL_W}px 1fr`, gap: 12, borderBottom: `1px solid ${hairline}`, padding: "9px 0", minHeight: 42 }}>
                 <div style={{ ...smallCaps, display: "flex", alignItems: "center", paddingRight: 12, opacity: vide ? .45 : 1 }}>{layerLabel(layer)}</div>
                 {vide ? (
-                  <div style={{ display: "flex", alignItems: "center", fontSize: 12, color: faint, opacity: .6 }}>—</div>
+                  <div />
                 ) : (
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(216px, 1fr))", gap: 8, alignItems: "start" }}>
                     {shown.map(renderBrick)}

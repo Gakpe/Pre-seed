@@ -150,6 +150,13 @@ export function OnboardingPanel({
               className={`mt-1.5 ${INPUT}`}
             />
           </label>
+          <p className="text-xs leading-5 text-neutral-600 sm:col-span-2">
+            Le message arrive en visite guidée, un paragraphe par étape (une
+            ligne vide entre deux) : le premier au centre de l&apos;écran, les
+            suivants sur la première fiche mise en avant, dans la data room, avec
+            un bouton pour l&apos;ouvrir sur la dernière étape. Deux paragraphes
+            suffisent.
+          </p>
         </div>
 
         <fieldset>

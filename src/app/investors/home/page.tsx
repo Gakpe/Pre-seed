@@ -108,16 +108,25 @@ export default async function InvestorHomePage() {
     );
   }
 
+  // Onboarding sur mesure s'il en existe un pour cette adresse. En démo, celui
+  // de l'adresse choisie à l'ouverture, pour montrer l'accueil d'une personne
+  // précise.
+  const onboardingEmail = demo ? demo.onboarding : investor.email;
+  const onboarding = onboardingEmail ? await getOnboarding(onboardingEmail) : null;
+
   // En démo il n'y a pas de session Supabase : on lit via le service role en
-  // rejouant nous-mêmes le filtrage de niveau que ferait la RLS.
+  // rejouant nous-mêmes le filtrage de niveau que ferait la RLS, ouvertures
+  // de l'onboarding comprises.
   let documents: DocumentRow[] | null = null;
   if (demo) {
     const { data } = await createAdminClient()
       .from("documents")
       .select("*")
-      .lte("access_level", demo.level2 ? 2 : 1)
       .order("sort_order");
-    documents = data as DocumentRow[] | null;
+    const unlocked = new Set(onboarding?.unlocked_slugs ?? []);
+    documents = ((data ?? []) as DocumentRow[]).filter(
+      (d) => d.access_level <= (demo.level2 ? 2 : 1) || unlocked.has(d.slug)
+    );
   } else {
     const supabase = await createClient();
     const { data } = await supabase
@@ -128,15 +137,17 @@ export default async function InvestorHomePage() {
   }
   const docs = documents ?? [];
   const level2Unlocked = investor.level2_access;
-  // Onboarding sur mesure s'il en existe un pour cette adresse (jamais en
-  // démo). Les fiches qu'il ouvre au-dessus du niveau de la personne arrivent
-  // déjà par la RLS ; on les range avec le niveau 1, qui est le sien.
-  const onboarding = demo ? null : await getOnboarding(investor.email);
+  // Les fiches que l'onboarding ouvre au-dessus du niveau de la personne
+  // arrivent déjà par la RLS ; on les range avec le niveau 1, qui est le sien.
   const openedForYou = new Set(level2Unlocked ? [] : (onboarding?.unlocked_slugs ?? []));
   const level1 = docs.filter(
     (d) => d.access_level === 1 || openedForYou.has(d.slug)
   );
   const level2 = docs.filter((d) => d.access_level === 2);
+  // Fiches de l'accueil ; avec un onboarding sur mesure, la première est celle
+  // que la visite guidée met en lumière dans la data room.
+  const steps = welcomeSteps(docs, onboarding, level2Unlocked, locale);
+  const welcomeMessage = onboardingMessage(onboarding, locale);
 
   let lockedTitles: {
     slug: string;
@@ -276,12 +287,13 @@ export default async function InvestorHomePage() {
           </div>
         </div>
 
-        {/* Accueil : par où commencer, par défaut ou sur mesure. */}
-        <div className="mt-10">
+        {/* Accueil : par où commencer, ou la visite guidée d'un onboarding
+            sur mesure, dont il ne reste ici que le lien pour la revoir. */}
+        <div className={welcomeMessage ? "mt-6" : "mt-10"}>
           <Welcome
             locale={locale}
-            message={onboardingMessage(onboarding, locale)}
-            steps={welcomeSteps(docs, onboarding, level2Unlocked, locale)}
+            message={welcomeMessage}
+            steps={steps}
             interest={
               level2Unlocked
                 ? "unlocked"
@@ -290,6 +302,7 @@ export default async function InvestorHomePage() {
                   : "open"
             }
             demo={!!demo}
+            tourKey={onboarding ? `minah_tour:${onboarding.updated_at}` : null}
           />
         </div>
 
@@ -424,7 +437,13 @@ export default async function InvestorHomePage() {
             {t(locale, "home.dataroom.level1")}
           </h2>
           <div className="mt-4">
-            <DataRoom docs={level1} locale={locale} columns={2} />
+            <DataRoom
+              docs={level1}
+              locale={locale}
+              columns={2}
+              opened={[...openedForYou]}
+              tourSlug={welcomeMessage ? (steps[0]?.slug ?? null) : null}
+            />
           </div>
         </section>
 

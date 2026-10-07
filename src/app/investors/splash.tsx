@@ -62,6 +62,8 @@ export function Splash() {
         phase === "out" ? "pointer-events-none opacity-0" : "opacity-100"
       }`}
       aria-hidden="true"
+      // Repère pour la visite guidée, qui attend la fin de la cinématique.
+      data-splash
     >
       {/* halo */}
       <div className="splash-halo absolute h-64 w-64 rounded-full bg-brand/15 blur-3xl" />

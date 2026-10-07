@@ -374,7 +374,7 @@ function model(p){
             pre:null, raised:air1Amt, pps:null, pending:air1Amt,
             text:fEur(air1Amt)+" souscrits en BSA1, "+fEur(BSA1.bijon)+" par Bijon et "+fEur(BSA1.serge)
                  +" par Serge. Décote "+fPct(BSA1.discount*100)+", tunnel de valorisation "
-                 +fEur(BSA1.floor)+" – "+fEur(BSA1.cap)+". Aucune action émise à ce stade : "
+                 +fEur(BSA1.floor)+" à "+fEur(BSA1.cap)+". Aucune action émise à ce stade : "
                  +"la conversion a lieu au pré-seed."});
 
     } else if(e.id==='cession'){
@@ -610,7 +610,7 @@ function render(){
      souscripteur ne gagne rien, voire paie plus cher que les entrants du tour. */
   const wLo = BSA1.floor/(1-BSA1.discount), wHi = BSA1.cap/(1-BSA1.discount);
   $('bsa-note').innerHTML =
-      'Tunnel '+fEur(BSA1.floor)+' – '+fEur(BSA1.cap)+' avec '+fPct(BSA1.discount*100)
+      'Tunnel '+fEur(BSA1.floor)+' à '+fEur(BSA1.cap)+' avec '+fPct(BSA1.discount*100)
     + ' de décote : la décote n\'est réellement active qu\'entre <b>'+fEur(wLo)+'</b> et <b>'+fEur(wHi)
     + '</b> de pré-money. En dessous de '+fEur(wLo)+' c\'est le plancher qui fixe le prix, et sous '
     + fEur(BSA1.floor)+' Bijon et Serge paieraient l\'action <b>plus cher</b> que les entrants du pré-seed. '
