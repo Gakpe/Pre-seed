@@ -29,7 +29,7 @@ const copy = {
       },
       {
         eyebrow: "La conviction technologique",
-        body: "On ne construit pas l'infrastructure financière de 2035 avec les outils de 2010. Notre architecture repose sur deux choix : la blockchain, pour qu'un investisseur puisse vérifier plutôt que croire, et l'IA, intégrée à l'analyse, au scoring et à l'exécution, pour collecter et actualiser en continu la donnée d'un marché fragmenté avec une équipe resserrée. Ces derniers rendent l'économie du modèle possible : un coût marginal de structuration assez bas pour servir un marché que la finance traditionnelle juge trop coûteux. Ce sont aussi eux qui permettent à Minah de se brancher à de nombreux acteurs à la fois : **en devenant une infrastructure technologique de la dette privée, Minah passe à l'échelle** et peut aller chercher un volume de 1\u00a0Md€.",
+        body: "On ne construit pas l'infrastructure financière de 2035 avec les outils de 2010. Notre architecture repose sur deux choix : la blockchain, pour qu'un investisseur puisse vérifier plutôt que croire, et l'IA, intégrée à l'analyse, au scoring et à l'exécution, pour collecter et actualiser en continu la donnée d'un marché fragmenté avec une équipe resserrée. Ces derniers rendent l'économie du modèle possible : un coût marginal de structuration assez bas pour servir un marché que la finance traditionnelle juge trop coûteux. C'est cet edge technologique qui fera de Minah **l'infrastructure technologique de la dette privée africaine**, et qui lui permettra d'atteindre des volumes critiques : 1\u00a0Md€ à l'horizon de notre vision.",
       },
     ],
 
@@ -66,7 +66,7 @@ const copy = {
       },
       {
         eyebrow: "The technology conviction",
-        body: "You do not build the financial infrastructure of 2035 with the tools of 2010. Our architecture rests on two choices: blockchain, so that an investor can verify rather than believe, and AI, embedded in analysis, scoring and execution, to collect and continuously refresh the data of a fragmented market with a small team. Together they make the model's economics work: a marginal structuring cost low enough to serve a market traditional finance considers too expensive. They are also what lets Minah plug into many players at once: **by becoming a technology infrastructure for private debt, Minah scales** and can go after €1B in volume.",
+        body: "You do not build the financial infrastructure of 2035 with the tools of 2010. Our architecture rests on two choices: blockchain, so that an investor can verify rather than believe, and AI, embedded in analysis, scoring and execution, to collect and continuously refresh the data of a fragmented market with a small team. Together they make the model's economics work: a marginal structuring cost low enough to serve a market traditional finance considers too expensive. It is this technology edge that will make Minah **the technology infrastructure for African private debt**, and take it to critical volumes: €1B within our vision.",
       },
     ],
 
