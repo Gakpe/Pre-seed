@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { InterestState, Onboarding, WelcomeStep } from "@/lib/onboarding";
+import type { Onboarding, WelcomeStep } from "@/lib/onboarding";
 import type { InvestorStatus } from "@/lib/types";
 import { Welcome } from "@/app/investors/home/welcome";
 
@@ -12,7 +12,7 @@ export type OnboardingView = {
   onboarding: Onboarding;
   status: InvestorStatus | null;
   preapproved: boolean;
-  preview: { message: string | null; steps: WelcomeStep[]; interest: InterestState };
+  preview: { message: string | null; steps: WelcomeStep[] };
 };
 
 const STATUS: Record<InvestorStatus, string> = {
@@ -162,8 +162,8 @@ export function OnboardingPanel({
         <fieldset>
           <legend className="text-sm font-medium">Fiches mises en avant, dans l&apos;ordre coché</legend>
           <p className="mt-0.5 text-xs text-neutral-600">
-            Aucune cochée : celles de l&apos;accueil par défaut ({defaultFocus.map(titleOf).join(", ")}).
-            L&apos;étape « Manifester un intérêt » s&apos;ajoute toujours en dernier.
+            Aucune cochée : celle de l&apos;accueil par défaut ({defaultFocus.map(titleOf).join(", ")}).
+            La première est celle que la visite met en lumière.
           </p>
           <ul className="mt-2 grid gap-x-6 sm:grid-cols-2">
             {docs.map((d) => {
@@ -289,7 +289,6 @@ export function OnboardingPanel({
                     locale="fr"
                     message={preview.message}
                     steps={preview.steps}
-                    interest={preview.interest}
                     preview
                   />
                 </div>

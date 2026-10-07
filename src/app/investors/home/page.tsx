@@ -144,8 +144,8 @@ export default async function InvestorHomePage() {
     (d) => d.access_level === 1 || openedForYou.has(d.slug)
   );
   const level2 = docs.filter((d) => d.access_level === 2);
-  // Fiches de l'accueil ; avec un onboarding sur mesure, la première est celle
-  // que la visite guidée met en lumière dans la data room.
+  // Fiches mises en avant ; la première est celle que la visite guidée met
+  // en lumière dans la data room.
   const steps = welcomeSteps(docs, onboarding, level2Unlocked, locale);
   const welcomeMessage = onboardingMessage(onboarding, locale);
 
@@ -283,26 +283,27 @@ export default async function InvestorHomePage() {
             {!level2Unlocked && !investor.interest_expressed_at && (
               <InterestModal locale={locale} demo={!!demo} />
             )}
-            <MeetingButton locale={locale} />
+            {/* Mis en lumière par la dernière étape de la visite par défaut. */}
+            <span data-tour="meeting" className="inline-flex">
+              <MeetingButton locale={locale} />
+            </span>
           </div>
         </div>
 
-        {/* Accueil : par où commencer, ou la visite guidée d'un onboarding
-            sur mesure, dont il ne reste ici que le lien pour la revoir. */}
-        <div className={welcomeMessage ? "mt-6" : "mt-10"}>
+        {/* Accueil : la visite guidée, par défaut ou sur mesure, dont il ne
+            reste ici que le lien pour la revoir. */}
+        <div className="mt-6">
           <Welcome
             locale={locale}
             message={welcomeMessage}
             steps={steps}
-            interest={
-              level2Unlocked
-                ? "unlocked"
-                : investor.interest_expressed_at
-                  ? "recorded"
-                  : "open"
-            }
+            firstName={investor.full_name?.trim().split(/\s+/)[0] || null}
             demo={!!demo}
-            tourKey={onboarding ? `minah_tour:${onboarding.updated_at}` : null}
+            tourKey={
+              onboarding && welcomeMessage
+                ? `minah_tour:${onboarding.updated_at}`
+                : "minah_tour:default:1"
+            }
           />
         </div>
 
@@ -442,7 +443,7 @@ export default async function InvestorHomePage() {
               locale={locale}
               columns={2}
               opened={[...openedForYou]}
-              tourSlug={welcomeMessage ? (steps[0]?.slug ?? null) : null}
+              tourSlug={steps[0]?.slug ?? null}
             />
           </div>
         </section>

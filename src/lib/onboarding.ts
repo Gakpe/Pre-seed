@@ -7,8 +7,8 @@ import type { DocumentRow } from "@/lib/types";
 // Onboarding des investisseurs : l'accueil de la data room, en tête de
 // /investors/home.
 //
-// Par défaut, le même pour tous : le deck, l'équipe, puis la manifestation
-// d'intérêt qui ouvre le reste. Une ligne de la table `onboardings` le remplace
+// Par défaut, la même visite guidée pour tous : un mot d'accueil, « Pourquoi
+// Minah ? », puis le rendez-vous. Une ligne de la table `onboardings` le remplace
 // pour une personne précise : un message à son intention, ses fiches mises en
 // avant, et des fiches ouvertes au-dessus de son niveau. L'ouverture est
 // appliquée en base (RLS, document_unlocked_for_me) ; ce module ne fait que
@@ -34,46 +34,8 @@ export type OnboardingInput = {
   note: string | null;
 };
 
-// L'accueil par défaut : deux fiches, puis l'étape d'intérêt (toujours
-// ajoutée en dernier par l'accueil, sauf niveau 2 déjà ouvert).
-export const DEFAULT_FOCUS = ["deck-preseed", "equipe"];
-
-// Une ligne de présentation par fiche mise en avant. Une fiche absente d'ici
-// s'affiche avec sa seule catégorie.
-export const FOCUS_BLURBS: Record<string, Record<Locale, string>> = {
-  "deck-preseed": {
-    fr: "Le projet en quelques minutes : le marché, le produit, la levée.",
-    en: "The project in a few minutes: the market, the product, the round.",
-  },
-  equipe: {
-    fr: "Les trois fondateurs, leurs parcours et ce que chacun apporte.",
-    en: "The three founders, their backgrounds and what each one brings.",
-  },
-  "vision-technique": {
-    fr: "Ce qui tourne en production, ce qui est en développement, et la vision de la plateforme.",
-    en: "What runs in production, what is being built, and where the platform is heading.",
-  },
-  "pourquoi-minah": {
-    fr: "Pourquoi Minah, et pourquoi maintenant.",
-    en: "Why Minah, and why now.",
-  },
-  "business-model": {
-    fr: "Comment Minah gagne de l'argent, flux par flux.",
-    en: "How Minah makes money, flow by flow.",
-  },
-  "track-record": {
-    fr: "Ce que l'équipe a déjà déployé, et avec quels résultats.",
-    en: "What the team has already deployed, and with what results.",
-  },
-  "go-to-market-apercu": {
-    fr: "La machine à réseau qui amène le capital et les deals.",
-    en: "The relationship machine that brings in capital and deals.",
-  },
-  "la-levee": {
-    fr: "Le tour en cours : montant, ticket, calendrier.",
-    en: "The current round: size, ticket, timeline.",
-  },
-};
+// L'accueil par défaut met en lumière « Pourquoi Minah ? » (voir welcome.tsx).
+export const DEFAULT_FOCUS = ["pourquoi-minah"];
 
 export async function getOnboarding(email: string): Promise<Onboarding | null> {
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return null;
@@ -121,15 +83,12 @@ export function onboardingMessage(o: Onboarding | null, locale: Locale): string 
 export type WelcomeStep = {
   slug: string;
   title: string;
-  blurb: string;
   /** Lien DocSend (nouvel onglet, tracé) ou page interne. */
   href: string;
   external: boolean;
   /** Fiche ouverte à cette personne au-dessus de son niveau. */
   openedForYou: boolean;
 };
-
-export type InterestState = "open" | "recorded" | "unlocked";
 
 // Les étapes de l'accueil, à partir des fiches que la personne voit déjà (la
 // RLS a filtré `docs`) : une fiche mise en avant mais invisible pour elle est
@@ -151,7 +110,6 @@ export function welcomeSteps(
       {
         slug,
         title: fields.title,
-        blurb: FOCUS_BLURBS[slug]?.[locale] ?? fields.category,
         href: docsend ?? `/investors/docs/${slug}`,
         external: Boolean(docsend),
         openedForYou: doc.access_level > 1 && !level2Unlocked && unlocked.has(slug),

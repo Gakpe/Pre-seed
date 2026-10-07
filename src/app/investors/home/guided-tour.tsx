@@ -4,13 +4,13 @@ import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Locale } from "@/lib/i18n";
-import type { WelcomeStep } from "@/lib/onboarding";
 
-// Visite guidée d'un onboarding sur mesure. Le message préparé pour la
-// personne est découpé en paragraphes (séparés par une ligne vide), un par
-// étape : le premier s'affiche au centre de l'écran, les suivants mettent en
-// lumière, dans la data room, la première fiche mise en avant, avec un
-// bouton pour l'ouvrir sur la dernière étape.
+// Visite guidée de l'accueil. Chaque étape a son texte et, au besoin, une
+// cible mise en lumière (un élément de la page marqué `data-tour`) ; sans
+// cible, la carte s'affiche au centre. La dernière étape peut porter une
+// action principale (ouvrir une fiche, prendre rendez-vous). Les étapes sont
+// composées par l'accueil (welcome.tsx) : celles par défaut, ou celles d'un
+// onboarding sur mesure.
 // Elle se lance une fois, après la cinématique d'entrée ; ensuite on la
 // rejoue depuis l'accueil.
 
@@ -64,15 +64,28 @@ export function useTourAutostart(storageKey: string | null, storage: "local" | "
   return { open, start: () => setOpen(true), close };
 }
 
+export type TourStep = {
+  text: string;
+  /** Valeur `data-tour` de l'élément mis en lumière ; null : carte centrée. */
+  target: string | null;
+};
+
+export type TourFinish = {
+  label: string;
+  href: string;
+  external: boolean;
+  onClick?: () => void;
+};
+
 export function GuidedTour({
-  paragraphs,
-  focus,
+  steps,
+  finish,
   locale,
   onClose,
 }: {
-  paragraphs: string[];
-  /** Fiche mise en lumière à partir de la deuxième étape. */
-  focus: WelcomeStep | null;
+  steps: TourStep[];
+  /** Action principale de la dernière étape ; absente, « Fermer ». */
+  finish: TourFinish | null;
   locale: Locale;
   onClose: () => void;
 }) {
@@ -81,12 +94,12 @@ export function GuidedTour({
   const [rect, setRect] = useState<DOMRect | null>(null);
   const [narrow, setNarrow] = useState(false);
   const primary = useRef<HTMLElement>(null);
-  const last = index === paragraphs.length - 1;
-  const spotlight = index > 0 && focus !== null;
+  const last = index === steps.length - 1;
+  const target = steps[index]?.target ?? null;
 
   // Suit la cible pendant le défilement doux et au redimensionnement.
   useLayoutEffect(() => {
-    const el = spotlight ? document.querySelector('[data-tour="focus"]') : null;
+    const el = target ? document.querySelector(`[data-tour="${target}"]`) : null;
     const update = () => {
       setNarrow(window.innerWidth < 640);
       setRect(el ? el.getBoundingClientRect() : null);
@@ -109,7 +122,7 @@ export function GuidedTour({
       window.removeEventListener("scroll", update, true);
       window.removeEventListener("resize", update);
     };
-  }, [spotlight]);
+  }, [target]);
 
   useEffect(() => {
     primary.current?.focus({ preventScroll: true });
@@ -118,12 +131,12 @@ export function GuidedTour({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-      if (e.key === "ArrowRight") setIndex((i) => Math.min(i + 1, paragraphs.length - 1));
+      if (e.key === "ArrowRight") setIndex((i) => Math.min(i + 1, steps.length - 1));
       if (e.key === "ArrowLeft") setIndex((i) => Math.max(i - 1, 0));
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, paragraphs.length]);
+  }, [onClose, steps.length]);
 
   // Carte sous la cible s'il y a la place, au-dessus sinon ; centrée quand il
   // n'y a pas de cible ; en bas d'écran sur mobile.
@@ -168,17 +181,19 @@ export function GuidedTour({
         style={cardStyle}
       >
         <p className="whitespace-pre-line text-[15px] leading-[1.8] text-neutral-700">
-          {paragraphs[index]}
+          {steps[index]?.text}
         </p>
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <span className="font-mono text-xs text-neutral-600">
-            {index + 1}/{paragraphs.length}
+            {index + 1}/{steps.length}
           </span>
           <div className="flex flex-wrap items-center justify-end gap-3">
-            <button onClick={onClose} className={`rounded text-sm text-neutral-600 hover:underline ${FOCUS}`}>
-              {last ? c.close : c.skip}
-            </button>
+            {!(last && !finish) && (
+              <button onClick={onClose} className={`rounded text-sm text-neutral-600 hover:underline ${FOCUS}`}>
+                {last ? c.close : c.skip}
+              </button>
+            )}
             {index > 0 && (
               <button onClick={() => setIndex(index - 1)} className={SECONDARY}>
                 {c.back}
@@ -194,33 +209,49 @@ export function GuidedTour({
               >
                 {c.next}
               </button>
-            ) : focus ? (
-              focus.external ? (
+            ) : finish ? (
+              finish.external ? (
                 <a
                   ref={(el) => {
                     primary.current = el;
                   }}
-                  href={focus.href}
+                  href={finish.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={onClose}
+                  onClick={() => {
+                    finish.onClick?.();
+                    onClose();
+                  }}
                   className={`whitespace-nowrap ${primaryClass}`}
                 >
-                  {focus.title} ↗
+                  {finish.label} ↗
                 </a>
               ) : (
                 <Link
                   ref={(el) => {
                     primary.current = el;
                   }}
-                  href={focus.href}
-                  onClick={onClose}
+                  href={finish.href}
+                  onClick={() => {
+                    finish.onClick?.();
+                    onClose();
+                  }}
                   className={`whitespace-nowrap ${primaryClass}`}
                 >
-                  {focus.title} →
+                  {finish.label} →
                 </Link>
               )
-            ) : null}
+            ) : (
+              <button
+                ref={(el) => {
+                  primary.current = el;
+                }}
+                onClick={onClose}
+                className={primaryClass}
+              >
+                {c.close}
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -45,7 +45,6 @@ export default async function OnboardingPage() {
       preview: {
         message: onboardingMessage(o, "fr"),
         steps: welcomeSteps(visible, o, level2, "fr"),
-        interest: level2 ? "unlocked" : "open",
       },
     };
   });
@@ -64,10 +63,11 @@ export default async function OnboardingPage() {
       </Link>
       <h1 className="mt-6 text-xl font-semibold tracking-tight">Onboarding</h1>
       <p className="mt-2 max-w-3xl text-sm leading-6 text-neutral-600">
-        Par défaut, chaque investisseur arrive sur le même accueil : le deck,
-        l&apos;équipe, puis la manifestation d&apos;intérêt qui ouvre le niveau 2.
-        Un onboarding sur mesure le remplace pour une adresse : un message à
-        son intention, les fiches mises en avant dans l&apos;ordre choisi, et
+        Par défaut, chaque investisseur arrive sur la même visite guidée : un
+        mot d&apos;accueil, «&nbsp;Pourquoi Minah&nbsp;?&nbsp;» mis en lumière,
+        puis l&apos;invitation à prendre rendez-vous. Un onboarding sur mesure
+        la remplace pour une adresse : un message à son intention, les fiches
+        mises en avant dans l&apos;ordre choisi, et
         des fiches de niveau 2 ouvertes pour elle seule, sans ouvrir le reste du
         niveau. L&apos;ouverture est appliquée en base, pas seulement à
         l&apos;affichage.

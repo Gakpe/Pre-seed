@@ -1,127 +1,83 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { track } from "@/lib/tracking";
-import type { Locale } from "@/lib/i18n";
-import type { InterestState, WelcomeStep } from "@/lib/onboarding";
-import { InterestModal } from "./interest-modal";
-import { GuidedTour, useTourAutostart } from "./guided-tour";
+import { deal } from "@/lib/deal";
+import { t, type Locale } from "@/lib/i18n";
+import type { WelcomeStep } from "@/lib/onboarding";
+import { GuidedTour, useTourAutostart, type TourFinish, type TourStep } from "./guided-tour";
 
-// Accueil de la data room, en tête de /investors/home : par où commencer.
-// Le contenu (message, fiches) est décidé côté serveur, voir lib/onboarding :
-// l'accueil par défaut, ou celui préparé pour la personne. Ici, l'affichage
-// seulement. Pas de cadre autour du bloc : les étapes sont déjà des cartes.
-// Un onboarding sur mesure remplace le bloc par une visite guidée (voir
-// guided-tour), et l'accueil ne garde qu'un lien pour la revoir.
+// Accueil de la data room, en tête de /investors/home : une visite guidée,
+// lancée à la première visite, et un lien pour la revoir.
+//
+// Par défaut, trois étapes écrites ici : un mot d'accueil, « Pourquoi Minah ? »
+// mis en lumière dans la data room, puis le rendez-vous. Un onboarding sur
+// mesure (lib/onboarding) les remplace par son message, un paragraphe par
+// étape : le premier au centre, les suivants sur la fiche mise en avant.
 
 const copy = {
   fr: {
-    title: "Par où commencer",
-    lead: "Trois étapes pour découvrir Minah : le deck pour le projet, l'équipe pour celles et ceux qui le portent et, si le projet vous parle, une manifestation d'intérêt pour ouvrir le reste de la data room.",
-    read: "Lire →",
-    docsend: "DocSend ↗",
-    openedForYou: "Ouvert pour vous",
-    interestTitle: "Manifester un intérêt",
-    interestBlurb:
-      "Indicatif et non engageant. Il ouvre le niveau\u00a02 : go-to-market complet, gestion du risque, documents clés.",
-    interestRecorded: "Intérêt enregistré : l'équipe vous ouvre le niveau\u00a02.",
-    interestUnlocked: "Niveau\u00a02 ouvert ↓",
     replay: "Revoir la présentation",
     tourActions: "Bouton : ouvrir {doc}.",
+    welcome: (name: string | null) =>
+      `Bonjour${name ? ` ${name}` : ""}, merci de prendre le temps de regarder l'opportunité Minah. Cette data room réunit ce qu'il faut pour vous faire une idée du projet.`,
+    why: "Commencez par « Pourquoi Minah ? » : le constat, l'opportunité, et les choix technologiques sur lesquels repose Minah.",
+    startWith: (title: string) => `Commencez par «\u00a0${title}\u00a0».`,
+    talk: "Les documents de la data room servent surtout à saisir l'ambition du projet ; le récit complet, nous le faisons de vive voix. Prenez rendez-vous pour un voice over de l'équipe, ou posez-nous vos questions depuis la bulle en bas à droite.",
   },
   en: {
-    title: "Where to start",
-    lead: "Three steps to discover Minah: the deck for the project, the team for the people behind it and, if the project speaks to you, an expression of interest to open the rest of the data room.",
-    read: "Read →",
-    docsend: "DocSend ↗",
-    openedForYou: "Opened for you",
-    interestTitle: "Express interest",
-    interestBlurb:
-      "Indicative and non-binding. It opens level\u00a02: the full go-to-market, risk management, key documents.",
-    interestRecorded: "Interest recorded: the team is opening level 2 for you.",
-    interestUnlocked: "Level 2 open ↓",
     replay: "Replay the introduction",
     tourActions: "Button: open {doc}.",
+    welcome: (name: string | null) =>
+      `Hello${name ? ` ${name}` : ""}, thank you for taking the time to look at the Minah opportunity. This data room brings together what you need to form a view of the project.`,
+    why: "Start with “Why Minah?”: the diagnosis, the opportunity, and the technology choices Minah is built on.",
+    startWith: (title: string) => `Start with “${title}”.`,
+    talk: "The data room documents are mostly there to convey the ambition of the project; we tell the full story in person. Book a meeting for a voice-over from the team, or ask us your questions from the bubble at the bottom right.",
   },
 } as const;
-
-// Classes écrites en toutes lettres pour que Tailwind les génère.
-const COLS: Record<number, string> = {
-  1: "lg:grid-cols-1",
-  2: "lg:grid-cols-2",
-  3: "lg:grid-cols-3",
-  4: "lg:grid-cols-4",
-  5: "lg:grid-cols-5",
-};
-
-const STEP =
-  "halo-hover group flex flex-col rounded-lg border border-foreground/10 bg-white/60 p-4 transition-colors hover:border-foreground/25";
 
 export function Welcome({
   locale,
   message,
   steps,
-  interest,
+  firstName = null,
   demo = false,
   preview = false,
   tourKey = null,
 }: {
   locale: Locale;
-  /** Message sur mesure ; absent, l'accueil par défaut. */
+  /** Message sur mesure ; absent, la visite par défaut. */
   message: string | null;
+  /** Fiches mises en avant ; la première est mise en lumière. */
   steps: WelcomeStep[];
-  interest: InterestState;
+  firstName?: string | null;
   demo?: boolean;
-  /** Aperçu depuis l'admin : rien n'est tracé, l'intérêt n'est pas cliquable. */
+  /** Aperçu depuis l'admin : les étapes à plat, sans visite. */
   preview?: boolean;
-  /** Clé de la visite guidée déjà vue ; change quand le message est modifié. */
+  /** Clé de la visite déjà vue ; change quand le message est modifié. */
   tourKey?: string | null;
 }) {
   const c = copy[locale];
-  const pathname = usePathname();
-  const total = steps.length + (interest === "unlocked" ? 0 : 1);
+  const focus = steps[0] ?? null;
   const paragraphs = (message ?? "")
     .split(/\n\s*\n/)
     .map((p) => p.trim())
     .filter(Boolean);
-  const guided = paragraphs.length > 0 && !preview;
-  const tour = useTourAutostart(guided ? tourKey : null, demo ? "session" : "local");
+  const custom = paragraphs.length > 0;
+  const tour = useTourAutostart(preview ? null : tourKey, demo ? "session" : "local");
 
-  // Onboarding sur mesure : la visite guidée tient lieu d'accueil.
-  if (guided) {
-    return (
-      <>
-        <button
-          onClick={tour.start}
-          className="inline-flex items-center gap-1.5 rounded-lg text-[15px] text-marsala underline decoration-marsala/30 underline-offset-4 hover:decoration-marsala"
-        >
-          {c.replay}
-          <span aria-hidden>↺</span>
-        </button>
-        {tour.open && (
-          <GuidedTour
-            paragraphs={paragraphs}
-            focus={steps[0] ?? null}
-            locale={locale}
-            onClose={tour.close}
-          />
-        )}
-      </>
-    );
-  }
-
-  // Aperçu admin d'une visite : ses étapes, dans l'ordre.
-  if (preview && paragraphs.length > 0) {
+  // Aperçu admin d'un onboarding sur mesure : ses étapes, dans l'ordre.
+  if (preview) {
     return (
       <ol className="grid gap-3 sm:grid-cols-2">
         {paragraphs.map((p, i) => (
           <li key={i} className="rounded-lg border border-foreground/10 bg-white/60 p-4">
-            <StepHead n={i + 1} badge={null} />
+            <span className="grid h-6 w-6 place-items-center rounded-md bg-brand/10 font-mono text-[11px] font-semibold text-marsala">
+              {String(i + 1).padStart(2, "0")}
+            </span>
             <p className="mt-3 whitespace-pre-line text-sm leading-6 text-neutral-700">{p}</p>
-            {i === paragraphs.length - 1 && (
+            {i === paragraphs.length - 1 && focus && (
               <p className="mt-2 text-xs leading-5 text-neutral-600">
-                {c.tourActions.replace("{doc}", steps[0]?.title ?? "")}
+                {c.tourActions.replace("{doc}", focus.title)}
               </p>
             )}
           </li>
@@ -130,90 +86,43 @@ export function Welcome({
     );
   }
 
+  const tourSteps: TourStep[] = custom
+    ? paragraphs.map((text, i) => ({ text, target: i === 0 ? null : focus ? "focus" : null }))
+    : [
+        { text: c.welcome(firstName), target: null },
+        {
+          // Un onboarding sans message mais avec ses fiches garde la visite par
+          // défaut : l'étape nomme alors la fiche mise en avant.
+          text: !focus || focus.slug === "pourquoi-minah" ? c.why : c.startWith(focus.title),
+          target: focus ? "focus" : null,
+        },
+        { text: c.talk, target: "meeting" },
+      ];
+
+  // Sur mesure : ouvrir la fiche mise en avant. Par défaut : le rendez-vous.
+  const finish: TourFinish | null = custom
+    ? focus && { label: focus.title, href: focus.href, external: focus.external }
+    : {
+        label: t(locale, "meeting.cta"),
+        href: deal.meetingUrl,
+        external: true,
+        onClick: () => {
+          if (!demo) track({ type: "cta_click", path: "/investors/home", label: "rdv-visite" });
+        },
+      };
+
   return (
-    <section>
-      <h2 className="text-2xl font-semibold leading-tight tracking-tight">{c.title}</h2>
-      <p className="mt-3 max-w-3xl whitespace-pre-line text-[15px] leading-7 text-neutral-700">
-        {message ?? c.lead}
-      </p>
-
-      <ol className={`mt-6 grid gap-3 sm:grid-cols-2 ${COLS[Math.min(total, 5)] ?? ""}`}>
-        {steps.map((s, i) => {
-          const inner = (
-            <>
-              <StepHead n={i + 1} badge={s.openedForYou ? c.openedForYou : null} />
-              <h3 className="mt-3 text-sm font-semibold text-foreground">{s.title}</h3>
-              <p className="mt-1 flex-1 text-sm leading-6 text-neutral-600">{s.blurb}</p>
-              <span className="mt-3 text-xs text-neutral-500 transition-colors group-hover:text-marsala">
-                {s.external ? c.docsend : c.read}
-              </span>
-            </>
-          );
-          return (
-            <li key={s.slug} className="flex">
-              {s.external ? (
-                <a
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => {
-                    if (!preview)
-                      track({ type: "docsend_click", path: pathname, label: s.title });
-                  }}
-                  className={`${STEP} w-full`}
-                >
-                  {inner}
-                </a>
-              ) : (
-                <Link href={s.href} className={`${STEP} w-full`}>
-                  {inner}
-                </Link>
-              )}
-            </li>
-          );
-        })}
-
-        {interest !== "unlocked" && (
-          <li className="flex">
-            <div className="flex w-full flex-col rounded-lg border border-dashed border-foreground/20 p-4">
-              <StepHead n={steps.length + 1} badge={null} />
-              <h3 className="mt-3 text-sm font-semibold text-foreground">{c.interestTitle}</h3>
-              <p className="mt-1 flex-1 text-sm leading-6 text-neutral-600">{c.interestBlurb}</p>
-              <div className="mt-3">
-                {interest === "recorded" ? (
-                  <p className="text-sm text-neutral-700">{c.interestRecorded}</p>
-                ) : preview ? (
-                  <span className="inline-block rounded-md bg-marsala/80 px-4 py-2 text-sm font-medium text-white">
-                    {copy[locale].interestTitle}
-                  </span>
-                ) : (
-                  <InterestModal locale={locale} demo={demo} />
-                )}
-              </div>
-            </div>
-          </li>
-        )}
-      </ol>
-      {interest === "unlocked" && (
-        <a href="#niveau-2" className="mt-3 inline-block text-sm text-marsala hover:underline">
-          {c.interestUnlocked}
-        </a>
+    <>
+      <button
+        onClick={tour.start}
+        className="inline-flex items-center gap-1.5 rounded-lg text-[15px] text-marsala underline decoration-marsala/30 underline-offset-4 hover:decoration-marsala"
+      >
+        {c.replay}
+        <span aria-hidden>↺</span>
+      </button>
+      {tour.open && (
+        <GuidedTour steps={tourSteps} finish={finish} locale={locale} onClose={tour.close} />
       )}
-    </section>
-  );
-}
-
-function StepHead({ n, badge }: { n: number; badge: string | null }) {
-  return (
-    <span className="flex items-center justify-between gap-2">
-      <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-brand/10 font-mono text-[11px] font-semibold text-marsala">
-        {String(n).padStart(2, "0")}
-      </span>
-      {badge && (
-        <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[11px] font-medium text-marsala">
-          {badge}
-        </span>
-      )}
-    </span>
+    </>
   );
 }
