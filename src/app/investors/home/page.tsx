@@ -152,8 +152,15 @@ export default async function InvestorHomePage() {
   const level2 = docs.filter((d) => d.access_level === 2);
   // Fiches mises en avant ; la première est celle que la visite guidée met
   // en lumière dans la data room.
-  const steps = welcomeSteps(docs, onboarding, level2Unlocked, locale);
-  const welcomeMessage = onboardingMessage(onboarding, locale);
+  // Un accueil sur mesure attend que toutes ses fiches soient visibles pour
+  // la personne (niveau 2 ouvert, ouvertures faites) : il ne montre rien
+  // qu'elle ne puisse ouvrir. D'ici là, l'accueil par défaut ; il se lance à
+  // la première connexion qui suit.
+  const customReady =
+    !onboarding || onboarding.focus_slugs.every((slug) => docs.some((d) => d.slug === slug));
+  const welcomeOnboarding = customReady ? onboarding : null;
+  const steps = welcomeSteps(docs, welcomeOnboarding, level2Unlocked, locale);
+  const welcomeMessage = onboardingMessage(welcomeOnboarding, locale);
   // La visite se lance d'elle-même à la première vraie connexion. Un accueil
   // sur mesure, préparé pour la personne, se lance quoi qu'il arrive (une
   // fois par version du message) ; une démo aussi, c'est ce qu'on y montre.
@@ -314,8 +321,8 @@ export default async function InvestorHomePage() {
             demo={!!demo}
             autoStart={autoTour}
             tourKey={
-              onboarding && welcomeMessage
-                ? `minah_tour:${onboarding.updated_at}`
+              welcomeOnboarding && welcomeMessage
+                ? `minah_tour:${welcomeOnboarding.updated_at}`
                 : "minah_tour:default:1"
             }
           />

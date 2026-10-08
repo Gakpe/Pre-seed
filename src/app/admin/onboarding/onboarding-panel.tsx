@@ -155,7 +155,10 @@ export function OnboardingPanel({
             ligne vide entre deux) : le premier au centre de l&apos;écran, puis
             chacun des suivants sur la fiche mise en avant de même rang, dans
             la data room (le deuxième sur la première fiche, le troisième sur
-            la deuxième…). La dernière étape propose d&apos;ouvrir sa fiche.
+            la deuxième…). Le dernier met en lumière toutes les fiches qui
+            restent. **gras** pour faire ressortir un passage. Tant qu&apos;une
+            fiche mise en avant n&apos;est pas visible pour la personne (niveau 2
+            pas encore ouvert), elle garde l&apos;accueil par défaut.
           </p>
         </div>
 

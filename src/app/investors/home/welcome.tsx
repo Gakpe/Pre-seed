@@ -13,8 +13,9 @@ import { GuidedTour, useTourAutostart, type TourFinish, type TourStep } from "./
 // mis en lumière dans la data room, puis le rendez-vous. Un onboarding sur
 // mesure (lib/onboarding) les remplace par son message, un paragraphe par
 // étape : le premier au centre, chacun des suivants sur la fiche mise en
-// avant de même rang (le deuxième sur la première fiche, etc.). Le bouton
-// final ouvre la dernière fiche montrée.
+// avant de même rang (le deuxième sur la première fiche, etc.), le dernier
+// sur toutes les fiches restantes. Le bouton final ouvre la première fiche de
+// la dernière étape.
 
 const copy = {
   fr: {
@@ -71,8 +72,14 @@ export function Welcome({
     .filter(Boolean);
   const custom = paragraphs.length > 0;
   // Fiche mise en lumière par le paragraphe i (i >= 1) d'un message sur mesure.
-  const focusFor = (i: number) => steps[Math.min(i - 1, steps.length - 1)] ?? null;
-  const lastFocus = custom && paragraphs.length > 1 ? focusFor(paragraphs.length - 1) : focus;
+  // Fiches mises en lumière par le paragraphe i (i >= 1) d'un message sur
+  // mesure : celle de même rang, et pour le dernier toutes celles qui restent.
+  const focusFor = (i: number): WelcomeStep[] => {
+    if (i === 0 || steps.length === 0) return [];
+    const from = Math.min(i - 1, steps.length - 1);
+    return i === paragraphs.length - 1 ? steps.slice(from) : [steps[from]];
+  };
+  const lastFocus = custom && paragraphs.length > 1 ? (focusFor(paragraphs.length - 1)[0] ?? null) : focus;
   const tour = useTourAutostart(
     preview ? null : tourKey,
     demo ? "session" : "local",
@@ -88,12 +95,14 @@ export function Welcome({
             <span className="grid h-6 w-6 place-items-center rounded-md bg-brand/10 font-mono text-[11px] font-semibold text-marsala">
               {String(i + 1).padStart(2, "0")}
             </span>
-            {i > 0 && focusFor(i) && (
+            {focusFor(i).length > 0 && (
               <p className="mt-2 text-xs leading-5 text-neutral-600">
-                {c.spotlight.replace("{doc}", focusFor(i)!.title)}
+                {c.spotlight.replace("{doc}", focusFor(i).map((d) => d.title).join(", "))}
               </p>
             )}
-            <p className="mt-3 whitespace-pre-line text-sm leading-6 text-neutral-700">{p}</p>
+            <p className="mt-3 whitespace-pre-line text-sm leading-6 text-neutral-700">
+              {p.replace(/\*\*/g, "")}
+            </p>
             {i === paragraphs.length - 1 && lastFocus && (
               <p className="mt-2 text-xs leading-5 text-neutral-600">
                 {c.tourActions.replace("{doc}", lastFocus.title)}
@@ -107,8 +116,8 @@ export function Welcome({
 
   const tourSteps: TourStep[] = custom
     ? paragraphs.map((text, i) => {
-        const doc = i === 0 ? null : focusFor(i);
-        return { text, target: doc ? `doc-${doc.slug}` : null };
+        const docs = focusFor(i);
+        return { text, target: docs.length ? docs.map((d) => `doc-${d.slug}`) : null };
       })
     : [
         { text: c.welcome(firstName), target: null },
