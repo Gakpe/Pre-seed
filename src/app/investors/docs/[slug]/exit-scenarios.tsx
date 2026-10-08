@@ -95,8 +95,8 @@ const copy: Record<
       },
       {
         when: "Après la licence d'établissement de crédit",
-        title: "Rachat par un fonds de private equity",
-        body: "Une fois la licence obtenue, en phase 2 de la roadmap.",
+        title: "Rachat par un fonds de private equity, en build-up",
+        body: "La finance africaine est en pleine mutation et accélère : un fonds de private equity rachète Minah pour bâtir, par acquisitions successives, un leader régional.",
       },
     ],
   },
@@ -140,8 +140,8 @@ const copy: Record<
       },
       {
         when: "After the credit institution licence",
-        title: "Buyout by a private equity fund",
-        body: "Once the licence is obtained, in phase 2 of the roadmap.",
+        title: "Buyout by a private equity fund, as a build-up",
+        body: "African finance is changing fast and accelerating: a private equity fund acquires Minah to build, through successive acquisitions, a regional leader.",
       },
     ],
   },
