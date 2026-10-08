@@ -46,9 +46,10 @@ d'ouverture de la data room est séparé par environnement
 Conventions arrêtées le 11/09/2026 sur l'accueil et la fiche « La levée en
 cours », étendues le 14/09/2026 à « Pourquoi Minah ? », à la note de marché et
 au business model, puis à la term sheet Kupanda, au track record, au
-go-to-market et à l'équipe (PR 48). Seule la gestion du risque n'y est pas
-encore alignée : s'y conformer en passant dessus, plutôt que d'inventer un
-traitement de plus.
+go-to-market et à l'équipe (PR 48). La gestion du risque a son en-tête encadré
+et son chapô depuis le 08/10/2026, mais ses intitulés en petites majuscules
+(colonnes, niveaux, protections) ne sont pas encore alignés : s'y conformer en
+passant dessus, plutôt que d'inventer un traitement de plus.
 
 ## Titres
 
@@ -75,7 +76,8 @@ un nouveau picto sur une planche de variantes, pas au jugé ; le picto
 
 L'en-tête encadré est géré par `framedHeader` dans `page.tsx` : la levée,
 Pourquoi Minah, la note de marché, le business model, la term sheet, le track
-record, le go-to-market, l'équipe. La catégorie s'affiche sous le titre
+record, le go-to-market, l'équipe, la gestion du risque, les scénarios de
+sortie. La catégorie s'affiche sous le titre
 (`headerCategory`), sauf quand elle répète le titre (« Business model » sous
 « Business model Minah », « Kupanda » sous « Term sheet Kupanda », et de même
 pour le track record, le go-to-market et l'équipe). Le chapô d'une fiche

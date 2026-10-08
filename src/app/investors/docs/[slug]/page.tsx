@@ -145,6 +145,7 @@ export default async function DocPage({
     doc.slug === "term-sheet-kupanda" ||
     doc.slug === "go-to-market" ||
     doc.slug === "scenarios-sortie" ||
+    doc.slug === "gestion-du-risque" ||
     gtmApercu ||
     note;
 
@@ -161,12 +162,14 @@ export default async function DocPage({
     doc.slug === "go-to-market" ||
     doc.slug === "go-to-market-apercu" ||
     doc.slug === "scenarios-sortie" ||
+    doc.slug === "gestion-du-risque" ||
     team ||
     roadmap ||
     comparables ||
     note ||
     businessModel;
-  const headerCategory = doc.slug === "pourquoi-minah" || note || comparables;
+  const headerCategory =
+    doc.slug === "pourquoi-minah" || doc.slug === "gestion-du-risque" || note || comparables;
 
   // Retour en haut sur les fiches vraiment longues : la note de marché, près de
   // sept écrans. La levée, Pourquoi Minah et le track record tiennent en moins
