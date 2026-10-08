@@ -12,7 +12,7 @@ export const META_EN: {
   apprentissagesParPhase: Partial<Record<Phase, string>>;
   preuveLibreParPhase: Partial<Record<Phase, string>>;
 } = {
-  vision: "Agent-native rails for African private debt.",
+  vision: "On-chain & agent-native rails for African private debt.",
   experienceParPhase: {
     fondations:
       "Before any interface, the proof: a first techno-financial MVP. An African bond becomes an on-chain asset, held by an institutional custodian and backed by real KYC. The base everything else will plug into.",

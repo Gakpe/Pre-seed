@@ -23,7 +23,7 @@ const MAJ = "2026-10-01T00:00:00.000Z";
 const BY = "Julien";
 
 export const ROADMAP_META: RoadmapMeta = {
-  vision: "Des rails agent-native pour la dette privée africaine.",
+  vision: "Des rails on-chain & agent-native pour la dette privée africaine.",
   misAJourLe: MAJ,
   // Côté investisseurs, la preuve est écrite, pas comptée : on annonce un ordre de
   // grandeur plutôt qu'un chiffre exact. Les chiffres réels restent visibles côté équipe.
