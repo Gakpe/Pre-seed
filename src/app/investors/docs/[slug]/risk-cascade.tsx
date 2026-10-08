@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AXIS_CAPTION, RISK_LEVELS, type RiskLevel } from "@/lib/risk-levels";
 import type { Locale } from "@/lib/i18n";
+import { SectionTitle } from "./section-title";
 
 // Décalage horizontal d'un niveau au suivant. C'est le signal visuel principal
 // de la page : la cascade doit se lire sans lire le texte.
@@ -25,6 +26,7 @@ const copy = {
     axisSide: "Niveaux de risque couverts",
     axisBottom: "Émetteur",
     levelWord: "Niveau",
+    cascadeTitle: "La cascade de protection",
   },
   en: {
     lead: [
@@ -38,6 +40,7 @@ const copy = {
     axisSide: "Risk levels covered",
     axisBottom: "Issuer",
     levelWord: "Level",
+    cascadeTitle: "The protection cascade",
   },
 } as const;
 
@@ -59,7 +62,8 @@ export function RiskCascade({ locale }: { locale: Locale }) {
         ))}
       </div>
 
-      <p className="mt-10 text-xs leading-5 text-neutral-400">{AXIS_CAPTION[locale]}</p>
+      <SectionTitle icon="layers" className="mt-14">{c.cascadeTitle}</SectionTitle>
+      <p className="mt-4 text-sm leading-6 text-neutral-600">{AXIS_CAPTION[locale]}</p>
 
       {/* en-têtes de colonnes, filets et point terminal */}
       <div className="mt-6 hidden lg:flex lg:pl-14">
@@ -96,7 +100,7 @@ export function RiskCascade({ locale }: { locale: Locale }) {
       </div>
 
       {/* Les notes des exposants posés sur les protections. */}
-      <ol className="mt-10 space-y-1 border-t border-risk-border pt-4 text-[11px] leading-5 text-neutral-600">
+      <ol className="mt-10 space-y-1 border-t border-risk-border pt-4 text-xs italic leading-5 text-neutral-600">
         {RISK_LEVELS.filter((l) => l.footnote).map((l, n) => (
           <li key={l.id}>
             {n + 1}) {l.footnote?.[locale]}
@@ -111,11 +115,13 @@ function ColumnHead({ label, className }: { label: string; className: string }) 
   return (
     <div className={`${className} pr-6`}>
       <div className="flex items-center gap-2">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-risk-critical">
+        <span className="text-sm font-semibold text-foreground">
           {label}
         </span>
-        <span className="h-px flex-1 bg-risk-rule/40" />
-        <span className="h-1 w-1 rounded-full bg-risk-rule" />
+        {/* L'orange passe sur le filet et le point, pas sur le texte : en texte
+            sur fond clair, il donnait 2,87 de contraste (choix d'Hervé, 08/10/2026). */}
+        <span className="h-px flex-1 bg-risk-critical/70" />
+        <span className="h-1.5 w-1.5 rounded-full bg-risk-critical" />
       </div>
     </div>
   );
@@ -126,10 +132,12 @@ function VerticalAxis({ locale }: { locale: Locale }) {
   const c = copy[locale];
   return (
     <div className="relative hidden w-14 shrink-0 lg:block" aria-hidden>
-      <span className="absolute left-0 top-0 text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-400">
+      <span className="absolute left-0 top-0 text-[11px] font-semibold uppercase tracking-[0.12em] text-neutral-700">
         {c.axisTop}
       </span>
-      <div className="absolute bottom-8 left-[6px] top-8 w-px bg-risk-border" />
+      {/* Axe épaissi et foncé le 08/10/2026 : en filet clair d'un pixel, il ne se
+          lisait pas. */}
+      <div className="absolute bottom-8 left-[5px] top-8 w-0.5 rounded-full bg-foreground/35" />
       <svg
         className="absolute bottom-5 left-[2px]"
         width="9"
@@ -137,15 +145,15 @@ function VerticalAxis({ locale }: { locale: Locale }) {
         viewBox="0 0 9 8"
         fill="none"
       >
-        <path d="M1 1l3.5 5L8 1" stroke="var(--risk-border)" strokeWidth="1.2" />
+        <path d="M1 1l3.5 5L8 1" stroke="var(--foreground)" strokeOpacity="0.45" strokeWidth="2" strokeLinecap="round" />
       </svg>
       <span
-        className="absolute left-4 top-1/2 origin-center -translate-y-1/2 rotate-180 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-400"
+        className="absolute left-4 top-1/2 origin-center -translate-y-1/2 rotate-180 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.12em] text-neutral-700"
         style={{ writingMode: "vertical-rl" }}
       >
         {c.axisSide}
       </span>
-      <span className="absolute bottom-0 left-0 text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-400">
+      <span className="absolute bottom-0 left-0 text-[11px] font-semibold uppercase tracking-[0.12em] text-neutral-700">
         {c.axisBottom}
       </span>
     </div>
@@ -202,7 +210,7 @@ function Row({
             critical ? "bg-risk-critical text-white" : "bg-risk-ink text-white"
           }`}
         >
-          <p className="text-[10px] font-medium uppercase tracking-[0.14em] opacity-70">
+          <p className="text-xs opacity-80">
             {c.levelWord} {level.index}
           </p>
           <p className="mt-1 text-sm font-semibold leading-snug">
@@ -213,7 +221,7 @@ function Row({
 
       {/* colonne 2, le déclencheur */}
       <div className="mt-4 lg:mt-0 lg:w-[28%] lg:pr-6">
-        <p className="text-[13px] leading-[1.6] text-neutral-700 lg:hyphens-auto lg:text-justify">
+        <p className="text-sm leading-[1.65] text-neutral-700">
           <strong className="font-semibold text-foreground">
             {level.trigger.lead[locale]}
           </strong>{" "}
@@ -224,16 +232,16 @@ function Row({
       {/* colonne 3, la protection */}
       <div className="mt-4 lg:mt-0 lg:w-[42%]">
         <div className="rounded-md border border-risk-border bg-white/60">
-          <p className="rounded-t-md bg-risk-soft px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-risk-ink">
+          <p className="rounded-t-md bg-risk-soft px-4 py-2 text-sm font-semibold text-risk-ink">
             {level.protection.name[locale]}
             {level.footnote && (
-              <sup className="ml-1 font-normal tracking-normal opacity-60">
+              <sup className="ml-1 font-normal opacity-70">
                 {level.index}
               </sup>
             )}
           </p>
           <div className="px-4 py-3">
-            <p className="text-[13px] leading-[1.6] text-neutral-700 lg:hyphens-auto lg:text-justify">
+            <p className="text-sm leading-[1.65] text-neutral-700">
               {level.protection.body[locale]}
             </p>
 

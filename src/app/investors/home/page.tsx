@@ -497,7 +497,9 @@ export default async function InvestorHomePage() {
                   <DataRoom
                     docs={level2}
                     locale={locale}
-                    startIndex={8}
+                    // Le niveau 2 reprend la numérotation là où s'arrête le
+                    // niveau 1 : codé à 8, il doublait le 08 de la levée.
+                    startIndex={countCategories(level1) + 1}
                     columns={2}
                   />
                 ) : (
@@ -591,4 +593,10 @@ function Term({
       <dd className="mt-0.5 text-sm font-medium">{children ?? value}</dd>
     </div>
   );
+}
+
+// Nombre de catégories de la data room, comptées comme DataRoom les regroupe :
+// une suite de fiches de même catégorie en forme une.
+function countCategories(docs: { category: string }[]): number {
+  return docs.filter((d, i) => i === 0 || docs[i - 1].category !== d.category).length;
 }

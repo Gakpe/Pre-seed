@@ -219,8 +219,12 @@ export function ExitScenarios({ locale }: { locale: Locale }) {
           />
           {c.financial.map((e, i) => (
             <li key={e.title} className="relative flex flex-col">
-              <span className="relative z-10 grid h-6 w-6 place-items-center rounded-lg bg-brand/10 font-mono text-[11px] font-semibold text-marsala ring-4 ring-background">
-                {String(i + 1).padStart(2, "0")}
+              {/* Fond opaque sous la pastille : l'orange à 10 % laissait voir la
+                  ligne de la frise à travers le numéro. */}
+              <span className="relative z-10 h-6 w-6 rounded-lg bg-background ring-4 ring-background">
+                <span className="grid h-full w-full place-items-center rounded-lg bg-brand/10 font-mono text-[11px] font-semibold text-marsala">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
               </span>
               <div className={`${CARD} mt-3 flex-1`}>
                 <p className="text-sm text-neutral-600">{e.when}</p>

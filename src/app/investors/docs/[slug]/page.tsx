@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -88,7 +89,18 @@ export default async function DocPage({
   if (!doc || RETIRED_SLUGS.has(doc.slug)) notFound();
   // Fiche en pause : fermée aux investisseurs, ouverte aux admins pour la
   // retravailler, sauf en démo où l'on montre ce que voit un investisseur.
-  if (UNAVAILABLE_SLUGS.has(doc.slug) && (demo || !(await getAdminEmail()))) notFound();
+  // En local seulement, le cookie minah_preview_paused=1 les ouvre aussi dans
+  // une session démo : relire une fiche en pause sans compte investisseur.
+  // Sans effet en production.
+  const localPreview =
+    process.env.NODE_ENV === "development" &&
+    (await cookies()).get("minah_preview_paused")?.value === "1";
+  if (
+    UNAVAILABLE_SLUGS.has(doc.slug) &&
+    !localPreview &&
+    (demo || !(await getAdminEmail()))
+  )
+    notFound();
 
   const { title, category, content, docsendUrl } = docFields(doc, locale);
   if (docsendUrl && !OWN_PAGE_SLUGS.has(doc.slug)) redirect(docsendUrl);
@@ -114,6 +126,7 @@ export default async function DocPage({
     : [{}, false];
   const extraWide =
     doc.slug === "cap-table" ||
+    doc.slug === "vision-technique" ||
     doc.slug === "gestion-du-risque" ||
     doc.slug === "business-model" ||
     doc.slug === "track-record" ||
@@ -182,7 +195,9 @@ export default async function DocPage({
   return (
     <main
       className={`mx-auto w-full flex-1 py-12 ${comparables ? "max-w-[84rem] px-10" : "px-6"} ${
-        team || roadmap || gtmApercu
+        // La roadmap technique a rejoint la largeur des fiches du niveau 1
+        // le 08/10/2026 : sa frise et sa vue d'ensemble y tiennent.
+        team || doc.slug === "roadmap-ecosysteme" || gtmApercu
             ? "max-w-6xl"
           : extraWide
             ? "max-w-5xl"

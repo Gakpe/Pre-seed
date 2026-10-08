@@ -34,16 +34,21 @@ export type BoardItem = {
 };
 
 const INK = "#2C1716";
-const MUTED = "#766962";
-const FAINT = "#A39A8E";
+// Gris relevés le 08/10/2026 : l'ancien gris clair (#A39A8E) donnait 2,5 de
+// contraste sur le fond, sous le plancher AA. Pas de police à empattements ni de
+// petites majuscules en titre dans les fiches (voir AGENTS.md).
+const MUTED = "#5F5650";
+const FAINT = "#766962";
 const LINE = "#E6E1D4";
 const HAIRLINE = "#F4F2EB";
 const ACCENT = "#E27B30";
 
 /** Colonne des libellés de couche. */
 const LABEL_W = 136;
-/** Largeur minimale d'une colonne de période : en dessous, le texte devient illisible. */
-const MIN_COL = 158;
+/** Largeur minimale d'une colonne de période. */
+// 126 px depuis le 08/10/2026 : la fiche est passée à la largeur des fiches du
+// niveau 1 (max-w-5xl), et à 158 px la sixième période sortait du cadre.
+const MIN_COL = 126;
 /** Graduation de la frise, en mois. */
 const TICK_MONTHS = 4;
 
@@ -122,7 +127,9 @@ export function ArchitectureBoard({
   const line = dark ? "rgba(255,255,255,.12)" : LINE;
   const hairline = dark ? "rgba(255,255,255,.06)" : HAIRLINE;
   const selectedBg = dark ? "rgba(255,255,255,.04)" : "#FCFBF7";
-  const surface = dark ? "#1E1410" : "#FFFFFE";
+  // Même blanc que la carte du tableau : les intitulés collants de la vue
+  // d'ensemble doivent s'y fondre.
+  const surface = dark ? "#1E1410" : "#FFFFFF";
   const railBg = dark ? "rgba(255,255,255,.1)" : "#EFEADE";
 
   // ── Géométrie de la frise : le temps réel, du début de la première période à la fin de
@@ -185,7 +192,11 @@ export function ArchitectureBoard({
   };
 
   const smallCaps: React.CSSProperties = {
-    fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: faint,
+    fontSize: 14, fontWeight: 600, color: ink,
+  };
+  // Intitulé de ligne (la couche) : étiquette de grille, pas un titre.
+  const rowLabel: React.CSSProperties = {
+    fontSize: 12.5, fontWeight: 500, lineHeight: 1.35, color: muted,
   };
 
   const layerLabel = (layer: string) => layerLabels?.[layer] ?? (labels.layers as Record<string, string>)[layer] ?? layer;
@@ -213,10 +224,14 @@ export function ArchitectureBoard({
         }}
       >
         <span style={{ fontSize: 12.5, fontWeight: 600, lineHeight: 1.3 }}>{o.titre}</span>
-        <span style={{ fontSize: 10, display: "flex", alignItems: "center", gap: 6, opacity: .9, flexWrap: "wrap" }}>
-          <span style={{ width: 6, height: 6, borderRadius: 3, background: st.dot, display: "inline-block", flexShrink: 0 }} />
-          {labels.statuses[status]}
-          {showMoteur && <span style={{ letterSpacing: "0.04em", textTransform: "uppercase", opacity: .75 }}>· {labels.moteurs[o.moteur!]}</span>}
+        <span style={{ fontSize: 10.5, display: "flex", alignItems: "center", gap: 6, opacity: .9, flexWrap: "wrap" }}>
+          {/* Pastille et statut solidaires : dans les colonnes étroites de la vue
+              d'ensemble, le libellé passait à la ligne sans sa pastille. */}
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}>
+            <span style={{ width: 6, height: 6, borderRadius: 3, background: st.dot, display: "inline-block", flexShrink: 0 }} />
+            {labels.statuses[status]}
+          </span>
+          {showMoteur && <span style={{ opacity: .8 }}>· {labels.moteurs[o.moteur!]}</span>}
         </span>
       </button>
     );
@@ -313,12 +328,12 @@ export function ArchitectureBoard({
       {/* ── 2. La période sélectionnée, en toutes lettres ───────────────────── */}
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 8 }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
-          <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 19, color: ink }}>{labels.phases[phase]}</span>
-          <span style={{ fontSize: 11.5, color: faint }}>{fmtPeriod(PHASE_WINDOWS[phase].start, PHASE_WINDOWS[phase].end, locale, selectedIdx === periods.length - 1)}</span>
+          <span style={{ fontSize: 18, fontWeight: 600, letterSpacing: "-0.01em", color: ink }}>{labels.phases[phase]}</span>
+          <span style={{ fontSize: 13, color: faint }}>{fmtPeriod(PHASE_WINDOWS[phase].start, PHASE_WINDOWS[phase].end, locale, selectedIdx === periods.length - 1)}</span>
           {proofLabel ? (
-            <span style={{ fontSize: 11.5, color: faint }}>· {proofLabel}</span>
+            <span style={{ fontSize: 13, color: faint }}>· {proofLabel}</span>
           ) : proof ? (
-            <span style={{ fontSize: 11.5, color: faint }}>
+            <span style={{ fontSize: 13, color: faint }}>
               · {proof.investisseurs} {labels.proofs.investors} · {fmtEur(proof.souscrit, locale)} {labels.proofs.subscribed}
               {proof.strategies > 0 && <> · {proof.strategies} {labels.proofs.strategies}</>}
             </span>
@@ -345,16 +360,16 @@ export function ArchitectureBoard({
       {/* L'expérience utilisateur est la promesse de la période. L'admin la garde en
           typographie nue ; la dataroom la met légèrement en valeur. */}
       {highlightExperience ? (
-        <div style={{ margin: "0 0 20px", padding: "18px 24px", borderRadius: 10, textAlign: "center", background: dark ? "rgba(255,255,255,.03)" : "#FDFAF4" }}>
-          <div style={{ ...smallCaps, marginBottom: 7 }}>{labels.experienceLabel}</div>
-          <p style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 17, lineHeight: 1.55, color: ink, margin: "0 auto", maxWidth: 780 }}>
+        <div style={{ margin: "8px 0 20px", padding: "18px 24px", textAlign: "center" }}>
+          <div style={{ ...smallCaps, color: muted, fontWeight: 500, marginBottom: 7 }}>{labels.experienceLabel}</div>
+          <p style={{ fontSize: 17, fontWeight: 500, lineHeight: 1.6, color: ink, margin: "0 auto", maxWidth: 780 }}>
             {experience[phase]}
           </p>
         </div>
       ) : (
         <div style={{ margin: "2px 0 18px" }}>
           <div style={{ ...smallCaps, marginBottom: 4 }}>{labels.experienceLabel}</div>
-          <p style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 16, lineHeight: 1.5, color: ink, margin: 0, maxWidth: 900 }}>
+          <p style={{ fontSize: 16, lineHeight: 1.5, color: ink, margin: 0, maxWidth: 900 }}>
             {experience[phase]}
           </p>
         </div>
@@ -363,7 +378,7 @@ export function ArchitectureBoard({
       {/* ── 3a. Cette période : ce qui y est livré, couche par couche ────────── */}
       {!overview && (
         <div style={{ borderTop: `1px solid ${line}` }}>
-          <div style={{ ...smallCaps, margin: "10px 0 2px" }}>{labels.deliveredHere}</div>
+          <div style={{ ...smallCaps, margin: "14px 0 4px" }}>{labels.deliveredHere}</div>
           {/* Les cinq couches sont toujours là, même vides : c'est l'architecture qui se lit,
               et voir qu'une couche ne bouge pas sur une période est une information. */}
           {layers.map((layer) => {
@@ -371,18 +386,18 @@ export function ArchitectureBoard({
             const vide = shown.length === 0;
             return (
               <div key={layer} style={{ display: "grid", gridTemplateColumns: `${LABEL_W}px 1fr`, gap: 12, borderBottom: `1px solid ${hairline}`, padding: "9px 0", minHeight: 42 }}>
-                <div style={{ ...smallCaps, display: "flex", alignItems: "center", paddingRight: 12, opacity: vide ? .45 : 1 }}>{layerLabel(layer)}</div>
+                <div style={{ ...rowLabel, display: "flex", alignItems: "center", paddingRight: 12, opacity: vide ? .55 : 1 }}>{layerLabel(layer)}</div>
                 {vide ? (
                   <div />
                 ) : (
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(216px, 1fr))", gap: 8, alignItems: "start" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(216px, 100%), 1fr))", gap: 8, alignItems: "start" }}>
                     {shown.map(renderBrick)}
                   </div>
                 )}
               </div>
             );
           })}
-          {rienLivre && <div style={{ padding: "12px 0 0", fontSize: 12.5, color: faint }}>{labels.nothingDelivered}</div>}
+          {rienLivre && <div style={{ padding: "12px 0 0", fontSize: 13, color: faint }}>{labels.nothingDelivered}</div>}
         </div>
       )}
 
@@ -442,7 +457,7 @@ function OverviewTable({
 
   const stickyLabel = (extra?: React.CSSProperties): React.CSSProperties => ({
     display: "flex", alignItems: "center",
-    fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: faint,
+    fontSize: 12.5, fontWeight: 500, color: muted,
     paddingRight: 12, minWidth: 0, position: "sticky", left: 0, zIndex: 2, background: surface,
     ...extra,
   });
@@ -521,23 +536,24 @@ function OverviewTable({
 }
 
 export function CapacityLine({ cap, labels, dark }: { cap: PhaseCapacity; labels: RoadmapLabels; dark?: boolean }) {
-  const faint = dark ? "rgba(255,255,255,.5)" : FAINT;
   const ink = dark ? "#fff" : INK;
   const muted = dark ? "rgba(255,255,255,.75)" : MUTED;
   return (
-    <div style={{ marginTop: 18, paddingTop: 14, borderTop: `1px solid ${dark ? "rgba(255,255,255,.12)" : LINE}`, display: "grid", gridTemplateColumns: "1fr auto", gap: "6px 32px", alignItems: "start" }}>
-      <div>
-        <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: faint, marginBottom: 4 }}>{labels.capacityLabel}</div>
-        <div style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 17, color: ink, lineHeight: 1.4 }}>{cap.capacite}</div>
+    // En flex qui passe à la ligne : en grille « 1fr auto », le volume gardait
+    // ses 180 px sur mobile et écrasait la capacité.
+    <div style={{ marginTop: 18, paddingTop: 14, borderTop: `1px solid ${dark ? "rgba(255,255,255,.12)" : LINE}`, display: "flex", flexWrap: "wrap", gap: "12px 32px", alignItems: "flex-start" }}>
+      <div style={{ flex: "1 1 320px" }}>
+        <div style={{ fontSize: 14, fontWeight: 600, color: ink, marginBottom: 4 }}>{labels.capacityLabel}</div>
+        <div style={{ fontSize: 15, color: muted, lineHeight: 1.6 }}>{cap.capacite}</div>
       </div>
-      <div style={{ textAlign: "right", minWidth: 180 }}>
-        <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: faint, marginBottom: 4 }}>{labels.volumeLabel}</div>
-        <div style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 17, color: ink, lineHeight: 1.4, whiteSpace: "nowrap" }}>{cap.volume}</div>
+      <div style={{ flex: "0 0 auto" }}>
+        <div style={{ fontSize: 14, fontWeight: 600, color: ink, marginBottom: 4 }}>{labels.volumeLabel}</div>
+        <div style={{ fontSize: 15, color: muted, lineHeight: 1.6, whiteSpace: "nowrap" }}>{cap.volume}</div>
       </div>
       {cap.api && (
-        <div style={{ gridColumn: "1 / -1", marginTop: 4 }}>
-          <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: faint, marginBottom: 4 }}>{labels.apiLabel}</div>
-          <div style={{ fontSize: 13.5, color: muted, lineHeight: 1.55 }}>{cap.api}</div>
+        <div style={{ flexBasis: "100%", marginTop: 4 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, color: ink, marginBottom: 4 }}>{labels.apiLabel}</div>
+          <div style={{ fontSize: 14, color: muted, lineHeight: 1.6 }}>{cap.api}</div>
         </div>
       )}
     </div>
@@ -549,17 +565,18 @@ export function CapacityLine({ cap, labels, dark }: { cap: PhaseCapacity; labels
  * sur le passé ce sont des faits acquis, sur le futur ce que la période débloquera.
  */
 export function DefendableList({ items, title, dark }: { items: string[]; title?: string; dark?: boolean }) {
-  const faint = dark ? "rgba(255,255,255,.5)" : FAINT;
   const ink = dark ? "#fff" : INK;
   if (!items?.length) return null;
   return (
     <div>
-      {title && <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: faint, marginBottom: 10 }}>{title}</div>}
+      {title && <div style={{ fontSize: 14, fontWeight: 600, color: ink, marginBottom: 10 }}>{title}</div>}
       <ol style={{ margin: 0, padding: 0, listStyle: "none", display: "grid", gap: 12 }}>
         {items.map((d, i) => (
-          <li key={i} style={{ display: "grid", gridTemplateColumns: "34px 1fr", gap: 12, alignItems: "start" }}>
-            <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 20, color: ACCENT, lineHeight: 1.3 }}>{String(i + 1).padStart(2, "0")}</span>
-            <span style={{ fontSize: 14.5, color: ink, lineHeight: 1.6 }}>{d}</span>
+          <li key={i} style={{ display: "grid", gridTemplateColumns: "8px 1fr", gap: 14, alignItems: "start" }}>
+            {/* Une puce et non un numéro : la liste change avec la période, une
+                numérotation qui repart à chaque fois n'apporte rien. */}
+            <span aria-hidden className="mt-[11px] h-1.5 w-1.5 rounded-full bg-marsala" />
+            <span className="text-[15px] leading-[1.8] text-neutral-700">{d}</span>
           </li>
         ))}
       </ol>
