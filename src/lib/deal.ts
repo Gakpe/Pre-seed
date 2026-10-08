@@ -10,8 +10,8 @@ export const deal = {
   minTicket: "100 K€",
   leadWanted: "500 K€",
   matchingFund: "500 K€ en soft commitment",
-  engagedLabel: "700 K€ d'engagements à date, pondérés",
-  progressPct: 47,
+  engagedLabel: "800 K€ d'engagements à date, pondérés",
+  progressPct: 53,
   tranches: ["< 100 K€", "< 250 K€", "< 500 K€", "500 K€+ (lead)"],
   // Lien de prise de RDV Cal.com (pitch pre-seed, équipe complète).
   meetingUrl: "https://cal.com/julien-gakpe-1icblz/pre-seed-pitch-minah-full-team",
@@ -24,7 +24,7 @@ const dealEn = {
   minTicket: "€100K",
   leadWanted: "€500K",
   matchingFund: "€500K soft commitment",
-  engagedLabel: "€700K of weighted commitments to date",
+  engagedLabel: "€800K of weighted commitments to date",
   tranches: ["< €100K", "< €250K", "< €500K", "€500K+ (lead)"],
 } as const;
 
@@ -77,13 +77,14 @@ export const commitments: Commitment[] = [
   {
     id: "business-angel",
     role: { fr: "Business angel", en: "Business angel" },
-    gross: 100_000,
+    // 300 K€ depuis le 08/10/2026 (Julien), pondérés à 50 %.
+    gross: 300_000,
     weight: 0.5,
     status: "discussion",
   },
 ];
 
-// Somme pondérée des lignes ci-dessus, à titre de contrôle : 800 000 €.
+// Somme pondérée des lignes ci-dessus, à titre de contrôle : 900 000 €.
 export const commitmentsWeightedSum = commitments.reduce(
   (sum, line) => sum + line.gross * line.weight,
   0
@@ -92,4 +93,6 @@ export const commitmentsWeightedSum = commitments.reduce(
 // Total retenu et communiqué par l'équipe. Volontairement plus prudent que la
 // somme pondérée : c'est ce chiffre qui s'affiche partout, jauge comprise.
 // À réaligner avec les lignes dès qu'une pondération est arrêtée.
-export const commitmentsTotal = 700_000;
+// 08/10/2026 : +100 K€ pondérés (business angel porté à 300 K€), même marge
+// de prudence de 100 K€ sous la somme des lignes.
+export const commitmentsTotal = 800_000;
