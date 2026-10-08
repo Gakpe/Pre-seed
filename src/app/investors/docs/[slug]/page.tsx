@@ -33,6 +33,7 @@ import { RiskCascade } from "./risk-cascade";
 import { ResilienceBar } from "./resilience-bar";
 import { RiskClosing } from "./risk-closing";
 import { BackToTop } from "./back-to-top";
+import { ExitScenarios } from "./exit-scenarios";
 
 export default async function DocPage({
   params,
@@ -118,6 +119,7 @@ export default async function DocPage({
     doc.slug === "pourquoi-minah" ||
     doc.slug === "term-sheet-kupanda" ||
     doc.slug === "go-to-market" ||
+    doc.slug === "scenarios-sortie" ||
     note;
 
   // Ces fiches débordent en largeur, mais leur chapô reste dans une colonne
@@ -142,6 +144,7 @@ export default async function DocPage({
     doc.slug === "pourquoi-minah" ||
     doc.slug === "term-sheet-kupanda" ||
     doc.slug === "go-to-market" ||
+    doc.slug === "scenarios-sortie" ||
     gtmApercu ||
     note;
 
@@ -157,6 +160,7 @@ export default async function DocPage({
     doc.slug === "track-record" ||
     doc.slug === "go-to-market" ||
     doc.slug === "go-to-market-apercu" ||
+    doc.slug === "scenarios-sortie" ||
     team ||
     roadmap ||
     comparables ||
@@ -258,6 +262,7 @@ export default async function DocPage({
           <RiskClosing locale={locale} />
         </>
       )}
+      {doc.slug === "scenarios-sortie" && <ExitScenarios locale={locale} />}
       {doc.slug === "cap-table" && (
         <CapTableInteractive title={t(locale, "docs.captable")} locale={locale} />
       )}
