@@ -35,6 +35,7 @@ export const PARTNERS: Partner[] = [
     url: "https://stellar.org",
     role: { fr: "Rail d'émission et de règlement des obligations tokenisées.", en: "Issuance and settlement rail for tokenised bonds." },
     statut: "actif", depuis: "fondations", visibleDataroom: true,
+    logo: "/partners/logos/stellar.svg",
   },
   {
     id: "fireblocks",
@@ -42,6 +43,7 @@ export const PARTNERS: Partner[] = [
     url: "https://www.fireblocks.com",
     role: { fr: "Custody institutionnelle et contrôle des transactions (KYT).", en: "Institutional custody and transaction screening (KYT)." },
     statut: "actif", depuis: "fondations", visibleDataroom: true,
+    logo: "/partners/logos/fireblocks.svg",
   },
   {
     id: "sumsub",
@@ -49,6 +51,7 @@ export const PARTNERS: Partner[] = [
     url: "https://sumsub.com",
     role: { fr: "Vérification d'identité et conformité des investisseurs.", en: "Identity verification and investor compliance." },
     statut: "actif", depuis: "fondations", visibleDataroom: true,
+    logo: "/partners/logos/sumsub.svg",
   },
   {
     id: "canton",
@@ -64,6 +67,7 @@ export const PARTNERS: Partner[] = [
     url: "https://www.starknet.io",
     role: { fr: "Second rail d'émission pour les stratégies Minah.", en: "Second issuance rail for Minah strategies." },
     statut: "en_cours", depuis: "b2b", visibleDataroom: true,
+    logo: "/partners/logos/starknet.svg",
   },
   {
     id: "sereel",
@@ -78,6 +82,7 @@ export const PARTNERS: Partner[] = [
     url: "https://www.etherfuse.com",
     role: { fr: "Obligations souveraines tokenisées, pour le moteur de dette souveraine.", en: "Tokenised sovereign bonds, for the sovereign debt engine." },
     statut: "pressenti", depuis: "api_v1", visibleDataroom: true,
+    logo: "/partners/logos/etherfuse.svg",
   },
   {
     id: "untangled",
@@ -85,6 +90,7 @@ export const PARTNERS: Partner[] = [
     url: "https://untangled.finance",
     role: { fr: "DeFi institutionnelle adossée à des actifs réels.", en: "Institutional DeFi backed by real-world assets." },
     statut: "pressenti", depuis: "api_v1", visibleDataroom: true,
+    logo: "/partners/logos/untangled.svg",
   },
   {
     id: "realiz",
@@ -92,6 +98,7 @@ export const PARTNERS: Partner[] = [
     url: "", // URL officielle à confirmer avant publication dataroom
     role: { fr: "Titrisation tokenisée d'actifs non bancables.", en: "Tokenised securitisation of non-bankable assets." },
     statut: "pressenti", depuis: "api_v1", visibleDataroom: true,
+    logo: "/partners/logos/realiz.png",
   },
   {
     id: "tranched",
@@ -99,6 +106,7 @@ export const PARTNERS: Partner[] = [
     url: "https://tranched.fi",
     role: { fr: "Titrisation on-chain avec découpage automatique en tranches senior et junior.", en: "On-chain securitisation with automatic senior and junior tranching." },
     statut: "pressenti", depuis: "api_v1", visibleDataroom: true,
+    logo: "/partners/logos/tranched.svg",
   },
   {
     id: "pendle",
@@ -106,6 +114,7 @@ export const PARTNERS: Partner[] = [
     url: "https://www.pendle.finance",
     role: { fr: "Référence du découpage principal / rendement (PT, YT).", en: "Reference for principal / yield splitting (PT, YT)." },
     statut: "pressenti", depuis: "vision", visibleDataroom: true,
+    logo: "/partners/logos/pendle.svg",
   },
   {
     id: "spectra",
@@ -113,6 +122,7 @@ export const PARTNERS: Partner[] = [
     url: "https://www.spectra.finance",
     role: { fr: "Marché de taux on-chain, piste de liquidité sur le modèle PT / YT.", en: "On-chain yield market, liquidity lead on the PT / YT model." },
     statut: "pressenti", depuis: "b2c", visibleDataroom: true,
+    logo: "/partners/logos/spectra.svg",
   },
   {
     id: "tradable",
@@ -120,6 +130,7 @@ export const PARTNERS: Partner[] = [
     url: "https://tradable.xyz",
     role: { fr: "Place de marché pour actifs privés tokenisés, piste pour le secondaire.", en: "Marketplace for tokenised private assets, a lead for the secondary market." },
     statut: "pressenti", depuis: "vision", visibleDataroom: true,
+    logo: "/partners/logos/tradable.svg",
   },
   {
     id: "spiko",

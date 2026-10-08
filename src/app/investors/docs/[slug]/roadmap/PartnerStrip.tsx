@@ -47,7 +47,9 @@ export function PartnerStrip({
           const aVenir = PHASES.indexOf(p.depuis) > idx;
           const inner = (
             <>
-              <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, minHeight: 22 }}>
+              {/* Le statut passe sous le logo quand la place manque : avec les vrais
+                  logos, plus larges que les noms, il débordait de la carte. */}
+              <span style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", columnGap: 8, rowGap: 6, minHeight: 22 }}>
                 <PartnerLogo p={p} />
                 <span style={{ fontSize: 9.5, letterSpacing: "0.05em", textTransform: "uppercase", color: FAINT, display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap" }}>
                   <span style={{ width: 5, height: 5, borderRadius: 3, background: STATUT_DOT[p.statut], display: "inline-block" }} />

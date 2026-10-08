@@ -156,7 +156,8 @@ export function OnboardingPanel({
             chacun des suivants sur la fiche mise en avant de même rang, dans
             la data room (le deuxième sur la première fiche, le troisième sur
             la deuxième…). Le dernier met en lumière toutes les fiches qui
-            restent. **gras** pour faire ressortir un passage. Tant qu&apos;une
+            restent. Des fiches cochées à la suite dans une même catégorie
+            s&apos;allument ensemble, sur la même étape. **gras** pour faire ressortir un passage. Tant qu&apos;une
             fiche mise en avant n&apos;est pas visible pour la personne (niveau 2
             pas encore ouvert), elle garde l&apos;accueil par défaut.
           </p>

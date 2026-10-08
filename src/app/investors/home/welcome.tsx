@@ -14,7 +14,9 @@ import { GuidedTour, useTourAutostart, type TourFinish, type TourStep } from "./
 // mesure (lib/onboarding) les remplace par son message, un paragraphe par
 // étape : le premier au centre, chacun des suivants sur la fiche mise en
 // avant de même rang (le deuxième sur la première fiche, etc.), le dernier
-// sur toutes les fiches restantes. Le bouton final ouvre la première fiche de
+// sur toutes les fiches restantes. Des fiches mises en avant consécutives de
+// la même catégorie comptent pour une seule et s'allument ensemble (le deck
+// risk et l'architecture de risque, par exemple). Le bouton final ouvre la première fiche de
 // la dernière étape.
 
 const copy = {
@@ -74,10 +76,16 @@ export function Welcome({
   // Fiche mise en lumière par le paragraphe i (i >= 1) d'un message sur mesure.
   // Fiches mises en lumière par le paragraphe i (i >= 1) d'un message sur
   // mesure : celle de même rang, et pour le dernier toutes celles qui restent.
+  const groups: WelcomeStep[][] = [];
+  for (const st of steps) {
+    const g = groups[groups.length - 1];
+    if (g && g[0].category === st.category) g.push(st);
+    else groups.push([st]);
+  }
   const focusFor = (i: number): WelcomeStep[] => {
-    if (i === 0 || steps.length === 0) return [];
-    const from = Math.min(i - 1, steps.length - 1);
-    return i === paragraphs.length - 1 ? steps.slice(from) : [steps[from]];
+    if (i === 0 || groups.length === 0) return [];
+    const from = Math.min(i - 1, groups.length - 1);
+    return i === paragraphs.length - 1 ? groups.slice(from).flat() : groups[from];
   };
   const lastFocus = custom && paragraphs.length > 1 ? (focusFor(paragraphs.length - 1)[0] ?? null) : focus;
   const tour = useTourAutostart(
