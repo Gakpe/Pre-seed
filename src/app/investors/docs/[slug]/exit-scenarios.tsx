@@ -19,16 +19,12 @@ type Exit = {
 };
 
 // Logos hébergés dans public/exits (rien n'est chargé depuis un service tiers).
-const EXAMPLES: Record<"banks" | "managers" | "fintechs", Example[]> = {
+// Pas d'exemples pour les gestionnaires d'actifs (Julien, 08/10/2026).
+const EXAMPLES: Record<"banks" | "fintechs", Example[]> = {
   banks: [
     { name: "Ecobank", logo: "/exits/ecobank.svg" },
     { name: "Standard Bank", logo: "/exits/standardbank.svg" },
     { name: "Access Bank", logo: "/exits/accessbank.png" },
-  ],
-  managers: [
-    { name: "Apollo", logo: "/exits/apollo.svg" },
-    { name: "Ares", logo: "/exits/ares.svg" },
-    { name: "Blackstone", logo: "/exits/blackstone.svg" },
   ],
   fintechs: [
     { name: "Wave", logo: "/exits/wave.svg" },
@@ -62,7 +58,6 @@ const copy: Record<
         title: "Gestionnaires d'actifs globaux",
         body: "Spécialistes du private credit, qui veulent une porte d'entrée structurée sur les rendements africains.",
         figure: { value: "~2 000 Md$", label: "d'encours en private credit" },
-        examples: EXAMPLES.managers,
       },
       {
         title: "Fintechs de première génération",
@@ -98,7 +93,6 @@ const copy: Record<
         title: "Global asset managers",
         body: "Private credit specialists who want a structured gateway to African yields.",
         figure: { value: "~$2Tn", label: "of private credit AUM" },
-        examples: EXAMPLES.managers,
       },
       {
         title: "First-generation fintechs",
