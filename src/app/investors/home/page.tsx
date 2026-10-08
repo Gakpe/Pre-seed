@@ -19,6 +19,7 @@ import {
   welcomeSteps,
 } from "@/lib/onboarding";
 import { MatchingFundTooltip } from "../matching-fund-tooltip";
+import { RETIRED_SLUGS } from "@/lib/retired-docs";
 
 // Contacts directs proposés à un investisseur en attente. Mêmes adresses que
 // le socle admin, voir ADMIN_EMAILS.
@@ -140,7 +141,7 @@ export default async function InvestorHomePage() {
       .order("sort_order");
     documents = data as DocumentRow[] | null;
   }
-  const docs = documents ?? [];
+  const docs = (documents ?? []).filter((d) => !RETIRED_SLUGS.has(d.slug));
   const level2Unlocked = investor.level2_access;
   // Les fiches que l'onboarding ouvre au-dessus du niveau de la personne
   // arrivent déjà par la RLS ; on les range avec le niveau 1, qui est le sien.
@@ -172,7 +173,9 @@ export default async function InvestorHomePage() {
       .select("slug, title, title_en, category, category_en, sort_order")
       .eq("access_level", 2)
       .order("sort_order");
-    lockedTitles = (locked ?? []).filter((d) => !openedForYou.has(d.slug));
+    lockedTitles = (locked ?? []).filter(
+      (d) => !openedForYou.has(d.slug) && !RETIRED_SLUGS.has(d.slug)
+    );
   }
 
   // En attente de validation : aucun document, pas même la liste des titres.
@@ -454,7 +457,6 @@ export default async function InvestorHomePage() {
               locale={locale}
               columns={2}
               opened={[...openedForYou]}
-              tourSlug={steps[0]?.slug ?? null}
             />
           </div>
         </section>

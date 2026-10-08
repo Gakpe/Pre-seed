@@ -6,6 +6,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getDemoSession } from "@/lib/demo";
 import { getOnboarding } from "@/lib/onboarding";
 import { OWN_PAGE_SLUGS } from "@/lib/own-pages";
+import { RETIRED_SLUGS } from "@/lib/retired-docs";
 import { getLocale } from "@/lib/i18n-server";
 import { docFields, t } from "@/lib/i18n";
 import type { DocumentRow } from "@/lib/types";
@@ -84,7 +85,7 @@ export default async function DocPage({
       kupandaInterest = last;
     }
   }
-  if (!doc) notFound();
+  if (!doc || RETIRED_SLUGS.has(doc.slug)) notFound();
 
   const { title, category, content, docsendUrl } = docFields(doc, locale);
   if (docsendUrl && !OWN_PAGE_SLUGS.has(doc.slug)) redirect(docsendUrl);

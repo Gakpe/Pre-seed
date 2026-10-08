@@ -14,16 +14,15 @@ export function DataRoom({
   startIndex = 1,
   columns = 1,
   opened = [],
-  tourSlug = null,
 }: {
   docs: DocumentRow[];
   locale: Locale;
   startIndex?: number;
   columns?: 1 | 2;
   /** Fiches ouvertes à la personne au-dessus de son niveau (onboarding). */
+  // Chaque ligne porte data-tour="doc-<slug>" : la visite guidée met en
+  // lumière les fiches d'un onboarding par ce repère.
   opened?: string[];
-  /** Fiche mise en lumière par la visite guidée. */
-  tourSlug?: string | null;
 }) {
   const pathname = usePathname();
 
@@ -64,7 +63,7 @@ export function DataRoom({
                 ? null
                 : fields.docsendUrl;
               return docsendUrl ? (
-                <li key={doc.slug} data-tour={doc.slug === tourSlug ? "focus" : undefined}>
+                <li key={doc.slug} data-tour={`doc-${doc.slug}`}>
                   <a
                     href={docsendUrl}
                     target="_blank"
@@ -85,7 +84,7 @@ export function DataRoom({
                   </a>
                 </li>
               ) : (
-                <li key={doc.slug} data-tour={doc.slug === tourSlug ? "focus" : undefined}>
+                <li key={doc.slug} data-tour={`doc-${doc.slug}`}>
                   <Link
                     href={`/investors/docs/${doc.slug}`}
                     className="halo-hover flex items-center justify-between px-4 py-3 text-sm transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900"
