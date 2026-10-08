@@ -7,28 +7,67 @@ import { SectionTitle } from "./section-title";
 // affiché (voir `richOnly` dans page.tsx) : toute retouche de fond se fait ici.
 // Aucun état, aucune interaction.
 
-type Exit = { title: string; body: string; when?: string; figure?: { value: string; label: string } };
+type Example = { name: string; logo: string };
+
+type Exit = {
+  title: string;
+  body: string;
+  when?: string;
+  figure?: { value: string; label: string };
+  /** Acquéreurs types, à titre d'illustration : aucune discussion en cours. */
+  examples?: Example[];
+};
+
+// Logos hébergés dans public/exits (rien n'est chargé depuis un service tiers).
+const EXAMPLES: Record<"banks" | "managers" | "fintechs", Example[]> = {
+  banks: [
+    { name: "Ecobank", logo: "/exits/ecobank.svg" },
+    { name: "Standard Bank", logo: "/exits/standardbank.svg" },
+    { name: "Access Bank", logo: "/exits/accessbank.png" },
+  ],
+  managers: [
+    { name: "Apollo", logo: "/exits/apollo.svg" },
+    { name: "Ares", logo: "/exits/ares.svg" },
+    { name: "Blackstone", logo: "/exits/blackstone.svg" },
+  ],
+  fintechs: [
+    { name: "Wave", logo: "/exits/wave.svg" },
+    { name: "Flutterwave", logo: "/exits/flutterwave.svg" },
+    { name: "M-Pesa", logo: "/exits/mpesa.png" },
+  ],
+};
 
 const copy: Record<
   Locale,
-  { lead: string; industrialTitle: string; industrial: Exit[]; financialTitle: string; financial: Exit[] }
+  {
+    lead: string;
+    examplesLabel: string;
+    industrialTitle: string;
+    industrial: Exit[];
+    financialTitle: string;
+    financial: Exit[];
+  }
 > = {
   fr: {
     lead: "Deux familles de sorties identifiées : des acquéreurs industriels, pour qui Minah est une brique à intégrer, et des sorties financières, échelonnées avec la croissance de la société. Un document de travail, que nous affinons avec l'équipe.",
+    examplesLabel: "Par exemple",
     industrialTitle: "Sorties industrielles",
     industrial: [
       {
         title: "Banques panafricaines",
         body: "À la recherche d'une plateforme de crédit digitale clé en main : la distribution et l'infrastructure.",
+        examples: EXAMPLES.banks,
       },
       {
         title: "Gestionnaires d'actifs globaux",
         body: "Spécialistes du private credit, qui veulent une porte d'entrée structurée sur les rendements africains.",
         figure: { value: "~2 000 Md$", label: "d'encours en private credit" },
+        examples: EXAMPLES.managers,
       },
       {
         title: "Fintechs de première génération",
         body: "Acteurs du paiement aux rails déjà déployés, qui intègrent la brique investissement pour monétiser leur base.",
+        examples: EXAMPLES.fintechs,
       },
     ],
     financialTitle: "Sorties financières",
@@ -47,20 +86,24 @@ const copy: Record<
   },
   en: {
     lead: "Two families of exits identified: industrial acquirers, for whom Minah is a building block to integrate, and financial exits, staged along the company's growth. A working document that we are refining with the team.",
+    examplesLabel: "For example",
     industrialTitle: "Industrial exits",
     industrial: [
       {
         title: "Pan-African banks",
         body: "Looking for a turnkey digital credit platform: distribution and infrastructure.",
+        examples: EXAMPLES.banks,
       },
       {
         title: "Global asset managers",
         body: "Private credit specialists who want a structured gateway to African yields.",
         figure: { value: "~$2Tn", label: "of private credit AUM" },
+        examples: EXAMPLES.managers,
       },
       {
         title: "First-generation fintechs",
         body: "Payment players with rails already deployed, adding the investment layer to monetise their base.",
+        examples: EXAMPLES.fintechs,
       },
     ],
     financialTitle: "Financial exits",
@@ -95,16 +138,33 @@ export function ExitScenarios({ locale }: { locale: Locale }) {
             <li key={e.title} className={`${CARD} flex flex-col`}>
               <h3 className="text-sm font-semibold text-foreground">{e.title}</h3>
               <p className="mt-2 text-[15px] leading-[1.7] text-neutral-700">{e.body}</p>
-              {e.figure && (
-                <p className="mt-auto pt-5">
-                  <span className="block border-t border-foreground/10 pt-4">
+              <div className="mt-auto pt-5">
+                {e.figure && (
+                  <p className="border-t border-foreground/10 pt-4">
                     <span className="block text-2xl font-semibold tracking-tight tabular-nums text-marsala">
                       {e.figure.value}
                     </span>
                     <span className="text-sm text-neutral-600">{e.figure.label}</span>
-                  </span>
-                </p>
-              )}
+                  </p>
+                )}
+                {e.examples && (
+                  <div className={`border-t border-foreground/10 pt-4 ${e.figure ? "mt-4" : ""}`}>
+                    <p className="text-sm text-neutral-600">{c.examplesLabel}</p>
+                    <ul className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-3 lg:flex-nowrap lg:justify-between">
+                      {e.examples.map((x) => (
+                        <li key={x.name}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={x.logo}
+                            alt={x.name}
+                            className="h-5 w-auto max-w-[96px] object-contain"
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </li>
           ))}
         </ul>
