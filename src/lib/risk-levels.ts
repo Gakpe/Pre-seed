@@ -169,8 +169,8 @@ export const LOSS_SCENARIOS: {
     { fr: "T4", en: "Q4" },
   ],
   caption: {
-    fr: "Pertes nettes cumulées (CNL), par trimestre. Source : deck risk Kupanda.",
-    en: "Cumulative net loss (CNL), by quarter. Source: Kupanda risk deck.",
+    fr: "Pertes nettes cumulées (CNL), par trimestre.",
+    en: "Cumulative net loss (CNL), by quarter.",
   },
   scenarios: [
     {
@@ -179,7 +179,12 @@ export const LOSS_SCENARIOS: {
       value: { fr: "30\u00a0%", en: "30%" },
       name: { fr: "Point mort", en: "Breakeven" },
       multiple: { fr: "6,5\u00a0× l'historique", en: "6.5× historical" },
-      impact: { fr: "première perte pour les investisseurs", en: "first loss for investors" },
+      // Au-delà du point mort, l'investisseur perd une partie de son rendement,
+      // pas son capital (Julien, 08/10/2026).
+      impact: {
+        fr: "perte partielle de performance pour l'investisseur, sans perte de capital",
+        en: "partial loss of performance for the investor, no loss of capital",
+      },
       body: {
         fr: "Perte cumulée maximale que la structure absorbe, une fois épuisés le performance bond, l'assurance crédit et la réserve de trésorerie.",
         en: "Maximum cumulative loss the structure absorbs, once the performance bond, credit insurance and cash reserve are exhausted.",

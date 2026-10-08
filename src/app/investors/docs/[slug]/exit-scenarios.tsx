@@ -43,16 +43,6 @@ const copy: Record<
         title: "Rachat par un fonds de private equity",
         body: "Une fois la licence obtenue, en phase 2 de la roadmap.",
       },
-      {
-        when: "Dès que le modèle génère du cash",
-        title: "Distribution sans sortie",
-        body: "La marge sur encours rend envisageable une politique de distribution, sans cession.",
-      },
-      {
-        when: "À long terme",
-        title: "Introduction en bourse",
-        body: "Portée par la liquidité on-chain.",
-      },
     ],
   },
   en: {
@@ -84,16 +74,6 @@ const copy: Record<
         when: "After the credit institution licence",
         title: "Buyout by a private equity fund",
         body: "Once the licence is obtained, in phase 2 of the roadmap.",
-      },
-      {
-        when: "As soon as the model generates cash",
-        title: "Distribution without an exit",
-        body: "The margin on outstanding volume makes a distribution policy possible, without a sale.",
-      },
-      {
-        when: "Long term",
-        title: "IPO",
-        body: "Supported by on-chain liquidity.",
       },
     ],
   },
@@ -133,11 +113,13 @@ export function ExitScenarios({ locale }: { locale: Locale }) {
       <section className="mt-14">
         <SectionTitle n="02">{c.financialTitle}</SectionTitle>
         {/* Une frise : les sorties financières s'échelonnent avec la
-            croissance de la société, de la série A à l'introduction en bourse. */}
-        <ol className="relative mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            croissance de la société, de la série A au rachat après licence.
+            Distribution sans sortie et introduction en bourse retirées le
+            08/10/2026 (Julien). */}
+        <ol className="relative mt-6 grid gap-4 sm:grid-cols-2">
           <span
             aria-hidden
-            className="absolute top-[11px] right-6 left-6 hidden h-px bg-foreground/15 lg:block"
+            className="absolute top-[11px] right-6 left-6 hidden h-px bg-foreground/15 sm:block"
           />
           {c.financial.map((e, i) => (
             <li key={e.title} className="relative flex flex-col">
