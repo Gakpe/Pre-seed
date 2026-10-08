@@ -780,7 +780,7 @@ const RAW: Raw[] = [
     visibleDataroom: true,
   },
   // Ajouts du 08/10/2026 (Julien) : sandbox partenaires en API v1, et trois
-  // briques de vision (marque blanche, agréments de custody, attaque permanente).
+  // briques de vision (marque blanche, partenariats de custody, attaque permanente).
   {
     id: "sandbox-partenaires", slug: "sandbox-partenaires", titre: "Sandbox partenaires", couche: "api", moteur: "transverse", ordre: 3,
     livreEn: "api_v1", owner: null, dependances: ["api-v1"], note: "Nouveau (08/10/2026)", aConfirmer: true,
@@ -812,17 +812,17 @@ const RAW: Raw[] = [
     visibleDataroom: true,
   },
   {
-    id: "agrements-custody", slug: "agrements-custody", titre: "Agréments de custody on-chain et traditionnelle", couche: "rails", moteur: "transverse", ordre: 7,
+    id: "partenariats-custody", slug: "partenariats-custody", titre: "Partenariats de custody on-chain et traditionnelle", couche: "rails", moteur: "transverse", ordre: 7,
     livreEn: "vision", owner: null, dependances: [], note: "Nouveau (08/10/2026)", aConfirmer: true,
     briefTheorique: draft(
-      "Obtenir les agréments pour opérer une custody on-chain et une custody traditionnelle, et couvrir ainsi tous les besoins, côté liquidité comme côté actifs.",
-      "[Juridictions visées, régimes d'agrément, partenaires, calendrier]",
+      "Nouer les partenariats qui donnent accès à une custody on-chain et à une custody traditionnelle, et couvrir ainsi tous les besoins, côté liquidité comme côté actifs.",
+      "[Partenaires visés, juridictions, intégration, calendrier]",
     ),
-    capaciteDebloquee: "Une custody agréée, on-chain comme traditionnelle.",
+    capaciteDebloquee: "Une custody on-chain comme traditionnelle, par nos partenaires.",
     briefInvestisseur: {
-      quoi: "Les agréments pour opérer une custody on-chain et une custody traditionnelle.",
+      quoi: "Des partenariats de custody, on-chain et traditionnelle.",
       pourquoi: "Répondre à l'ensemble des besoins, côté liquidité comme côté actifs, avec un seul acteur.",
-      capacite: "Custody agréée sur les deux mondes.",
+      capacite: "Custody sur les deux mondes.",
     },
     visibleDataroom: true,
   },
