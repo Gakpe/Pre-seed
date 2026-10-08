@@ -6,7 +6,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getDemoSession } from "@/lib/demo";
 import { getOnboarding } from "@/lib/onboarding";
 import { OWN_PAGE_SLUGS } from "@/lib/own-pages";
-import { RETIRED_SLUGS } from "@/lib/retired-docs";
+import { RETIRED_SLUGS, UNAVAILABLE_SLUGS } from "@/lib/retired-docs";
 import { getLocale } from "@/lib/i18n-server";
 import { docFields, t } from "@/lib/i18n";
 import type { DocumentRow } from "@/lib/types";
@@ -28,7 +28,7 @@ import { Comparables } from "./comparables/Comparables";
 import { EcosystemRoadmap } from "./ecosystem/EcosystemRoadmap";
 import { getPublicRoadmap } from "@/lib/roadmap/public";
 import { listStatusOverrides } from "@/lib/roadmap/overrides";
-import { isOwner } from "@/lib/admin";
+import { getAdminEmail, isOwner } from "@/lib/admin";
 import { RiskCascade } from "./risk-cascade";
 import { ResilienceBar } from "./resilience-bar";
 import { RiskClosing } from "./risk-closing";
@@ -87,6 +87,9 @@ export default async function DocPage({
     }
   }
   if (!doc || RETIRED_SLUGS.has(doc.slug)) notFound();
+  // Fiche en pause : fermée aux investisseurs, ouverte aux admins pour la
+  // retravailler, sauf en démo où l'on montre ce que voit un investisseur.
+  if (UNAVAILABLE_SLUGS.has(doc.slug) && (demo || !(await getAdminEmail()))) notFound();
 
   const { title, category, content, docsendUrl } = docFields(doc, locale);
   if (docsendUrl && !OWN_PAGE_SLUGS.has(doc.slug)) redirect(docsendUrl);

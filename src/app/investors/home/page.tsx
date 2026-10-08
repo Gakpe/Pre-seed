@@ -19,7 +19,7 @@ import {
   welcomeSteps,
 } from "@/lib/onboarding";
 import { MatchingFundTooltip } from "../matching-fund-tooltip";
-import { RETIRED_SLUGS } from "@/lib/retired-docs";
+import { RETIRED_SLUGS, UNAVAILABLE_SLUGS } from "@/lib/retired-docs";
 
 // Contacts directs proposés à un investisseur en attente. Mêmes adresses que
 // le socle admin, voir ADMIN_EMAILS.
@@ -156,10 +156,13 @@ export default async function InvestorHomePage() {
   // la personne (niveau 2 ouvert, ouvertures faites) : il ne montre rien
   // qu'elle ne puisse ouvrir. D'ici là, l'accueil par défaut ; il se lance à
   // la première connexion qui suit.
+  // Une fiche en pause ne compte pas : grisée, elle ne s'ouvre pas.
+  const openableDocs = docs.filter((d) => !UNAVAILABLE_SLUGS.has(d.slug));
   const customReady =
-    !onboarding || onboarding.focus_slugs.every((slug) => docs.some((d) => d.slug === slug));
+    !onboarding ||
+    onboarding.focus_slugs.every((slug) => openableDocs.some((d) => d.slug === slug));
   const welcomeOnboarding = customReady ? onboarding : null;
-  const steps = welcomeSteps(docs, welcomeOnboarding, level2Unlocked, locale);
+  const steps = welcomeSteps(openableDocs, welcomeOnboarding, level2Unlocked, locale);
   const welcomeMessage = onboardingMessage(welcomeOnboarding, locale);
   // La visite se lance d'elle-même à la première vraie connexion. Un accueil
   // sur mesure, préparé pour la personne, se lance quoi qu'il arrive (une

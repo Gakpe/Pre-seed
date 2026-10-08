@@ -1,11 +1,28 @@
-// Fiches retirées de la data room, pour tout le monde. La ligne reste dans la
-// table `documents` (rien n'est perdu : retirer le slug d'ici la rétablit),
-// mais la fiche n'est plus listée nulle part ni ouvrable par son adresse.
+// Fiches retirées ou mises en pause dans la data room, pour tout le monde. La
+// ligne reste dans la table `documents` (rien n'est perdu : retirer le slug
+// d'ici la rétablit).
 //
 // Module sans dépendance serveur, comme own-pages : l'admin et la data room
 // le lisent tous deux.
+
+// Retirées : plus listées nulle part, ni ouvrables par leur adresse.
 export const RETIRED_SLUGS = new Set([
-  // Retirée le 08/10/2026 (Julien) : le deck risk Kupanda et l'architecture
-  // de risque couvrent le sujet.
+  // 08/10/2026 (Julien) : le deck risk Kupanda et l'architecture de risque
+  // couvrent le sujet.
   "scenarios-risques",
+  // 08/10/2026 (Julien).
+  "contrat-cadre-zambie",
+  "pacte-associes",
+]);
+
+// En pause : toujours listées, mais grisées et non cliquables, avec la mention
+// « en cours de mise à jour ». Leur page n'est ouverte qu'aux admins (hors
+// démo), le temps de les retravailler.
+export const UNAVAILABLE_SLUGS = new Set([
+  // 08/10/2026 (Julien) : le go-to-market et la roadmap écosystème sont en
+  // train d'être fusionnés.
+  "go-to-market",
+  "roadmap-ecosysteme",
+  // 08/10/2026 (Julien).
+  "cap-table",
 ]);

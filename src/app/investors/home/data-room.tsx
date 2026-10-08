@@ -6,6 +6,7 @@ import { track } from "@/lib/tracking";
 import { docFields, t, type Locale } from "@/lib/i18n";
 import type { DocumentRow } from "@/lib/types";
 import { OWN_PAGE_SLUGS } from "@/lib/own-pages";
+import { UNAVAILABLE_SLUGS } from "@/lib/retired-docs";
 
 // Regroupe par catégorie (ordre dicté par sort_order) et numérote 01, 02, …
 export function DataRoom({
@@ -62,6 +63,22 @@ export function DataRoom({
               const docsendUrl = OWN_PAGE_SLUGS.has(doc.slug)
                 ? null
                 : fields.docsendUrl;
+              // Fiche en pause : grisée, sans lien, avec sa mention.
+              if (UNAVAILABLE_SLUGS.has(doc.slug)) {
+                return (
+                  <li key={doc.slug} data-tour={`doc-${doc.slug}`}>
+                    <div
+                      aria-disabled="true"
+                      className="flex cursor-not-allowed items-center justify-between gap-3 bg-neutral-200/40 px-4 py-3 text-sm text-neutral-600"
+                    >
+                      <span>{title}</span>
+                      <span className="shrink-0 text-xs text-neutral-600">
+                        {t(locale, "home.docs.unavailable")}
+                      </span>
+                    </div>
+                  </li>
+                );
+              }
               return docsendUrl ? (
                 <li key={doc.slug} data-tour={`doc-${doc.slug}`}>
                   <a
