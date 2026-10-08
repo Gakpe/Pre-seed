@@ -204,8 +204,14 @@ const PEOPLE: Person[] = [
   },
 ];
 
+// Fond greige des cartes (#e9e4dd), choisi sur planche le 15/09/2026. Il est
+// aussi incrusté dans les découpes de repos et dans le portrait de Coralie :
+// changer cette couleur impose de régénérer ces quatre photos.
 const copy = {
   fr: {
+    // Chapô de la fiche : il vivait en base (production), il est repris ici
+    // pour être modifié sans écrire en base.
+    lead: "Trois associés, trois profils complémentaires, tous issus du financement d'entreprise : Julien côté investisseur institutionnel, Coralie côté écosystème et investisseurs, Hervé côté entreprise et direction financière.",
     intro: "Survolez un portrait pour ouvrir le profil, au doigt, touchez-le.",
     academic: "Formation",
     career: "Parcours",
@@ -216,6 +222,7 @@ const copy = {
       "Autour des fondateurs, quatre profils support, tech, communication, juridique. Bios détaillées sur demande.",
   },
   en: {
+    lead: "Three partners, three complementary profiles, all from corporate finance: Julien on the institutional investor side, Coralie on the ecosystem and investor side, Hervé on the company and finance side.",
     intro: "Hover a portrait to open the profile, on touch, tap it.",
     academic: "Education",
     career: "Career",
@@ -246,8 +253,11 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
     setOpenId((current) => (current === id ? null : current));
 
   return (
-    <section className="mt-10">
-      <p className="text-sm leading-6 text-neutral-600">{c.intro}</p>
+    <section className="mt-6">
+      <p className="max-w-3xl text-[15px] leading-[1.8] text-neutral-700">
+        {c.lead}
+      </p>
+      <p className="mt-8 text-sm leading-6 text-neutral-600">{c.intro}</p>
 
       <ul className="mt-6 flex flex-col gap-4 lg:h-[min(560px,calc((100vw-80px)/2))] lg:flex-row">
         {PEOPLE.map((p) => {
@@ -266,7 +276,7 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                 type="button"
                 aria-expanded={open}
                 aria-label={`${c.reveal} ${p.name}`}
-                className={`${open ? "tp-open" : ""} group relative block h-full w-full overflow-hidden rounded-xl bg-[#f7ecdd] text-left outline-none ring-brand/60 ring-offset-2 ring-offset-background focus-visible:ring-2`}
+                className={`${open ? "tp-open" : ""} group relative block h-full w-full overflow-hidden rounded-xl bg-[#e9e4dd] text-left outline-none ring-brand/60 ring-offset-2 ring-offset-background focus-visible:ring-2`}
                 onPointerEnter={canHover ? () => setOpenId(p.id) : undefined}
                 onPointerLeave={canHover ? () => close(p.id) : undefined}
                 // Au clavier seulement : un tap tactile pose aussi le focus, et
@@ -285,6 +295,16 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                   }
                 }}
               >
+                {/* affordance : plus au repos, moins une fois ouvert. Posée sur
+                    la carte et non sur le portrait : au repos, le portrait est
+                    plus large que la carte et le signe était rogné à droite. */}
+                <span
+                  aria-hidden
+                  className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-foreground/20 bg-white/40 backdrop-blur-[2px]"
+                >
+                  <span className="absolute h-px w-2.5 bg-foreground/60" />
+                  <span className="tp-plus-v absolute h-px w-2.5 rotate-90 bg-foreground/60" />
+                </span>
                 <div className="flex h-full w-full flex-col lg:flex-row">
                   {/* Le portrait garde son cadrage : il ne s'étire pas quand la
                       carte s'élargit, sinon le visage se déforme. */}
@@ -308,18 +328,9 @@ export function TeamProfiles({ locale }: { locale: Locale }) {
                       className="tp-scrim absolute inset-0"
                       style={{
                         background:
-                          "linear-gradient(to top, #f7ecdd 0%, rgba(247,236,221,.92) 22%, rgba(247,236,221,.35) 44%, rgba(247,236,221,0) 64%)",
+                          "linear-gradient(to top, #e9e4dd 0%, rgba(233,228,221,.92) 22%, rgba(233,228,221,.35) 44%, rgba(233,228,221,0) 64%)",
                       }}
                     />
-                    {/* affordance : plus au repos, moins une fois ouvert */}
-                    <span
-                      aria-hidden
-                      className="absolute right-3.5 top-3.5 flex h-7 w-7 items-center justify-center rounded-full border border-foreground/20 bg-white/40 backdrop-blur-[2px]"
-                    >
-                      <span className="absolute h-px w-2.5 bg-foreground/60" />
-                      <span className="tp-plus-v absolute h-px w-2.5 rotate-90 bg-foreground/60" />
-                    </span>
-
                     {/* identité : toujours visible, en bas du portrait */}
                     <div className="absolute inset-x-0 bottom-0 p-4">
                       <h3 className="text-base font-semibold leading-tight tracking-tight text-foreground">
