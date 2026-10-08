@@ -15,7 +15,6 @@ export type RiskLevel = {
   // `lead` est mis en gras, `body` prolonge la phrase.
   trigger: { lead: Bi; body: Bi };
   protection: { name: Bi; body: Bi };
-  status?: Bi;
   footnote?: Bi;
 };
 
@@ -46,10 +45,6 @@ export const RISK_LEVELS: RiskLevel[] = [
         en: "The performance bond covers underperformance of the underlying asset, short of outright default, for instance poor working-capital management that erodes the operator's cash position.",
       },
     },
-    status: {
-      fr: "Aucune occurrence sur le portefeuille actuel.",
-      en: "No occurrence on the current portfolio.",
-    },
     footnote: {
       fr: "Termes et conditions du performance bond disponibles sur demande.",
       en: "Performance bond terms and conditions available on request.",
@@ -75,10 +70,6 @@ export const RISK_LEVELS: RiskLevel[] = [
         fr: "L'assurance crédit prend le relais en cas de défaut souverain sur le produit : la défaillance de l'État à honorer son engagement, à distinguer de la défaillance de l'actif sous-jacent.",
         en: "Credit insurance steps in on a sovereign default on the product: the State's failure to honour its commitment, to be distinguished from a failure of the underlying asset.",
       },
-    },
-    status: {
-      fr: "Aucune occurrence sur le portefeuille actuel.",
-      en: "No occurrence on the current portfolio.",
     },
     footnote: {
       fr: "Termes clés de l'assurance crédit disponibles sur demande.",
@@ -144,89 +135,79 @@ export const RISK_LEVELS: RiskLevel[] = [
   },
 ];
 
-// Bandeau de résistance : repères fixes, aucun calcul, aucun curseur.
-export const RESILIENCE: {
-  headline: Bi;
-  marks: { at: number; label: Bi; caption: Bi }[];
-} = {
-  headline: {
-    fr: "Coupons et principal restent servis jusqu'à 30 % de pertes cumulées sur le portefeuille. Soit six fois le taux de perte historique observé sur les contrats publics de ce type.",
-    en: "Coupons and principal keep being paid up to 30% of cumulative losses on the portfolio, six times the historical loss rate observed on public contracts of this type.",
-  },
-  marks: [
-    {
-      at: 5,
-      label: { fr: "< 5 %", en: "< 5%" },
-      caption: { fr: "historique observé à ce jour", en: "observed to date" },
-    },
-    {
-      at: 15,
-      label: { fr: "15 %", en: "15%" },
-      caption: {
-        fr: "scénario central de stress",
-        en: "central stress scenario",
-      },
-    },
-    {
-      at: 30,
-      label: { fr: "30 %", en: "30%" },
-      caption: {
-        fr: "point mort de la structure",
-        en: "break-even of the structure",
-      },
-    },
-  ],
+
+// Scénarios de pertes cumulées de la stratégie Kupanda, repris du deck risk
+// (08/10/2026). Les points tracent l'allure des courbes du deck, trimestre par
+// trimestre ; seuls les niveaux finaux (< 5 %, 15 %, 30 %) et les multiples
+// sont des chiffres du deck, c'est eux que la fiche affiche.
+export type LossScenario = {
+  id: "breakeven" | "base" | "historical";
+  points: number[];
+  value: Bi;
+  name: Bi;
+  multiple: Bi;
+  impact: Bi;
+  body: Bi;
 };
 
-// Section de clôture, « Ce que cet exemple démontre ».
-export const RISK_CLOSING: {
+export const LOSS_SCENARIOS: {
   title: Bi;
-  intro: Bi;
-  variables: { lead: Bi; body: Bi }[];
-  conclusion: Bi;
+  lead: Bi;
+  quarters: Bi[];
+  caption: Bi;
+  scenarios: LossScenario[];
 } = {
-  title: {
-    fr: "Ce que cet exemple démontre",
-    en: "What this example demonstrates",
+  title: { fr: "Scénarios de pertes cumulées", en: "Cumulative loss scenarios" },
+  lead: {
+    fr: "Toutes protections réunies, seul un taux de pertes supérieur à **six fois le niveau historique** exposerait les investisseurs à une perte partielle de performance.",
+    en: "With every protection in place, only a loss rate above **six times the historical level** would expose investors to a partial loss of performance.",
   },
-  intro: {
-    fr: "Kupanda est une illustration, pas un modèle unique. La cascade se recalibre pour chaque stratégie, selon trois variables :",
-    en: "Kupanda is an illustration, not a single template. The cascade is recalibrated for each strategy, along three variables:",
+  quarters: [
+    { fr: "T1", en: "Q1" },
+    { fr: "T2", en: "Q2" },
+    { fr: "T3", en: "Q3" },
+    { fr: "T4", en: "Q4" },
+  ],
+  caption: {
+    fr: "Pertes nettes cumulées (CNL), par trimestre. Source : deck risk Kupanda.",
+    en: "Cumulative net loss (CNL), by quarter. Source: Kupanda risk deck.",
   },
-  variables: [
+  scenarios: [
     {
-      lead: {
-        fr: "La contrepartie fixe les deux premiers niveaux.",
-        en: "The counterparty sets the first two levels.",
-      },
+      id: "breakeven",
+      points: [13.5, 22.5, 27.5, 30],
+      value: { fr: "30\u00a0%", en: "30%" },
+      name: { fr: "Point mort", en: "Breakeven" },
+      multiple: { fr: "6,5\u00a0× l'historique", en: "6.5× historical" },
+      impact: { fr: "première perte pour les investisseurs", en: "first loss for investors" },
       body: {
-        fr: "Un État, une grande entreprise ou un opérateur privé n'appellent ni les mêmes garanties, ni les mêmes assureurs.",
-        en: "A State, a large corporate or a private operator call for neither the same guarantees nor the same insurers.",
+        fr: "Perte cumulée maximale que la structure absorbe, une fois épuisés le performance bond, l'assurance crédit et la réserve de trésorerie.",
+        en: "Maximum cumulative loss the structure absorbs, once the performance bond, credit insurance and cash reserve are exhausted.",
       },
     },
     {
-      lead: {
-        fr: "La géographie et la devise fixent le troisième.",
-        en: "Geography and currency set the third.",
-      },
+      id: "base",
+      points: [6.8, 11.2, 13.8, 15],
+      value: { fr: "15\u00a0%", en: "15%" },
+      name: { fr: "Scénario central", en: "Base case" },
+      multiple: { fr: "3,3\u00a0× l'historique", en: "3.3× historical" },
+      impact: { fr: "aucun impact investisseur", en: "no investor impact" },
       body: {
-        fr: "Zone UEMOA, Afrique australe, marché dollarisé : le risque de transfert et la couverture de change se traitent différemment.",
-        en: "WAEMU zone, Southern Africa, dollarised market: transfer risk and currency hedging are handled differently.",
+        fr: "Défauts modérés sur les PME sous-jacentes, service de la dette maintenu.",
+        en: "Moderate defaults on the underlying SMEs, debt service maintained.",
       },
     },
     {
-      lead: {
-        fr: "Notre bilan et la diversification des stratégies fixent le quatrième.",
-        en: "Our balance sheet and the diversification of strategies set the fourth.",
-      },
+      id: "historical",
+      points: [2.1, 3.4, 4.1, 4.6],
+      value: { fr: "<\u00a05\u00a0%", en: "< 5%" },
+      name: { fr: "Historique", en: "Historical" },
+      multiple: { fr: "1,0\u00a0×", en: "1.0×" },
+      impact: { fr: "aucun impact investisseur", en: "no investor impact" },
       body: {
-        fr: "Plus le nombre de stratégies en portefeuille augmente, plus la réserve qui absorbe le résiduel s'épaissit.",
-        en: "The more strategies in the portfolio, the thicker the reserve that absorbs the residual.",
+        fr: "Performance réelle des millésimes financés à ce jour dans la même structure, sans aucun défaut de paiement.",
+        en: "Actual performance of the vintages financed to date through the same structure, with no payment default.",
       },
     },
   ],
-  conclusion: {
-    fr: "Concevoir cette cascade, la documenter, et la faire tenir contractuellement niveau par niveau : c'est précisément le produit que nous vendons à nos souscripteurs.",
-    en: "Designing this cascade, documenting it, and making it hold contractually level by level, that is precisely the product we sell to our subscribers.",
-  },
 };

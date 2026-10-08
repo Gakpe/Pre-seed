@@ -25,7 +25,6 @@ const copy = {
     axisSide: "Niveaux de risque couverts",
     axisBottom: "Émetteur",
     levelWord: "Niveau",
-    statusLabel: "Statut.",
   },
   en: {
     lead: [
@@ -39,7 +38,6 @@ const copy = {
     axisSide: "Risk levels covered",
     axisBottom: "Issuer",
     levelWord: "Level",
-    statusLabel: "Status.",
   },
 } as const;
 
@@ -97,6 +95,14 @@ export function RiskCascade({ locale }: { locale: Locale }) {
         </div>
       </div>
 
+      {/* Les notes des exposants posés sur les protections. */}
+      <ol className="mt-10 space-y-1 border-t border-risk-border pt-4 text-[11px] leading-5 text-neutral-600">
+        {RISK_LEVELS.filter((l) => l.footnote).map((l, n) => (
+          <li key={l.id}>
+            {n + 1}) {l.footnote?.[locale]}
+          </li>
+        ))}
+      </ol>
     </section>
   );
 }
@@ -230,12 +236,6 @@ function Row({
             <p className="text-[13px] leading-[1.6] text-neutral-700 lg:hyphens-auto lg:text-justify">
               {level.protection.body[locale]}
             </p>
-            {level.status && (
-              <p className="mt-2 text-[12px] text-neutral-500">
-                <span className="font-medium">{c.statusLabel}</span>{" "}
-                {level.status[locale]}
-              </p>
-            )}
 
           </div>
         </div>

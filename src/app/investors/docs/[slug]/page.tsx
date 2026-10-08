@@ -30,8 +30,7 @@ import { getPublicRoadmap } from "@/lib/roadmap/public";
 import { listStatusOverrides } from "@/lib/roadmap/overrides";
 import { getAdminEmail, isOwner } from "@/lib/admin";
 import { RiskCascade } from "./risk-cascade";
-import { ResilienceBar } from "./resilience-bar";
-import { RiskClosing } from "./risk-closing";
+import { LossCurves } from "./loss-curves";
 import { BackToTop } from "./back-to-top";
 import { ExitScenarios } from "./exit-scenarios";
 
@@ -264,8 +263,7 @@ export default async function DocPage({
       {doc.slug === "gestion-du-risque" && (
         <>
           <RiskCascade locale={locale} />
-          <ResilienceBar locale={locale} />
-          <RiskClosing locale={locale} />
+          <LossCurves locale={locale} />
         </>
       )}
       {doc.slug === "scenarios-sortie" && <ExitScenarios locale={locale} />}
