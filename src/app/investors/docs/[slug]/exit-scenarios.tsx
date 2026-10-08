@@ -20,7 +20,7 @@ type Exit = {
 
 // Logos hébergés dans public/exits (rien n'est chargé depuis un service tiers).
 // Pas d'exemples pour les gestionnaires d'actifs (Julien, 08/10/2026).
-const EXAMPLES: Record<"banks" | "fintechs", Example[]> = {
+const EXAMPLES: Record<"banks" | "fintechs" | "web3" | "privateDebt", Example[]> = {
   banks: [
     { name: "Ecobank", logo: "/exits/ecobank.svg" },
     { name: "Standard Bank", logo: "/exits/standardbank.svg" },
@@ -30,6 +30,17 @@ const EXAMPLES: Record<"banks" | "fintechs", Example[]> = {
     { name: "Wave", logo: "/exits/wave.svg" },
     { name: "Flutterwave", logo: "/exits/flutterwave.svg" },
     { name: "M-Pesa", logo: "/exits/mpesa.png" },
+  ],
+  // Ajoutés le 08/10/2026 (Julien).
+  web3: [
+    { name: "Maple Finance", logo: "/exits/maple.svg" },
+    { name: "Centrifuge", logo: "/exits/centrifuge.svg" },
+    { name: "Ondo Finance", logo: "/exits/ondo.svg" },
+  ],
+  privateDebt: [
+    { name: "TLG Capital", logo: "/exits/tlg.png" },
+    { name: "Cauris", logo: "/exits/cauris.png" },
+    { name: "Lendable", logo: "/exits/lendable.svg" },
   ],
 };
 
@@ -63,6 +74,16 @@ const copy: Record<
         title: "Fintechs de première génération",
         body: "Acteurs du paiement aux rails déjà déployés, qui intègrent la brique investissement pour monétiser leur base.",
         examples: EXAMPLES.fintechs,
+      },
+      {
+        title: "Acteurs du Web3",
+        body: "Protocoles on-chain qui veulent se rapprocher de la finance traditionnelle et de l'économie réelle, avec Minah pour passerelle.",
+        examples: EXAMPLES.web3,
+      },
+      {
+        title: "Acteurs de la dette privée",
+        body: "Fonds et plateformes de dette privée qui veulent s'équiper de notre couche technologique : structuration, traçabilité on-chain, distribution.",
+        examples: EXAMPLES.privateDebt,
       },
     ],
     financialTitle: "Sorties financières",
@@ -99,6 +120,16 @@ const copy: Record<
         body: "Payment players with rails already deployed, adding the investment layer to monetise their base.",
         examples: EXAMPLES.fintechs,
       },
+      {
+        title: "Web3 players",
+        body: "On-chain protocols that want to move closer to traditional finance and the real economy, with Minah as their gateway.",
+        examples: EXAMPLES.web3,
+      },
+      {
+        title: "Private debt players",
+        body: "Private debt funds and platforms that want to adopt our technology layer: structuring, on-chain traceability, distribution.",
+        examples: EXAMPLES.privateDebt,
+      },
     ],
     financialTitle: "Financial exits",
     financial: [
@@ -127,9 +158,14 @@ export function ExitScenarios({ locale }: { locale: Locale }) {
 
       <section className="mt-12">
         <SectionTitle n="01">{c.industrialTitle}</SectionTitle>
-        <ul className="mt-6 grid gap-4 md:grid-cols-3">
-          {c.industrial.map((e) => (
-            <li key={e.title} className={`${CARD} flex flex-col`}>
+        {/* Cinq cartes : trois sur la première ligne, deux plus larges sur la
+            seconde, plutôt qu'une rangée à moitié vide. */}
+        <ul className="mt-6 grid gap-4 md:grid-cols-6">
+          {c.industrial.map((e, i) => (
+            <li
+              key={e.title}
+              className={`${CARD} flex flex-col ${i < 3 ? "md:col-span-2" : "md:col-span-3"}`}
+            >
               <h3 className="text-sm font-semibold text-foreground">{e.title}</h3>
               <p className="mt-2 text-[15px] leading-[1.7] text-neutral-700">{e.body}</p>
               <div className="mt-auto pt-5">
@@ -144,7 +180,13 @@ export function ExitScenarios({ locale }: { locale: Locale }) {
                 {e.examples && (
                   <div className={`border-t border-foreground/10 pt-4 ${e.figure ? "mt-4" : ""}`}>
                     <p className="text-sm text-neutral-600">{c.examplesLabel}</p>
-                    <ul className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-3 lg:flex-nowrap lg:justify-between">
+                    <ul
+                      className={`mt-3 flex flex-wrap items-center gap-y-3 lg:flex-nowrap ${
+                        // Cartes étroites : les trois logos occupent la ligne.
+                        // Cartes larges : alignés à gauche, sinon trop écartés.
+                        i < 3 ? "gap-x-4 lg:justify-between" : "gap-x-4 lg:gap-x-10"
+                      }`}
+                    >
                       {e.examples.map((x) => (
                         <li key={x.name}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
