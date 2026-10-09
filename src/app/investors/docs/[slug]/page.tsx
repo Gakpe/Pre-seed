@@ -256,10 +256,10 @@ export default async function DocPage({
         <CapTableInteractive title={t(locale, "docs.captable")} locale={locale} />
       )}
       {comparables && <Comparables locale={locale} />}
-      {/* Encore en brouillon (décision du 05/10/2026) : bandeau et mentions
-          « à confirmer » restent visibles, le temps que Coralie la retravaille.
-          Personne n'a le niveau 2 hors de l'équipe. Retirer `draft` pour publier. */}
-      {doc.slug === "roadmap-ecosysteme" && <EcosystemRoadmap locale={locale} draft />}
+      {/* Publiée le 09/10/2026 après la fusion du go-to-market : la fiche
+          unique de la section. Repasser `draft` pour réafficher le bandeau
+          brouillon et les mentions « à confirmer ». */}
+      {doc.slug === "roadmap-ecosysteme" && <EcosystemRoadmap locale={locale} />}
       {doc.slug === "vision-technique" && (
         <VisionTechnique
           data={getPublicRoadmap(null, roadmapOverrides, locale)}
