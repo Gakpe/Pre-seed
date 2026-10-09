@@ -18,7 +18,7 @@ export type EcoCopy = {
 };
 
 const fr: EcoCopy = {
-  intro: "Un écosystème se construit avant d'en avoir besoin. Le nôtre est aligné sur deux choses : les produits que nous distribuerons demain, et la distribution que nous serons capables d'opérer. Chaque période prépare donc la suivante, côté pipeline comme côté capital : l'écosystème a toujours un coup d'avance sur le volume, et c'est lui qui rend le prochain palier crédible. Déplacez le curseur : chaque période dit qui finance, d'où viennent les actifs, et où Minah est vue.",
+  intro: "Notre écosystème se construit une période avant le volume qu'il doit porter. Quatre périodes mènent de notre première stratégie live à un marché à part entière : Amorçage (0 à 2 M€), Traction (2 à 50 M€), Distribution (50 à 100 M€), puis la route vers 1 Md€. Dans chacune, trois fils disent qui finance et par quel canal, d'où viennent les actifs, et où Minah est vue. Déplacez le curseur pour suivre le chemin.",
   today: "Aujourd'hui",
   viewPhase: "Cette période",
   viewOverview: "Vue d'ensemble",
@@ -35,7 +35,7 @@ const fr: EcoCopy = {
 };
 
 const en: EcoCopy = {
-  intro: "An ecosystem is built before it is needed. Ours is aligned on two things: the products we will distribute tomorrow, and the distribution we will be able to run. Each period therefore prepares the next, on the pipeline side as on the capital side: the ecosystem is always one step ahead of volume, and it is what makes the next tier credible. Move the cursor: each period tells who funds, where the assets come from, and where Minah is seen.",
+  intro: "Our ecosystem is built one period ahead of the volume it has to carry. Four periods take us from our first live strategy to a fully fledged market: Seeding (€0 to €2M), Traction (€2M to €50M), Distribution (€50M to €100M), then the road to €1B. In each one, three threads tell who funds and through which channel, where the assets come from, and where Minah is seen. Move the cursor to follow the path.",
   today: "Today",
   viewPhase: "This period",
   viewOverview: "Whole picture",
