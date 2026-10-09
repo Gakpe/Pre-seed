@@ -48,7 +48,7 @@ Conditions : ticket minimum 100 K€, recherche d''un lead investisseur à 500 K
 
 Où nous en sommes : plus de 700 K€ engagés, business angels 200 K€ (committed), tickets écosystème jusqu''à 300 K€ (en discussion). S''y ajoutent environ 500 K$ de soutien non dilutif (grants Stellar Foundation) et 500 K€ de premier closing Kupanda souscrit par 4 HNWIs.
 
-Trajectoire : 15 M€ de volume en phase 1 (MVP, 2 stratégies live), 100 M€ fin 2027, 500 M€ à horizon 2029, chaque phase finançant la suivante.
+Trajectoire : 15 M€ de volume en phase 1 (MVP, 2 stratégies live), 100 M€ d''ici 2028, 500 M€ à horizon 2029, chaque phase finançant la suivante.
 
 Partenaires bancaires et écosystème : Orabank Togo, SIB, Stellar, 50 Partners.'),
 
@@ -149,7 +149,7 @@ Terms: €100K minimum ticket, looking for a €500K lead investor, €600K matc
 
 Where we stand: over €700K identified, €200K business angels (committed), up to €300K ecosystem tickets (in discussion). On top: about $500K of non-dilutive support (Stellar Foundation grants) and a €500K Kupanda first closing subscribed by 4 HNWIs.
 
-Trajectory: €15M of volume in phase 1 (MVP, 2 live strategies), €100M by end of 2027, €500M by 2029, each phase funding the next.
+Trajectory: €15M of volume in phase 1 (MVP, 2 live strategies), €100M by 2028, €500M by 2029, each phase funding the next.
 
 Banking and ecosystem partners: Orabank Togo, SIB, Stellar, 50 Partners.' where slug = 'la-levee';
 
@@ -276,7 +276,7 @@ Conditions : ticket minimum 100 K€, recherche d'un lead investisseur à 500 K�
 
 Où nous en sommes : plus de 700 K€ engagés, business angels 200 K€ (committed), tickets écosystème jusqu'à 300 K€ (en discussion). S'y ajoutent environ 500 K$ de soutien non dilutif (grants Stellar Foundation) et 500 K€ de premier closing Kupanda souscrit par 4 HNWIs.
 
-Trajectoire : 15 M€ de volume en phase 1 (MVP, 2 stratégies live), 100 M€ fin 2027, 500 M€ à horizon 2029, chaque phase finançant la suivante.
+Trajectoire : 15 M€ de volume en phase 1 (MVP, 2 stratégies live), 100 M€ d'ici 2028, 500 M€ à horizon 2029, chaque phase finançant la suivante.
 
 Partenaires bancaires et écosystème : Orabank Togo, SIB, Stellar, 50 Partners.
 
@@ -303,7 +303,7 @@ Terms: €100K minimum ticket, seeking a €500K lead investor, €600K matching
 
 Where we stand: over €700K committed, €200K from business angels (committed), ecosystem tickets up to €300K (in discussion). On top of that, around US$500K of non-dilutive support (Stellar Foundation grants) and a €500K Kupanda first closing subscribed by 4 HNWIs.
 
-Trajectory: €15M of volume in phase 1 (MVP, 2 live strategies), €100M by end of 2027, €500M by 2029, each phase funding the next.
+Trajectory: €15M of volume in phase 1 (MVP, 2 live strategies), €100M by 2028, €500M by 2029, each phase funding the next.
 
 Banking and ecosystem partners: Orabank Togo, SIB, Stellar, 50 Partners.
 
