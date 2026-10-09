@@ -23,9 +23,6 @@ export const RETIRED_SLUGS = new Set([
 // « en cours de mise à jour ». Leur page n'est ouverte qu'aux admins (hors
 // démo), le temps de les retravailler.
 export const UNAVAILABLE_SLUGS = new Set([
-  // 09/10/2026 (Coralie) : la fusion go-to-market → roadmap écosystème est
-  // dans le code, la fiche reste cachée le temps de la valider.
-  "roadmap-ecosysteme",
   // 08/10/2026 (Julien).
   "cap-table",
 ]);
