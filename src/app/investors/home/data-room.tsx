@@ -6,6 +6,7 @@ import { track } from "@/lib/tracking";
 import { docFields, t, type Locale } from "@/lib/i18n";
 import type { DocumentRow } from "@/lib/types";
 import { OWN_PAGE_SLUGS } from "@/lib/own-pages";
+import { UNAVAILABLE_SLUGS } from "@/lib/retired-docs";
 
 // Regroupe par catégorie (ordre dicté par sort_order) et numérote 01, 02, …
 export function DataRoom({
@@ -14,16 +15,15 @@ export function DataRoom({
   startIndex = 1,
   columns = 1,
   opened = [],
-  tourSlug = null,
 }: {
   docs: DocumentRow[];
   locale: Locale;
   startIndex?: number;
   columns?: 1 | 2;
   /** Fiches ouvertes à la personne au-dessus de son niveau (onboarding). */
+  // Chaque ligne porte data-tour="doc-<slug>" : la visite guidée met en
+  // lumière les fiches d'un onboarding par ce repère.
   opened?: string[];
-  /** Fiche mise en lumière par la visite guidée. */
-  tourSlug?: string | null;
 }) {
   const pathname = usePathname();
 
@@ -63,8 +63,24 @@ export function DataRoom({
               const docsendUrl = OWN_PAGE_SLUGS.has(doc.slug)
                 ? null
                 : fields.docsendUrl;
+              // Fiche en pause : grisée, sans lien, avec sa mention.
+              if (UNAVAILABLE_SLUGS.has(doc.slug)) {
+                return (
+                  <li key={doc.slug} data-tour={`doc-${doc.slug}`}>
+                    <div
+                      aria-disabled="true"
+                      className="flex cursor-not-allowed items-center justify-between gap-3 bg-neutral-200/40 px-4 py-3 text-sm text-neutral-600"
+                    >
+                      <span>{title}</span>
+                      <span className="shrink-0 text-xs text-neutral-600">
+                        {t(locale, "home.docs.unavailable")}
+                      </span>
+                    </div>
+                  </li>
+                );
+              }
               return docsendUrl ? (
-                <li key={doc.slug} data-tour={doc.slug === tourSlug ? "focus" : undefined}>
+                <li key={doc.slug} data-tour={`doc-${doc.slug}`}>
                   <a
                     href={docsendUrl}
                     target="_blank"
@@ -85,7 +101,7 @@ export function DataRoom({
                   </a>
                 </li>
               ) : (
-                <li key={doc.slug} data-tour={doc.slug === tourSlug ? "focus" : undefined}>
+                <li key={doc.slug} data-tour={`doc-${doc.slug}`}>
                   <Link
                     href={`/investors/docs/${doc.slug}`}
                     className="halo-hover flex items-center justify-between px-4 py-3 text-sm transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900"

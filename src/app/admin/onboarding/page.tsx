@@ -8,6 +8,7 @@ import {
   welcomeSteps,
 } from "@/lib/onboarding";
 import { listPreapproved } from "@/lib/preapproved";
+import { RETIRED_SLUGS, UNAVAILABLE_SLUGS } from "@/lib/retired-docs";
 import type { DocumentRow, InvestorStatus } from "@/lib/types";
 import { OnboardingPanel, type DocOption, type OnboardingView } from "./onboarding-panel";
 
@@ -22,7 +23,9 @@ export default async function OnboardingPage() {
     admin.from("documents").select("*").order("sort_order"),
     admin.from("investors").select("email, status, level2_access"),
   ]);
-  const docs = (docRows ?? []) as DocumentRow[];
+  const docs = ((docRows ?? []) as DocumentRow[]).filter(
+    (d) => !RETIRED_SLUGS.has(d.slug) && !UNAVAILABLE_SLUGS.has(d.slug)
+  );
   const byEmail = new Map(
     ((investors ?? []) as { email: string; status: InvestorStatus; level2_access: boolean }[]).map(
       (i) => [i.email.toLowerCase(), i]

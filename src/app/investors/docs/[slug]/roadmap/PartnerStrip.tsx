@@ -9,10 +9,11 @@
 import { PHASES, type Phase } from "@/lib/roadmap/types";
 import { partnersFor, type Partner } from "@/lib/roadmap/partners";
 import { PartnerLogo } from "./PartnerLogo";
+import { SectionTitle } from "../section-title";
 
 const INK = "#2C1716";
-const MUTED = "#766962";
-const FAINT = "#A39A8E";
+// Gris du texte relevé le 08/10/2026 : l'ancien gris clair (#A39A8E) donnait 2,5 de contraste.
+const MUTED = "#5F5650";
 const LINE = "#E6E1D4";
 
 const STATUT_DOT: Record<Partner["statut"], string> = {
@@ -39,24 +40,26 @@ export function PartnerStrip({
   const partners = partnersFor(dataroom);
 
   return (
-    <section style={{ marginTop: 18, paddingTop: 16, borderTop: `1px solid ${LINE}` }}>
-      <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT, marginBottom: 4 }}>{title}</div>
-      <p style={{ fontSize: 13.5, color: MUTED, lineHeight: 1.55, margin: "0 0 14px", maxWidth: 720 }}>{intro}</p>
-      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(212px, 1fr))", gap: 10 }}>
+    <section className="mt-14">
+      <SectionTitle n="03">{title}</SectionTitle>
+      <p className="mt-4 mb-6 max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{intro}</p>
+      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 10 }}>
         {partners.map((p) => {
           const aVenir = PHASES.indexOf(p.depuis) > idx;
           const inner = (
             <>
-              <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, minHeight: 22 }}>
+              {/* Le statut passe sous le logo quand la place manque : avec les vrais
+                  logos, plus larges que les noms, il débordait de la carte. */}
+              <span style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", columnGap: 8, rowGap: 6, minHeight: 22 }}>
                 <PartnerLogo p={p} />
-                <span style={{ fontSize: 9.5, letterSpacing: "0.05em", textTransform: "uppercase", color: FAINT, display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap" }}>
+                <span style={{ fontSize: 11.5, color: MUTED, display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap" }}>
                   <span style={{ width: 5, height: 5, borderRadius: 3, background: STATUT_DOT[p.statut], display: "inline-block" }} />
                   {statusLabels[p.statut]}
                 </span>
               </span>
-              <span style={{ fontSize: 12, color: MUTED, lineHeight: 1.45 }}>{p.role[lang]}</span>
+              <span style={{ fontSize: 13, color: MUTED, lineHeight: 1.5 }}>{p.role[lang]}</span>
               {p.url && (
-                <span style={{ fontSize: 11, color: INK, opacity: .75 }}>
+                <span style={{ fontSize: 12, color: INK, opacity: .8, whiteSpace: "nowrap" }}>
                   {p.url.replace(/^https?:\/\/(www\.)?/, "")} ↗
                 </span>
               )}
@@ -64,7 +67,7 @@ export function PartnerStrip({
           );
           const style: React.CSSProperties = {
             display: "flex", flexDirection: "column", gap: 7,
-            border: `1px solid ${LINE}`, borderRadius: 10, padding: "12px 13px",
+            border: `1px solid ${LINE}`, borderRadius: 12, padding: "14px 15px",
             background: "#FFFFFE", textDecoration: "none", height: "100%", boxSizing: "border-box",
             opacity: aVenir ? 0.5 : 1, transition: "opacity .25s ease, border-color .2s ease, box-shadow .2s ease",
           };

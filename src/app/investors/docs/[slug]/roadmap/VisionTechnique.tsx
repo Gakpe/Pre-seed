@@ -9,17 +9,13 @@ import { ArchitectureBoard, CapacityLine, DefendableList } from "./ArchitectureB
 import { PartnerStrip } from "./PartnerStrip";
 import { InvestorCardModal } from "./InvestorCard";
 import { StatusEditor } from "./StatusEditor";
+import { SectionTitle } from "../section-title";
 import type { Status } from "@/lib/roadmap/types";
 
 // Fiche « Roadmap technique », vue investisseurs. Portée le 02/10/2026 depuis la
 // page /vision-technique de l'admin Minah (minah_interface). Ici la donnée arrive
 // en props, projetée côté serveur par getPublicRoadmap : pas d'API, pas de
 // chargement. Le titre, le chapô et la langue viennent de la fiche du portail.
-
-const INK = "#2C1716";
-const MUTED = "#766962";
-const FAINT = "#A39A8E";
-const LINE = "#E6E1D4";
 
 export function VisionTechnique({
   data,
@@ -41,26 +37,32 @@ export function VisionTechnique({
 
   return (
     <div className="mt-8">
-      <p style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 30, fontWeight: 400, color: INK, lineHeight: 1.2, letterSpacing: "-0.02em", margin: "0 0 32px", maxWidth: 760 }}>
+      {/* La phrase de vision prend la carte blanche des citations, sans
+          guillemets : elle ne cite personne (voir AGENTS.md). */}
+      <p className="rounded-xl border border-foreground/10 bg-white/60 px-6 py-7 text-center text-xl font-semibold leading-[1.4] tracking-tight text-foreground">
         {data.meta.vision}
       </p>
 
+      <SectionTitle n="01" className="mt-14">{c.boardTitle}</SectionTitle>
+
       {/* Légende du code couleur, lisible avant la frise : chaque brique
           reprend exactement ces trois traitements. */}
-      <ul style={{ listStyle: "none", margin: "0 0 14px", padding: 0, display: "flex", flexWrap: "wrap", gap: "8px 18px", fontSize: 12.5, color: MUTED }}>
+      <ul className="mt-6 mb-3.5 flex flex-wrap gap-x-[18px] gap-y-2 text-sm text-neutral-600">
         {(["livre", "en_cours", "prevu"] as const).map((status) => {
           const st = STATUS_STYLE[status];
           return (
-            <li key={status} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <li key={status} className="flex items-center gap-2">
               <span aria-hidden style={{ width: 22, height: 14, borderRadius: 4, background: st.bg, border: `1px ${status === "prevu" ? "dashed" : "solid"} ${st.border}`, display: "inline-block" }} />
-              <span style={{ color: INK, fontWeight: 600 }}>{c.labels.statuses[status]}</span>
+              <span className="font-semibold text-foreground">{c.labels.statuses[status]}</span>
               <span>{c.legend[status]}</span>
             </li>
           );
         })}
       </ul>
 
-      <section style={{ background: "#FFFFFE", border: `1px solid ${LINE}`, borderRadius: 16, padding: "26px 28px 26px" }}>
+      {/* Fond blanc plein, et non le blanc à 60 % des autres cartes : sur ce
+          tableau dense, le beige qui transparaissait gênait la lecture. */}
+      <section className="rounded-xl border border-foreground/10 bg-white px-5 py-6 sm:px-7">
         <ArchitectureBoard
           objectifs={data.objectifs}
           phase={phase}
@@ -77,22 +79,26 @@ export function VisionTechnique({
         />
         <CapacityLine cap={data.meta.capacitesParPhase[phase]} labels={c.labels} />
         {data.meta.apprentissagesParPhase[phase] && (
-          <div style={{ marginTop: 14 }}>
-            <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT, marginBottom: 4 }}>{c.learnedLabel}</div>
-            <div style={{ fontSize: 13.5, color: MUTED, lineHeight: 1.55, maxWidth: 720 }}>{data.meta.apprentissagesParPhase[phase]}</div>
+          <div className="mt-4">
+            <p className="text-sm font-semibold text-foreground">{c.learnedLabel}</p>
+            <p className="mt-1 max-w-3xl text-sm leading-6 text-neutral-700">{data.meta.apprentissagesParPhase[phase]}</p>
           </div>
         )}
-        <div style={{ marginTop: 16 }}>
-          <span style={{ fontSize: 11.5, color: FAINT }}>
-            {c.updatedOn.replace("{date}", new Date(data.meta.misAJourLe).toLocaleDateString(dateLocale))}
-          </span>
-        </div>
+        <p className="mt-4 text-xs text-neutral-600">
+          {c.updatedOn.replace("{date}", new Date(data.meta.misAJourLe).toLocaleDateString(dateLocale))}
+        </p>
       </section>
 
-      <section style={{ marginTop: 44, maxWidth: 860 }}>
-        <h2 style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 24, fontWeight: 400, color: INK, margin: "0 0 6px" }}>{c.defendableTitle}</h2>
-        <p style={{ fontSize: 12.5, color: FAINT, margin: "0 0 18px" }}>{c.labels.phases[phase]}</p>
-        <DefendableList items={data.meta.defendableParPhase[phase]} />
+      <section className="mt-14">
+        <SectionTitle n="02">{c.defendableTitle}</SectionTitle>
+        {/* Les arguments suivent la période choisie sur la frise : on la rappelle. */}
+        <p className="mt-2 text-sm text-neutral-600">
+          {locale === "fr" ? "Période\u00a0: " : "Period: "}
+          <span className="font-medium text-foreground">{c.labels.phases[phase]}</span>
+        </p>
+        <div className="mt-6">
+          <DefendableList items={data.meta.defendableParPhase[phase]} />
+        </div>
       </section>
 
       <PartnerStrip
@@ -105,7 +111,7 @@ export function VisionTechnique({
         lang={locale}
       />
 
-      <p style={{ marginTop: 44, fontSize: 12, color: FAINT }}>{c.footer}</p>
+      <p className="mt-12 text-sm text-neutral-600">{c.footer}</p>
 
       {selected && (
         <InvestorCardModal

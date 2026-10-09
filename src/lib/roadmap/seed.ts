@@ -23,7 +23,7 @@ const MAJ = "2026-10-01T00:00:00.000Z";
 const BY = "Julien";
 
 export const ROADMAP_META: RoadmapMeta = {
-  vision: "Des rails agent-native pour la dette privée africaine.",
+  vision: "Des rails on-chain & agent-native pour la dette privée africaine.",
   misAJourLe: MAJ,
   // Côté investisseurs, la preuve est écrite, pas comptée : on annonce un ordre de
   // grandeur plutôt qu'un chiffre exact. Les chiffres réels restent visibles côté équipe.
@@ -777,6 +777,68 @@ const RAW: Raw[] = [
       capacite: "Interopérabilité entre rails.",
     },
     partenaires: ["stellar"],
+    visibleDataroom: true,
+  },
+  // Ajouts du 08/10/2026 (Julien) : sandbox partenaires en API v1, et trois
+  // briques de vision (marque blanche, partenariats de custody, attaque permanente).
+  {
+    id: "sandbox-partenaires", slug: "sandbox-partenaires", titre: "Sandbox partenaires", couche: "api", moteur: "transverse", ordre: 3,
+    livreEn: "api_v1", owner: null, dependances: ["api-v1"], note: "Nouveau (08/10/2026)", aConfirmer: true,
+    briefTheorique: draft(
+      "Un environnement de test isolé, ouvert aux partenaires, pour qu'un nouvel acteur se branche vite et sans risque pour la production.",
+      "[Données de test, clés dédiées, parité avec l'API de production, procédure de passage en production]",
+    ),
+    capaciteDebloquee: "Les partenaires testent leur intégration en toute sécurité.",
+    briefInvestisseur: {
+      quoi: "Une sandbox : un environnement de test isolé, ouvert aux partenaires.",
+      pourquoi: "De nombreux acteurs se branchent à Minah rapidement et de façon sécurisée, sans toucher à la production.",
+      capacite: "Intégration partenaire rapide et sécurisée.",
+    },
+    visibleDataroom: true,
+  },
+  {
+    id: "marque-blanche", slug: "marque-blanche", titre: "Produit en marque blanche", couche: "produits", moteur: "transverse", ordre: 9,
+    livreEn: "vision", owner: null, dependances: ["api-v2"], note: "Nouveau (08/10/2026)", aConfirmer: true,
+    briefTheorique: draft(
+      "Un produit Minah que des acteurs locaux distribuent sous leur propre marque, pour relier capitaux internationaux et on-chain à leurs clients sans que le nom Minah n'apparaisse.",
+      "[Personnalisation, intégration chez l'acteur local, conformité, partage des revenus]",
+    ),
+    capaciteDebloquee: "Minah se branche aux acteurs locaux, sous leur marque.",
+    briefInvestisseur: {
+      quoi: "Un produit Minah en marque blanche, distribué par des acteurs locaux sous leur propre nom.",
+      pourquoi: "Les capitaux internationaux et on-chain atteignent l'économie locale par les acteurs déjà en place : Minah assure la connexion, en coulisses.",
+      capacite: "Distribution sous marque locale.",
+    },
+    visibleDataroom: true,
+  },
+  {
+    id: "partenariats-custody", slug: "partenariats-custody", titre: "Partenariats de custody on-chain et traditionnelle", couche: "rails", moteur: "transverse", ordre: 7,
+    livreEn: "vision", owner: null, dependances: [], note: "Nouveau (08/10/2026)", aConfirmer: true,
+    briefTheorique: draft(
+      "Nouer les partenariats qui donnent accès à une custody on-chain et à une custody traditionnelle, et couvrir ainsi tous les besoins, côté liquidité comme côté actifs.",
+      "[Partenaires visés, juridictions, intégration, calendrier]",
+    ),
+    capaciteDebloquee: "Une custody on-chain comme traditionnelle, par nos partenaires.",
+    briefInvestisseur: {
+      quoi: "Des partenariats de custody, on-chain et traditionnelle.",
+      pourquoi: "Répondre à l'ensemble des besoins, côté liquidité comme côté actifs, avec un seul acteur.",
+      capacite: "Custody sur les deux mondes.",
+    },
+    visibleDataroom: true,
+  },
+  {
+    id: "attaque-permanente", slug: "attaque-permanente", titre: "Attaque permanente par les meilleurs modèles", couche: "admin", moteur: "transverse", ordre: 5,
+    livreEn: "vision", owner: null, dependances: ["durcissement-securite"], note: "Nouveau (08/10/2026)", aConfirmer: true,
+    briefTheorique: draft(
+      "La plateforme est attaquée en continu par les meilleurs modèles d'IA du moment ; chaque vulnérabilité trouvée, notamment par un nouveau modèle, est corrigée aussitôt.",
+      "[Modèles utilisés, périmètre attaqué, délai de correction, traçabilité des patchs]",
+    ),
+    capaciteDebloquee: "Une sécurité mise à l'épreuve en continu.",
+    briefInvestisseur: {
+      quoi: "Une attaque permanente de la plateforme par les meilleurs modèles d'IA du moment.",
+      pourquoi: "Chaque nouveau modèle est mis à l'épreuve sur notre infrastructure : une vulnérabilité trouvée est corrigée aussitôt.",
+      capacite: "Patchs dès qu'une vulnérabilité apparaît.",
+    },
     visibleDataroom: true,
   },
 ];

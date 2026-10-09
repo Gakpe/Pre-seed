@@ -15,6 +15,7 @@ export function DemoStartForm({
   const [lastName, setLastName] = useState("");
   const [entity, setEntity] = useState("");
   const [onboarding, setOnboarding] = useState("");
+  const [level2, setLevel2] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,6 +34,7 @@ export function DemoStartForm({
         name: `${firstName.trim()} ${lastName.trim()}`.trim(),
         entity: entity.trim(),
         onboarding,
+        level2,
       }),
     }).catch(() => null);
 
@@ -109,6 +111,16 @@ export function DemoStartForm({
           </select>
         </div>
       )}
+
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={level2}
+          onChange={(e) => setLevel2(e.target.checked)}
+          className="h-4 w-4 accent-marsala"
+        />
+        Niveau 2 ouvert dès l&apos;entrée
+      </label>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 

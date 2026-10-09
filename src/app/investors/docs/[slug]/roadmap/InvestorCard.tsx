@@ -11,8 +11,8 @@ import { STATUS_STYLE, type RoadmapLabels } from "@/lib/roadmap/labels";
 import { PartnerLogo } from "./PartnerLogo";
 
 const INK = "#2C1716";
-const MUTED = "#766962";
-const FAINT = "#A39A8E";
+const MUTED = "#5F5650";
+const FAINT = "#766962"; // relevé le 08/10/2026, #A39A8E donnait 2,5 de contraste
 const LINE = "#E6E1D4";
 
 /**
@@ -31,7 +31,7 @@ function PartnerChips({ partners, label, linkLabel, lang }: { partners: Partner[
 
   return (
     <div style={{ marginTop: 18, paddingTop: 14, borderTop: `1px solid ${LINE}` }}>
-      <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT, marginBottom: 9 }}>{label}</div>
+      <div style={{ fontSize: 14, fontWeight: 600, color: INK, marginBottom: 9 }}>{label}</div>
       <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 9 }}>
         {partners.map((p) => {
           const inner = (
@@ -88,26 +88,26 @@ export function InvestorCardBody({
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 14 }}>
-        <span style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 22, color: INK }}>{objectif.titre}</span>
+        <span style={{ fontSize: 20, fontWeight: 600, letterSpacing: "-0.01em", color: INK }}>{objectif.titre}</span>
         <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 9px", borderRadius: 20, background: st.bg, color: st.color, border: `1px solid ${st.border}` }}>
           {labels.statuses[status]}
         </span>
       </div>
       <dl style={{ margin: 0, display: "grid", gridTemplateColumns: "140px 1fr", rowGap: 10, columnGap: 16, fontSize: 13.5 }}>
-        <dt style={{ color: FAINT, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", paddingTop: 2 }}>{t.quarter}</dt>
+        <dt style={{ color: FAINT, fontSize: 13, fontWeight: 500, paddingTop: 1 }}>{t.quarter}</dt>
         <dd style={{ margin: 0, color: INK }}>{labels.phases[objectif.livreEn]}</dd>
-        <dt style={{ color: FAINT, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", paddingTop: 2 }}>{t.moteur}</dt>
+        <dt style={{ color: FAINT, fontSize: 13, fontWeight: 500, paddingTop: 1 }}>{t.moteur}</dt>
         <dd style={{ margin: 0, color: INK }}>{labels.moteurs[objectif.moteur]}</dd>
-        <dt style={{ color: FAINT, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", paddingTop: 2 }}>{t.what}</dt>
+        <dt style={{ color: FAINT, fontSize: 13, fontWeight: 500, paddingTop: 1 }}>{t.what}</dt>
         <dd style={{ margin: 0, color: INK, lineHeight: 1.5 }}>{b.quoi}</dd>
-        <dt style={{ color: FAINT, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", paddingTop: 2 }}>{t.why}</dt>
+        <dt style={{ color: FAINT, fontSize: 13, fontWeight: 500, paddingTop: 1 }}>{t.why}</dt>
         <dd style={{ margin: 0, color: MUTED, lineHeight: 1.5 }}>{b.pourquoi}</dd>
-        <dt style={{ color: FAINT, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", paddingTop: 2 }}>{t.capacity}</dt>
+        <dt style={{ color: FAINT, fontSize: 13, fontWeight: 500, paddingTop: 1 }}>{t.capacity}</dt>
         <dd style={{ margin: 0, color: INK, lineHeight: 1.5 }}>{b.capacite}</dd>
         {/* Texte libre conservé pour un tiers qui n'est pas (encore) dans `partners.ts`. */}
         {b.partenaire && partners.length === 0 && (
           <>
-            <dt style={{ color: FAINT, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", paddingTop: 2 }}>{t.partner}</dt>
+            <dt style={{ color: FAINT, fontSize: 13, fontWeight: 500, paddingTop: 1 }}>{t.partner}</dt>
             <dd style={{ margin: 0, color: INK }}>{b.partenaire}</dd>
           </>
         )}

@@ -152,10 +152,14 @@ export function OnboardingPanel({
           </label>
           <p className="text-xs leading-5 text-neutral-600 sm:col-span-2">
             Le message arrive en visite guidée, un paragraphe par étape (une
-            ligne vide entre deux) : le premier au centre de l&apos;écran, les
-            suivants sur la première fiche mise en avant, dans la data room, avec
-            un bouton pour l&apos;ouvrir sur la dernière étape. Deux paragraphes
-            suffisent.
+            ligne vide entre deux) : le premier au centre de l&apos;écran, puis
+            chacun des suivants sur la fiche mise en avant de même rang, dans
+            la data room (le deuxième sur la première fiche, le troisième sur
+            la deuxième…). Le dernier met en lumière toutes les fiches qui
+            restent. Des fiches cochées à la suite dans une même catégorie
+            s&apos;allument ensemble, sur la même étape. **gras** pour faire ressortir un passage. Tant qu&apos;une
+            fiche mise en avant n&apos;est pas visible pour la personne (niveau 2
+            pas encore ouvert), elle garde l&apos;accueil par défaut.
           </p>
         </div>
 

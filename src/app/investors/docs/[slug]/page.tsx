@@ -1,11 +1,13 @@
 import { Fragment } from "react";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getDemoSession } from "@/lib/demo";
 import { getOnboarding } from "@/lib/onboarding";
 import { OWN_PAGE_SLUGS } from "@/lib/own-pages";
+import { RETIRED_SLUGS, UNAVAILABLE_SLUGS } from "@/lib/retired-docs";
 import { getLocale } from "@/lib/i18n-server";
 import { docFields, t } from "@/lib/i18n";
 import type { DocumentRow } from "@/lib/types";
@@ -26,11 +28,11 @@ import { Comparables } from "./comparables/Comparables";
 import { EcosystemRoadmap } from "./ecosystem/EcosystemRoadmap";
 import { getPublicRoadmap } from "@/lib/roadmap/public";
 import { listStatusOverrides } from "@/lib/roadmap/overrides";
-import { isOwner } from "@/lib/admin";
+import { getAdminEmail, isOwner } from "@/lib/admin";
 import { RiskCascade } from "./risk-cascade";
-import { ResilienceBar } from "./resilience-bar";
-import { RiskClosing } from "./risk-closing";
+import { LossCurves } from "./loss-curves";
 import { BackToTop } from "./back-to-top";
+import { ExitScenarios } from "./exit-scenarios";
 
 export default async function DocPage({
   params,
@@ -83,7 +85,21 @@ export default async function DocPage({
       kupandaInterest = last;
     }
   }
-  if (!doc) notFound();
+  if (!doc || RETIRED_SLUGS.has(doc.slug)) notFound();
+  // Fiche en pause : fermée aux investisseurs, ouverte aux admins pour la
+  // retravailler, sauf en démo où l'on montre ce que voit un investisseur.
+  // En local seulement, le cookie minah_preview_paused=1 les ouvre aussi dans
+  // une session démo : relire une fiche en pause sans compte investisseur.
+  // Sans effet en production.
+  const localPreview =
+    process.env.NODE_ENV === "development" &&
+    (await cookies()).get("minah_preview_paused")?.value === "1";
+  if (
+    UNAVAILABLE_SLUGS.has(doc.slug) &&
+    !localPreview &&
+    (demo || !(await getAdminEmail()))
+  )
+    notFound();
 
   const { title, category, content, docsendUrl } = docFields(doc, locale);
   if (docsendUrl && !OWN_PAGE_SLUGS.has(doc.slug)) redirect(docsendUrl);
@@ -109,12 +125,14 @@ export default async function DocPage({
     : [{}, false];
   const extraWide =
     doc.slug === "cap-table" ||
+    doc.slug === "vision-technique" ||
     doc.slug === "gestion-du-risque" ||
     doc.slug === "business-model" ||
     doc.slug === "track-record" ||
     doc.slug === "la-levee" ||
     doc.slug === "pourquoi-minah" ||
     doc.slug === "term-sheet-kupanda" ||
+    doc.slug === "scenarios-sortie" ||
     note;
 
   // Ces fiches débordent en largeur, mais leur chapô reste dans une colonne
@@ -134,10 +152,13 @@ export default async function DocPage({
   // base ferait doublon avec, et par endroits contredirait, les chiffres
   // qu'elles détaillent. Il reste en base, simplement plus affiché ici.
   const richOnly =
+    team ||
     doc.slug === "track-record" ||
     doc.slug === "la-levee" ||
     doc.slug === "pourquoi-minah" ||
     doc.slug === "term-sheet-kupanda" ||
+    doc.slug === "scenarios-sortie" ||
+    doc.slug === "gestion-du-risque" ||
     gtmApercu ||
     note;
 
@@ -152,12 +173,15 @@ export default async function DocPage({
     doc.slug === "term-sheet-kupanda" ||
     doc.slug === "track-record" ||
     doc.slug === "go-to-market-apercu" ||
+    doc.slug === "scenarios-sortie" ||
+    doc.slug === "gestion-du-risque" ||
     team ||
     roadmap ||
     comparables ||
     note ||
     businessModel;
-  const headerCategory = doc.slug === "pourquoi-minah" || note || comparables;
+  const headerCategory =
+    doc.slug === "pourquoi-minah" || doc.slug === "gestion-du-risque" || note || comparables;
 
   // Retour en haut sur les fiches vraiment longues : la note de marché, près de
   // sept écrans. La levée, Pourquoi Minah et le track record tiennent en moins
@@ -167,7 +191,9 @@ export default async function DocPage({
   return (
     <main
       className={`mx-auto w-full flex-1 py-12 ${comparables ? "max-w-[84rem] px-10" : "px-6"} ${
-        team || roadmap || gtmApercu
+        // La roadmap technique a rejoint la largeur des fiches du niveau 1
+        // le 08/10/2026 : sa frise et sa vue d'ensemble y tiennent.
+        team || doc.slug === "roadmap-ecosysteme" || gtmApercu
             ? "max-w-6xl"
           : extraWide
             ? "max-w-5xl"
@@ -248,10 +274,10 @@ export default async function DocPage({
       {doc.slug === "gestion-du-risque" && (
         <>
           <RiskCascade locale={locale} />
-          <ResilienceBar locale={locale} />
-          <RiskClosing locale={locale} />
+          <LossCurves locale={locale} />
         </>
       )}
+      {doc.slug === "scenarios-sortie" && <ExitScenarios locale={locale} />}
       {doc.slug === "cap-table" && (
         <CapTableInteractive title={t(locale, "docs.captable")} locale={locale} />
       )}

@@ -1,97 +1,69 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { AXIS_CAPTION, RISK_LEVELS, type RiskLevel } from "@/lib/risk-levels";
 import type { Locale } from "@/lib/i18n";
+import { SectionTitle } from "./section-title";
 
 // Décalage horizontal d'un niveau au suivant. C'est le signal visuel principal
 // de la page : la cascade doit se lire sans lire le texte.
 const STEP = 36;
-const TOKEN = 14;
 
 // Libellés propres au composant (les données de risque vivent dans risk-levels).
+// Le chapô de la fiche vit ici et non en base (08/10/2026) : la base est la
+// production, un texte modifié y part en ligne aussitôt. Celui de la base
+// reste en place, simplement plus affiché.
 const copy = {
   fr: {
+    lead: [
+      "Tout repose sur notre capacité à structurer des stratégies : des produits financiers qui diversifient le risque et s'adaptent aux réalités économiques et conjoncturelles de chaque région. Cette structuration, nous la portons dans une infrastructure technologique que notre plateforme rend liquide : c'est là que se trouve notre edge.",
+      "Chaque structuration a donc sa propre cascade de gestion du risque. Ci-dessous, celle de l'opportunité Kupanda, qui sera adaptée à chacune de nos stratégies.",
+    ],
     colLevel: "Niveau",
     colTrigger: "Déclencheur",
     colProtection: "Protection",
     axisTop: "Sous-jacent",
     axisSide: "Niveaux de risque couverts",
     axisBottom: "Émetteur",
-    reset: "Réinitialiser",
     levelWord: "Niveau",
-    statusLabel: "Statut.",
-    absorbed: "Absorbé à ce niveau, impact investisseur : aucun",
-    simulate: "Simuler ce scénario",
+    cascadeTitle: "La cascade de protection",
   },
   en: {
+    lead: [
+      "Everything rests on our ability to structure strategies: financial products that diversify risk and adapt to the economic and cyclical realities of each region. We carry this structuring in a technology infrastructure that our platform makes liquid: that is where our edge lies.",
+      "Each structure therefore has its own risk management cascade. Below is the one for the Kupanda opportunity, which will be adapted to each of our strategies.",
+    ],
     colLevel: "Level",
     colTrigger: "Trigger",
     colProtection: "Protection",
     axisTop: "Underlying",
     axisSide: "Risk levels covered",
     axisBottom: "Issuer",
-    reset: "Reset",
     levelWord: "Level",
-    statusLabel: "Status.",
-    absorbed: "Absorbed at this level, investor impact: none",
-    simulate: "Simulate this scenario",
+    cascadeTitle: "The protection cascade",
   },
 } as const;
-
-type Token = { index: number; x: number; y: number };
 
 export function RiskCascade({ locale }: { locale: Locale }) {
   const c = copy[locale];
   // Ligne survolée ou focalisée, met les autres en retrait.
   const [active, setActive] = useState<number | null>(null);
-  // Niveau où la perte simulée a été absorbée.
-  const [absorbed, setAbsorbed] = useState<number | null>(null);
-  const [token, setToken] = useState<Token | null>(null);
 
-  const boxRef = useRef<HTMLDivElement>(null);
-  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  // Position mesurée au clic : pas d'effet, pas de state posé au montage.
-  function simulate(i: number) {
-    const row = rowRefs.current[i];
-    const box = boxRef.current;
-    setAbsorbed(i);
-    if (row && box) {
-      setToken({
-        index: i,
-        x: i * STEP,
-        y: row.offsetTop + 28,
-      });
-    }
-  }
-
-  function reset() {
-    setAbsorbed(null);
-    setToken(null);
-  }
-
-  function onKeyDown(e: React.KeyboardEvent, i: number) {
-    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-      e.preventDefault();
-      const next = e.key === "ArrowDown" ? i + 1 : i - 1;
-      rowRefs.current[next]?.focus();
-    } else if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      simulate(i);
-    }
-  }
-
-  // Une ligne s'efface si une autre est mise en avant, ou si la perte simulée
-  // s'est arrêtée avant elle, montrer qu'elle n'a jamais été sollicitée.
+  // Une ligne s'efface quand une autre est mise en avant.
   function dim(i: number): boolean {
-    if (absorbed !== null) return i > absorbed;
     return active !== null && active !== i;
   }
 
   return (
-    <section className="mt-10">
-      <p className="text-xs leading-5 text-neutral-400">{AXIS_CAPTION[locale]}</p>
+    <section className="mt-8">
+      <div className="max-w-3xl space-y-4 text-[15px] leading-[1.8] text-neutral-700">
+        {c.lead.map((p) => (
+          <p key={p}>{p}</p>
+        ))}
+      </div>
+
+      <SectionTitle icon="layers" className="mt-14">{c.cascadeTitle}</SectionTitle>
+      <p className="mt-4 text-sm leading-6 text-neutral-600">{AXIS_CAPTION[locale]}</p>
 
       {/* en-têtes de colonnes, filets et point terminal */}
       <div className="mt-6 hidden lg:flex lg:pl-14">
@@ -103,40 +75,7 @@ export function RiskCascade({ locale }: { locale: Locale }) {
       <div className="mt-4 flex">
         <VerticalAxis locale={locale} />
 
-        <div ref={boxRef} className="relative flex-1">
-          {/* jeton : apparaît en haut de la cascade et descend au niveau visé */}
-          {token && (
-            <>
-              <span
-                key={`d${token.index}`}
-                aria-hidden
-                className="token-drop absolute left-0 top-0 z-20 hidden rounded-full bg-risk-critical shadow-md lg:block"
-                style={
-                  {
-                    width: TOKEN,
-                    height: TOKEN,
-                    "--token-x": `${token.x}px`,
-                    "--token-y": `${token.y}px`,
-                  } as React.CSSProperties
-                }
-              />
-              {/* en mobile le jeton descend le long du rail, sans décalage */}
-              <span
-                key={`m${token.index}`}
-                aria-hidden
-                className="token-drop absolute -left-1 top-0 z-20 rounded-full bg-risk-critical shadow-md lg:hidden"
-                style={
-                  {
-                    width: TOKEN,
-                    height: TOKEN,
-                    "--token-x": "0px",
-                    "--token-y": `${token.y}px`,
-                  } as React.CSSProperties
-                }
-              />
-            </>
-          )}
-
+        <div className="relative flex-1">
           {RISK_LEVELS.map((level, i) => (
             <div key={level.id}>
               <Row
@@ -144,15 +83,9 @@ export function RiskCascade({ locale }: { locale: Locale }) {
                 index={i}
                 locale={locale}
                 dimmed={dim(i)}
-                highlighted={absorbed === i}
                 focused={active === i}
-                onSimulate={() => simulate(i)}
-                onKeyDown={(e) => onKeyDown(e, i)}
                 onEnter={() => setActive(i)}
                 onLeave={() => setActive(null)}
-                ref={(el) => {
-                  rowRefs.current[i] = el;
-                }}
               />
               {i < RISK_LEVELS.length - 1 && (
                 <div
@@ -166,17 +99,14 @@ export function RiskCascade({ locale }: { locale: Locale }) {
         </div>
       </div>
 
-      {absorbed !== null && (
-        <div className="mt-6 flex justify-end">
-          <button
-            onClick={reset}
-            className="rounded-md border border-neutral-300 px-3 py-1.5 text-xs text-neutral-600 transition-colors hover:border-neutral-400"
-          >
-            {c.reset}
-          </button>
-        </div>
-      )}
-
+      {/* Les notes des exposants posés sur les protections. */}
+      <ol className="mt-10 space-y-1 border-t border-risk-border pt-4 text-xs italic leading-5 text-neutral-600">
+        {RISK_LEVELS.filter((l) => l.footnote).map((l, n) => (
+          <li key={l.id}>
+            {n + 1}) {l.footnote?.[locale]}
+          </li>
+        ))}
+      </ol>
     </section>
   );
 }
@@ -185,11 +115,13 @@ function ColumnHead({ label, className }: { label: string; className: string }) 
   return (
     <div className={`${className} pr-6`}>
       <div className="flex items-center gap-2">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-risk-critical">
+        <span className="text-sm font-semibold text-foreground">
           {label}
         </span>
-        <span className="h-px flex-1 bg-risk-rule/40" />
-        <span className="h-1 w-1 rounded-full bg-risk-rule" />
+        {/* L'orange passe sur le filet et le point, pas sur le texte : en texte
+            sur fond clair, il donnait 2,87 de contraste (choix d'Hervé, 08/10/2026). */}
+        <span className="h-px flex-1 bg-risk-critical/70" />
+        <span className="h-1.5 w-1.5 rounded-full bg-risk-critical" />
       </div>
     </div>
   );
@@ -200,10 +132,12 @@ function VerticalAxis({ locale }: { locale: Locale }) {
   const c = copy[locale];
   return (
     <div className="relative hidden w-14 shrink-0 lg:block" aria-hidden>
-      <span className="absolute left-0 top-0 text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-400">
+      <span className="absolute left-0 top-0 text-[11px] font-semibold uppercase tracking-[0.12em] text-neutral-700">
         {c.axisTop}
       </span>
-      <div className="absolute bottom-8 left-[6px] top-8 w-px bg-risk-border" />
+      {/* Axe épaissi et foncé le 08/10/2026 : en filet clair d'un pixel, il ne se
+          lisait pas. */}
+      <div className="absolute bottom-8 left-[5px] top-8 w-0.5 rounded-full bg-foreground/35" />
       <svg
         className="absolute bottom-5 left-[2px]"
         width="9"
@@ -211,15 +145,15 @@ function VerticalAxis({ locale }: { locale: Locale }) {
         viewBox="0 0 9 8"
         fill="none"
       >
-        <path d="M1 1l3.5 5L8 1" stroke="var(--risk-border)" strokeWidth="1.2" />
+        <path d="M1 1l3.5 5L8 1" stroke="var(--foreground)" strokeOpacity="0.45" strokeWidth="2" strokeLinecap="round" />
       </svg>
       <span
-        className="absolute left-4 top-1/2 origin-center -translate-y-1/2 rotate-180 whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-400"
+        className="absolute left-4 top-1/2 origin-center -translate-y-1/2 rotate-180 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.12em] text-neutral-700"
         style={{ writingMode: "vertical-rl" }}
       >
         {c.axisSide}
       </span>
-      <span className="absolute bottom-0 left-0 text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-400">
+      <span className="absolute bottom-0 left-0 text-[11px] font-semibold uppercase tracking-[0.12em] text-neutral-700">
         {c.axisBottom}
       </span>
     </div>
@@ -231,13 +165,9 @@ type RowProps = {
   index: number;
   locale: Locale;
   dimmed: boolean;
-  highlighted: boolean;
   focused: boolean;
-  onSimulate: () => void;
-  onKeyDown: (e: React.KeyboardEvent) => void;
   onEnter: () => void;
   onLeave: () => void;
-  ref: (el: HTMLDivElement | null) => void;
 };
 
 function Row({
@@ -245,13 +175,9 @@ function Row({
   index,
   locale,
   dimmed,
-  highlighted,
   focused,
-  onSimulate,
-  onKeyDown,
   onEnter,
   onLeave,
-  ref,
 }: RowProps) {
   const c = copy[locale];
   // Le niveau 4 est le seul en orange plein : c'est notre propre bilan qui
@@ -260,17 +186,10 @@ function Row({
 
   return (
     <div
-      ref={ref}
-      role="button"
-      tabIndex={0}
-      aria-label={`${c.levelWord} ${level.index}, ${level.name[locale]}`}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
-      onFocus={onEnter}
-      onBlur={onLeave}
-      onKeyDown={onKeyDown}
-      className={`relative rounded-lg border p-4 pl-6 transition-all duration-150 lg:pl-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-risk-critical focus-visible:ring-offset-2 lg:flex lg:p-3 ${
-        focused || highlighted
+      className={`relative rounded-lg border p-4 pl-6 transition-all duration-150 lg:pl-3 lg:flex lg:p-3 ${
+        focused
           ? "border-[1.5px] border-risk-critical bg-risk-surface"
           : "border-transparent"
       } ${dimmed ? "opacity-55" : "opacity-100"}`}
@@ -291,7 +210,7 @@ function Row({
             critical ? "bg-risk-critical text-white" : "bg-risk-ink text-white"
           }`}
         >
-          <p className="text-[10px] font-medium uppercase tracking-[0.14em] opacity-70">
+          <p className="text-xs opacity-80">
             {c.levelWord} {level.index}
           </p>
           <p className="mt-1 text-sm font-semibold leading-snug">
@@ -302,7 +221,7 @@ function Row({
 
       {/* colonne 2, le déclencheur */}
       <div className="mt-4 lg:mt-0 lg:w-[28%] lg:pr-6">
-        <p className="text-[13px] leading-[1.6] text-neutral-700 lg:hyphens-auto lg:text-justify">
+        <p className="text-sm leading-[1.65] text-neutral-700">
           <strong className="font-semibold text-foreground">
             {level.trigger.lead[locale]}
           </strong>{" "}
@@ -312,51 +231,20 @@ function Row({
 
       {/* colonne 3, la protection */}
       <div className="mt-4 lg:mt-0 lg:w-[42%]">
-        <div
-          className={`rounded-md border transition-colors ${
-            highlighted
-              ? "border-risk-ok bg-white"
-              : "border-risk-border bg-white/60"
-          }`}
-        >
-          <p className="rounded-t-md bg-risk-soft px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-risk-ink">
+        <div className="rounded-md border border-risk-border bg-white/60">
+          <p className="rounded-t-md bg-risk-soft px-4 py-2 text-sm font-semibold text-risk-ink">
             {level.protection.name[locale]}
             {level.footnote && (
-              <sup className="ml-1 font-normal tracking-normal opacity-60">
+              <sup className="ml-1 font-normal opacity-70">
                 {level.index}
               </sup>
             )}
           </p>
           <div className="px-4 py-3">
-            <p className="text-[13px] leading-[1.6] text-neutral-700 lg:hyphens-auto lg:text-justify">
+            <p className="text-sm leading-[1.65] text-neutral-700">
               {level.protection.body[locale]}
             </p>
-            {level.status && (
-              <p className="mt-2 text-[12px] text-neutral-500">
-                <span className="font-medium">{c.statusLabel}</span>{" "}
-                {level.status[locale]}
-              </p>
-            )}
 
-            <div aria-live="polite">
-              {highlighted && (
-                <p className="mt-3 rounded bg-risk-ok/10 px-2.5 py-1.5 text-[12px] font-medium text-risk-ok">
-                  {c.absorbed}
-                </p>
-              )}
-            </div>
-
-            {!highlighted && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSimulate();
-                }}
-                className="mt-3 text-[11px] text-neutral-400 underline-offset-2 transition-colors hover:text-risk-critical hover:underline"
-              >
-                {c.simulate}
-              </button>
-            )}
           </div>
         </div>
       </div>

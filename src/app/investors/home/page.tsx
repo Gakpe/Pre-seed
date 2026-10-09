@@ -19,6 +19,7 @@ import {
   welcomeSteps,
 } from "@/lib/onboarding";
 import { MatchingFundTooltip } from "../matching-fund-tooltip";
+import { RETIRED_SLUGS, UNAVAILABLE_SLUGS } from "@/lib/retired-docs";
 
 // Contacts directs proposés à un investisseur en attente. Mêmes adresses que
 // le socle admin, voir ADMIN_EMAILS.
@@ -140,7 +141,7 @@ export default async function InvestorHomePage() {
       .order("sort_order");
     documents = data as DocumentRow[] | null;
   }
-  const docs = documents ?? [];
+  const docs = (documents ?? []).filter((d) => !RETIRED_SLUGS.has(d.slug));
   const level2Unlocked = investor.level2_access;
   // Les fiches que l'onboarding ouvre au-dessus du niveau de la personne
   // arrivent déjà par la RLS ; on les range avec le niveau 1, qui est le sien.
@@ -151,8 +152,18 @@ export default async function InvestorHomePage() {
   const level2 = docs.filter((d) => d.access_level === 2);
   // Fiches mises en avant ; la première est celle que la visite guidée met
   // en lumière dans la data room.
-  const steps = welcomeSteps(docs, onboarding, level2Unlocked, locale);
-  const welcomeMessage = onboardingMessage(onboarding, locale);
+  // Un accueil sur mesure attend que toutes ses fiches soient visibles pour
+  // la personne (niveau 2 ouvert, ouvertures faites) : il ne montre rien
+  // qu'elle ne puisse ouvrir. D'ici là, l'accueil par défaut ; il se lance à
+  // la première connexion qui suit.
+  // Une fiche en pause ne compte pas : grisée, elle ne s'ouvre pas.
+  const openableDocs = docs.filter((d) => !UNAVAILABLE_SLUGS.has(d.slug));
+  const customReady =
+    !onboarding ||
+    onboarding.focus_slugs.every((slug) => openableDocs.some((d) => d.slug === slug));
+  const welcomeOnboarding = customReady ? onboarding : null;
+  const steps = welcomeSteps(openableDocs, welcomeOnboarding, level2Unlocked, locale);
+  const welcomeMessage = onboardingMessage(welcomeOnboarding, locale);
   // La visite se lance d'elle-même à la première vraie connexion. Un accueil
   // sur mesure, préparé pour la personne, se lance quoi qu'il arrive (une
   // fois par version du message) ; une démo aussi, c'est ce qu'on y montre.
@@ -172,7 +183,9 @@ export default async function InvestorHomePage() {
       .select("slug, title, title_en, category, category_en, sort_order")
       .eq("access_level", 2)
       .order("sort_order");
-    lockedTitles = (locked ?? []).filter((d) => !openedForYou.has(d.slug));
+    lockedTitles = (locked ?? []).filter(
+      (d) => !openedForYou.has(d.slug) && !RETIRED_SLUGS.has(d.slug)
+    );
   }
 
   // En attente de validation : aucun document, pas même la liste des titres.
@@ -311,8 +324,8 @@ export default async function InvestorHomePage() {
             demo={!!demo}
             autoStart={autoTour}
             tourKey={
-              onboarding && welcomeMessage
-                ? `minah_tour:${onboarding.updated_at}`
+              welcomeOnboarding && welcomeMessage
+                ? `minah_tour:${welcomeOnboarding.updated_at}`
                 : "minah_tour:default:1"
             }
           />
@@ -454,7 +467,6 @@ export default async function InvestorHomePage() {
               locale={locale}
               columns={2}
               opened={[...openedForYou]}
-              tourSlug={steps[0]?.slug ?? null}
             />
           </div>
         </section>
@@ -485,7 +497,9 @@ export default async function InvestorHomePage() {
                   <DataRoom
                     docs={level2}
                     locale={locale}
-                    startIndex={8}
+                    // Le niveau 2 reprend la numérotation là où s'arrête le
+                    // niveau 1 : codé à 8, il doublait le 08 de la levée.
+                    startIndex={countCategories(level1) + 1}
                     columns={2}
                   />
                 ) : (
@@ -579,4 +593,10 @@ function Term({
       <dd className="mt-0.5 text-sm font-medium">{children ?? value}</dd>
     </div>
   );
+}
+
+// Nombre de catégories de la data room, comptées comme DataRoom les regroupe :
+// une suite de fiches de même catégorie en forme une.
+function countCategories(docs: { category: string }[]): number {
+  return docs.filter((d, i) => i === 0 || docs[i - 1].category !== d.category).length;
 }

@@ -100,6 +100,9 @@ export function onboardingMessage(o: Onboarding | null, locale: Locale): string 
 export type WelcomeStep = {
   slug: string;
   title: string;
+  /** Catégorie (française, identifiant stable) : la visite regroupe les fiches
+   *  mises en avant consécutives d'une même catégorie sur une seule étape. */
+  category: string;
   /** Lien DocSend (nouvel onglet, tracé) ou page interne. */
   href: string;
   external: boolean;
@@ -127,6 +130,7 @@ export function welcomeSteps(
       {
         slug,
         title: fields.title,
+        category: doc.category,
         href: docsend ?? `/investors/docs/${slug}`,
         external: Boolean(docsend),
         openedForYou: doc.access_level > 1 && !level2Unlocked && unlocked.has(slug),

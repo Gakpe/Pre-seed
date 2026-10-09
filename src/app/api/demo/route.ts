@@ -34,7 +34,8 @@ export async function POST(request: Request) {
           ? body.entity.trim().slice(0, 120)
           : null,
       tranche: null,
-      level2: false,
+      // Ouvert d'emblée pour montrer l'accueil d'un investisseur déjà au niveau 2.
+      level2: body.level2 === true,
       onboarding: isEmailShaped(onboarding) ? onboarding : null,
     };
   } else if (current) {

@@ -12,12 +12,18 @@ import { GuidedTour, useTourAutostart, type TourFinish, type TourStep } from "./
 // Par défaut, trois étapes écrites ici : un mot d'accueil, « Pourquoi Minah ? »
 // mis en lumière dans la data room, puis le rendez-vous. Un onboarding sur
 // mesure (lib/onboarding) les remplace par son message, un paragraphe par
-// étape : le premier au centre, les suivants sur la fiche mise en avant.
+// étape : le premier au centre, chacun des suivants sur la fiche mise en
+// avant de même rang (le deuxième sur la première fiche, etc.), le dernier
+// sur toutes les fiches restantes. Des fiches mises en avant consécutives de
+// la même catégorie comptent pour une seule et s'allument ensemble (le deck
+// risk et l'architecture de risque, par exemple). Le bouton final ouvre la première fiche de
+// la dernière étape.
 
 const copy = {
   fr: {
     replay: "Revoir la présentation",
     tourActions: "Bouton : ouvrir {doc}.",
+    spotlight: "En lumière : {doc}",
     welcome: (name: string | null) =>
       `Bonjour${name ? ` ${name}` : ""}, merci de prendre le temps de regarder l'opportunité Minah. Cette data room réunit ce qu'il faut pour vous faire une idée du projet.`,
     why: "Commencez par « Pourquoi Minah ? » : le constat, l'opportunité, et les choix technologiques sur lesquels repose Minah.",
@@ -27,6 +33,7 @@ const copy = {
   en: {
     replay: "Replay the introduction",
     tourActions: "Button: open {doc}.",
+    spotlight: "Spotlight: {doc}",
     welcome: (name: string | null) =>
       `Hello${name ? ` ${name}` : ""}, thank you for taking the time to look at the Minah opportunity. This data room brings together what you need to form a view of the project.`,
     why: "Start with “Why Minah?”: the diagnosis, the opportunity, and the technology choices Minah is built on.",
@@ -66,6 +73,21 @@ export function Welcome({
     .map((p) => p.trim())
     .filter(Boolean);
   const custom = paragraphs.length > 0;
+  // Fiche mise en lumière par le paragraphe i (i >= 1) d'un message sur mesure.
+  // Fiches mises en lumière par le paragraphe i (i >= 1) d'un message sur
+  // mesure : celle de même rang, et pour le dernier toutes celles qui restent.
+  const groups: WelcomeStep[][] = [];
+  for (const st of steps) {
+    const g = groups[groups.length - 1];
+    if (g && g[0].category === st.category) g.push(st);
+    else groups.push([st]);
+  }
+  const focusFor = (i: number): WelcomeStep[] => {
+    if (i === 0 || groups.length === 0) return [];
+    const from = Math.min(i - 1, groups.length - 1);
+    return i === paragraphs.length - 1 ? groups.slice(from).flat() : groups[from];
+  };
+  const lastFocus = custom && paragraphs.length > 1 ? (focusFor(paragraphs.length - 1)[0] ?? null) : focus;
   const tour = useTourAutostart(
     preview ? null : tourKey,
     demo ? "session" : "local",
@@ -81,10 +103,17 @@ export function Welcome({
             <span className="grid h-6 w-6 place-items-center rounded-md bg-brand/10 font-mono text-[11px] font-semibold text-marsala">
               {String(i + 1).padStart(2, "0")}
             </span>
-            <p className="mt-3 whitespace-pre-line text-sm leading-6 text-neutral-700">{p}</p>
-            {i === paragraphs.length - 1 && focus && (
+            {focusFor(i).length > 0 && (
               <p className="mt-2 text-xs leading-5 text-neutral-600">
-                {c.tourActions.replace("{doc}", focus.title)}
+                {c.spotlight.replace("{doc}", focusFor(i).map((d) => d.title).join(", "))}
+              </p>
+            )}
+            <p className="mt-3 whitespace-pre-line text-sm leading-6 text-neutral-700">
+              {p.replace(/\*\*/g, "")}
+            </p>
+            {i === paragraphs.length - 1 && lastFocus && (
+              <p className="mt-2 text-xs leading-5 text-neutral-600">
+                {c.tourActions.replace("{doc}", lastFocus.title)}
               </p>
             )}
           </li>
@@ -94,21 +123,24 @@ export function Welcome({
   }
 
   const tourSteps: TourStep[] = custom
-    ? paragraphs.map((text, i) => ({ text, target: i === 0 ? null : focus ? "focus" : null }))
+    ? paragraphs.map((text, i) => {
+        const docs = focusFor(i);
+        return { text, target: docs.length ? docs.map((d) => `doc-${d.slug}`) : null };
+      })
     : [
         { text: c.welcome(firstName), target: null },
         {
           // Un onboarding sans message mais avec ses fiches garde la visite par
           // défaut : l'étape nomme alors la fiche mise en avant.
           text: !focus || focus.slug === "pourquoi-minah" ? c.why : c.startWith(focus.title),
-          target: focus ? "focus" : null,
+          target: focus ? `doc-${focus.slug}` : null,
         },
         { text: c.talk, target: "meeting" },
       ];
 
-  // Sur mesure : ouvrir la fiche mise en avant. Par défaut : le rendez-vous.
+  // Sur mesure : ouvrir la dernière fiche montrée. Par défaut : le rendez-vous.
   const finish: TourFinish | null = custom
-    ? focus && { label: focus.title, href: focus.href, external: focus.external }
+    ? lastFocus && { label: lastFocus.title, href: lastFocus.href, external: lastFocus.external }
     : {
         label: t(locale, "meeting.cta"),
         href: deal.meetingUrl,

@@ -20,6 +20,8 @@ export type RoadmapCopy = {
   labels: RoadmapLabels;
   today: string;
   intro: string;
+  /** Titre de section du tableau d'architecture (fiche investisseurs). */
+  boardTitle: string;
   defendableTitle: string;
   footer: string;
   updatedOn: string;
@@ -55,6 +57,7 @@ const fr: RoadmapCopy = {
   today: "Aujourd'hui",
   intro:
     "Ce qui est construit, où va Minah, et pourquoi l'infrastructure est défendable. Déplacez le curseur pour voir la plateforme évoluer, des fondations à la vision.",
+  boardTitle: "L'architecture, période par période",
   defendableTitle: "Pourquoi c'est défendable",
   footer: "Document confidentiel, réservé aux investisseurs sous NDA. Les phases sont indicatives.",
   updatedOn: "Mis à jour le {date}",
@@ -90,6 +93,7 @@ const en: RoadmapCopy = {
   today: "Today",
   intro:
     "What is built, where Minah is going, and why the infrastructure is defensible. Move the cursor to see the platform evolve, from the foundations to the vision.",
+  boardTitle: "The architecture, period by period",
   defendableTitle: "Why it is defensible",
   footer: "Confidential document, for investors under NDA. Phases are indicative.",
   updatedOn: "Updated on {date}",

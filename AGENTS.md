@@ -46,9 +46,13 @@ d'ouverture de la data room est séparé par environnement
 Conventions arrêtées le 11/09/2026 sur l'accueil et la fiche « La levée en
 cours », étendues le 14/09/2026 à « Pourquoi Minah ? », à la note de marché et
 au business model, puis à la term sheet Kupanda, au track record, au
-go-to-market et à l'équipe (PR 48). Seule la gestion du risque n'y est pas
-encore alignée : s'y conformer en passant dessus, plutôt que d'inventer un
-traitement de plus.
+go-to-market et à l'équipe (PR 48). Le 08/10/2026, la data room de niveau 2 a
+suivi : la roadmap technique (largeur `max-w-5xl`, sections numérotées, plus de
+police à empattements), la gestion du risque (section « La cascade de
+protection » à picto, intitulés en casse normale) et les scénarios de sortie.
+Les fiches en pause (go-to-market de niveau 2, roadmap écosystème, cap table)
+ne sont pas alignées. Pour toute fiche nouvelle, s'y conformer plutôt que
+d'inventer un traitement de plus.
 
 ## Titres
 
@@ -75,7 +79,8 @@ un nouveau picto sur une planche de variantes, pas au jugé ; le picto
 
 L'en-tête encadré est géré par `framedHeader` dans `page.tsx` : la levée,
 Pourquoi Minah, la note de marché, le business model, la term sheet, le track
-record, le go-to-market, l'équipe. La catégorie s'affiche sous le titre
+record, le go-to-market, l'équipe, la gestion du risque, les scénarios de
+sortie. La catégorie s'affiche sous le titre
 (`headerCategory`), sauf quand elle répète le titre (« Business model » sous
 « Business model Minah », « Kupanda » sous « Term sheet Kupanda », et de même
 pour le track record, le go-to-market et l'équipe). Le chapô d'une fiche
@@ -150,6 +155,11 @@ en 15 px sur carte blanche (3,07, sous le seuil AA de 4,5). Hervé l'a choisi
 en connaissance de cause le 14/09/2026, face à un orange assombri `#c2410c` à
 5,00. Ne pas en faire une règle pour les autres fiches.
 
+Autre exception, choisie par Hervé le 08/10/2026 : sur la cascade de risque,
+l'orange revient sur le filet et le point des en-têtes de colonnes (Niveau,
+Déclencheur, Protection), le texte restant en encre. En texte, cet orange
+donnait 2,87. Le picto « couches » de la cascade a été posé sans planche.
+
 Le texte en `text-neutral-400` échoue aussi (2,29 sur le fond) : `neutral-500`
 est à 4,31, `neutral-600` à 7,11. Préférer `neutral-600` pour le texte
 secondaire en 14 px et moins.
@@ -187,6 +197,13 @@ compte en généralisant l'en-tête à toutes les fiches.
   tient depuis la PR 48 à partir de 1 150 px et déborde encore en dessous.
 - Le go-to-market est une fiche de niveau 2 : une session démo de niveau 1
   tombe sur une 404.
+- Une pastille posée sur une ligne de frise : `bg-brand/10` est translucide,
+  la ligne se voit à travers le numéro. Mettre la pastille sur un fond opaque
+  (`bg-background`), comme sur la frise des sorties financières.
+- Fiches en pause : elles répondent 404 en démo. En local seulement, le cookie
+  `minah_preview_paused=1` les ouvre dans une session démo pour les relire.
+- Roadmap technique en vue d'ensemble : six colonnes de période, 126 px
+  minimum chacune pour tenir dans `max-w-5xl` sans défilement horizontal.
 
 ## Voix éditoriale
 

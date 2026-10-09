@@ -69,10 +69,26 @@ export function useTourAutostart(
 }
 
 export type TourStep = {
+  /** Retours à la ligne gardés, **gras** pour ce qui doit ressortir. */
   text: string;
-  /** Valeur `data-tour` de l'élément mis en lumière ; null : carte centrée. */
-  target: string | null;
+  /** Valeur(s) `data-tour` des éléments mis en lumière ; null : carte centrée. */
+  target: string | string[] | null;
 };
+
+type Box = { left: number; top: number; right: number; bottom: number };
+
+// **gras** dans le texte d'une étape.
+function withBold(text: string) {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+    part.startsWith("**") && part.endsWith("**") ? (
+      <strong key={i} className="font-semibold text-foreground">
+        {part.slice(2, -2)}
+      </strong>
+    ) : (
+      part
+    )
+  );
+}
 
 export type TourFinish = {
   label: string;
@@ -95,29 +111,40 @@ export function GuidedTour({
 }) {
   const c = copy[locale];
   const [index, setIndex] = useState(0);
-  const [rect, setRect] = useState<DOMRect | null>(null);
+  // Une boîte par élément mis en lumière, et leur enveloppe pour placer la carte.
+  const [boxes, setBoxes] = useState<Box[]>([]);
   const [narrow, setNarrow] = useState(false);
   const primary = useRef<HTMLElement>(null);
   const last = index === steps.length - 1;
-  const target = steps[index]?.target ?? null;
+  const rawTarget = steps[index]?.target ?? null;
+  const targetKey = rawTarget === null ? "" : [rawTarget].flat().join(" ");
 
-  // Suit la cible pendant le défilement doux et au redimensionnement.
+  // Suit les cibles pendant le défilement doux et au redimensionnement.
   useLayoutEffect(() => {
-    const el = target ? document.querySelector(`[data-tour="${target}"]`) : null;
+    const els = targetKey
+      ? targetKey
+          .split(" ")
+          .map((t) => document.querySelector(`[data-tour="${t}"]`))
+          .filter((el): el is Element => el !== null)
+      : [];
     const update = () => {
       setNarrow(window.innerWidth < 640);
-      setRect(el ? el.getBoundingClientRect() : null);
+      setBoxes(els.map((el) => el.getBoundingClientRect()));
     };
-    if (el) {
-      // Sur mobile, la carte occupe le bas de l'écran : la cible remonte
-      // juste sous l'en-tête collant au lieu d'être centrée.
-      if (window.innerWidth < 640) {
-        const header = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
-        const top = el.getBoundingClientRect().top + window.scrollY - header - 24;
-        window.scrollTo({ top, behavior: "smooth" });
-      } else {
-        el.scrollIntoView({ block: "center", behavior: "smooth" });
-      }
+    if (els.length) {
+      const all = els.map((el) => el.getBoundingClientRect());
+      const top = Math.min(...all.map((b) => b.top)) + window.scrollY;
+      const bottom = Math.max(...all.map((b) => b.bottom)) + window.scrollY;
+      // Sur mobile, la carte occupe le bas de l'écran : les cibles remontent
+      // juste sous l'en-tête collant. Au large, elles sont centrées.
+      const header = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
+      window.scrollTo({
+        top:
+          window.innerWidth < 640
+            ? top - header - 24
+            : top - Math.max(header + 24, (window.innerHeight - (bottom - top)) / 2),
+        behavior: "smooth",
+      });
     }
     update();
     window.addEventListener("scroll", update, true);
@@ -126,7 +153,7 @@ export function GuidedTour({
       window.removeEventListener("scroll", update, true);
       window.removeEventListener("resize", update);
     };
-  }, [target]);
+  }, [targetKey]);
 
   useEffect(() => {
     primary.current?.focus({ preventScroll: true });
@@ -142,8 +169,18 @@ export function GuidedTour({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose, steps.length]);
 
-  // Carte sous la cible s'il y a la place, au-dessus sinon ; centrée quand il
-  // n'y a pas de cible ; en bas d'écran sur mobile.
+  // Enveloppe des cibles : c'est elle que la carte évite.
+  const rect: Box | null = boxes.length
+    ? {
+        left: Math.min(...boxes.map((b) => b.left)),
+        top: Math.min(...boxes.map((b) => b.top)),
+        right: Math.max(...boxes.map((b) => b.right)),
+        bottom: Math.max(...boxes.map((b) => b.bottom)),
+      }
+    : null;
+
+  // Carte sous les cibles s'il y a la place, au-dessus sinon ; centrée quand
+  // il n'y a pas de cible ; en bas d'écran sur mobile.
   let cardStyle: React.CSSProperties;
   if (narrow) {
     cardStyle = { left: GAP, right: GAP, bottom: GAP };
@@ -173,19 +210,27 @@ export function GuidedTour({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      {rect ? (
-        // Le halo sombre est l'ombre de la découpe : la cible reste nette.
-        <div
-          aria-hidden
-          className="pointer-events-none fixed rounded-xl transition-all duration-300 ease-out"
-          style={{
-            left: rect.left - PAD,
-            top: rect.top - PAD,
-            width: rect.width + PAD * 2,
-            height: rect.height + PAD * 2,
-            boxShadow: "0 0 0 9999px rgba(28, 15, 12, 0.55)",
-          }}
-        />
+      {boxes.length ? (
+        // Voile percé d'une découpe par cible : elles restent nettes.
+        <svg aria-hidden className="pointer-events-none fixed inset-0 h-full w-full" data-tour-veil>
+          <defs>
+            <mask id="tour-holes">
+              <rect width="100%" height="100%" fill="white" />
+              {boxes.map((b, i) => (
+                <rect
+                  key={i}
+                  x={b.left - PAD}
+                  y={b.top - PAD}
+                  width={b.right - b.left + PAD * 2}
+                  height={b.bottom - b.top + PAD * 2}
+                  rx={12}
+                  fill="black"
+                />
+              ))}
+            </mask>
+          </defs>
+          <rect width="100%" height="100%" fill="rgba(28, 15, 12, 0.55)" mask="url(#tour-holes)" />
+        </svg>
       ) : (
         <div aria-hidden className="pointer-events-none fixed inset-0 bg-[rgba(28,15,12,0.55)]" />
       )}
@@ -204,7 +249,7 @@ export function GuidedTour({
           </svg>
         </button>
         <p className="whitespace-pre-line pr-7 text-[15px] leading-[1.8] text-neutral-700">
-          {steps[index]?.text}
+          {withBold(steps[index]?.text ?? "")}
         </p>
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
@@ -212,8 +257,9 @@ export function GuidedTour({
             {index + 1}/{steps.length}
           </span>
           <div className="flex flex-wrap items-center justify-end gap-3">
+            {/* Sur mobile, la croix suffit : la ligne garde Retour et l'action. */}
             {!(last && !finish) && (
-              <button onClick={onClose} className={`rounded text-sm text-neutral-600 hover:underline ${FOCUS}`}>
+              <button onClick={onClose} className={`hidden rounded text-sm text-neutral-600 hover:underline sm:inline ${FOCUS}`}>
                 {last ? c.close : c.skip}
               </button>
             )}
