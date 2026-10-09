@@ -139,7 +139,7 @@ const copy: Record<
           fig: "+5 M€",
           figLabel: "en discussion",
           detail:
-            "Nous sommes invités là où se concentre le capital : World Economic Forum à Davos, Africa CEO Forum, Africa Financial Industry Summit. C'est à l'une de ces tables, au Qatar, qu'un fonds américain nous a rejoints pour co-structurer Kupanda.",
+            "Nous sommes invités là où se concentre le capital : World Economic Forum à Davos, Africa CEO Forum, Africa Financial Industry Summit. C'est à l'une de ces tables, au Qatar, qu'un fonds américain nous a rejoints pour co-structurer Kupanda. Côté brokers, Atlantic Financials, broker londonien, aligne 5 M€ de tickets pour finaliser le placement de Kupanda I et Kupanda II. Nous visons cinq accords de distribution à partir de ce premier test.",
         },
         {
           id: "chain",
@@ -248,7 +248,7 @@ const copy: Record<
           fig: "+€5M",
           figLabel: "in discussion",
           detail:
-            "We are invited where capital concentrates: the World Economic Forum in Davos, the Africa CEO Forum, the Africa Financial Industry Summit. It was at one of these tables, in Qatar, that an American fund joined us to co-structure Kupanda.",
+            "We are invited where capital concentrates: the World Economic Forum in Davos, the Africa CEO Forum, the Africa Financial Industry Summit. It was at one of these tables, in Qatar, that an American fund joined us to co-structure Kupanda. On the broker side, Atlantic Financials, a London broker, is lining up €5M of tickets to finalise the placement of Kupanda I and Kupanda II. We aim to move from this first test to five distribution agreements.",
         },
         {
           id: "chain",
