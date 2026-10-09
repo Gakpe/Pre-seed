@@ -117,7 +117,7 @@ const copy: Record<
       label: "Capital-in",
       sub: "qui apporte les investisseurs",
       fig: "100 M€",
-      figLabel: "de capital-in d'ici fin 2027",
+      figLabel: "de capital-in d'ici fin 2028",
       detail:
         "Trois canaux amènent les investisseurs, du particulier fortuné à la ligne institutionnelle : un réseau d'apporteurs, les institutions et brokers rencontrés aux grandes tables du continent, et la liquidité on-chain.",
       rows: [
@@ -194,7 +194,7 @@ const copy: Record<
       ],
     },
     level2:
-      "Une fois votre intérêt manifesté, le niveau 2 ouvre notre roadmap écosystème : l'ordre dans lequel nous activons ce réseau, et la structure qui le transforme en volume, étape par étape. Le réseau, nous l'avons déjà ; la roadmap montre comment nous l'adressons pour atteindre 100 M€ de capital-in d'ici fin 2027.",
+      "Une fois votre intérêt manifesté, le niveau 2 ouvre notre roadmap écosystème : l'ordre dans lequel nous activons ce réseau, et la structure qui le transforme en volume, étape par étape. Le réseau, nous l'avons déjà ; la roadmap montre comment nous l'adressons pour atteindre 100 M€ de capital-in d'ici fin 2028.",
   },
   en: {
     lead: [
@@ -225,7 +225,7 @@ const copy: Record<
       label: "Capital-in",
       sub: "who brings the investors",
       fig: "€100M",
-      figLabel: "capital-in by end-2027",
+      figLabel: "capital-in by end-2028",
       detail:
         "Three channels bring in investors, from the wealthy individual to the institutional line: a network of introducers, the institutions and brokers met at the continent's key tables, and on-chain liquidity.",
       rows: [
@@ -302,7 +302,7 @@ const copy: Record<
       ],
     },
     level2:
-      "Once you have expressed interest, level 2 opens our ecosystem roadmap: the order in which we activate this network, and the structure that turns it into volume, step by step. The network is already there; the roadmap shows how we work it to reach €100M of capital-in by end-2027.",
+      "Once you have expressed interest, level 2 opens our ecosystem roadmap: the order in which we activate this network, and the structure that turns it into volume, step by step. The network is already there; the roadmap shows how we work it to reach €100M of capital-in by end-2028.",
   },
 };
 
