@@ -90,8 +90,8 @@ const copy: Record<
 > = {
   fr: {
     lead: [
-      "Notre force, c'est l'accès. Nous avons formalisé une **machine à réseau** qui nous connecte aux bonnes personnes des deux côtés : le capital qui finance, et les entreprises génératrices de cash qui font les meilleurs sous-jacents en Afrique.",
-      "Ces relations sont notre **unfair advantage**. Elles viennent de la diaspora et de deux carrières construites autour de l'investissement africain, au contact des dirigeants, des ministres et des investisseurs du continent. Elles nourrissent nos événements propriétaires **Minah Circles** et nous ouvrent les tables où se concentre le capital international : World Economic Forum, Africa CEO Forum, Financial Times Africa Summit.",
+      "Minah repose sur un réseau. En six ans de carrière, nos deux fondateurs ont tissé des relations des deux côtés de chaque deal : le capital qui finance, et les entreprises, les fonds et les États qui génèrent les meilleurs sous-jacents en Afrique. Nous en avons fait une **machine à réseau**, que chaque nouvelle stratégie met au travail.",
+      "Ce réseau vient de la diaspora et de deux carrières construites autour de l'investissement africain, au contact des dirigeants, des ministres et des investisseurs du continent. Il nourrit nos événements **Minah Circles** et nous ouvre les grands événements mondiaux où se concentre le capital, comme le World Economic Forum et l'Africa CEO Forum.",
     ],
     foundersLabel: "Les deux réseaux",
     founders: [
@@ -199,8 +199,8 @@ const copy: Record<
   },
   en: {
     lead: [
-      "Our strength is access. We have formalised a **relationship machine** that connects us to the right people on both sides: the capital that funds, and the cash-generative businesses that make the best underlyings in Africa.",
-      "These relationships are our **unfair advantage**. They come from the diaspora and from two careers built around African investment, working alongside the continent's leaders, ministers and investors. They feed our proprietary **Minah Circles** events and open the tables where international capital concentrates: the World Economic Forum, the Africa CEO Forum, the Financial Times Africa Summit.",
+      "Minah is built on a network. Over six years of careers, our two founders have built relationships on both sides of every deal: the capital that funds, and the companies, funds and States that generate the best underlyings in Africa. We have turned this into a **relationship machine**, which every new strategy puts to work.",
+      "This network comes from the diaspora and from two careers built around African investment, alongside the continent's leaders, ministers and investors. It feeds our **Minah Circles** events and opens the key global events where capital concentrates, such as the World Economic Forum and the Africa CEO Forum.",
     ],
     foundersLabel: "The two networks",
     founders: [
