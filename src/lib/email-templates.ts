@@ -82,7 +82,7 @@ Minah`,
 
 Merci pour votre marque d'intérêt, elle compte beaucoup pour nous. C'est avec plaisir que nous vous ouvrons le niveau 2 de la data room, la partie du dossier que nous réservons aux investisseurs qui avancent avec nous.
 
-Vous y trouverez le go-to-market complet, l'architecture de risque et les scénarios de protection, le deck risk Kupanda, le contrat cadre avec la République de Zambie, le pacte d'associés (draft), la table de capitalisation interactive et les scénarios de sortie :
+Vous y trouverez la roadmap écosystème, l'architecture de risque et les scénarios de protection, le deck risk Kupanda, le contrat cadre avec la République de Zambie, le pacte d'associés (draft), la table de capitalisation interactive et les scénarios de sortie :
 ${PORTAL}
 
 Ces documents se lisent mieux avec leur contexte. Nous vous proposons un échange dédié pour les parcourir ensemble et répondre à vos questions :
@@ -95,7 +95,7 @@ Minah`,
 
 Thank you for expressing your interest, it means a great deal to us. We are pleased to open level 2 of the data room to you, the part of the file we reserve for investors moving forward with us.
 
-You will find the full go-to-market, the risk architecture and protection scenarios, the Kupanda risk deck, the framework agreement with the Republic of Zambia, the shareholders' agreement (draft), the interactive cap table and the exit scenarios:
+You will find the ecosystem roadmap, the risk architecture and protection scenarios, the Kupanda risk deck, the framework agreement with the Republic of Zambia, the shareholders' agreement (draft), the interactive cap table and the exit scenarios:
 ${PORTAL}
 
 These documents read better with their context. We suggest a dedicated call to go through them together and answer your questions:

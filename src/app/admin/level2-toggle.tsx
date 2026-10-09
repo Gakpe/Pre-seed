@@ -81,8 +81,8 @@ export function Level2Toggle({
             </h3>
             <p className="mt-2 text-sm leading-6 text-neutral-600">
               Cette personne verra la cap table, le contrat cadre, le pacte
-              d&apos;associés, les scénarios de sortie, la gestion des risques, le
-              go-to-market complet et la roadmap technique.
+              d&apos;associés, les scénarios de sortie, la gestion des risques, la
+              roadmap écosystème et la roadmap technique.
             </p>
             <p className="mt-2 text-sm leading-6 text-neutral-600">
               Rien ne lui est envoyé : à vous de la prévenir, avec le mail type

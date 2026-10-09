@@ -18,7 +18,6 @@ import { TeamProfiles } from "./team-profiles";
 import { TrackRecord } from "./track-record";
 import { Fundraise } from "./fundraise";
 import { WhyMinah } from "./why-minah";
-import { GoToMarket } from "./go-to-market";
 import { GtmMachine } from "./gtm-machine";
 import { TermSheet } from "./term-sheet";
 import { KupandaInterest } from "./kupanda-interest";
@@ -116,7 +115,6 @@ export default async function DocPage({
     doc.slug === "la-levee" ||
     doc.slug === "pourquoi-minah" ||
     doc.slug === "term-sheet-kupanda" ||
-    doc.slug === "go-to-market" ||
     note;
 
   // Ces fiches débordent en largeur, mais leur chapô reste dans une colonne
@@ -140,13 +138,12 @@ export default async function DocPage({
     doc.slug === "la-levee" ||
     doc.slug === "pourquoi-minah" ||
     doc.slug === "term-sheet-kupanda" ||
-    doc.slug === "go-to-market" ||
     gtmApercu ||
     note;
 
   // En-tête encadré (voir AGENTS.md). « Pourquoi Minah » et la note de marché
   // gardent leur catégorie, derrière le titre. Le business model, la term
-  // sheet, le track record, les deux go-to-market et l'équipe non : leur
+  // sheet, le track record, l'aperçu go-to-market et l'équipe non : leur
   // catégorie répète le titre.
   const businessModel = doc.slug === "business-model";
   const framedHeader =
@@ -154,7 +151,6 @@ export default async function DocPage({
     doc.slug === "pourquoi-minah" ||
     doc.slug === "term-sheet-kupanda" ||
     doc.slug === "track-record" ||
-    doc.slug === "go-to-market" ||
     doc.slug === "go-to-market-apercu" ||
     team ||
     roadmap ||
@@ -223,7 +219,6 @@ export default async function DocPage({
 
       {/* Certaines fiches portent un contenu riche en plus de leur texte. */}
       {doc.slug === "pourquoi-minah" && <WhyMinah locale={locale} />}
-      {doc.slug === "go-to-market" && <GoToMarket locale={locale} />}
       {gtmApercu && <GtmMachine locale={locale} />}
       {doc.slug === "term-sheet-kupanda" && (
         <>
