@@ -13,15 +13,18 @@ export const RETIRED_SLUGS = new Set([
   // 08/10/2026 (Julien).
   "contrat-cadre-zambie",
   "pacte-associes",
+  // 09/10/2026 (Coralie) : fusionnée dans la roadmap écosystème, qui devient
+  // la seule fiche de la section. Son composant a été supprimé du code ; la
+  // ligne reste en base.
+  "go-to-market",
 ]);
 
 // En pause : toujours listées, mais grisées et non cliquables, avec la mention
 // « en cours de mise à jour ». Leur page n'est ouverte qu'aux admins (hors
 // démo), le temps de les retravailler.
 export const UNAVAILABLE_SLUGS = new Set([
-  // 08/10/2026 (Julien) : le go-to-market et la roadmap écosystème sont en
-  // train d'être fusionnés.
-  "go-to-market",
+  // 09/10/2026 (Coralie) : la fusion go-to-market → roadmap écosystème est
+  // dans le code, la fiche reste cachée le temps de la valider.
   "roadmap-ecosysteme",
   // 08/10/2026 (Julien).
   "cap-table",

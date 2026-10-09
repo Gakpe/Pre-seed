@@ -20,7 +20,6 @@ import { TeamProfiles } from "./team-profiles";
 import { TrackRecord } from "./track-record";
 import { Fundraise } from "./fundraise";
 import { WhyMinah } from "./why-minah";
-import { GoToMarket } from "./go-to-market";
 import { GtmMachine } from "./gtm-machine";
 import { TermSheet } from "./term-sheet";
 import { KupandaInterest } from "./kupanda-interest";
@@ -133,7 +132,6 @@ export default async function DocPage({
     doc.slug === "la-levee" ||
     doc.slug === "pourquoi-minah" ||
     doc.slug === "term-sheet-kupanda" ||
-    doc.slug === "go-to-market" ||
     doc.slug === "scenarios-sortie" ||
     note;
 
@@ -159,7 +157,6 @@ export default async function DocPage({
     doc.slug === "la-levee" ||
     doc.slug === "pourquoi-minah" ||
     doc.slug === "term-sheet-kupanda" ||
-    doc.slug === "go-to-market" ||
     doc.slug === "scenarios-sortie" ||
     doc.slug === "gestion-du-risque" ||
     gtmApercu ||
@@ -167,7 +164,7 @@ export default async function DocPage({
 
   // En-tête encadré (voir AGENTS.md). « Pourquoi Minah » et la note de marché
   // gardent leur catégorie, derrière le titre. Le business model, la term
-  // sheet, le track record, les deux go-to-market et l'équipe non : leur
+  // sheet, le track record, l'aperçu go-to-market et l'équipe non : leur
   // catégorie répète le titre.
   const businessModel = doc.slug === "business-model";
   const framedHeader =
@@ -175,7 +172,6 @@ export default async function DocPage({
     doc.slug === "pourquoi-minah" ||
     doc.slug === "term-sheet-kupanda" ||
     doc.slug === "track-record" ||
-    doc.slug === "go-to-market" ||
     doc.slug === "go-to-market-apercu" ||
     doc.slug === "scenarios-sortie" ||
     doc.slug === "gestion-du-risque" ||
@@ -249,7 +245,6 @@ export default async function DocPage({
 
       {/* Certaines fiches portent un contenu riche en plus de leur texte. */}
       {doc.slug === "pourquoi-minah" && <WhyMinah locale={locale} />}
-      {doc.slug === "go-to-market" && <GoToMarket locale={locale} />}
       {gtmApercu && <GtmMachine locale={locale} />}
       {doc.slug === "term-sheet-kupanda" && (
         <>
@@ -287,10 +282,10 @@ export default async function DocPage({
         <CapTableInteractive title={t(locale, "docs.captable")} locale={locale} />
       )}
       {comparables && <Comparables locale={locale} />}
-      {/* Encore en brouillon (décision du 05/10/2026) : bandeau et mentions
-          « à confirmer » restent visibles, le temps que Coralie la retravaille.
-          Personne n'a le niveau 2 hors de l'équipe. Retirer `draft` pour publier. */}
-      {doc.slug === "roadmap-ecosysteme" && <EcosystemRoadmap locale={locale} draft />}
+      {/* Publiée le 09/10/2026 après la fusion du go-to-market : la fiche
+          unique de la section. Repasser `draft` pour réafficher le bandeau
+          brouillon et les mentions « à confirmer ». */}
+      {doc.slug === "roadmap-ecosysteme" && <EcosystemRoadmap locale={locale} />}
       {doc.slug === "vision-technique" && (
         <VisionTechnique
           data={getPublicRoadmap(null, roadmapOverrides, locale)}

@@ -103,7 +103,7 @@ const copy: Record<
       {
         name: "Coralie Lolliot",
         photo: "/brand/gtm/slide/founder-coralie.jpg",
-        focus: "Secteur public, corporates et scale-ups africaines",
+        focus: "Secteur public, investisseurs, corporates et scale-ups africaines",
       },
     ],
     title: "Une machine qui transforme les relations en volume",
@@ -212,7 +212,7 @@ const copy: Record<
       {
         name: "Coralie Lolliot",
         photo: "/brand/gtm/slide/founder-coralie.jpg",
-        focus: "Public sector, corporates and African scale-ups",
+        focus: "Public sector, investors, corporates and African scale-ups",
       },
     ],
     title: "A machine that turns relationships into volume",
@@ -431,9 +431,10 @@ export function GtmMachine({ locale }: { locale: Locale }) {
         </div>
         <aside className="self-center border-t border-foreground/10 pt-6 md:border-t-0 md:border-l md:pt-0 md:pl-8">
           <p className="text-sm text-neutral-600">{c.foundersLabel}</p>
-          <ul className="mt-4 space-y-4">
+          {/* Les deux fondateurs au même niveau : côte à côte, même rang. */}
+          <ul className="mt-4 grid grid-cols-2 gap-5">
             {c.founders.map((f) => (
-              <li key={f.name} className="flex items-center gap-3.5">
+              <li key={f.name} className="flex flex-col gap-2.5">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={f.photo}
@@ -442,7 +443,7 @@ export function GtmMachine({ locale }: { locale: Locale }) {
                 />
                 <span>
                   <span className="block text-sm font-semibold text-foreground">{f.name}</span>
-                  <span className="block text-sm leading-5 text-neutral-600">{f.focus}</span>
+                  <span className="mt-0.5 block text-sm leading-5 text-neutral-600">{f.focus}</span>
                 </span>
               </li>
             ))}

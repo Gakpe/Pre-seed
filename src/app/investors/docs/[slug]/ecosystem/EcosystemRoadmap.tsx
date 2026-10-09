@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Locale } from "@/lib/i18n";
-import { ACTORS, CATEGORIES, CATEGORY_LABEL, ECO_TODAY, GROWTH_PHASES, NARRATIVE, STREAMS, STREAM_META, type Actor, type GrowthPhase, type Photo, type Stream } from "@/lib/ecosystem/seed";
+import { ACTORS, CATEGORIES, CATEGORY_LABEL, ECO_TODAY, FOUNDERS_INTRO, GROWTH_PHASES, NARRATIVE, STREAMS, STREAM_META, type Actor, type Company, type GrowthPhase, type Layer, type Lever, type Offering, type Panel, type Partner, type Photo, type Stream } from "@/lib/ecosystem/seed";
 import { useState as useLocalState } from "react";
 import { ecoCopy } from "@/lib/ecosystem/i18n";
 
@@ -17,6 +17,10 @@ const FAINT = "#A39A8E";
 const LINE = "#E6E1D4";
 const HAIRLINE = "#F4F2EB";
 const ACCENT = "#E27B30";
+// Orange foncé pour les chiffres orangés sur fond clair : #E27B30 tombe à ~2,9
+// de contraste (sous le plancher WCAG), #9A4B10 passe à ~6,2. On garde l'ACCENT
+// vif pour les fonds, badges et puces, l'ACCENT_TEXT pour le texte.
+const ACCENT_TEXT = "#9A4B10";
 const SURFACE = "#FFFFFE";
 const SERIF = "Georgia, 'Times New Roman', serif";
 
@@ -47,11 +51,11 @@ function rich(text: string) {
 
 const smallCaps: React.CSSProperties = { fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT };
 
-export function EcosystemRoadmap({ locale, draft = false }: { locale: Locale; /** Aperçu admin : bandeau et mentions « à confirmer ». */ draft?: boolean }) {
+export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorcage" }: { locale: Locale; /** Aperçu admin : bandeau et mentions « à confirmer ». */ draft?: boolean; /** Phase ouverte au chargement. */ initialPhase?: GrowthPhase }) {
   const c = ecoCopy(locale);
   const l: Lang = locale === "en" ? "en" : "fr";
   const dateLocale = l === "fr" ? "fr-FR" : "en-US";
-  const [phase, setPhase] = useState<GrowthPhase>("traction");
+  const [phase, setPhase] = useState<GrowthPhase>(initialPhase);
   const [overview, setOverview] = useState(false);
   const idx = phaseIdx(phase);
   const current = GROWTH_PHASES[idx];
@@ -124,18 +128,153 @@ export function EcosystemRoadmap({ locale, draft = false }: { locale: Locale; /*
   };
 
   const photoStrip = (photos: Photo[]) => (
-    <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(3, photos.length)}, 1fr)`, gap: 10, marginTop: 14 }}>
-      {photos.slice(0, 6).map((p) => (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginTop: 14 }}>
+      {photos.map((p) => (
         <figure key={p.src} style={{ margin: 0 }}>
           <div style={{ aspectRatio: "16 / 10", overflow: "hidden", borderRadius: 10, background: HAIRLINE }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={p.src} alt={p.t[l]} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            <img src={p.src} alt={p.t[l]} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: p.pos ?? "center", display: "block" }} />
           </div>
           <figcaption style={{ marginTop: 6, fontSize: 11.5, lineHeight: 1.45, color: MUTED }}>
             <span style={{ color: INK, fontWeight: 600 }}>{p.t[l]}</span>
-            {p.d && <> <span>{p.d[l]}</span></>}
+            {p.d && <>{" - "}<span>{p.d[l]}</span></>}
           </figcaption>
         </figure>
+      ))}
+    </div>
+  );
+
+  // En-tête du co-structurant (Africa Rise) : nom en tête, dirigeants en
+  // regard, chacun avec son petit portrait rond quand on en a un.
+  const partnerHeader = (pt: Partner) => (
+    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px 20px", marginBottom: 14, paddingBottom: 12, borderBottom: `1px solid ${HAIRLINE}` }}>
+      <span style={{ fontFamily: SERIF, fontSize: 16, fontWeight: 600, color: INK }}>{pt.name}</span>
+      {pt.people?.map((pe) => (
+        <span key={pe.name} style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12.5, color: MUTED }}>
+          {pe.photo && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={pe.photo} alt={pe.name} style={{ width: 28, height: 28, borderRadius: 999, objectFit: "cover", border: `1px solid ${LINE}`, display: "block" }} />
+          )}
+          <span><span style={{ color: INK, fontWeight: 600 }}>{pe.name}</span> {pe.role[l]}</span>
+        </span>
+      ))}
+    </div>
+  );
+
+  // La thèse de gestion du risque : intitulé explicite, puis les niveaux de
+  // protection numérotés (numéro orangé, intitulé en encre, précision en gris).
+  const riskLayers = (layers: Layer[]) => (
+    <div style={{ marginTop: 16, borderTop: `1px solid ${HAIRLINE}`, paddingTop: 12 }}>
+      <div style={{ ...smallCaps, color: MUTED }}>{l === "fr" ? "La thèse de gestion du risque" : "The risk management thesis"}</div>
+      <p style={{ margin: "4px 0 10px", fontSize: 12.5, color: "#4B4039" }}>
+        {l === "fr" ? "Nos souscripteurs sont toujours en dette senior, protégés par cinq niveaux :" : "Our subscribers are always senior debt, protected by five layers:"}
+      </p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: "8px 24px" }}>
+        {layers.map((ly) => (
+          <div key={ly.n} style={{ display: "flex", gap: 8, alignItems: "baseline", fontSize: 13, lineHeight: 1.5 }}>
+            <span style={{ fontFamily: SERIF, color: ACCENT, minWidth: 12 }}>{ly.n}</span>
+            <span style={{ color: INK, fontWeight: 600 }}>{ly.title[l]}</span>
+            <span style={{ color: MUTED }}>{ly.detail[l]}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  // Encart « liquidité qui arrive » : montant en vedette, colonnes à côté.
+  const liquidityPanel = (pnl: Panel) => (
+    <div style={{ marginTop: 16, border: `1px dashed ${ACCENT}`, borderRadius: 12, padding: "16px 18px", background: "#FFFBF6" }}>
+      <div style={{ ...smallCaps, color: MUTED, marginBottom: 10 }}>{pnl.title[l]}</div>
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: "10px 32px" }}>
+        <div>
+          <div style={{ fontFamily: SERIF, fontSize: 26, lineHeight: 1, color: ACCENT_TEXT }}>{pnl.amount[l]}</div>
+          <div style={{ ...smallCaps, color: FAINT, marginTop: 5 }}>{pnl.note[l]}</div>
+        </div>
+        {pnl.cols.map((col, i) => (
+          <div key={i} style={{ minWidth: 150 }}>
+            <div style={{ fontSize: 14, fontWeight: 600, color: INK }}>{col.h[l]}</div>
+            <div style={{ fontSize: 12.5, color: MUTED, marginTop: 2 }}>{col.d[l]}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  // Stratégie à venir, en carte « offre » : badge d'ouverture, descriptif et
+  // une ligne de métriques jointives (rendement, ticket, allocation, durée).
+  const offeringCards = (offerings: Offering[]) => (
+    <div style={{ marginTop: 18, display: "grid", gap: 12 }}>
+      {offerings.map((o) => (
+        <div key={o.name.en} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "16px 18px", background: SURFACE }}>
+          {o.partner && partnerHeader(o.partner)}
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", justifyContent: "space-between", gap: "6px 16px" }}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
+              <span style={{ fontFamily: SERIF, fontSize: 18, color: INK }}>{o.name[l]}</span>
+              {o.tag && <span style={{ fontSize: 12.5, color: MUTED }}>{o.tag[l]}</span>}
+              {o.logos?.map((lg) => (
+                <span key={lg.name} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12.5, color: MUTED }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={lg.src} alt="" style={{ height: 16, width: "auto", maxWidth: 70, objectFit: "contain", display: "block" }} />
+                  {lg.name}
+                </span>
+              ))}
+            </div>
+            {o.status && <span style={{ ...smallCaps, color: ACCENT_TEXT, border: `1px solid ${ACCENT}`, borderRadius: 999, padding: "3px 10px" }}>{o.status[l]}</span>}
+          </div>
+          {o.subtitle && <p style={{ margin: "8px 0 0", fontSize: 13.5, color: "#4B4039", lineHeight: 1.7 }}>{rich(o.subtitle[l])}</p>}
+          <div style={{ marginTop: 14, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 1, background: LINE, border: `1px solid ${LINE}`, borderRadius: 10, overflow: "hidden" }}>
+            {o.metrics.map((m, i) => (
+              <div key={i} style={{ background: m.accent ? ACCENT : SURFACE, padding: "10px 12px" }}>
+                <div style={{ ...smallCaps, color: m.accent ? "rgba(255,255,255,0.92)" : FAINT }}>{m.k[l]}</div>
+                <div style={{ fontFamily: SERIF, fontSize: 17, marginTop: 4, color: m.accent ? "#fff" : INK }}>{m.v[l]}</div>
+              </div>
+            ))}
+          </div>
+          {o.layers && o.layers.length > 0 && riskLayers(o.layers)}
+          {o.companies && companyCards(o.companies.list, o.companies.title[l])}
+          {o.note && <p style={{ margin: "10px 0 0", fontSize: 12.5, color: MUTED, fontStyle: "italic" }}>{o.note[l]}</p>}
+        </div>
+      ))}
+    </div>
+  );
+
+  // Scale-ups et opérateurs : cartes à chiffres clés, même grammaire que le
+  // reste des sous-jacents (carte encadrée, nom en serif, puces orangées).
+  const companyCards = (companies: Company[], title?: string) => (
+    <div style={{ marginTop: 18 }}>
+      <div style={{ ...smallCaps, color: MUTED, marginBottom: 10 }}>{title ?? (l === "fr" ? "Scale-ups et opérateurs" : "Scale-ups & operators")}</div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 10 }}>
+        {companies.map((co) => (
+          <div key={co.name[l]} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "14px 16px", background: SURFACE }}>
+            <div style={{ fontFamily: SERIF, fontSize: 16, color: INK, lineHeight: 1.2 }}>
+              {co.name[l]}
+              {draft && co.aConfirmer && <span style={{ marginLeft: 6, fontSize: 10, color: FAINT }}>({c.toConfirm})</span>}
+            </div>
+            <div style={{ fontSize: 12, color: FAINT, marginTop: 3 }}>{co.tag[l]}</div>
+            <ul style={{ listStyle: "none", margin: "10px 0 0", padding: 0, display: "flex", flexDirection: "column", gap: 6 }}>
+              {co.figs.map((f, i) => (
+                <li key={i} style={{ display: "flex", gap: 8, fontSize: 12.5, lineHeight: 1.5, color: "#4B4039" }}>
+                  <span aria-hidden style={{ marginTop: 7, width: 4, height: 4, borderRadius: 999, background: ACCENT, flexShrink: 0 }} />
+                  <span>{f[l]}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  // Leviers de la machine réseau : cartes avec intitulé, chiffre-phare et une
+  // phrase. Une vraie mise en page du récit, pas un bloc de texte.
+  const leverCards = (levers: Lever[]) => (
+    <div style={{ marginTop: 16, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 10 }}>
+      {levers.map((lv, i) => (
+        <div key={i} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "14px 16px", background: SURFACE }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: INK }}>{lv.title[l]}</div>
+          <div style={{ fontFamily: SERIF, fontSize: 20, color: ACCENT_TEXT, margin: "6px 0 8px", lineHeight: 1.15 }}>{lv.metric[l]}</div>
+          <p style={{ margin: 0, fontSize: 13, lineHeight: 1.6, color: "#4B4039" }}>{rich(lv.text[l])}</p>
+        </div>
       ))}
     </div>
   );
@@ -144,6 +283,21 @@ export function EcosystemRoadmap({ locale, draft = false }: { locale: Locale; /*
     <div className="mt-8">
       {draft && <p style={{ margin: "0 0 20px", padding: "10px 14px", borderRadius: 8, background: "#FCE6D3", color: "#6B3A0E", fontSize: 13 }}>{c.draftBanner}</p>}
       <p style={{ fontSize: 15, color: MUTED, margin: "0 0 24px", maxWidth: 680, lineHeight: 1.6 }}>{c.intro}</p>
+
+      {/* ── Le réseau des fondateurs, premier actif : l'intro avant la frise ── */}
+      <section style={{ background: SURFACE, border: `1px solid ${LINE}`, borderRadius: 16, padding: "22px 28px 24px", marginBottom: 20 }}>
+        <div style={{ fontFamily: SERIF, fontSize: 19, color: INK }}>{FOUNDERS_INTRO.title[l]}</div>
+        <p style={{ margin: "8px 0 0", fontSize: 14, lineHeight: 1.7, color: "#4B4039", maxWidth: 760 }}>{FOUNDERS_INTRO.body[l]}</p>
+        <div style={{ marginTop: 16, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 10 }}>
+          {FOUNDERS_INTRO.people.map((pe) => (
+            <div key={pe.name} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "14px 16px" }}>
+              <div style={{ ...smallCaps, color: MUTED }}>{pe.side[l]}</div>
+              <div style={{ fontFamily: SERIF, fontSize: 16, color: INK, marginTop: 4 }}>{pe.name}</div>
+              <p style={{ margin: "6px 0 0", fontSize: 13, lineHeight: 1.6, color: "#4B4039" }}>{pe.text[l]}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* ── Bandeau fixe : où l'on est, ce qu'on regarde, où l'on va. Il ne
           s'affiche qu'une fois les volumes défilés hors de l'écran. ── */}
@@ -266,8 +420,81 @@ export function EcosystemRoadmap({ locale, draft = false }: { locale: Locale; /*
                   </div>
                   <div style={{ minWidth: 0 }}>
                     <p style={{ margin: 0, fontSize: 15, lineHeight: 1.8, color: "#4B4039", maxWidth: 760 }}>{rich(ch.text[l])}</p>
-                    {actorGrid(s)}
+                    {ch.levers && ch.levers.length > 0 && leverCards(ch.levers)}
+                    {/* Graphique de convergence, en rail : un tombant sous
+                        chaque carte, un collecteur horizontal, une descente
+                        orangée vers le nœud central. */}
+                    {ch.hub && (
+                      <div>
+                        <div aria-hidden style={{ position: "relative", height: 36 }}>
+                          {[12.5, 37.5, 62.5, 87.5].map((x) => (
+                            <span key={x} style={{ position: "absolute", left: `${x}%`, top: 0, width: 1, height: 13, background: "#D9D2C2" }} />
+                          ))}
+                          <span style={{ position: "absolute", left: "12.5%", right: "12.5%", top: 13, height: 1, background: "#D9D2C2" }} />
+                          <span style={{ position: "absolute", left: "50%", top: 13, width: 2, height: 23, marginLeft: -1, background: ACCENT }} />
+                        </div>
+                        <div style={{ margin: "0 auto", maxWidth: 380, borderRadius: 12, borderTop: `3px solid ${ACCENT}`, background: INK, color: "#fff", textAlign: "center", padding: "14px 18px" }}>
+                          <div style={{ fontFamily: SERIF, fontSize: 16 }}>{ch.hub.title[l]}</div>
+                          <div style={{ fontSize: 11.5, marginTop: 3, color: "rgba(255,255,255,0.75)" }}>{ch.hub.sub[l]}</div>
+                        </div>
+                      </div>
+                    )}
+                    {/* Graphique de scission : la position se découpe en
+                        deux jambes, qui se rejoignent sur le marché
+                        secondaire. Même grammaire de rail que le hub. */}
+                    {ch.split && (
+                      <div style={{ marginTop: 16 }}>
+                        <div style={{ margin: "0 auto", maxWidth: 320, borderRadius: 12, borderTop: `3px solid ${ACCENT}`, background: INK, color: "#fff", textAlign: "center", padding: "12px 16px", fontFamily: SERIF, fontSize: 15 }}>
+                          {ch.split.source[l]}
+                        </div>
+                        <div aria-hidden style={{ position: "relative", height: 30 }}>
+                          <span style={{ position: "absolute", left: "50%", top: 0, width: 1, height: 10, background: "#D9D2C2" }} />
+                          <span style={{ position: "absolute", left: "25%", right: "25%", top: 10, height: 1, background: "#D9D2C2" }} />
+                          {[25, 75].map((x) => (
+                            <span key={x} style={{ position: "absolute", left: `${x}%`, top: 10, width: 1, height: 20, background: "#D9D2C2" }} />
+                          ))}
+                        </div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+                          {ch.split.parts.map((part) => (
+                            <div key={part.en} style={{ justifySelf: "center", border: `1px solid ${LINE}`, borderRadius: 10, background: SURFACE, padding: "9px 22px", fontFamily: SERIF, fontSize: 15, color: INK }}>
+                              {part[l]}
+                            </div>
+                          ))}
+                        </div>
+                        <div aria-hidden style={{ position: "relative", height: 30 }}>
+                          {[25, 75].map((x) => (
+                            <span key={x} style={{ position: "absolute", left: `${x}%`, top: 0, width: 1, height: 10, background: "#D9D2C2" }} />
+                          ))}
+                          <span style={{ position: "absolute", left: "25%", right: "25%", top: 10, height: 1, background: "#D9D2C2" }} />
+                          <span style={{ position: "absolute", left: "50%", top: 10, width: 2, height: 20, marginLeft: -1, background: ACCENT }} />
+                        </div>
+                        <div style={{ border: `1px dashed ${ACCENT}`, borderRadius: 12, background: "#FFFBF6", padding: "14px 18px", textAlign: "center" }}>
+                          <div style={{ fontFamily: SERIF, fontSize: 16, color: INK }}>{ch.split.market.title[l]}</div>
+                          <div style={{ fontSize: 12.5, color: MUTED, marginTop: 3 }}>{ch.split.market.sub[l]}</div>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 10, marginTop: 12 }}>
+                          {ch.split.badges.map((b) => (
+                            <span key={b.en} style={{ border: `1px solid ${LINE}`, borderRadius: 8, background: SURFACE, padding: "5px 12px", fontSize: 12, color: INK }}>
+                              {b[l]}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {ch.panel && liquidityPanel(ch.panel)}
+                    {/* La grille d'acteurs s'efface sur un bloc à encart, sauf
+                        demande explicite (showActors). */}
+                    {(ch.showActors ?? !ch.panel) && actorGrid(s)}
+                    {ch.offerings && ch.offerings.length > 0 && offeringCards(ch.offerings)}
+                    {ch.companies && ch.companies.length > 0 && companyCards(ch.companies)}
+                    {ch.footnote && <p style={{ margin: "14px 0 0", fontSize: 12.5, lineHeight: 1.6, color: MUTED, fontStyle: "italic", maxWidth: 760 }}>{ch.footnote[l]}</p>}
                     {ch.photos && ch.photos.length > 0 && photoStrip(ch.photos)}
+                    {ch.photoGroups?.map((grp) => (
+                      <div key={grp.title[l]} style={{ marginTop: 20 }}>
+                        <div style={{ ...smallCaps, color: MUTED, paddingBottom: 6, borderBottom: `1px solid ${HAIRLINE}` }}>{grp.title[l]}</div>
+                        {photoStrip(grp.photos)}
+                      </div>
+                    ))}
                   </div>
                 </div>
               );
@@ -293,7 +520,7 @@ export function EcosystemRoadmap({ locale, draft = false }: { locale: Locale; /*
                   </div>
                   {GROWTH_PHASES.map((g, i) => (
                     <div key={`${s}-${g.id}`} style={{ background: i === idx ? "#FCFBF7" : "transparent", borderLeft: `1px solid ${HAIRLINE}`, borderBottom: si === STREAMS.length - 1 ? "none" : `1px solid ${HAIRLINE}`, padding: "12px 10px", fontSize: 12.5, lineHeight: 1.6, color: "#4B4039" }}>
-                      {rich(NARRATIVE[g.id][s].text[l])}
+                      {rich((NARRATIVE[g.id][s].summary ?? NARRATIVE[g.id][s].text)[l])}
                     </div>
                   ))}
                 </div>
