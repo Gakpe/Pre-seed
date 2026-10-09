@@ -139,7 +139,7 @@ const copy: Record<
           fig: "+5 M€",
           figLabel: "en discussion",
           detail:
-            "Nous sommes invités là où se concentre le capital : World Economic Forum à Davos, Africa CEO Forum, Africa Financial Industry Summit. C'est à l'une de ces tables, au Qatar, qu'un fonds américain nous a rejoints pour co-structurer Kupanda. Côté brokers, Atlantic Financials, broker londonien, aligne 5 M€ de tickets pour finaliser le placement de Kupanda I et Kupanda II. Nous visons cinq accords de distribution à partir de ce premier test.",
+            "Nous sommes invités là où se concentre le capital : World Economic Forum à Davos, Africa CEO Forum, Africa Financial Industry Summit. C'est à l'une de ces tables, au Qatar, qu'un fonds américain nous a rejoints pour co-structurer Kupanda. Des discussions sont aussi en cours avec des brokers, pour placer nos stratégies auprès de leurs clients institutionnels.",
         },
         {
           id: "chain",
@@ -148,7 +148,7 @@ const copy: Record<
           fig: "+4 M€",
           figLabel: "en discussion",
           detail:
-            "Près de 30 Md$ d'actifs réels sont tokenisés, dont environ 17 Md$ de crédit privé, et presque rien n'est adossé à des sous-jacents africains. Nous construisons ce pont avec la Stellar Foundation, qui nous subventionne déjà, Canton Network et Ubuntu Tribe.",
+            "Près de 30 Md$ d'actifs réels sont tokenisés, dont environ 17 Md$ de crédit privé, et presque rien n'est adossé à des sous-jacents africains. Notre ambition : devenir le canal qui amène cette liquidité on-chain vers les sous-jacents africains. Nous construisons ce pont avec la Stellar Foundation, qui nous subventionne déjà, Canton Network et Ubuntu Tribe.",
         },
       ],
     },
@@ -248,7 +248,7 @@ const copy: Record<
           fig: "+€5M",
           figLabel: "in discussion",
           detail:
-            "We are invited where capital concentrates: the World Economic Forum in Davos, the Africa CEO Forum, the Africa Financial Industry Summit. It was at one of these tables, in Qatar, that an American fund joined us to co-structure Kupanda. On the broker side, Atlantic Financials, a London broker, is lining up €5M of tickets to finalise the placement of Kupanda I and Kupanda II. We aim to move from this first test to five distribution agreements.",
+            "We are invited where capital concentrates: the World Economic Forum in Davos, the Africa CEO Forum, the Africa Financial Industry Summit. It was at one of these tables, in Qatar, that an American fund joined us to co-structure Kupanda. Discussions are also underway with brokers, to place our strategies with their institutional clients.",
         },
         {
           id: "chain",
@@ -257,7 +257,7 @@ const copy: Record<
           fig: "+€4M",
           figLabel: "in discussion",
           detail:
-            "Close to $30B of real-world assets are tokenized, of which about $17B is private credit, and almost none is backed by African underlyings. We are building that bridge with the Stellar Foundation, which already backs us with grants, Canton Network and Ubuntu Tribe.",
+            "Close to $30B of real-world assets are tokenized, of which about $17B is private credit, and almost none is backed by African underlyings. Our ambition is to become the channel that brings this on-chain liquidity to African underlyings. We are building that bridge with the Stellar Foundation, which already backs us with grants, Canton Network and Ubuntu Tribe.",
         },
       ],
     },
