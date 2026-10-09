@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Locale } from "@/lib/i18n";
-import { ACTORS, CATEGORIES, CATEGORY_LABEL, ECO_TODAY, FOUNDERS_INTRO, GROWTH_PHASES, NARRATIVE, STREAMS, STREAM_META, type Actor, type Company, type GrowthPhase, type Layer, type Lever, type Offering, type Panel, type Partner, type Photo, type Stream } from "@/lib/ecosystem/seed";
+import { ACTORS, CATEGORIES, CATEGORY_LABEL, CIRCLES_PATH, ECO_TODAY, FOUNDERS_INTRO, GROWTH_PHASES, NARRATIVE, STREAMS, STREAM_META, type Actor, type Company, type EventCard, type GrowthPhase, type Layer, type Lever, type Offering, type Panel, type Partner, type Photo, type Stream } from "@/lib/ecosystem/seed";
 import { useState as useLocalState } from "react";
 import { ecoCopy } from "@/lib/ecosystem/i18n";
 
@@ -136,7 +136,11 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
             <img src={p.src} alt={p.t[l]} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: p.pos ?? "center", display: "block" }} />
           </div>
           <figcaption style={{ marginTop: 6, fontSize: 11.5, lineHeight: 1.45, color: MUTED }}>
-            <span style={{ color: INK, fontWeight: 600 }}>{p.t[l]}</span>
+            {p.href ? (
+              <a href={p.href} target="_blank" rel="noopener noreferrer" style={{ color: INK, fontWeight: 600, textDecoration: "underline", textDecorationColor: LINE, textUnderlineOffset: 3 }}>{p.t[l]}</a>
+            ) : (
+              <span style={{ color: INK, fontWeight: 600 }}>{p.t[l]}</span>
+            )}
             {p.d && <>{" - "}<span>{p.d[l]}</span></>}
           </figcaption>
         </figure>
@@ -149,15 +153,24 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
   const partnerHeader = (pt: Partner) => (
     <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px 20px", marginBottom: 14, paddingBottom: 12, borderBottom: `1px solid ${HAIRLINE}` }}>
       <span style={{ fontFamily: SERIF, fontSize: 16, fontWeight: 600, color: INK }}>{pt.name}</span>
-      {pt.people?.map((pe) => (
-        <span key={pe.name} style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12.5, color: MUTED }}>
-          {pe.photo && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={pe.photo} alt={pe.name} style={{ width: 28, height: 28, borderRadius: 999, objectFit: "cover", border: `1px solid ${LINE}`, display: "block" }} />
-          )}
-          <span><span style={{ color: INK, fontWeight: 600 }}>{pe.name}</span> {pe.role[l]}</span>
-        </span>
-      ))}
+      {pt.people?.map((pe) => {
+        const inner = (
+          <>
+            {pe.photo && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={pe.photo} alt="" style={{ width: 28, height: 28, borderRadius: 999, objectFit: "cover", border: `1px solid ${LINE}`, display: "block" }} />
+            )}
+            <span><span style={{ color: INK, fontWeight: 600 }}>{pe.name}</span> {pe.role[l]}</span>
+          </>
+        );
+        const style: React.CSSProperties = { display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12.5, color: MUTED, textDecoration: "none" };
+        // Portrait et titre mènent au profil LinkedIn.
+        return pe.href ? (
+          <a key={pe.name} href={pe.href} target="_blank" rel="noopener noreferrer" aria-label={`${pe.name}, LinkedIn`} style={style}>{inner}</a>
+        ) : (
+          <span key={pe.name} style={style}>{inner}</span>
+        );
+      })}
     </div>
   );
 
@@ -259,6 +272,61 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
                 </li>
               ))}
             </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  // Évolution des Minah Circles : une étape par phase. Les étapes passées sont
+  // acquises (point plein), l'étape en cours est encadrée en orange, les
+  // suivantes restent en pointillés.
+  const circlesLadder = (active: GrowthPhase) => {
+    const activeAt = CIRCLES_PATH.steps.findIndex((st) => st.phase === active);
+    return (
+      <div style={{ marginTop: 18 }}>
+        <div style={{ ...smallCaps, color: MUTED, marginBottom: 10 }}>{CIRCLES_PATH.title[l]}</div>
+        <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 10 }}>
+          {CIRCLES_PATH.steps.map((st, i) => {
+            const state = i < activeAt ? "past" : i === activeAt ? "now" : "next";
+            const phaseLabel = GROWTH_PHASES.find((g) => g.id === st.phase)!.label[l];
+            return (
+              <li key={st.phase} aria-current={state === "now" ? "step" : undefined} style={{ position: "relative", border: state === "now" ? `1.5px solid ${ACCENT}` : state === "next" ? `1px dashed ${LINE}` : `1px solid ${LINE}`, borderRadius: 12, padding: "12px 14px 14px", background: state === "now" ? "#FFFBF6" : SURFACE, opacity: state === "next" ? 0.75 : 1 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                  <span aria-hidden style={{ width: 9, height: 9, borderRadius: 999, flexShrink: 0, background: state === "next" ? "transparent" : ACCENT, border: `1.5px solid ${state === "next" ? FAINT : ACCENT}` }} />
+                  <span style={{ ...smallCaps, color: state === "now" ? ACCENT_TEXT : MUTED }}>{phaseLabel}</span>
+                </div>
+                <div style={{ fontFamily: SERIF, fontSize: 15, color: INK, lineHeight: 1.25 }}>{st.title[l]}</div>
+                <p style={{ margin: "6px 0 0", fontSize: 12.5, lineHeight: 1.55, color: "#4B4039" }}>{st.sub[l]}</p>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    );
+  };
+
+  // Événements clés : logo (quand on l'a), nom (lien vers le site), lieu et
+  // dates en tête, puis une phrase.
+  const eventCards = (ev: { title: { fr: string; en: string }; list: EventCard[] }) => (
+    <div style={{ marginTop: 18 }}>
+      <div style={{ ...smallCaps, color: MUTED, marginBottom: 10 }}>{ev.title[l]}</div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 10 }}>
+        {ev.list.map((e) => (
+          <div key={e.name.en} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "14px 16px", background: SURFACE }}>
+            {e.logo && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={e.logo} alt="" style={{ height: 22, width: "auto", maxWidth: 110, objectFit: "contain", objectPosition: "left", display: "block", marginBottom: 10 }} />
+            )}
+            <div style={{ fontSize: 13, fontWeight: 600, color: INK }}>
+              {e.href ? (
+                <a href={e.href} target="_blank" rel="noopener noreferrer" style={{ color: INK, textDecoration: "underline", textDecorationColor: LINE, textUnderlineOffset: 3 }}>{e.name[l]}</a>
+              ) : (
+                e.name[l]
+              )}
+            </div>
+            <div style={{ fontSize: 12.5, fontWeight: 600, color: ACCENT_TEXT, margin: "4px 0 8px", lineHeight: 1.4 }}>{e.where[l]}</div>
+            <p style={{ margin: 0, fontSize: 13, lineHeight: 1.6, color: "#4B4039" }}>{e.text[l]}</p>
           </div>
         ))}
       </div>
@@ -420,25 +488,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
                   </div>
                   <div style={{ minWidth: 0 }}>
                     <p style={{ margin: 0, fontSize: 15, lineHeight: 1.8, color: "#4B4039", maxWidth: 760 }}>{rich(ch.text[l])}</p>
-                    {ch.levers && ch.levers.length > 0 && leverCards(ch.levers)}
-                    {/* Graphique de convergence, en rail : un tombant sous
-                        chaque carte, un collecteur horizontal, une descente
-                        orangée vers le nœud central. */}
-                    {ch.hub && (
-                      <div>
-                        <div aria-hidden style={{ position: "relative", height: 36 }}>
-                          {[12.5, 37.5, 62.5, 87.5].map((x) => (
-                            <span key={x} style={{ position: "absolute", left: `${x}%`, top: 0, width: 1, height: 13, background: "#D9D2C2" }} />
-                          ))}
-                          <span style={{ position: "absolute", left: "12.5%", right: "12.5%", top: 13, height: 1, background: "#D9D2C2" }} />
-                          <span style={{ position: "absolute", left: "50%", top: 13, width: 2, height: 23, marginLeft: -1, background: ACCENT }} />
-                        </div>
-                        <div style={{ margin: "0 auto", maxWidth: 380, borderRadius: 12, borderTop: `3px solid ${ACCENT}`, background: INK, color: "#fff", textAlign: "center", padding: "14px 18px" }}>
-                          <div style={{ fontFamily: SERIF, fontSize: 16 }}>{ch.hub.title[l]}</div>
-                          <div style={{ fontSize: 11.5, marginTop: 3, color: "rgba(255,255,255,0.75)" }}>{ch.hub.sub[l]}</div>
-                        </div>
-                      </div>
-                    )}
+                    {ch.ladder && circlesLadder(ch.ladder)}
                     {/* Graphique de scission : la position se découpe en
                         deux jambes, qui se rejoignent sur le marché
                         secondaire. Même grammaire de rail que le hub. */}
@@ -478,6 +528,26 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
                               {b[l]}
                             </span>
                           ))}
+                        </div>
+                      </div>
+                    )}
+                    {ch.levers && ch.levers.length > 0 && leverCards(ch.levers)}
+                    {ch.events && eventCards(ch.events)}
+                    {/* Graphique de convergence, en rail : un tombant sous
+                        chaque carte, un collecteur horizontal, une descente
+                        orangée vers le nœud central. */}
+                    {ch.hub && (
+                      <div>
+                        <div aria-hidden style={{ position: "relative", height: 36 }}>
+                          {[12.5, 37.5, 62.5, 87.5].map((x) => (
+                            <span key={x} style={{ position: "absolute", left: `${x}%`, top: 0, width: 1, height: 13, background: "#D9D2C2" }} />
+                          ))}
+                          <span style={{ position: "absolute", left: "12.5%", right: "12.5%", top: 13, height: 1, background: "#D9D2C2" }} />
+                          <span style={{ position: "absolute", left: "50%", top: 13, width: 2, height: 23, marginLeft: -1, background: ACCENT }} />
+                        </div>
+                        <div style={{ margin: "0 auto", maxWidth: 380, borderRadius: 12, borderTop: `3px solid ${ACCENT}`, background: INK, color: "#fff", textAlign: "center", padding: "14px 18px" }}>
+                          <div style={{ fontFamily: SERIF, fontSize: 16 }}>{ch.hub.title[l]}</div>
+                          <div style={{ fontSize: 11.5, marginTop: 3, color: "rgba(255,255,255,0.75)" }}>{ch.hub.sub[l]}</div>
                         </div>
                       </div>
                     )}

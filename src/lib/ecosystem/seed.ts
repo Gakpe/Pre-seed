@@ -16,7 +16,8 @@ export const ECO_TODAY = "2026-10-01";
 
 /** `pos` : object-position du recadrage (défaut « center »), pour garder les
  *  visages dans le cadre quand ils ne sont pas au centre de la photo. */
-export type Photo = { src: string; t: Bilingual; d?: Bilingual; pos?: string };
+/** `href` : site de l'événement, porté par le titre de la légende. */
+export type Photo = { src: string; t: Bilingual; d?: Bilingual; pos?: string; href?: string };
 
 export const GROWTH_PHASES: Array<{
   id: GrowthPhase;
@@ -35,7 +36,7 @@ export const GROWTH_PHASES: Array<{
   { id: "distribution", start: "2028-01-01", end: "2028-12-31", label: { fr: "Distribution", en: "Distribution" }, volume: { fr: "50 à 100 M€", en: "€50M to €100M" }, volumeMEur: 100,
     tagline: { fr: "Trois écosystèmes nourrissent trois moteurs, dette privée, dette souveraine, liquidité crypto ; chacun a été ouvert une période avant d'être nécessaire.", en: "Three ecosystems feed three engines, private debt, sovereign debt, crypto liquidity; each was opened one period before it was needed." } },
   { id: "marche", start: "2029-01-01", end: "2029-12-31", label: { fr: "Marché", en: "Market" }, volume: { fr: "Road to 1 Md€", en: "Road to €1B" }, volumeMEur: 1000,
-    tagline: { fr: "L'écosystème devient le marché : des places de liquidité et des institutions branchées en direct, préparées pendant l'échelle, portent le milliard.", en: "The ecosystem becomes the market: liquidity venues and institutions plugged in directly, prepared during scale, carry the billion." } },
+    tagline: { fr: "L'écosystème devient le marché : des places de liquidité et des institutions branchées en direct, préparées pendant la distribution, portent le milliard.", en: "The ecosystem becomes the market: liquidity venues and institutions plugged in directly, prepared during distribution, carry the billion." } },
 ];
 
 export const STREAM_META: Record<Stream, { label: Bilingual; sub: Bilingual }> = {
@@ -55,13 +56,13 @@ const P = {
   ouattara: { src: "/brand/gtm/field-6.jpg?v=2", t: { fr: "Cocktail privé, Abidjan, Côte d'Ivoire", en: "Private cocktail, Abidjan, Côte d'Ivoire" }, d: { fr: "Rencontre avec la Première dame de Côte d'Ivoire.", en: "Meeting with the First Lady of Côte d'Ivoire." } },
   wwfc: { src: "/brand/gtm/field-21.jpg", t: { fr: "Women Working for Change, Abidjan, Côte d'Ivoire", en: "Women Working for Change, Abidjan, Côte d'Ivoire" }, d: { fr: "Ecobank, Bank of Kigali, Transcorp, Zambia National Commercial Bank.", en: "Ecobank, Bank of Kigali, Transcorp, Zambia National Commercial Bank." } },
   doha: { src: "/brand/gtm/field-13.jpg?v=3", pos: "center 30%", t: { fr: "Web Summit, Doha, Qatar", en: "Web Summit, Doha, Qatar" }, d: { fr: "C'est là qu'un fonds américain a rejoint Kupanda.", en: "Where a US fund joined Kupanda." } },
-  nairobi: { src: "/brand/gtm/field-5.jpg", t: { fr: "Africa Forward, Nairobi, Kenya", en: "Africa Forward, Nairobi, Kenya" }, d: { fr: "Sommet France, Kenya, avec la délégation présidentielle française.", en: "France, Kenya summit, with the French presidential delegation." } },
+  nairobi: { src: "/brand/gtm/field-5.jpg", href: "https://www.elysee.fr/emmanuel-macron/2026/05/06/sommet-africa-forward-partenariats-entre-lafrique-et-la-france-pour-linnovation-et-la-croissance", t: { fr: "Africa Forward, Nairobi, Kenya", en: "Africa Forward, Nairobi, Kenya" }, d: { fr: "Sommet France, Kenya, avec la délégation présidentielle française.", en: "France, Kenya summit, with the French presidential delegation." } },
   changeNow: { src: "/brand/gtm/field-3.jpg?v=2", t: { fr: "ChangeNOW, Grand Palais, Paris, France", en: "ChangeNOW, Grand Palais, Paris, France" }, d: { fr: "Africa for Change, modération de panel.", en: "Africa for Change, panel moderation." } },
   cotonou: { src: "/brand/gtm/field-16.jpg", t: { fr: "Rencontre privée, Cotonou, Bénin", en: "Private meeting, Cotonou, Benin" }, d: { fr: "Particuliers fortunés et corporates.", en: "Wealthy individuals and corporates." } },
   conakry: { src: "/brand/gtm/field-17.jpg", t: { fr: "Rencontre privée, Conakry, Guinée", en: "Private meeting, Conakry, Guinea" }, d: { fr: "Corporates et investisseurs.", en: "Corporates and investors." } },
-  paloneo: { src: "/brand/gtm/field-18.jpg", t: { fr: "Sommet Paloneo, Hambourg, Allemagne", en: "Paloneo Summit, Hamburg, Germany" }, d: { fr: "Partenaire du WEF ; table ronde Afrique animée avec Launch Africa.", en: "WEF partner; Africa round table hosted with Launch Africa." } },
+  paloneo: { src: "/brand/gtm/field-18.jpg", href: "https://www.paloneo.org", t: { fr: "Sommet Paloneo, Hambourg, Allemagne", en: "Paloneo Summit, Hamburg, Germany" }, d: { fr: "Partenaire du WEF ; table ronde Afrique animée avec Launch Africa.", en: "WEF partner; Africa round table hosted with Launch Africa." } },
   marrakech: { src: "/brand/gtm/field-19.jpg", t: { fr: "Rencontre privée, Marrakech, Maroc", en: "Private meeting, Marrakech, Morocco" }, d: { fr: "Diaspora et investisseurs.", en: "Diaspora and investors." } },
-  onChain: { src: "/brand/gtm/field-10.jpg?v=2", t: { fr: "50 Days on Chain, Paris, France", en: "50 Days on Chain, Paris, France" }, d: { fr: "Panel de présentation de Minah.", en: "Panel presenting Minah." } },
+  onChain: { src: "/brand/gtm/field-10.jpg?v=2", href: "https://www.50partners.fr/programmes/web3", t: { fr: "50 Days on Chain, Paris, France", en: "50 Days on Chain, Paris, France" }, d: { fr: "Panel de présentation de Minah.", en: "Panel presenting Minah." } },
   delubac: { src: "/brand/gtm/field-11.jpg", t: { fr: "Prix Cyrille Bialkiewicz, Paris, France", en: "Cyrille Bialkiewicz Prize, Paris, France" }, d: { fr: "Remis par la Banque Delubac.", en: "Awarded by Banque Delubac." } },
   circleGP: { src: "/brand/gtm/field-14.jpg?v=2", pos: "center 22%", t: { fr: "Minah Circle, Grand Palais, Paris, France", en: "Minah Circle, Grand Palais, Paris, France" }, d: { fr: "L'écosystème investisseur de ChangeNOW.", en: "ChangeNOW's investor ecosystem." } },
   circleLome: { src: "/brand/gtm/field-15.jpg?v=2", pos: "center 38%", t: { fr: "Minah Circle, Lomé, Togo", en: "Minah Circle, Lomé, Togo" }, d: { fr: "L'écosystème tech et corporate de Lomé.", en: "Lomé's tech and corporate ecosystem." } },
@@ -76,7 +77,7 @@ const P = {
 export type Layer = { n: number; title: Bilingual; detail: Bilingual };
 /** Le partenaire co-structurant : nom et, le cas échéant, ses dirigeants
  *  (photo : petit portrait rond, servi depuis public/partners). */
-export type Partner = { name: string; logo?: string; people?: { name: string; role: Bilingual; photo?: string }[] };
+export type Partner = { name: string; logo?: string; people?: { name: string; role: Bilingual; photo?: string; href?: string }[] };
 /** Un encart « liquidité qui arrive » : un montant et quelques colonnes. */
 export type Panel = {
   title: Bilingual;
@@ -119,6 +120,15 @@ export type Company = {
 };
 /** Un levier de la machine réseau : intitulé, chiffre-phare, une phrase. Mise
  *  en page en cartes, pour ne pas laisser le récit en bloc de texte. */
+/** Un événement clé où Minah veut être présente : nom, lieu (ville, pays) et
+ *  dates, une phrase. Logo et site quand on les a. */
+export type EventCard = {
+  name: Bilingual;
+  where: Bilingual;
+  text: Bilingual;
+  logo?: string;
+  href?: string;
+};
 export type Lever = {
   title: Bilingual;
   metric: Bilingual;
@@ -156,11 +166,47 @@ export type Chapter = {
   companies?: Company[];
   /** Leviers de la machine réseau, en cartes (distribution). */
   levers?: Lever[];
+  /** Événements clés où Minah veut être présente, avec un intitulé de bloc. */
+  events?: { title: Bilingual; list: EventCard[] };
+  /** Échelle d'évolution des Minah Circles (CIRCLES_PATH), avec la phase dont
+   *  c'est l'étape en cours : les précédentes sont acquises, les suivantes à venir. */
+  ladder?: GrowthPhase;
   /** Forcer l'affichage de la grille d'acteurs même avec des blocs chiffrés.
    *  Par défaut, la grille s'efface dès qu'un bloc chiffré porte l'info. */
   showActors?: boolean;
   /** Hypothèse à valider par l'équipe. */
   aConfirmer?: boolean;
+};
+
+// ── L'évolution des Minah Circles, phase par phase ───────────────────────────
+// Dessinée dans le volet Marché des phases 2 à 4 : chaque phase y est une étape.
+export const CIRCLES_PATH: {
+  title: Bilingual;
+  steps: { phase: GrowthPhase; title: Bilingual; sub: Bilingual }[];
+} = {
+  title: { fr: "Les Minah Circles, étape par étape", en: "The Minah Circles, step by step" },
+  steps: [
+    {
+      phase: "amorcage",
+      title: { fr: "Rencontres en petit comité", en: "Small-group gatherings" },
+      sub: { fr: "Événements investisseurs tenus au Grand Palais (Paris, France) et à Lomé (Togo).", en: "Investor events held at the Grand Palais (Paris, France) and in Lomé (Togo)." },
+    },
+    {
+      phase: "traction",
+      title: { fr: "Une montée en gamme, de nouvelles villes", en: "A higher tier, new cities" },
+      sub: { fr: "Les meilleurs investisseurs, des éditions à Davos (Suisse), New York (États-Unis), Paris (France) et Abidjan (Côte d'Ivoire), et d'autres événements qui s'ouvrent.", en: "Top investors, editions in Davos (Switzerland), New York (United States), Paris (France) and Abidjan (Côte d'Ivoire), and other events opening up." },
+    },
+    {
+      phase: "distribution",
+      title: { fr: "Un vrai forum", en: "A real forum" },
+      sub: { fr: "Un forum annuel des investisseurs, tandis que les rencontres privées continuent dans leurs villes dédiées. Nous sommes invités aux grands événements mondiaux.", en: "An annual investor forum, while the private gatherings continue in their dedicated cities. We are invited to the key global events." },
+    },
+    {
+      phase: "marche",
+      title: { fr: "L'un des plus gros forums", en: "One of the biggest forums" },
+      sub: { fr: "Le Minah Forum compte parmi les plus gros, et nous restons invités aux grands événements mondiaux.", en: "The Minah Forum stands among the biggest, and we remain invited to the key global events." },
+    },
+  ],
 };
 
 // ── L'intro de la fiche : le réseau des fondateurs, premier actif ───────────
@@ -256,8 +302,8 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
           partner: {
             name: "Africa Rise",
             people: [
-              { name: "Fabien Anthony", role: { fr: "CIO · Managing Partner", en: "CIO · Managing Partner" }, photo: "/partners/africa-rise-fabien.jpg" },
-              { name: "Osa Aihie", role: { fr: "COO · Managing Partner", en: "COO · Managing Partner" }, photo: "/partners/africa-rise-osa.jpg" },
+              { name: "Fabien Anthony", role: { fr: "CIO · Managing Partner", en: "CIO · Managing Partner" }, photo: "/partners/africa-rise-fabien.jpg", href: "https://www.linkedin.com/in/fabienanthony/" },
+              { name: "Osa Aihie", role: { fr: "COO · Managing Partner", en: "COO · Managing Partner" }, photo: "/partners/africa-rise-osa.jpg", href: "https://www.linkedin.com/in/osaaihie/" },
             ],
           },
           metrics: [
@@ -345,10 +391,10 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         en: "Three strategies in structuring.",
       },
       summary: {
-        fr: "Trois stratégies en structuration : Kupanda II (12 M€, contrat cadre signé avec la Zambie), Esgni (12 M€, Wave et Yango en discussion), et des tranches de fonds de crédit privé (TLG Capital, Enko Capital).",
-        en: "Three strategies in structuring: Kupanda II (€12M, framework signed with Zambia), Esgni (€12M, Wave and Yango in discussion), and private credit fund tranches (TLG Capital, Enko Capital).",
+        fr: "Trois stratégies en structuration : Kupanda II (12 M€, contrat cadre signé avec la Zambie), Esgni (15 M€, Wave et Yango en discussion), et des tranches de fonds de crédit privé (TLG Capital, Enko Capital).",
+        en: "Three strategies in structuring: Kupanda II (€12M, framework signed with Zambia), Esgni (€15M, Wave and Yango in discussion), and private credit fund tranches (TLG Capital, Enko Capital).",
       },
-      showActors: true,
+      showActors: false,
       offerings: [
         {
           name: { fr: "Kupanda II", en: "Kupanda II" },
@@ -382,7 +428,7 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
           metrics: [
             { k: { fr: "Rendement cible", en: "Target yield" }, v: { fr: "9 – 15 %", en: "9 – 15%" } },
             { k: { fr: "Ticket minimum", en: "Minimum ticket" }, v: { fr: "À définir", en: "To be defined" } },
-            { k: { fr: "Allocation", en: "Allocation" }, v: { fr: "12,0 M€", en: "€12.0M" } },
+            { k: { fr: "Allocation", en: "Allocation" }, v: { fr: "15,0 M€", en: "€15.0M" } },
             { k: { fr: "Durée", en: "Term" }, v: { fr: "24 mois", en: "24 months" } },
           ],
           companies: {
@@ -436,21 +482,47 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
           ],
           status: { fr: "EN DISCUSSION", en: "IN DISCUSSION" },
           subtitle: {
-            fr: "Des fonds de crédit privé comme **TLG Capital** et **Enko Capital**, avec qui nous discutons pour prendre des tranches de leurs opérations et les distribuer à notre réseau. Nous multiplions ces opérations.",
-            en: "Private credit funds such as **TLG Capital** and **Enko Capital**, with whom we are in discussions to take tranches of their operations and distribute them to our network. We multiply those operations.",
+            fr: "En discussion avec des fonds de crédit privé comme **TLG Capital** et **Enko Capital** : des tranches prises dans leurs opérations, distribuées à notre réseau, avec d'autres fonds de crédit privé à venir.",
+            en: "In discussion with private credit funds such as **TLG Capital** and **Enko Capital**: tranches taken in their operations, distributed to our network, with more private credit funds to come.",
           },
           metrics: [
             { k: { fr: "Tranche TLG", en: "TLG tranche" }, v: { fr: "20 M€", en: "€20M" }, accent: true },
             { k: { fr: "Distribution", en: "Distribution" }, v: { fr: "Notre réseau", en: "Our network" } },
-            { k: { fr: "Partenaires", en: "Partners" }, v: { fr: "TLG · Enko", en: "TLG · Enko" } },
+            { k: { fr: "Partenaires", en: "Partners" }, v: { fr: "TLG · Enko · d'autres à venir", en: "TLG · Enko · more to come" } },
           ],
         },
       ],
     },
     marche: {
       text: {
-        fr: "Les **Minah Circles** : nos événements investisseurs en petit comité, déjà tenus au Grand Palais et à Lomé, deviennent des rendez-vous incontournables de l'écosystème de la dette – ils attirent les meilleurs investisseurs, avec des éditions à **Davos**, **New York**, **Paris** et **Abidjan**. En parallèle, de nouveaux événements s'ouvrent à nous à travers le monde – plus privés, plus exclusifs – où participer et prendre la parole.",
-        en: "The **Minah Circles**: our small-group investor events, already held at the Grand Palais and in Lomé, become must-attend gatherings of the debt ecosystem – attracting top investors, with editions in **Davos**, **New York**, **Paris** and **Abidjan**. Alongside, new events open up to us across the world – more private, more exclusive – to attend and speak at.",
+        fr: "Les **Minah Circles** montent en gamme : toujours des événements investisseurs en petit comité, déjà tenus au Grand Palais et à Lomé, ils deviennent des rendez-vous incontournables de l'écosystème de la dette et attirent les meilleurs investisseurs. Les éditions gagnent de nouvelles villes, **Davos**, **New York** et **Abidjan**, aux côtés de **Paris**. D'autres événements s'ouvrent à nous à travers le monde – plus privés, plus exclusifs – où participer et prendre la parole.",
+        en: "The **Minah Circles** move up a tier: still small-group investor events, already held at the Grand Palais and in Lomé, they become must-attend gatherings of the debt ecosystem, attracting top investors. Editions reach new cities, **Davos**, **New York** and **Abidjan**, alongside **Paris**. Other events open up to us across the world – more private, more exclusive – to attend and speak at.",
+      },
+      ladder: "traction",
+      summary: {
+        fr: "Les Minah Circles deviennent des rendez-vous incontournables de l'écosystème de la dette, à Davos, New York, Paris et Abidjan. En parallèle, des événements clés où participer et prendre la parole : AFSIC et le Financial Times Africa Summit à Londres, et d'autres à travers le monde.",
+        en: "The Minah Circles become must-attend gatherings of the debt ecosystem, in Davos, New York, Paris and Abidjan. Alongside, key events to attend and speak at: AFSIC and the Financial Times Africa Summit in London, and others across the world.",
+      },
+      events: {
+        title: { fr: "Événements clés où participer et prendre la parole", en: "Key events to attend and speak at" },
+        list: [
+          {
+            name: { fr: "AFSIC – Investing in Africa", en: "AFSIC – Investing in Africa" },
+            where: { fr: "Londres, Royaume-Uni", en: "London, United Kingdom" },
+            text: { fr: "Réunit les investisseurs mondiaux et les grands secteurs de l'Afrique.", en: "Brings together global investors and Africa's leading sectors." },
+            href: "https://www.afsic.net",
+          },
+          {
+            name: { fr: "Financial Times Africa Summit", en: "Financial Times Africa Summit" },
+            where: { fr: "Londres, Royaume-Uni", en: "London, United Kingdom" },
+            text: { fr: "Le sommet Afrique du Financial Times : chefs d'État, décideurs publics, dirigeants et investisseurs.", en: "The Financial Times' flagship Africa summit: heads of state, policymakers, chief executives and investors." },
+          },
+          {
+            name: { fr: "D'autres événements à travers le monde", en: "More events across the world" },
+            where: { fr: "Partout dans le monde", en: "Across the world" },
+            text: { fr: "Des événements plus privés et plus exclusifs, où participer et prendre la parole.", en: "More private, more exclusive events, to attend and speak at." },
+          },
+        ],
       },
       showActors: false,
     },
@@ -506,8 +578,8 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
       levers: [
         {
           title: { fr: "Tranches de fonds de crédit privé", en: "Private credit fund tranches" },
-          metric: { fr: "TLG · Enko", en: "TLG · Enko" },
-          text: { fr: "Les tranches prises dans leurs opérations, distribuées à notre réseau.", en: "Tranches taken in their operations, distributed to our network." },
+          metric: { fr: "TLG · Enko · + d'autres fonds", en: "TLG · Enko · + more funds" },
+          text: { fr: "Les tranches prises dans leurs opérations, distribuées à notre réseau – et des deals avec d'autres fonds de crédit privé, qui s'ajoutent à ceux de TLG et d'Enko.", en: "Tranches taken in their operations, distributed to our network – and deals with other private credit funds too, on top of TLG's and Enko's." },
         },
         {
           title: { fr: "PME sous contrats publics", en: "SMEs under government contracts" },
@@ -532,9 +604,10 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
     },
     marche: {
       text: {
-        fr: "Les **Minah Circles** deviennent des événements clés de l'investissement en Afrique : un forum annuel des investisseurs, aux côtés des rencontres privées à **Davos**, **Abidjan**, **New York** et **Paris**.",
-        en: "The **Minah Circles** become key events for investment in Africa: an annual investor forum, alongside private gatherings in **Davos**, **Abidjan**, **New York** and **Paris**.",
+        fr: "Les **Minah Circles** deviennent un vrai forum : un forum annuel des investisseurs, et les rencontres privées continuent dans leurs villes dédiées, **Davos**, **Abidjan**, **New York** et **Paris**. Minah est invitée aux grands événements mondiaux : les allocataires, fonds et institutions y rencontrent les États, les PME et les fintechs dont les deals alimentent nos stratégies, en marge des grandes tables où le capital circule déjà, l'Africa CEO Forum et le World Economic Forum.",
+        en: "The **Minah Circles** become a real forum: an annual investor forum, while the private gatherings carry on in their dedicated cities, **Davos**, **Abidjan**, **New York** and **Paris**. Minah is invited to the key global events: allocators, funds and institutions meet there the States, SMEs and fintechs whose deals feed our strategies, alongside the big tables where capital already travels, the Africa CEO Forum and the World Economic Forum.",
       },
+      ladder: "distribution",
       showActors: false,
       aConfirmer: true,
     },
@@ -546,9 +619,31 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         en: "A Minah position can be sold: principal and yield separated, secondary market, exit before maturity.",
       },
       summary: {
-        fr: "Une position Minah se cède : principal et rendement séparés, marché secondaire, sortie avant l'échéance. Des places de liquidité et des teneurs de marché se branchent ; un token ouvre toutes les stratégies.",
-        en: "A Minah position can be sold: principal and yield separated, secondary market, exit before maturity. Liquidity venues and market makers plug in; one token opens every strategy.",
+        fr: "Une position Minah se cède : principal et rendement séparés, marché secondaire, sortie avant l'échéance. Des places de liquidité et des teneurs de marché se branchent ; un token ouvre toutes les stratégies, et la dette privée africaine, d'ordinaire bloquée jusqu'à l'échéance, devient liquide.",
+        en: "A Minah position can be sold: principal and yield separated, secondary market, exit before maturity. Liquidity venues and market makers plug in; one token opens every strategy, and African private debt, usually locked until maturity, becomes liquid.",
       },
+      levers: [
+        {
+          title: { fr: "Principal et rendement séparés", en: "Principal and yield, separated" },
+          metric: { fr: "Deux jambes", en: "Two legs" },
+          text: { fr: "Chaque position se découpe en une jambe principal et une jambe rendement, que l'on peut détenir ou céder séparément.", en: "Each position splits into a principal leg and a yield leg, which can be held or sold separately." },
+        },
+        {
+          title: { fr: "Marché secondaire", en: "Secondary market" },
+          metric: { fr: "Entre investisseurs", en: "Between investors" },
+          text: { fr: "Les positions s'échangent avant l'échéance : les places de liquidité et les teneurs de marché se branchent, les institutions aussi, en direct.", en: "Positions trade before maturity: liquidity venues and market makers plug in, and so do institutions, directly." },
+        },
+        {
+          title: { fr: "Sortie avant l'échéance", en: "Exit before maturity" },
+          metric: { fr: "Plus d'attente", en: "No more waiting" },
+          text: { fr: "Un investisseur n'attend plus le terme : la dette privée africaine, d'ordinaire bloquée jusqu'à l'échéance, devient liquide.", en: "An investor no longer waits for the term: African private debt, usually locked until maturity, becomes liquid." },
+        },
+        {
+          title: { fr: "Un token, toutes les stratégies", en: "One token, every strategy" },
+          metric: { fr: "Un seul accès", en: "A single access" },
+          text: { fr: "Un token ouvre toutes les stratégies Minah, du premier Kupanda aux plus récentes.", en: "One token opens every Minah strategy, from the first Kupanda to the most recent." },
+        },
+      ],
       split: {
         source: { fr: "Une position Minah", en: "A Minah position" },
         parts: [
@@ -572,33 +667,58 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         fr: "Un milliard d'euros d'actifs réels africains, originés par des partenaires autant que par Minah : États, PME, fintechs, dans plusieurs pays et plusieurs devises, sur une infrastructure que d'autres utilisent.",
         en: "One billion euros of African real assets, originated by partners as much as by Minah: States, SMEs, fintechs, across several countries and currencies, on an infrastructure others use.",
       },
+      summary: {
+        fr: "Un milliard d'euros d'actifs réels africains, originés par des partenaires autant que par Minah : États, PME, fintechs, dans plusieurs pays et plusieurs devises, sur une infrastructure que d'autres utilisent. L'équipe et les agents IA sourcent les meilleurs deals en Afrique.",
+        en: "One billion euros of African real assets, originated by partners as much as by Minah: States, SMEs, fintechs, across several countries and currencies, on an infrastructure others use. The team and AI agents source the best deals in Africa.",
+      },
+      levers: [
+        {
+          title: { fr: "Originés par des partenaires", en: "Originated by partners" },
+          metric: { fr: "Autant que par Minah", en: "As much as by Minah" },
+          text: { fr: "Des partenaires amènent leurs propres deals sur une infrastructure que d'autres utilisent.", en: "Partners bring their own deals onto an infrastructure others use." },
+        },
+        {
+          title: { fr: "Sourcés par l'équipe", en: "Sourced by the team" },
+          metric: { fr: "Les meilleurs deals d'Afrique", en: "Africa's best deals" },
+          text: { fr: "L'équipe Minah ouvre les portes des États, des PME et des fintechs.", en: "The Minah team opens the doors to States, SMEs and fintechs." },
+        },
+        {
+          title: { fr: "Sourcés par les agents IA", en: "Sourced by AI agents" },
+          metric: { fr: "Aux côtés de l'équipe", en: "Alongside the team" },
+          text: { fr: "Des agents IA parcourent le continent et font remonter les meilleurs deals à l'équipe.", en: "AI agents scan the continent and surface the best deals to the team." },
+        },
+      ],
+      panel: {
+        title: { fr: "Sur la route de", en: "On the road to" },
+        amount: { fr: "1 Md€", en: "€1B" },
+        note: { fr: "d'actifs réels africains", en: "of African real assets" },
+        cols: [
+          { h: { fr: "États · PME · fintechs", en: "States · SMEs · fintechs" }, d: { fr: "Dans plusieurs pays et plusieurs devises", en: "Across several countries and currencies" } },
+        ],
+      },
       showActors: false,
       aConfirmer: true,
     },
     marche: {
       text: {
-        fr: "Minah est une couche de l'écosystème : la référence que citent les tables où elle a commencé par être invitée.",
-        en: "Minah is a layer of the ecosystem: the reference cited by the tables where it started out as a guest.",
+        fr: "Le Minah Forum devient l'un des plus gros forums de la dette privée africaine, et Minah reste invitée aux grands événements mondiaux : une couche de l'écosystème, la référence que citent les tables où elle a commencé par être invitée.",
+        en: "The Minah Forum becomes one of the biggest forums of African private debt, and Minah remains invited to the key global events: a layer of the ecosystem, the reference cited by the tables where it started out as a guest.",
       },
       summary: {
-        fr: "Minah est une couche de l'écosystème : la référence que citent les tables où elle a commencé par être invitée. Le Minah Forum réunit chaque année les grands acteurs de la dette privée africaine, deal rooms comprises.",
-        en: "Minah is a layer of the ecosystem: the reference cited by the tables where it started out as a guest. The Minah Forum gathers the big players of African private debt every year, deal rooms included.",
+        fr: "Le Minah Forum devient l'un des plus gros forums de la dette privée africaine, deal rooms comprises, et Minah reste invitée aux grands événements mondiaux : la référence que citent les tables où elle a commencé par être invitée.",
+        en: "The Minah Forum becomes one of the biggest forums of African private debt, deal rooms included, and Minah remains invited to the key global events: the reference cited by the tables where it started out as a guest.",
       },
+      ladder: "marche",
       levers: [
         {
-          title: { fr: "Minah Forum", en: "Minah Forum" },
-          metric: { fr: "Le rendez-vous annuel", en: "The annual gathering" },
-          text: { fr: "Le forum annuel de la dette privée africaine : chefs d'État, DFI, allocateurs mondiaux et gérants autour des mêmes tables.", en: "The annual forum of African private debt: heads of state, DFIs, global allocators and fund managers around the same tables." },
-        },
-        {
-          title: { fr: "Deal rooms", en: "Deal rooms" },
-          metric: { fr: "Les opérations de l'année", en: "The year's deals" },
-          text: { fr: "Les plus grosses opérations de l'année s'y originent, s'y négocient et s'y signent.", en: "The year's largest operations are originated, negotiated and signed there." },
+          title: { fr: "Minah Forum et deal rooms", en: "Minah Forum and deal rooms" },
+          metric: { fr: "L'un des plus gros forums", en: "One of the biggest forums" },
+          text: { fr: "Le forum annuel de la dette privée africaine : chefs d'État, DFI, allocateurs mondiaux et gérants autour des mêmes tables. Ses deal rooms sont celles des opérations de l'année : les plus grosses s'y originent, s'y négocient et s'y signent.", en: "The annual forum of African private debt: heads of state, DFIs, global allocators and fund managers around the same tables. Its deal rooms are the year's deals: the largest operations are originated, negotiated and signed there." },
         },
         {
           title: { fr: "Les rencontres privées", en: "Private gatherings" },
           metric: { fr: "Davos · Abidjan · New York · Paris", en: "Davos · Abidjan · New York · Paris" },
-          text: { fr: "Toute l'année, dans les villes où le capital se décide.", en: "All year round, in the cities where capital decides." },
+          text: { fr: "Toute l'année, dans les villes où le capital se décide, et aux grands événements mondiaux où l'on nous invite.", en: "All year round, in the cities where capital decides, and at the key global events we are invited to." },
         },
       ],
       showActors: false,
@@ -686,16 +806,17 @@ export const ACTORS: Actor[] = [
   // Marché
   { id: "afis", stream: "marche", category: "sommets", name: { fr: "Africa Financial Industry Summit, Casablanca (Maroc) & Lomé (Togo)", en: "Africa Financial Industry Summit, Casablanca (Morocco) & Lomé (Togo)" }, depuis: "amorcage", logo: "/partners/afis.png" },
   { id: "congres-lome", stream: "marche", category: "sommets", name: { fr: "Congrès panafricain, Lomé, Togo", en: "Pan-African Congress, Lomé, Togo" }, depuis: "amorcage" },
-  { id: "50days", stream: "marche", category: "sommets", name: { fr: "50 Days on Chain, Paris, France", en: "50 Days on Chain, Paris, France" }, depuis: "amorcage" },
+  { id: "50days", stream: "marche", category: "sommets", name: { fr: "50 Days on Chain, Paris, France", en: "50 Days on Chain, Paris, France" }, depuis: "amorcage", logo: "/partners/fifty.png", url: "https://www.50partners.fr/programmes/web3" },
   { id: "delubac", stream: "marche", category: "prix", name: { fr: "Prix Cyrille Bialkiewicz, Banque Delubac", en: "Cyrille Bialkiewicz Prize, Banque Delubac" }, depuis: "amorcage" },
   { id: "wef", stream: "marche", category: "sommets", name: { fr: "World Economic Forum, Davos, Suisse", en: "World Economic Forum, Davos, Switzerland" }, depuis: "amorcage", logo: "/partners/wef.png", url: "https://www.weforum.org" },
-  { id: "africa-ceo-forum", stream: "marche", category: "sommets", name: { fr: "Africa CEO Forum, Abidjan (Côte d'Ivoire) & Kigali (Rwanda)", en: "Africa CEO Forum, Abidjan (Côte d'Ivoire) & Kigali (Rwanda)" }, depuis: "amorcage", url: "https://www.theafricaceoforum.com" },
+  { id: "choiseul", stream: "marche", category: "sommets", name: { fr: "Choiseul Africa Business Forum, Lagos, Nigeria", en: "Choiseul Africa Business Forum, Lagos, Nigeria" }, depuis: "amorcage", logo: "/partners/choiseul-africa.svg", url: "https://www.choiseul-africa.com/en/" },
+  { id: "africa-ceo-forum", stream: "marche", category: "sommets", name: { fr: "Africa CEO Forum, Abidjan (Côte d'Ivoire) & Kigali (Rwanda)", en: "Africa CEO Forum, Abidjan (Côte d'Ivoire) & Kigali (Rwanda)" }, depuis: "amorcage", logo: "/partners/africa-ceo-forum.png", url: "https://www.theafricaceoforum.com" },
   { id: "changenow", stream: "marche", category: "sommets", name: { fr: "ChangeNOW, Paris, France", en: "ChangeNOW, Paris, France" }, depuis: "amorcage", logo: "/partners/changenow.png", url: "https://www.changenow.world" },
   { id: "websummit", stream: "marche", category: "sommets", name: { fr: "Web Summit, Doha, Qatar", en: "Web Summit, Doha, Qatar" }, depuis: "amorcage", logo: "/partners/websummit.png", url: "https://websummit.com" },
   { id: "websummit-lisbonne", stream: "marche", category: "sommets", name: { fr: "Web Summit, Lisbonne, Portugal", en: "Web Summit, Lisbon, Portugal" }, depuis: "amorcage", logo: "/partners/websummit.png", url: "https://websummit.com" },
-  { id: "africa-forward", stream: "marche", category: "sommets", name: { fr: "Africa Forward, Nairobi, Kenya", en: "Africa Forward, Nairobi, Kenya" }, depuis: "amorcage" },
+  { id: "africa-forward", stream: "marche", category: "sommets", name: { fr: "Africa Forward, Nairobi, Kenya", en: "Africa Forward, Nairobi, Kenya" }, depuis: "amorcage", url: "https://www.elysee.fr/emmanuel-macron/2026/05/06/sommet-africa-forward-partenariats-entre-lafrique-et-la-france-pour-linnovation-et-la-croissance" },
   { id: "circles-tenus", stream: "marche", category: "nos_evenements", name: { fr: "Minah Circle : Paris (France) & Lomé (Togo)", en: "Minah Circle: Paris (France) & Lomé (Togo)" }, depuis: "amorcage", logo: MINAH },
-  { id: "paloneo", stream: "marche", category: "sommets", name: { fr: "Sommet Paloneo, Hambourg, Allemagne", en: "Paloneo Summit, Hamburg, Germany" }, depuis: "amorcage" },
+  { id: "paloneo", stream: "marche", category: "sommets", name: { fr: "Sommet Paloneo, Hambourg, Allemagne", en: "Paloneo Summit, Hamburg, Germany" }, depuis: "amorcage", logo: "/partners/paloneo.png", url: "https://www.paloneo.org" },
   { id: "circles-hubs", stream: "marche", category: "nos_evenements", name: { fr: "Minah Circle : Davos, Abidjan, New York, Paris", en: "Minah Circle: Davos, Abidjan, New York, Paris" }, depuis: "distribution", logo: MINAH, aConfirmer: true },
   { id: "circle-trimestriel", stream: "marche", category: "nos_evenements", name: { fr: "Minah Forum, le rendez-vous annuel des investisseurs", en: "Minah Forum, the annual investor gathering" }, depuis: "distribution", logo: MINAH, aConfirmer: true },
 ];
