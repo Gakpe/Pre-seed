@@ -159,6 +159,7 @@ export default async function DocPage({
     doc.slug === "term-sheet-kupanda" ||
     doc.slug === "scenarios-sortie" ||
     doc.slug === "gestion-du-risque" ||
+    doc.slug === "roadmap-ecosysteme" ||
     gtmApercu ||
     note;
 
