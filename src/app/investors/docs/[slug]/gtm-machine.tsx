@@ -90,8 +90,7 @@ const copy: Record<
 > = {
   fr: {
     lead: [
-      "Minah repose sur un réseau. En six ans de carrière, nos deux fondateurs ont tissé des relations des deux côtés de chaque deal : le capital qui finance, et les entreprises, les fonds et les États qui génèrent les meilleurs sous-jacents en Afrique. Nous en avons fait une **machine à réseau**, que chaque nouvelle stratégie met au travail.",
-      "Ce réseau vient de la diaspora et de deux carrières construites autour de l'investissement africain, au contact des dirigeants, des ministres et des investisseurs du continent. Il nourrit nos événements **Minah Circles** et nous ouvre les grands événements mondiaux où se concentre le capital, comme le World Economic Forum et l'Africa CEO Forum.",
+      "Minah repose sur un réseau. En six ans de carrière, les deux fondateurs ont tissé des relations des deux côtés de chaque deal : le capital qui finance, et les entreprises, les fonds et les États qui génèrent les meilleurs sous-jacents en Afrique. Nous en avons fait une **machine à réseau**, que chaque nouvelle stratégie met au travail.",
     ],
     foundersLabel: "Les deux réseaux",
     founders: [
@@ -199,8 +198,7 @@ const copy: Record<
   },
   en: {
     lead: [
-      "Minah is built on a network. Over six years of careers, our two founders have built relationships on both sides of every deal: the capital that funds, and the companies, funds and States that generate the best underlyings in Africa. We have turned this into a **relationship machine**, which every new strategy puts to work.",
-      "This network comes from the diaspora and from two careers built around African investment, alongside the continent's leaders, ministers and investors. It feeds our **Minah Circles** events and opens the key global events where capital concentrates, such as the World Economic Forum and the Africa CEO Forum.",
+      "Minah is built on a network. Over six years of careers, the two founders have built relationships on both sides of every deal: the capital that funds, and the companies, funds and States that generate the best underlyings in Africa. We have turned this into a **relationship machine**, which every new strategy puts to work.",
     ],
     foundersLabel: "The two networks",
     founders: [
