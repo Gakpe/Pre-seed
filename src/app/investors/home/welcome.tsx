@@ -73,21 +73,29 @@ export function Welcome({
     .map((p) => p.trim())
     .filter(Boolean);
   const custom = paragraphs.length > 0;
-  // Fiche mise en lumière par le paragraphe i (i >= 1) d'un message sur mesure.
-  // Fiches mises en lumière par le paragraphe i (i >= 1) d'un message sur
-  // mesure : celle de même rang, et pour le dernier toutes celles qui restent.
+  // Fiches mises en avant consécutives regroupées sur une même étape : même
+  // catégorie, ou toutes deux ouvertes pour la personne au-dessus de son
+  // niveau (les deux roadmaps de Newform, par exemple).
   const groups: WelcomeStep[][] = [];
   for (const st of steps) {
     const g = groups[groups.length - 1];
-    if (g && g[0].category === st.category) g.push(st);
+    const last = g?.[g.length - 1];
+    if (last && (last.category === st.category || (last.openedForYou && st.openedForYou))) g.push(st);
     else groups.push([st]);
   }
+  // Un paragraphe de plus qu'il n'y a de groupes : le dernier met en lumière
+  // le rendez-vous, comme la visite par défaut, et la visite se ferme dessus.
+  const meetingStep = custom && paragraphs.length - 1 > groups.length;
+  const lastDocPara = paragraphs.length - 1 - (meetingStep ? 1 : 0);
+  // Fiches mises en lumière par le paragraphe i (i >= 1) d'un message sur
+  // mesure : le groupe de même rang, et pour le dernier paragraphe de fiches
+  // tous les groupes qui restent.
   const focusFor = (i: number): WelcomeStep[] => {
-    if (i === 0 || groups.length === 0) return [];
+    if (i === 0 || i > lastDocPara || groups.length === 0) return [];
     const from = Math.min(i - 1, groups.length - 1);
-    return i === paragraphs.length - 1 ? groups.slice(from).flat() : groups[from];
+    return i === lastDocPara && !meetingStep ? groups.slice(from).flat() : groups[from];
   };
-  const lastFocus = custom && paragraphs.length > 1 ? (focusFor(paragraphs.length - 1)[0] ?? null) : focus;
+  const lastFocus = custom && lastDocPara > 0 ? (focusFor(lastDocPara)[0] ?? null) : focus;
   const tour = useTourAutostart(
     preview ? null : tourKey,
     demo ? "session" : "local",
@@ -111,9 +119,17 @@ export function Welcome({
             <p className="mt-3 whitespace-pre-line text-sm leading-6 text-neutral-700">
               {p.replace(/\*\*/g, "")}
             </p>
-            {i === paragraphs.length - 1 && lastFocus && (
+            {meetingStep && i === paragraphs.length - 1 && (
               <p className="mt-2 text-xs leading-5 text-neutral-600">
-                {c.tourActions.replace("{doc}", lastFocus.title)}
+                {c.spotlight.replace("{doc}", t(locale, "meeting.cta"))}
+              </p>
+            )}
+            {i === paragraphs.length - 1 && (meetingStep || lastFocus) && (
+              <p className="mt-2 text-xs leading-5 text-neutral-600">
+                {c.tourActions.replace(
+                  "{doc}",
+                  meetingStep ? t(locale, "meeting.cta") : (lastFocus?.title ?? "")
+                )}
               </p>
             )}
           </li>
@@ -124,6 +140,7 @@ export function Welcome({
 
   const tourSteps: TourStep[] = custom
     ? paragraphs.map((text, i) => {
+        if (meetingStep && i === paragraphs.length - 1) return { text, target: "meeting" };
         const docs = focusFor(i);
         return { text, target: docs.length ? docs.map((d) => `doc-${d.slug}`) : null };
       })
@@ -138,8 +155,9 @@ export function Welcome({
         { text: c.talk, target: "meeting" },
       ];
 
-  // Sur mesure : ouvrir la dernière fiche montrée. Par défaut : le rendez-vous.
-  const finish: TourFinish | null = custom
+  // Sur mesure : ouvrir la dernière fiche montrée, ou le rendez-vous si la
+  // visite finit dessus. Par défaut : le rendez-vous.
+  const finish: TourFinish | null = custom && !meetingStep
     ? lastFocus && { label: lastFocus.title, href: lastFocus.href, external: lastFocus.external }
     : {
         label: t(locale, "meeting.cta"),
