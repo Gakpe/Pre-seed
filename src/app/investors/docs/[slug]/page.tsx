@@ -7,7 +7,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getDemoSession } from "@/lib/demo";
 import { getOnboarding } from "@/lib/onboarding";
 import { OWN_PAGE_SLUGS } from "@/lib/own-pages";
-import { RETIRED_SLUGS, UNAVAILABLE_SLUGS } from "@/lib/retired-docs";
+import { DRAFT_DOCS, DRAFT_SLUGS, RETIRED_SLUGS, UNAVAILABLE_SLUGS, draftRow } from "@/lib/retired-docs";
 import { getLocale } from "@/lib/i18n-server";
 import { docFields, t } from "@/lib/i18n";
 import type { DocumentRow } from "@/lib/types";
@@ -33,6 +33,8 @@ import { RiskCascade } from "./risk-cascade";
 import { LossCurves } from "./loss-curves";
 import { BackToTop } from "./back-to-top";
 import { ExitScenarios } from "./exit-scenarios";
+import { BusinessPlan } from "./business-plan/BusinessPlan";
+import { getBusinessPlan } from "@/lib/business-plan/data";
 
 export default async function DocPage({
   params,
@@ -51,7 +53,9 @@ export default async function DocPage({
       createAdminClient().from("documents").select("*").eq("slug", slug).maybeSingle(),
       demo.onboarding ? getOnboarding(demo.onboarding) : null,
     ]);
-    const row = data as DocumentRow | null;
+    // Brouillon : défini dans le code tant qu'il n'est pas en base.
+    const draft = DRAFT_DOCS.find((d) => d.slug === slug);
+    const row = (data as DocumentRow | null) ?? (draft ? (draftRow(draft) as DocumentRow) : null);
     doc =
       row &&
       (row.access_level <= (demo.level2 ? 2 : 1) ||
@@ -86,6 +90,9 @@ export default async function DocPage({
     }
   }
   if (!doc || RETIRED_SLUGS.has(doc.slug)) notFound();
+  // Brouillon : ouvert dans une session démo (ouverte par un admin), jamais
+  // ailleurs, même si sa ligne existe déjà en base.
+  if (DRAFT_SLUGS.has(doc.slug) && !demo) notFound();
   // Fiche en pause : fermée aux investisseurs, ouverte aux admins pour la
   // retravailler, sauf en démo où l'on montre ce que voit un investisseur.
   // En local seulement, le cookie minah_preview_paused=1 les ouvre aussi dans
@@ -102,6 +109,7 @@ export default async function DocPage({
     notFound();
 
   const { title, category, content, docsendUrl } = docFields(doc, locale);
+  const businessPlan = doc.slug === "business-plan" ? await getBusinessPlan() : null;
   if (docsendUrl && !OWN_PAGE_SLUGS.has(doc.slug)) redirect(docsendUrl);
 
   // Les fiches à schéma ou à portraits respirent mal dans la colonne de lecture.
@@ -133,6 +141,7 @@ export default async function DocPage({
     doc.slug === "pourquoi-minah" ||
     doc.slug === "term-sheet-kupanda" ||
     doc.slug === "scenarios-sortie" ||
+    doc.slug === "business-plan" ||
     note;
 
   // Ces fiches débordent en largeur, mais leur chapô reste dans une colonne
@@ -158,6 +167,7 @@ export default async function DocPage({
     doc.slug === "pourquoi-minah" ||
     doc.slug === "term-sheet-kupanda" ||
     doc.slug === "scenarios-sortie" ||
+    doc.slug === "business-plan" ||
     doc.slug === "gestion-du-risque" ||
     doc.slug === "roadmap-ecosysteme" ||
     gtmApercu ||
@@ -175,6 +185,7 @@ export default async function DocPage({
     doc.slug === "track-record" ||
     doc.slug === "go-to-market-apercu" ||
     doc.slug === "scenarios-sortie" ||
+    doc.slug === "business-plan" ||
     doc.slug === "gestion-du-risque" ||
     team ||
     roadmap ||
@@ -182,7 +193,11 @@ export default async function DocPage({
     note ||
     businessModel;
   const headerCategory =
-    doc.slug === "pourquoi-minah" || doc.slug === "gestion-du-risque" || note || comparables;
+    doc.slug === "pourquoi-minah" ||
+    doc.slug === "gestion-du-risque" ||
+    doc.slug === "business-plan" ||
+    note ||
+    comparables;
 
   // Retour en haut sur les fiches vraiment longues : la note de marché, près de
   // sept écrans. La levée, Pourquoi Minah et le track record tiennent en moins
@@ -279,6 +294,9 @@ export default async function DocPage({
         </>
       )}
       {doc.slug === "scenarios-sortie" && <ExitScenarios locale={locale} />}
+      {/* Les chiffres sont lus côté serveur dans app_settings, jamais dans le
+          code : la page ne s'affiche qu'aux sessions autorisées. */}
+      {businessPlan && <BusinessPlan data={businessPlan} locale={locale} />}
       {doc.slug === "cap-table" && (
         <CapTableInteractive title={t(locale, "docs.captable")} locale={locale} />
       )}

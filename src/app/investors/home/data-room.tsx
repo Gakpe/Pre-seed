@@ -6,7 +6,7 @@ import { track } from "@/lib/tracking";
 import { docFields, t, type Locale } from "@/lib/i18n";
 import type { DocumentRow } from "@/lib/types";
 import { OWN_PAGE_SLUGS } from "@/lib/own-pages";
-import { UNAVAILABLE_SLUGS } from "@/lib/retired-docs";
+import { DRAFT_SLUGS, UNAVAILABLE_SLUGS } from "@/lib/retired-docs";
 
 // Regroupe par catégorie (ordre dicté par sort_order) et numérote 01, 02, …
 export function DataRoom({
@@ -111,6 +111,12 @@ export function DataRoom({
                       {opened.includes(doc.slug) && (
                         <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[11px] font-medium text-marsala">
                           {t(locale, "home.docs.openedForYou")}
+                        </span>
+                      )}
+                      {/* Brouillon : seule une démo le liste, la mention le rappelle. */}
+                      {DRAFT_SLUGS.has(doc.slug) && (
+                        <span className="rounded-full border border-dashed border-neutral-400 px-2 py-0.5 text-[11px] text-neutral-600">
+                          {t(locale, "home.docs.draft")}
                         </span>
                       )}
                     </span>

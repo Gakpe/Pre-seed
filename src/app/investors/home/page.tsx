@@ -19,7 +19,7 @@ import {
   welcomeSteps,
 } from "@/lib/onboarding";
 import { MatchingFundTooltip } from "../matching-fund-tooltip";
-import { RETIRED_SLUGS, UNAVAILABLE_SLUGS } from "@/lib/retired-docs";
+import { DRAFT_DOCS, DRAFT_SLUGS, RETIRED_SLUGS, UNAVAILABLE_SLUGS, draftRow } from "@/lib/retired-docs";
 
 // Contacts directs proposés à un investisseur en attente. Mêmes adresses que
 // le socle admin, voir ADMIN_EMAILS.
@@ -130,9 +130,13 @@ export default async function InvestorHomePage() {
       .select("*")
       .order("sort_order");
     const unlocked = new Set(onboarding?.unlocked_slugs ?? []);
-    documents = ((data ?? []) as DocumentRow[]).filter(
-      (d) => d.access_level <= (demo.level2 ? 2 : 1) || unlocked.has(d.slug)
+    // Brouillons : listés en démo seulement, au niveau qui est le leur.
+    const drafts = DRAFT_DOCS.map(draftRow).filter(
+      (d) => !(data ?? []).some((row) => row.slug === d.slug)
     );
+    documents = ([...((data ?? []) as DocumentRow[]), ...drafts] as DocumentRow[])
+      .filter((d) => d.access_level <= (demo.level2 ? 2 : 1) || unlocked.has(d.slug))
+      .sort((a, b) => a.sort_order - b.sort_order);
   } else {
     const supabase = await createClient();
     const { data } = await supabase
@@ -141,7 +145,9 @@ export default async function InvestorHomePage() {
       .order("sort_order");
     documents = data as DocumentRow[] | null;
   }
-  const docs = (documents ?? []).filter((d) => !RETIRED_SLUGS.has(d.slug));
+  const docs = (documents ?? []).filter(
+    (d) => !RETIRED_SLUGS.has(d.slug) && (demo || !DRAFT_SLUGS.has(d.slug))
+  );
   const level2Unlocked = investor.level2_access;
   // Les fiches que l'onboarding ouvre au-dessus du niveau de la personne
   // arrivent déjà par la RLS ; on les range avec le niveau 1, qui est le sien.
@@ -157,7 +163,9 @@ export default async function InvestorHomePage() {
   // qu'elle ne puisse ouvrir. D'ici là, l'accueil par défaut ; il se lance à
   // la première connexion qui suit.
   // Une fiche en pause ne compte pas : grisée, elle ne s'ouvre pas.
-  const openableDocs = docs.filter((d) => !UNAVAILABLE_SLUGS.has(d.slug));
+  const openableDocs = docs.filter(
+    (d) => !UNAVAILABLE_SLUGS.has(d.slug) && !DRAFT_SLUGS.has(d.slug)
+  );
   const customReady =
     !onboarding ||
     onboarding.focus_slugs.every((slug) => openableDocs.some((d) => d.slug === slug));
@@ -184,7 +192,7 @@ export default async function InvestorHomePage() {
       .eq("access_level", 2)
       .order("sort_order");
     lockedTitles = (locked ?? []).filter(
-      (d) => !openedForYou.has(d.slug) && !RETIRED_SLUGS.has(d.slug)
+      (d) => !openedForYou.has(d.slug) && !RETIRED_SLUGS.has(d.slug) && !DRAFT_SLUGS.has(d.slug)
     );
   }
 
