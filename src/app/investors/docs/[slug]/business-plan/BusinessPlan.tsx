@@ -79,6 +79,14 @@ const copy = {
     raised: "Montant levé",
     accelerated: "version accélérée",
     s1: "En cours : Kupanda 1 et 2",
+    s1Lead:
+      "Kupanda 1 et 2 sont nos deux premières grosses stratégies, en cours de levée. L'objectif : valider les deux d'ici le premier trimestre 2027, en deux étapes.",
+    step: (n: number) => `Étape ${n}`,
+    step1Title: (v: string) => `Plus de ${v} de revenu net 2027`,
+    step1Body: (k2: string) => `Lever ${k2} sur Kupanda 2, en plus de Kupanda 1, suffit à le verrouiller.`,
+    step2Title: "100\u00a0% de Kupanda 2 levé d'ici le T1 2027",
+    step2Body: (amount: string, net: string) =>
+      `${amount} levés sur Kupanda 1 et 2, qui portent ${net} de revenu net en 2027.`,
     s2: "Ce qui arrive",
     s3: "Revenus et dépenses en un coup d'œil",
     s4: "Cash burn, runway et accélération",
@@ -190,6 +198,14 @@ const copy = {
     raised: "Amount raised",
     accelerated: "accelerated version",
     s1: "In progress: Kupanda 1 and 2",
+    s1Lead:
+      "Kupanda 1 and 2 are our first two large strategies, currently being raised. The goal: close both by Q1 2027, in two steps.",
+    step: (n: number) => `Step ${n}`,
+    step1Title: (v: string) => `Over ${v} of 2027 net revenue`,
+    step1Body: (k2: string) => `Raising ${k2} on Kupanda 2, on top of Kupanda 1, is enough to lock it in.`,
+    step2Title: "100% of Kupanda 2 raised by Q1 2027",
+    step2Body: (amount: string, net: string) =>
+      `${amount} raised on Kupanda 1 and 2, carrying ${net} of net revenue in 2027.`,
     s2: "What comes next",
     s3: "Revenue and costs at a glance",
     s4: "Cash burn, runway and acceleration",
@@ -352,7 +368,31 @@ export function BusinessPlan({ data, locale }: { data: BusinessPlanData; locale:
       <RaiseToggle raised={raised} setRaised={setRaised} locale={locale} className="mt-8" />
 
       <Section n="01" title={c.s1} c={c}>
-        <ul className="grid gap-4 md:grid-cols-3">
+        <p className="max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{c.s1Lead}</p>
+        {/* Les deux étapes, en bandeau à deux colonnes séparées d'un filet. */}
+        <ol className="mt-5 grid border-y border-foreground/10 sm:grid-cols-2 sm:divide-x sm:divide-foreground/10">
+          {[
+            {
+              title: c.step1Title(eur(data.targets?.revenue_2027_locked ?? 1_000_000, locale)),
+              body: c.step1Body(
+                eur(amountNeededFor(data, "Kupanda 2", data.targets?.revenue_2027_locked ?? 1_000_000, ["Kupanda 1"]), locale)
+              ),
+            },
+            { title: c.step2Title, body: c.step2Body(eur(ip.amount, locale), eur(ip.net2027, locale)) },
+          ].map((st, i) => (
+            <li key={i} className="py-5 max-sm:border-t max-sm:border-foreground/10 max-sm:first:border-t-0 sm:px-6 sm:first:pl-0 sm:last:pr-0">
+              <p className="flex items-center gap-2 text-sm text-neutral-600">
+                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-brand/10 font-mono text-[11px] font-semibold text-marsala">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                {c.step(i + 1)}
+              </p>
+              <p className="mt-2 text-sm font-semibold text-foreground">{st.title}</p>
+              <p className="mt-1 text-sm leading-6 text-neutral-600">{st.body}</p>
+            </li>
+          ))}
+        </ol>
+        <ul className="mt-6 grid gap-4 md:grid-cols-3">
           {ip.list.map((s) => (
             <li key={s.strategy} className={`${CARD} flex flex-col`}>
               <div className="flex flex-wrap items-center justify-between gap-2">
