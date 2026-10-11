@@ -11,11 +11,11 @@ import {
   inProgress,
   leverBreakdown,
   netRevenue,
+  pipeline,
   pnlByYear,
   revenueByStrategy,
   riskView,
   scenarios,
-  upcoming,
   type BusinessPlanData,
   type PnlLine,
 } from "@/lib/business-plan/calc";
@@ -355,8 +355,9 @@ export function BusinessPlan({ data, locale }: { data: BusinessPlanData; locale:
   // levée accélérée (partie 2) et recalcule la trésorerie (partie 4).
   const [raised, setRaised] = useState<number>(RAISE_OPTIONS[0]);
   const ip = useMemo(() => inProgress(data), [data]);
-  const up = useMemo(() => upcoming(data), [data]);
   const pnl = useMemo(() => pnlByYear(data), [data]);
+  // « Ce qui arrive » montre toute la file, Kupanda 1 et 2 compris (11/10/2026).
+  const all = useMemo(() => pipeline(data), [data]);
   const pool = data.accelerated_pool && raised >= data.accelerated_pool.requires_raise ? data.accelerated_pool : null;
 
   return (
@@ -428,7 +429,7 @@ export function BusinessPlan({ data, locale }: { data: BusinessPlanData; locale:
       </Section>
 
       <Section n="02" title={c.s2} c={c}>
-        <Upcoming data={data} up={up} pool={pool} locale={locale} />
+        <Upcoming data={data} up={all} pool={pool} locale={locale} />
       </Section>
 
       <Section n="03" title={c.s3} c={c}>
@@ -696,7 +697,7 @@ function Upcoming({
   locale,
 }: {
   data: BusinessPlanData;
-  up: ReturnType<typeof upcoming>;
+  up: ReturnType<typeof pipeline>;
   pool: BusinessPlanData["accelerated_pool"] | null;
   locale: Locale;
 }) {
@@ -734,7 +735,16 @@ function Upcoming({
             {up.list.map((s) => (
               <Fragment key={s.strategy}>
                 <tr className={rowClass(s.strategy)} onClick={() => toggle(s.strategy)}>
-                  <td className={`${pad(s.strategy)} pr-4 font-medium text-foreground`}>{s.strategy}</td>
+                  <td className={`${pad(s.strategy)} pr-4 font-medium text-foreground`}>
+                    <span className="flex flex-wrap items-center gap-2">
+                      {s.strategy}
+                      {s.status === "En cours de levée" && (
+                        <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[11px] font-medium text-marsala">
+                          {c.inProgress}
+                        </span>
+                      )}
+                    </span>
+                  </td>
                   <td className={`hidden ${pad(s.strategy)} pr-4 text-neutral-600 md:table-cell`}>
                     {FAMILY[s.family]?.[locale] ?? s.family}
                   </td>

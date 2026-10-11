@@ -301,3 +301,16 @@ export function riskView(d: BusinessPlanData) {
     riskCost,
   };
 }
+
+/** Toutes les stratégies du BP, en cours et à venir, triées par premier closing. */
+export function pipeline(d: BusinessPlanData) {
+  const list = [...d.strategies]
+    .sort((a, b) => a.first_closing.localeCompare(b.first_closing))
+    .map((s) => ({ ...s, net2027: netRevenue(d, s.strategy, 2027), net2028: netRevenue(d, s.strategy, 2028) }));
+  return {
+    list,
+    amount: sum(list.map((s) => s.amount_raised)),
+    net: sum(list.map((s) => s.net2027 + s.net2028)),
+    maxAmount: Math.max(0, ...list.map((s) => s.amount_raised)),
+  };
+}
