@@ -49,6 +49,18 @@ export type Lever = {
   pct_of_raised: number;
   assumptions: string;
   assumptions_en: string;
+  /** Ce que le levier doit permettre de lever en plus (estimation hors BP). */
+  impact?: { volume: number; axis: string; text: string; text_en: string; status?: string };
+};
+
+export type AcceleratedPool = {
+  name: string;
+  name_en: string;
+  amount: number;
+  /** Montant de levée à partir duquel le fonds entre dans le plan. */
+  requires_raise: number;
+  description: string;
+  description_en: string;
 };
 
 export type BusinessPlanData = {
@@ -58,6 +70,9 @@ export type BusinessPlanData = {
   pnl_split: PnlLine[];
   cash_flows: CashFlow[];
   levers: Lever[];
+  /** Objectifs de l'équipe, hors BP : ils pilotent les chiffres phares. */
+  targets?: { revenue_2027_locked: number; volume_early_2028: number; raise_time_months?: number };
+  accelerated_pool?: AcceleratedPool;
 };
 
 /** Mois de la levée : la trésorerie la reçoit à partir de ce mois. */
@@ -186,4 +201,103 @@ export function scenarios(d: BusinessPlanData, raised: number): ScenarioRow[] {
 export function horizonMonths(d: BusinessPlanData): number {
   const last = d.cash_flows[d.cash_flows.length - 1]?.month ?? RAISE_MONTH;
   return monthsBetween(RAISE_MONTH, last) + 1;
+}
+
+// ── Ajouts du 11/10/2026 ────────────────────────────────────────────────────
+
+/** Revenus d'une année par stratégie : intérêts et frais de transaction. */
+export function revenueByStrategy(d: BusinessPlanData, year: number) {
+  return d.strategy_revenue
+    .filter((r) => r.year === year && (r.interest_income || r.transaction_fees))
+    .map((r) => ({ strategy: r.strategy, interest: r.interest_income, fees: r.transaction_fees }));
+}
+
+/**
+ * Part d'une stratégie à lever pour atteindre un revenu net 2027 donné, en plus
+ * des autres stratégies déjà comptées. Au prorata : le revenu d'une stratégie
+ * suit le montant levé.
+ */
+export function amountNeededFor(
+  d: BusinessPlanData,
+  strategy: string,
+  target: number,
+  alreadyCounted: string[]
+): number {
+  const s = d.strategies.find((x) => x.strategy === strategy);
+  if (!s) return 0;
+  const base = sum(alreadyCounted.map((n) => netRevenue(d, n, 2027)));
+  const full = netRevenue(d, strategy, 2027);
+  if (full <= 0) return s.amount_raised;
+  return Math.max(0, Math.min(1, (target - base) / full)) * s.amount_raised;
+}
+
+/** Détail du coût d'un levier sur l'horizon du BP, pour expliquer son total. */
+export function leverBreakdown(d: BusinessPlanData, l: Lever) {
+  const months = d.cash_flows.map((c) => c.month).filter((m) => m >= l.start);
+  const closings = l.pct_of_raised
+    ? d.strategies
+        .filter((s) => s.first_closing >= l.start && months.includes(s.first_closing))
+        .map((s) => ({ strategy: s.strategy, month: s.first_closing, cost: s.amount_raised * l.pct_of_raised }))
+    : [];
+  const monthly = l.monthly_cost * months.length;
+  const oneOff = l.one_off_month && d.cash_flows.some((c) => c.month === l.one_off_month) ? l.one_off_cost : 0;
+  return {
+    monthly: { perMonth: l.monthly_cost, months: months.length, total: monthly },
+    oneOff: { amount: oneOff, month: l.one_off_month },
+    closings,
+    total: monthly + oneOff + sum(closings.map((c) => c.cost)),
+  };
+}
+
+// ── Où est le risque (ajout du 11/10/2026) ──────────────────────────────────
+
+/**
+ * Revenu net 2027 perdu si chaque stratégie à venir closait `delay` mois plus
+ * tard. Approximation, à afficher comme telle : intérêts et coupons étalés
+ * uniformément à partir du closing ; les frais de transaction restent en 2027
+ * tant que le closing y reste, sinon ils basculent en 2028.
+ */
+export function delayImpact2027(d: BusinessPlanData, delay: number): number {
+  return sum(
+    d.strategies
+      .filter((s) => s.status === "À venir" && s.first_closing.startsWith("2027"))
+      .map((s) => {
+        const r = d.strategy_revenue.find((x) => x.strategy === s.strategy && x.year === 2027);
+        if (!r) return 0;
+        const m = Number(s.first_closing.slice(5, 7));
+        const active = 13 - m;
+        const kept = Math.max(0, active - delay);
+        const recurring = r.net_revenue - r.transaction_fees;
+        const fees = m + delay <= 12 ? r.transaction_fees : 0;
+        return r.net_revenue - (recurring * kept) / active - fees;
+      })
+  );
+}
+
+export function riskView(d: BusinessPlanData) {
+  const all2027 = sum(d.strategies.map((s) => netRevenue(d, s.strategy, 2027)));
+  const future = d.strategies.filter((s) => s.status === "À venir");
+  const future2027 = sum(future.map((s) => netRevenue(d, s.strategy, 2027)));
+  const closings = future.map((s) => s.first_closing).sort();
+  const span = closings.length ? monthsBetween(closings[0], closings[closings.length - 1]) + 1 : 1;
+  const totalAmount = sum(d.strategies.map((s) => s.amount_raised));
+  const weightedDefault = totalAmount
+    ? sum(d.strategies.map((s) => s.default_rate * s.amount_raised)) / totalAmount
+    : 0;
+  const riskCost = pnlByYear(d).map((y) => {
+    const line = y.costs.find((l) => l.bucket.startsWith("Risque"));
+    return { year: y.year, amount: line?.amount ?? 0, shareOfRevenue: y.rev ? (line?.amount ?? 0) / y.rev : 0 };
+  });
+  return {
+    futureShare2027: all2027 ? future2027 / all2027 : 0,
+    futureAmount: sum(future.map((s) => s.amount_raised)),
+    span,
+    firstClosing: closings[0],
+    lastClosing: closings[closings.length - 1],
+    pace: span ? sum(future.map((s) => s.amount_raised)) / span : 0,
+    largest: [...future].sort((a, b) => b.amount_raised - a.amount_raised)[0],
+    weightedDefault,
+    defaults: d.strategies.map((s) => ({ strategy: s.strategy, rate: s.default_rate, amount: s.amount_raised })),
+    riskCost,
+  };
 }

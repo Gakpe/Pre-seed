@@ -1,19 +1,27 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import {
   RAISE_MONTH,
   RAISE_OPTIONS,
+  amountNeededFor,
+  delayImpact2027,
   horizonMonths,
   inProgress,
+  leverBreakdown,
+  netRevenue,
   pnlByYear,
+  revenueByStrategy,
+  riskView,
   scenarios,
   upcoming,
   type BusinessPlanData,
   type PnlLine,
 } from "@/lib/business-plan/calc";
 import { SectionTitle } from "../section-title";
+import Link from "next/link";
+import { ScrollReveal } from "../scroll-reveal";
 
 // Fiche « Revenus, cash et runway » (business plan, niveau 2, brouillon).
 // Les chiffres arrivent du serveur (app_settings, jamais dans le code : le
@@ -42,49 +50,72 @@ const BUCKETS_EN: Record<string, string> = {
   "Équipe et frais généraux": "Team and overheads",
 };
 
-const FAMILY_EN: Record<string, string> = {
-  "Eastern Africa - SMEs strategies": "Eastern Africa, SMEs",
-  "Western Africa - SMEs strategies": "Western Africa, SMEs",
-  "Eastern Africa - Startups strategies": "Eastern Africa, startups",
-  "Western Africa - Startups strategies": "Western Africa, startups",
+const FAMILY: Record<string, { fr: string; en: string }> = {
+  "Eastern Africa - SMEs strategies": { fr: "Afrique de l'Est, PME", en: "Eastern Africa, SMEs" },
+  "Western Africa - SMEs strategies": { fr: "Afrique de l'Ouest, PME", en: "Western Africa, SMEs" },
+  "Eastern Africa - Startups strategies": { fr: "Afrique de l'Est, startups", en: "Eastern Africa, startups" },
+  "Western Africa - Startups strategies": { fr: "Afrique de l'Ouest, startups", en: "Western Africa, startups" },
 };
-const FAMILY_FR: Record<string, string> = {
-  "Eastern Africa - SMEs strategies": "Afrique de l'Est, PME",
-  "Western Africa - SMEs strategies": "Afrique de l'Ouest, PME",
-  "Eastern Africa - Startups strategies": "Afrique de l'Est, startups",
-  "Western Africa - Startups strategies": "Afrique de l'Ouest, startups",
-};
+
+const AXIS_EN: Record<string, string> = { Temps: "Time", Volume: "Volume", Qualité: "Quality", Valorisation: "Valuation" };
 
 const copy = {
   fr: {
     kicker: "Minah SAS, business plan 2026-2028, scénario Best Case",
-    lead: (a: string, b: string, n: number, c: string, d: string) =>
-      `Kupanda 1 et 2, en cours de levée pour ${a}, génèrent ${b} de revenu net en 2027. ${n} autres stratégies, soit ${c} à lever d'ici début 2028, ajoutent ${d} sur 2027-2028.`,
+    f1Label: "En cours",
+    f1Title: "Kupanda 1 se finalise, Kupanda 2 arrive",
+    f1a: (m: string) => `Kupanda 1, finalisation en cours (premier closing ${m})`,
+    f1b: "Kupanda 2, une bonne partie levée d'ici fin 2026",
+    f2Label: "Ce que ça verrouille",
+    f2Title: (v: string) => `Plus de ${v} de revenu net 2027, sécurisé avant fin 2026`,
+    f2Body: (k1: string, k2: string) =>
+      `Kupanda 1 apporte ${k1} de revenu net en 2027 ; il suffit de lever ${k2} sur Kupanda 2 pour dépasser le million.`,
+    f3Label: "Début 2028",
+    f3Title: (v: string) => `Plus de ${v} de volume levé`,
+    f3Body: (rev: string, vol: string) =>
+      `Dans le BP actuel (${vol} levés), le chiffre d'affaires 2028 atteint ${rev}. Le BP est en cours de mise à jour sur l'objectif de 100 M€.`,
     netDef:
       "Revenu net d'une stratégie : intérêts encaissés et frais de transaction, moins les coupons versés aux porteurs, avant coût du risque, partage de performance et distribution.",
+    raised: "Montant levé",
+    accelerated: "version accélérée",
     s1: "En cours : Kupanda 1 et 2",
     s2: "Ce qui arrive",
     s3: "Revenus et dépenses en un coup d'œil",
     s4: "Cash burn, runway et accélération",
+    open: "Déplier",
+    close: "Replier",
     inProgress: "En cours de levée",
     net2027: "revenu net 2027",
     amount: "Montant",
     coupon: "Coupon porteurs",
     grossYield: "Rendement brut attendu",
+    defaultRate: "Taux de défaut retenu",
+    duration: "Durée",
     fees: "Frais de transaction",
     total: "Kupanda 1 + 2",
     totalAmount: "Montant total",
     share: "Part du revenu net 2027 de Minah",
     th: ["Stratégie", "Segment", "1er closing", "Montant", "Revenu net 2027", "Revenu net 2028"],
     upcomingTotal: "Total",
+    withPool: "dont le fonds de la levée accélérée",
+    clickStrategy: "Cliquez sur une stratégie pour voir ses caractéristiques.",
+    poolTag: "Levée accélérée",
+    tbd: "à définir",
+    byYear: "Par année",
+    interest: "Intérêts",
+    coupons: "Coupons versés",
+    net: "Revenu net",
+    months: (n: number) => `${n} mois`,
     revenues: "Revenus",
     costs: "Dépenses",
     ebitda: "EBITDA",
     ofTotal: "du total",
-    raised: "Montant levé",
+    fromStrategies: "Par stratégie",
     scenarioTh: [
       "Scénario",
-      "Coût de l'accélération (estimations)",
+      "Coût du levier seul",
+      "Coût cumulé",
+      "Volume en plus, estimation",
       "Burn mensuel 2027",
       "Runway sans revenu",
       "Runway selon le BP",
@@ -92,47 +123,106 @@ const copy = {
       "Trésorerie fin 2028",
     ],
     planBp: "Plan BP",
-    months: (n: number) => `${n} mois`,
-    beyond: (n: number) => `> ${n} mois`,
+    beyond: (n: number) => `> ${n} mois`,
     chartTitle: "Trésorerie mois par mois",
     raise: "Levée",
-    clickHint: "Cliquez sur une ligne pour afficher sa courbe.",
-    leversTitle: "Hypothèses de chaque levier",
-    addedCost: "coût ajouté, estimation",
+    clickHint: "Cliquez sur une ligne pour afficher sa courbe et le détail du levier.",
+    planHint: "Le Plan BP n'ajoute aucun levier : choisissez une ligne pour voir le détail de son coût.",
+    whyCost: "Pourquoi ce coût",
+    perMonth: (a: string, n: number) => `${a} par mois sur ${n} mois`,
+    oneOff: (a: string, m: string) => `${a} ponctuels (${m})`,
+    coverage: (rate: string) => `Couverture à ${rate} des montants levés à chaque closing`,
+    assumptions: "Hypothèses",
+    gain: "Ce que ça doit permettre de lever en plus",
+    proposal: "Proposition, à valider",
     notModelled:
-      "Les revenus supplémentaires que ces leviers peuvent apporter ne sont pas modélisés : seuls leurs coûts le sont.",
+      "Les coûts des leviers sont des estimations, hors BP. Leurs revenus supplémentaires ne sont pas modélisés dans la trésorerie : le volume en plus est une estimation à part.",
+    s5: "Où est le risque dans notre modèle",
+    s5Lead:
+      "Deux choses peuvent casser le plan : une stratégie qui ne se lève pas assez vite, et des défauts au-delà de ce que la structure absorbe. Voici comment le BP les prend en compte.",
+    raiseTitle: "Lever vite",
+    raiseBase: (n: number) => `Hypothèse de base : une stratégie se lève en ${n}\u00a0mois après son lancement.`,
+    pace: (a: string, n: number, from: string, to: string) =>
+      `Le BP suppose ${a} levés sur ${n}\u00a0mois (${from} à ${to}).`,
+    perMonthPace: "par mois en moyenne",
+    largest: (name: string, a: string, m: string) => `La plus grosse : ${name}, ${a} en ${m}.`,
+    dependence: "du revenu net 2027 vient de stratégies pas encore levées",
+    delayTitle: "Si chaque stratégie à venir closait plus tard",
+    delay: (n: number) => `${n}\u00a0mois de retard`,
+    lost2027: "de revenu net 2027 en moins",
+    approx:
+      "Approximation : intérêts et coupons étalés à partir du closing, frais de transaction reportés à 2028 si le closing y bascule.",
+    cushion: (n: string, a: string) => `Si aucune nouvelle stratégie ne se levait, ${a} levés couvrent ${n} de burn (Plan BP).`,
+    defaultTitle: "Se protéger en cas de défaut",
+    defaultRates: "Taux de défaut retenus par le BP",
+    weighted: "moyenne pondérée par les montants",
+    riskCost: (y: number) => `Coût du risque provisionné en ${y}`,
+    ofRevenue: "des revenus",
+    riskCostNote:
+      "Le poste du P&L regroupe le coût du risque et le partage de performance : le BP ne les sépare pas.",
+    cascade:
+      "Au-delà du provisionnement, chaque stratégie a sa cascade de protections : performance bond, assurance crédit, assurance du risque systémique et currency swap, puis la tranche junior de Minah, en première perte. Sur Kupanda, la structure tient jusqu'à 30\u00a0% de pertes cumulées, 6,5\u00a0fois le niveau historique.",
+    cascadeLink: "Voir l'architecture de risque",
+    lever3: "Le levier « Protection du portefeuille » ajoute une couverture à 0,5\u00a0% des montants levés à chaque closing.",
     source:
-      "Source : business plan Minah SAS (fichier 260902_Minah_BP.xlsx), scénario Best Case, montants en euros. Coûts des leviers d'accélération : estimations, hors BP.",
+      "Source : business plan Minah SAS (fichier 260902_Minah_BP.xlsx), scénario Best Case, montants en euros. Coûts des leviers d'accélération, volumes en plus et temps de levée : estimations, hors BP.",
   },
   en: {
     kicker: "Minah SAS, 2026-2028 business plan, Best Case scenario",
-    lead: (a: string, b: string, n: number, c: string, d: string) =>
-      `Kupanda 1 and 2, currently raising ${a}, generate ${b} of net revenue in 2027. ${n} further strategies, ${c} to raise by early 2028, add ${d} over 2027-2028.`,
+    f1Label: "In progress",
+    f1Title: "Kupanda 1 is closing, Kupanda 2 is next",
+    f1a: (m: string) => `Kupanda 1, being finalised (first closing ${m})`,
+    f1b: "Kupanda 2, a large part raised by end 2026",
+    f2Label: "What it locks in",
+    f2Title: (v: string) => `Over ${v} of 2027 net revenue, secured before end 2026`,
+    f2Body: (k1: string, k2: string) =>
+      `Kupanda 1 brings ${k1} of net revenue in 2027; raising ${k2} on Kupanda 2 is enough to pass one million.`,
+    f3Label: "Early 2028",
+    f3Title: (v: string) => `Over ${v} of volume raised`,
+    f3Body: (rev: string, vol: string) =>
+      `In the current BP (${vol} raised), 2028 revenue reaches ${rev}. The BP is being updated on the €100M target.`,
     netDef:
       "Net revenue of a strategy: interest received and transaction fees, minus coupons paid to bondholders, before cost of risk, performance sharing and distribution.",
+    raised: "Amount raised",
+    accelerated: "accelerated version",
     s1: "In progress: Kupanda 1 and 2",
     s2: "What comes next",
     s3: "Revenue and costs at a glance",
     s4: "Cash burn, runway and acceleration",
+    open: "Expand",
+    close: "Collapse",
     inProgress: "Raising",
     net2027: "net revenue 2027",
     amount: "Amount",
     coupon: "Bondholder coupon",
     grossYield: "Expected gross yield",
+    defaultRate: "Assumed default rate",
+    duration: "Duration",
     fees: "Transaction fees",
     total: "Kupanda 1 + 2",
     totalAmount: "Total amount",
     share: "Share of Minah's 2027 net revenue",
     th: ["Strategy", "Segment", "First closing", "Amount", "Net revenue 2027", "Net revenue 2028"],
     upcomingTotal: "Total",
+    withPool: "including the accelerated round fund",
+    clickStrategy: "Click a strategy to see its characteristics.",
+    poolTag: "Accelerated round",
+    tbd: "to be defined",
+    byYear: "By year",
+    interest: "Interest",
+    coupons: "Coupons paid",
+    net: "Net revenue",
+    months: (n: number) => `${n} months`,
     revenues: "Revenue",
     costs: "Costs",
     ebitda: "EBITDA",
     ofTotal: "of total",
-    raised: "Amount raised",
+    fromStrategies: "By strategy",
     scenarioTh: [
       "Scenario",
-      "Acceleration cost (estimates)",
+      "Lever cost alone",
+      "Cumulative cost",
+      "Extra volume, estimate",
       "Monthly burn 2027",
       "Runway without revenue",
       "Runway per the BP",
@@ -140,19 +230,52 @@ const copy = {
       "Cash end 2028",
     ],
     planBp: "BP plan",
-    months: (n: number) => `${n} months`,
     beyond: (n: number) => `> ${n} months`,
     chartTitle: "Monthly cash position",
     raise: "Raise",
-    clickHint: "Click a row to show its curve.",
-    leversTitle: "Assumptions behind each lever",
-    addedCost: "added cost, estimate",
+    clickHint: "Click a row to show its curve and the lever's detail.",
+    planHint: "The BP plan adds no lever: pick a row to see the detail of its cost.",
+    whyCost: "Why this cost",
+    perMonth: (a: string, n: number) => `${a} per month over ${n} months`,
+    oneOff: (a: string, m: string) => `${a} one-off (${m})`,
+    coverage: (rate: string) => `Cover at ${rate} of the amounts raised at each closing`,
+    assumptions: "Assumptions",
+    gain: "What it should help raise on top",
+    proposal: "Proposal, to be validated",
     notModelled:
-      "The additional revenue these levers may bring is not modelled: only their costs are.",
+      "Lever costs are estimates, outside the BP. Their extra revenue is not modelled in the cash position: the extra volume is a separate estimate.",
+    s5: "Where the risk sits in our model",
+    s5Lead:
+      "Two things can break the plan: a strategy that does not raise fast enough, and defaults beyond what the structure absorbs. Here is how the BP accounts for them.",
+    raiseTitle: "Raising fast",
+    raiseBase: (n: number) => `Base assumption: a strategy is raised within ${n} months of its launch.`,
+    pace: (a: string, n: number, from: string, to: string) =>
+      `The BP assumes ${a} raised over ${n} months (${from} to ${to}).`,
+    perMonthPace: "per month on average",
+    largest: (name: string, a: string, m: string) => `The largest: ${name}, ${a} in ${m}.`,
+    dependence: "of 2027 net revenue comes from strategies not yet raised",
+    delayTitle: "If every upcoming strategy closed later",
+    delay: (n: number) => `${n} months late`,
+    lost2027: "less 2027 net revenue",
+    approx:
+      "Approximation: interest and coupons spread from closing, transaction fees moved to 2028 if the closing slips into it.",
+    cushion: (n: string, a: string) => `If no new strategy were raised, ${a} raised covers ${n} of burn (BP plan).`,
+    defaultTitle: "Protecting against defaults",
+    defaultRates: "Default rates assumed in the BP",
+    weighted: "weighted average by amount",
+    riskCost: (y: number) => `Cost of risk provisioned in ${y}`,
+    ofRevenue: "of revenue",
+    riskCostNote: "This P&L line combines cost of risk and performance sharing: the BP does not split them.",
+    cascade:
+      "Beyond provisioning, each strategy has its cascade of protections: performance bond, credit insurance, systemic risk insurance and currency swap, then Minah's junior tranche as first loss. On Kupanda, the structure holds up to 30% cumulative losses, 6.5 times the historical level.",
+    cascadeLink: "See the risk architecture",
+    lever3: "The \u201cPortfolio protection\u201d lever adds cover at 0.5% of the amounts raised at each closing.",
     source:
-      "Source: Minah SAS business plan (file 260902_Minah_BP.xlsx), Best Case scenario, amounts in euros. Acceleration lever costs: estimates, outside the BP.",
+      "Source: Minah SAS business plan (file 260902_Minah_BP.xlsx), Best Case scenario, amounts in euros. Acceleration lever costs, extra volumes and raising time: estimates, outside the BP.",
   },
 } as const;
+
+type Copy = (typeof copy)[Locale];
 
 // ── Formats ─────────────────────────────────────────────────────────────────
 
@@ -197,24 +320,28 @@ function month(m: string, locale: Locale) {
 
 const CARD = "rounded-xl border border-foreground/10 bg-white/50 p-5";
 
+// ── Page ────────────────────────────────────────────────────────────────────
+
 export function BusinessPlan({ data, locale }: { data: BusinessPlanData; locale: Locale }) {
   const c = copy[locale];
+  // Montant de la levée : piloté en haut de page, il ouvre le fonds de la
+  // levée accélérée (partie 2) et recalcule la trésorerie (partie 4).
+  const [raised, setRaised] = useState<number>(RAISE_OPTIONS[0]);
   const ip = useMemo(() => inProgress(data), [data]);
   const up = useMemo(() => upcoming(data), [data]);
   const pnl = useMemo(() => pnlByYear(data), [data]);
+  const pool = data.accelerated_pool && raised >= data.accelerated_pool.requires_raise ? data.accelerated_pool : null;
 
   return (
     <div className="mt-8">
       <p className="text-sm text-neutral-600">{c.kicker}</p>
-      <p className="mt-3 max-w-3xl text-xl font-semibold leading-snug tracking-tight text-foreground sm:text-2xl">
-        {c.lead(eur(ip.amount, locale), eur(ip.net2027, locale), up.list.length, eur(up.amount, locale), eur(up.net, locale))}
-      </p>
-      <p className="mt-4 max-w-3xl text-sm leading-6 text-neutral-600">{c.netDef}</p>
+      <KeyFacts data={data} locale={locale} />
+      <p className="mt-6 max-w-3xl text-sm leading-6 text-neutral-600">{c.netDef}</p>
 
-      {/* 01, Kupanda 1 et 2 */}
-      <section className="mt-14">
-        <SectionTitle n="01">{c.s1}</SectionTitle>
-        <ul className="mt-6 grid gap-4 md:grid-cols-3">
+      <RaiseToggle raised={raised} setRaised={setRaised} locale={locale} className="mt-8" />
+
+      <Section n="01" title={c.s1} c={c}>
+        <ul className="grid gap-4 md:grid-cols-3">
           {ip.list.map((s) => (
             <li key={s.strategy} className={`${CARD} flex flex-col`}>
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -247,77 +374,256 @@ export function BusinessPlan({ data, locale }: { data: BusinessPlanData; locale:
             </dl>
           </li>
         </ul>
-      </section>
+      </Section>
 
-      {/* 02, ce qui arrive */}
-      <section className="mt-14">
-        <SectionTitle n="02">{c.s2}</SectionTitle>
-        <div className="mt-6 overflow-x-auto">
-          <table className="w-full min-w-[520px] border-collapse text-sm">
-            <thead>
-              <tr className="border-b border-foreground/15 text-left text-neutral-600">
-                <th className="py-2 pr-4 font-medium">{c.th[0]}</th>
-                <th className="hidden py-2 pr-4 font-medium md:table-cell">{c.th[1]}</th>
-                <th className="py-2 pr-4 font-medium">{c.th[2]}</th>
-                <th className="py-2 pr-4 font-medium">{c.th[3]}</th>
-                <th className="py-2 pr-4 text-right font-medium">{c.th[4]}</th>
-                <th className="py-2 text-right font-medium">{c.th[5]}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {up.list.map((s) => (
-                <tr key={s.strategy} className="border-b border-foreground/10">
-                  <td className="py-3 pr-4 font-medium text-foreground">{s.strategy}</td>
-                  <td className="hidden py-3 pr-4 text-neutral-600 md:table-cell">
-                    {(locale === "fr" ? FAMILY_FR : FAMILY_EN)[s.family] ?? s.family}
-                  </td>
-                  <td className="whitespace-nowrap py-3 pr-4 text-neutral-700">{month(s.first_closing, locale)}</td>
-                  <td className="py-3 pr-4">
-                    <div className="flex items-center gap-3">
-                      <span className="w-16 shrink-0 tabular-nums text-neutral-700">{eur(s.amount_raised, locale)}</span>
-                      <span className="hidden h-2 flex-1 rounded-full bg-foreground/[0.06] sm:block">
-                        <span
-                          className="block h-2 rounded-full"
-                          style={{ width: `${(s.amount_raised / up.maxAmount) * 100}%`, background: MARSALA }}
-                        />
-                      </span>
-                    </div>
-                  </td>
-                  <td className="py-3 pr-4 text-right tabular-nums text-neutral-700">{eur(s.net2027, locale)}</td>
-                  <td className="py-3 text-right tabular-nums text-neutral-700">{eur(s.net2028, locale)}</td>
-                </tr>
-              ))}
-              <tr className="font-semibold text-foreground">
-                <td className="py-3 pr-4">{c.upcomingTotal}</td>
-                <td className="hidden md:table-cell" />
-                <td />
-                <td className="py-3 pr-4 tabular-nums">{eur(up.amount, locale)}</td>
-                <td className="py-3 pr-4 text-right tabular-nums">
-                  {eur(up.list.reduce((a, s) => a + s.net2027, 0), locale)}
-                </td>
-                <td className="py-3 text-right tabular-nums">
-                  {eur(up.list.reduce((a, s) => a + s.net2028, 0), locale)}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+      <Section n="02" title={c.s2} c={c}>
+        <Upcoming data={data} up={up} pool={pool} locale={locale} />
+      </Section>
 
-      {/* 03, revenus et dépenses */}
-      <section className="mt-14">
-        <SectionTitle n="03">{c.s3}</SectionTitle>
-        <PnlBars pnl={pnl} locale={locale} />
-      </section>
+      <Section n="03" title={c.s3} c={c}>
+        <PnlBars data={data} pnl={pnl} locale={locale} />
+      </Section>
 
-      {/* 04, trésorerie et accélération */}
-      <section className="mt-14">
-        <SectionTitle n="04">{c.s4}</SectionTitle>
-        <Runway data={data} locale={locale} />
-      </section>
+      <Section n="04" title={c.s4} c={c}>
+        <RaiseToggle raised={raised} setRaised={setRaised} locale={locale} />
+        <Runway data={data} raised={raised} locale={locale} />
+      </Section>
+
+      <Section n="05" title={c.s5} c={c}>
+        <RiskSection data={data} raised={raised} locale={locale} />
+      </Section>
 
       <p className="mt-14 border-t border-foreground/10 pt-4 text-xs leading-5 text-neutral-600">{c.source}</p>
     </div>
+  );
+}
+
+// ── Partie 5 : où est le risque ─────────────────────────────────────────────
+
+function RiskSection({ data, raised, locale }: { data: BusinessPlanData; raised: number; locale: Locale }) {
+  const c = copy[locale];
+  const r = useMemo(() => riskView(data), [data]);
+  const plan = useMemo(() => scenarios(data, raised)[0], [data, raised]);
+  const base = data.targets?.raise_time_months;
+
+  return (
+    <div>
+      <p className="max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{c.s5Lead}</p>
+      <div className="mt-6 grid gap-4 lg:grid-cols-2">
+        <div className={CARD}>
+          <h3 className="text-sm font-semibold text-foreground">{c.raiseTitle}</h3>
+          {base ? (
+            <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-neutral-700">
+              {c.raiseBase(base)}
+              <span className="rounded-full border border-dashed border-neutral-400 px-2 py-0.5 text-[11px] text-neutral-600">
+                {c.proposal}
+              </span>
+            </p>
+          ) : null}
+          <p className="mt-4 text-3xl font-semibold tracking-tight tabular-nums text-marsala">{pct(r.futureShare2027, locale, 0)}</p>
+          <p className="text-sm text-neutral-600">{c.dependence}</p>
+          <p className="mt-4 text-sm leading-6 text-neutral-700">
+            {c.pace(eur(r.futureAmount, locale), r.span, month(r.firstClosing, locale), month(r.lastClosing, locale))}{" "}
+            <span className="font-semibold text-foreground">{eur(r.pace, locale)}</span> {c.perMonthPace}.{" "}
+            {r.largest && c.largest(r.largest.strategy, eur(r.largest.amount_raised, locale), month(r.largest.first_closing, locale))}
+          </p>
+          <p className="mt-5 text-sm font-semibold text-foreground">{c.delayTitle}</p>
+          <dl className="mt-2 grid grid-cols-2 gap-px overflow-hidden rounded-lg bg-foreground/10">
+            {[3, 6].map((m) => (
+              <div key={m} className="bg-[#fbfaf7] p-3">
+                <dt className="text-sm text-neutral-600">{c.delay(m)}</dt>
+                <dd className="mt-1 text-xl font-semibold tabular-nums" style={{ color: NEGATIVE }}>
+                  {eur(-delayImpact2027(data, m), locale)}
+                </dd>
+                <dd className="text-xs text-neutral-600">{c.lost2027}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-2 text-xs leading-5 text-neutral-600">{c.approx}</p>
+          <p className="mt-4 text-sm leading-6 text-neutral-700">{c.cushion(c.months(plan.runwayNoRevenue), eur(raised, locale))}</p>
+        </div>
+
+        <div className={CARD}>
+          <h3 className="text-sm font-semibold text-foreground">{c.defaultTitle}</h3>
+          <p className="mt-3 text-sm text-neutral-600">{c.defaultRates}</p>
+          <ul className="mt-2 space-y-1 text-sm">
+            {r.defaults.map((x) => (
+              <li key={x.strategy} className="flex justify-between gap-3">
+                <span className="text-neutral-700">{x.strategy}</span>
+                <span className="tabular-nums text-foreground">{pct(x.rate, locale, 1)}</span>
+              </li>
+            ))}
+            <li className="flex justify-between gap-3 border-t border-foreground/10 pt-1 font-semibold text-foreground">
+              <span>{c.weighted}</span>
+              <span className="tabular-nums">{pct(r.weightedDefault, locale, 1)}</span>
+            </li>
+          </ul>
+          <div className="mt-5 grid grid-cols-2 gap-px overflow-hidden rounded-lg bg-foreground/10">
+            {r.riskCost
+              .filter((y) => y.year >= 2027)
+              .map((y) => (
+                <div key={y.year} className="bg-[#fbfaf7] p-3">
+                  <p className="text-sm text-neutral-600">{c.riskCost(y.year)}</p>
+                  <p className="mt-1 text-xl font-semibold tabular-nums text-foreground">{eur(y.amount, locale)}</p>
+                  <p className="text-xs text-neutral-600">
+                    {pct(y.shareOfRevenue, locale, 0)} {c.ofRevenue}
+                  </p>
+                </div>
+              ))}
+          </div>
+          <p className="mt-2 text-xs leading-5 text-neutral-600">{c.riskCostNote}</p>
+          <p className="mt-4 text-sm leading-6 text-neutral-700">{c.cascade}</p>
+          <p className="mt-2 text-sm leading-6 text-neutral-700">{c.lever3}</p>
+          <Link
+            href="/investors/docs/gestion-du-risque"
+            className="mt-3 inline-block whitespace-nowrap rounded-lg text-sm font-medium text-marsala underline decoration-marsala/30 underline-offset-4 hover:decoration-marsala"
+          >
+            {c.cascadeLink} →
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Trois chiffres phares, qui arrivent au défilement ───────────────────────
+
+function KeyFacts({ data, locale }: { data: BusinessPlanData; locale: Locale }) {
+  const c = copy[locale];
+  const k1 = data.strategies.find((s) => s.strategy === "Kupanda 1");
+  const k2 = data.strategies.find((s) => s.strategy === "Kupanda 2");
+  const target = data.targets?.revenue_2027_locked ?? 1_000_000;
+  const volume = data.targets?.volume_early_2028 ?? 100_000_000;
+  const k1Net = netRevenue(data, "Kupanda 1", 2027);
+  const k2Needed = amountNeededFor(data, "Kupanda 2", target, ["Kupanda 1"]);
+  const bpVolume = data.strategies.reduce((a, s) => a + s.amount_raised, 0);
+  const rev2028 = pnlByYear(data).find((y) => y.year === 2028)?.rev ?? 0;
+
+  const facts = [
+    {
+      label: c.f1Label,
+      title: c.f1Title,
+      big: (
+        <div className="grid grid-cols-2 gap-6">
+          <BigNumber value={eur(k1?.amount_raised ?? 0, locale)} caption={c.f1a(month(k1?.first_closing ?? RAISE_MONTH, locale))} />
+          <BigNumber value={eur(k2?.amount_raised ?? 0, locale)} caption={c.f1b} />
+        </div>
+      ),
+    },
+    {
+      label: c.f2Label,
+      title: c.f2Title(eur(target, locale)),
+      big: <BigNumber value={`> ${eur(target, locale)}`} caption={c.f2Body(eur(k1Net, locale), eur(k2Needed, locale))} />,
+    },
+    {
+      label: c.f3Label,
+      title: c.f3Title(eur(volume, locale)),
+      big: <BigNumber value={`> ${eur(volume, locale)}`} caption={c.f3Body(eur(rev2028, locale), eur(bpVolume, locale))} />,
+    },
+  ];
+
+  return (
+    <ol className="mt-6 divide-y divide-foreground/10 border-y border-foreground/10">
+      {facts.map((f, i) => (
+        <li key={i} className="py-10 sm:py-14">
+          <ScrollReveal delay={i === 0 ? 0 : 120}>
+            <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:items-center md:gap-12">
+              <div>
+                <p className="flex items-center gap-3 text-sm text-neutral-600">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand/10 font-mono text-sm font-semibold text-marsala">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {f.label}
+                </p>
+                <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-[28px]">
+                  {f.title}
+                </h2>
+              </div>
+              {f.big}
+            </div>
+          </ScrollReveal>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function BigNumber({ value, caption }: { value: string; caption: string }) {
+  return (
+    <div>
+      <p className="whitespace-nowrap text-4xl font-semibold tracking-tight tabular-nums text-marsala sm:text-5xl">{value}</p>
+      <p className="mt-2 text-[15px] leading-[1.7] text-neutral-700">{caption}</p>
+    </div>
+  );
+}
+
+// ── Commandes communes ──────────────────────────────────────────────────────
+
+function RaiseToggle({
+  raised,
+  setRaised,
+  locale,
+  className = "",
+}: {
+  raised: number;
+  setRaised: (r: number) => void;
+  locale: Locale;
+  className?: string;
+}) {
+  const c = copy[locale];
+  return (
+    <div className={`flex flex-wrap items-center gap-3 ${className}`}>
+      <span className="text-sm text-neutral-600">{c.raised}</span>
+      <div className="inline-flex rounded-lg border border-foreground/15 p-0.5" role="group">
+        {RAISE_OPTIONS.map((r) => (
+          <button
+            key={r}
+            onClick={() => setRaised(r)}
+            aria-pressed={raised === r}
+            className={`rounded-md px-3 py-1 text-sm transition-colors ${
+              raised === r ? "bg-foreground text-background" : "text-foreground hover:bg-foreground/5"
+            }`}
+          >
+            {eur(r, locale)}
+            {r === RAISE_OPTIONS[RAISE_OPTIONS.length - 1] && (
+              <span className={raised === r ? "text-background/75" : "text-neutral-600"}>, {c.accelerated}</span>
+            )}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Partie repliable : le titre est le bouton, ouvert par défaut.
+function Section({ n, title, c, children }: { n: string; title: string; c: Copy; children: React.ReactNode }) {
+  const [open, setOpen] = useState(true);
+  return (
+    <section className="mt-14">
+      <button
+        onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        className="group flex w-full items-center justify-between gap-4 rounded-lg text-left outline-none focus-visible:ring-2 focus-visible:ring-marsala/40"
+      >
+        <SectionTitle n={n}>{title}</SectionTitle>
+        <span className="flex shrink-0 items-center gap-2 text-sm text-neutral-600 group-hover:text-foreground">
+          <span className="hidden sm:inline">{open ? c.close : c.open}</span>
+          <svg
+            aria-hidden
+            viewBox="0 0 16 16"
+            className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M4 6l4 4 4-4" />
+          </svg>
+        </span>
+      </button>
+      {open && <div className="mt-6">{children}</div>}
+    </section>
   );
 }
 
@@ -330,11 +636,190 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
 
-// ── Barres revenus / dépenses ───────────────────────────────────────────────
+// ── Partie 2 : les stratégies à venir ───────────────────────────────────────
 
-type Hover = { label: string; amount: number; share: number; x: number; y: number } | null;
+function Upcoming({
+  data,
+  up,
+  pool,
+  locale,
+}: {
+  data: BusinessPlanData;
+  up: ReturnType<typeof upcoming>;
+  pool: BusinessPlanData["accelerated_pool"] | null;
+  locale: Locale;
+}) {
+  const c = copy[locale];
+  const [selected, setSelected] = useState<string | null>(null);
+  const max = Math.max(up.maxAmount, pool?.amount ?? 0);
+  const rowClass = (key: string) =>
+    `cursor-pointer border-b border-foreground/10 transition-all ${
+      selected === key ? "bg-brand/[0.06]" : selected ? "text-[13px] opacity-50 hover:opacity-80" : "hover:bg-foreground/[0.03]"
+    }`;
+  const pad = (key: string) => (selected && selected !== key ? "py-1.5" : "py-3");
+  const toggle = (key: string) => setSelected(selected === key ? null : key);
+  const bar = (amount: number, color: string) => (
+    <span className="hidden h-2 w-24 shrink-0 rounded-full bg-foreground/[0.06] sm:block">
+      <span className="block h-2 rounded-full" style={{ width: `${(amount / max) * 100}%`, background: color }} />
+    </span>
+  );
 
-function PnlBars({ pnl, locale }: { pnl: ReturnType<typeof pnlByYear>; locale: Locale }) {
+  return (
+    <div>
+      <p className="text-sm text-neutral-600">{c.clickStrategy}</p>
+      <div className="mt-3 overflow-x-auto">
+        <table className="w-full min-w-[520px] border-collapse text-sm">
+          <thead>
+            <tr className="border-b border-foreground/15 text-left text-neutral-600">
+              <th className="py-2 pr-4 font-medium">{c.th[0]}</th>
+              <th className="hidden py-2 pr-4 font-medium md:table-cell">{c.th[1]}</th>
+              <th className="py-2 pr-4 font-medium">{c.th[2]}</th>
+              <th className="py-2 pr-4 font-medium">{c.th[3]}</th>
+              <th className="py-2 pr-4 text-right font-medium">{c.th[4]}</th>
+              <th className="py-2 text-right font-medium">{c.th[5]}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {up.list.map((s) => (
+              <Fragment key={s.strategy}>
+                <tr className={rowClass(s.strategy)} onClick={() => toggle(s.strategy)}>
+                  <td className={`${pad(s.strategy)} pr-4 font-medium text-foreground`}>{s.strategy}</td>
+                  <td className={`hidden ${pad(s.strategy)} pr-4 text-neutral-600 md:table-cell`}>
+                    {FAMILY[s.family]?.[locale] ?? s.family}
+                  </td>
+                  <td className={`whitespace-nowrap ${pad(s.strategy)} pr-4 text-neutral-700`}>{month(s.first_closing, locale)}</td>
+                  <td className={`${pad(s.strategy)} pr-4`}>
+                    <div className="flex items-center gap-3">
+                      <span className="w-16 shrink-0 tabular-nums text-neutral-700">{eur(s.amount_raised, locale)}</span>
+                      {bar(s.amount_raised, MARSALA)}
+                    </div>
+                  </td>
+                  <td className={`${pad(s.strategy)} pr-4 text-right tabular-nums text-neutral-700`}>{eur(s.net2027, locale)}</td>
+                  <td className={`${pad(s.strategy)} text-right tabular-nums text-neutral-700`}>{eur(s.net2028, locale)}</td>
+                </tr>
+                {selected === s.strategy && (
+                  <tr className="border-b border-foreground/10 bg-brand/[0.03]">
+                    <td colSpan={6} className="px-1 py-5">
+                      <StrategyDetail data={data} name={s.strategy} locale={locale} />
+                    </td>
+                  </tr>
+                )}
+              </Fragment>
+            ))}
+            {pool && (
+              <Fragment>
+                <tr className={rowClass("pool")} onClick={() => toggle("pool")}>
+                  <td className={`${pad("pool")} pr-4 font-medium text-foreground`}>
+                    <span className="flex flex-wrap items-center gap-2">
+                      {locale === "fr" ? pool.name : pool.name_en}
+                      <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[11px] font-medium text-marsala">{c.poolTag}</span>
+                    </span>
+                  </td>
+                  <td className={`hidden ${pad("pool")} pr-4 text-neutral-600 md:table-cell`}>{c.tbd}</td>
+                  <td className={`${pad("pool")} pr-4 text-neutral-600`}>{c.tbd}</td>
+                  <td className={`${pad("pool")} pr-4`}>
+                    <div className="flex items-center gap-3">
+                      <span className="w-16 shrink-0 tabular-nums text-neutral-700">{eur(pool.amount, locale)}</span>
+                      {bar(pool.amount, SELECTED)}
+                    </div>
+                  </td>
+                  <td className={`${pad("pool")} pr-4 text-right text-neutral-600`}>{c.tbd}</td>
+                  <td className={`${pad("pool")} text-right text-neutral-600`}>{c.tbd}</td>
+                </tr>
+                {selected === "pool" && (
+                  <tr className="border-b border-foreground/10 bg-brand/[0.03]">
+                    <td colSpan={6} className="px-1 py-5 text-[15px] leading-[1.7] text-neutral-700">
+                      {locale === "fr" ? pool.description : pool.description_en}
+                    </td>
+                  </tr>
+                )}
+              </Fragment>
+            )}
+            <tr className="font-semibold text-foreground">
+              <td className="py-3 pr-4">{c.upcomingTotal}</td>
+              <td className="hidden md:table-cell" />
+              <td />
+              <td className="py-3 pr-4 tabular-nums">{eur(up.amount + (pool?.amount ?? 0), locale)}</td>
+              <td className="py-3 pr-4 text-right tabular-nums">{eur(up.list.reduce((a, s) => a + s.net2027, 0), locale)}</td>
+              <td className="py-3 text-right tabular-nums">{eur(up.list.reduce((a, s) => a + s.net2028, 0), locale)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {pool && (
+        <p className="mt-2 text-sm text-neutral-600">
+          {eur(up.amount + pool.amount, locale)}, {c.withPool} ({eur(pool.amount, locale)}).
+        </p>
+      )}
+    </div>
+  );
+}
+
+function StrategyDetail({ data, name, locale }: { data: BusinessPlanData; name: string; locale: Locale }) {
+  const c = copy[locale];
+  const s = data.strategies.find((x) => x.strategy === name);
+  if (!s) return null;
+  const years = data.strategy_revenue.filter((r) => r.strategy === name && (r.interest_income || r.transaction_fees || r.coupons_paid));
+  return (
+    <div className="grid gap-6 md:grid-cols-2">
+      <dl className="space-y-1.5 text-sm">
+        <Row label={c.th[1]} value={FAMILY[s.family]?.[locale] ?? s.family} />
+        <Row label={c.amount} value={eur(s.amount_raised, locale)} />
+        <Row label={c.th[2]} value={month(s.first_closing, locale)} />
+        <Row label={c.duration} value={c.months(s.duration_months)} />
+        <Row label={c.coupon} value={pct(s.bond_rate, locale)} />
+        <Row label={c.grossYield} value={pct(s.gross_yield, locale)} />
+        <Row label={c.defaultRate} value={pct(s.default_rate, locale)} />
+      </dl>
+      <div>
+        <p className="text-sm font-semibold text-foreground">{c.byYear}</p>
+        <table className="mt-2 w-full text-sm">
+          <thead>
+            <tr className="text-neutral-600">
+              <th className="py-1 pr-3 text-left font-medium" />
+              {years.map((y) => (
+                <th key={y.year} className="py-1 pl-3 text-right font-medium">{y.year}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="tabular-nums">
+            {([
+              [c.interest, "interest_income"],
+              [c.fees, "transaction_fees"],
+              [c.coupons, "coupons_paid"],
+            ] as const).map(([label, key]) => (
+              <tr key={key}>
+                <td className="py-1 pr-3 text-neutral-600">{label}</td>
+                {years.map((y) => (
+                  <td key={y.year} className="py-1 pl-3 text-right text-neutral-700">{eur(y[key], locale)}</td>
+                ))}
+              </tr>
+            ))}
+            <tr className="border-t border-foreground/10 font-semibold text-foreground">
+              <td className="py-1 pr-3">{c.net}</td>
+              {years.map((y) => (
+                <td key={y.year} className="py-1 pl-3 text-right">{eur(y.net_revenue, locale)}</td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// ── Partie 3 : barres revenus / dépenses ────────────────────────────────────
+
+type Hover = {
+  label: string;
+  amount: number;
+  share: number;
+  x: number;
+  y: number;
+  parts?: { name: string; amount: number }[];
+} | null;
+
+function PnlBars({ data, pnl, locale }: { data: BusinessPlanData; pnl: ReturnType<typeof pnlByYear>; locale: Locale }) {
   const c = copy[locale];
   const [hover, setHover] = useState<Hover>(null);
   const max = Math.max(...pnl.flatMap((y) => [y.rev, y.cost]), 1);
@@ -342,7 +827,19 @@ function PnlBars({ pnl, locale }: { pnl: ReturnType<typeof pnlByYear>; locale: L
   const revBuckets = pnl[0]?.revenues.map((l) => l.bucket) ?? [];
   const costBuckets = pnl[0]?.costs.map((l) => l.bucket) ?? [];
 
-  const bar = (lines: PnlLine[], shades: string[], total: number, label: string) => (
+  // Intérêts et frais se ventilent par stratégie (onglet P&L) : l'info-bulle
+  // dit d'où vient le revenu. Les autres postes n'ont pas de stratégie.
+  const partsFor = (year: number, l: PnlLine) => {
+    const rows = revenueByStrategy(data, year);
+    const key = l.bucket.startsWith("Intérêts") ? "interest" : l.bucket.startsWith("Frais") ? "fees" : null;
+    if (l.side !== "Revenus" || !key) return undefined;
+    return rows
+      .map((r) => ({ name: r.strategy, amount: r[key] }))
+      .filter((p) => p.amount > 0)
+      .sort((a, b) => b.amount - a.amount);
+  };
+
+  const bar = (year: number, lines: PnlLine[], shades: string[], total: number, label: string) => (
     <div className="flex items-center gap-3">
       <span className="w-20 shrink-0 text-sm text-neutral-600">{label}</span>
       <div className="flex h-5 flex-1 items-center">
@@ -358,7 +855,14 @@ function PnlBars({ pnl, locale }: { pnl: ReturnType<typeof pnlByYear>; locale: L
                 onMouseEnter={(e) => {
                   const r = (e.currentTarget.closest("[data-pnl]") as HTMLElement).getBoundingClientRect();
                   const s = e.currentTarget.getBoundingClientRect();
-                  setHover({ label: bucketName(l.bucket), amount: l.amount, share: v / total, x: s.left - r.left + s.width / 2, y: s.top - r.top });
+                  setHover({
+                    label: `${bucketName(l.bucket)}, ${year}`,
+                    amount: l.amount,
+                    share: v / total,
+                    x: Math.min(Math.max(s.left - r.left + s.width / 2, 130), r.width - 130),
+                    y: s.top - r.top,
+                    parts: partsFor(year, l),
+                  });
                 }}
                 onMouseLeave={() => setHover(null)}
               />
@@ -371,14 +875,14 @@ function PnlBars({ pnl, locale }: { pnl: ReturnType<typeof pnlByYear>; locale: L
   );
 
   return (
-    <div className="mt-6">
+    <div>
       <div data-pnl className="relative space-y-7">
         {pnl.map((y) => (
           <div key={y.year}>
             <p className="text-sm font-semibold text-foreground">{y.year}</p>
             <div className="mt-2 space-y-1.5">
-              {bar(y.revenues, REVENUE_SHADES, y.rev, c.revenues)}
-              {bar(y.costs, COST_SHADES, y.cost, c.costs)}
+              {bar(y.year, y.revenues, REVENUE_SHADES, y.rev, c.revenues)}
+              {bar(y.year, y.costs, COST_SHADES, y.cost, c.costs)}
             </div>
             <p className="mt-2 text-sm">
               <span className="text-neutral-600">{c.ebitda} </span>
@@ -391,17 +895,27 @@ function PnlBars({ pnl, locale }: { pnl: ReturnType<typeof pnlByYear>; locale: L
         ))}
         {hover && (
           <div
-            className="pointer-events-none absolute z-10 w-56 -translate-x-1/2 -translate-y-full rounded-lg border border-foreground/10 bg-white px-3 py-2 text-xs leading-5 shadow-md"
+            className="pointer-events-none absolute z-10 w-64 -translate-x-1/2 -translate-y-full rounded-lg border border-foreground/10 bg-white px-3 py-2 text-xs leading-5 shadow-md"
             style={{ left: hover.x, top: hover.y - 6 }}
           >
             <p className="font-semibold text-foreground">{hover.label}</p>
             <p className="text-neutral-600">
               {eur(hover.amount, locale)}, {pct(hover.share, locale, 0)} {c.ofTotal}
             </p>
+            {hover.parts && hover.parts.length > 0 && (
+              <div className="mt-1.5 border-t border-foreground/10 pt-1.5">
+                <p className="text-neutral-600">{c.fromStrategies}</p>
+                {hover.parts.map((p) => (
+                  <p key={p.name} className="flex justify-between gap-3 text-neutral-700">
+                    <span>{p.name}</span>
+                    <span className="tabular-nums">{eur(p.amount, locale)}</span>
+                  </p>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
-      {/* Légende des huit postes : revenus puis dépenses. */}
       <ul className="mt-6 grid gap-x-6 gap-y-2 text-sm text-neutral-700 sm:grid-cols-2">
         {revBuckets.map((b, i) => (
           <Legend key={b} color={REVENUE_SHADES[i % REVENUE_SHADES.length]} label={bucketName(b)} />
@@ -423,111 +937,142 @@ function Legend({ color, label }: { color: string; label: string }) {
   );
 }
 
-// ── Trésorerie, scénarios et leviers ────────────────────────────────────────
+// ── Partie 4 : trésorerie, scénarios et leviers ─────────────────────────────
 
-function Runway({ data, locale }: { data: BusinessPlanData; locale: Locale }) {
+function Runway({ data, raised, locale }: { data: BusinessPlanData; raised: number; locale: Locale }) {
   const c = copy[locale];
-  const [raised, setRaised] = useState<number>(RAISE_OPTIONS[0]);
   const [selected, setSelected] = useState(0);
   const rows = useMemo(() => scenarios(data, raised), [data, raised]);
   const horizon = horizonMonths(data);
   const levers = [...data.levers].sort((a, b) => a.level - b.level);
   const name = (k: number) =>
     k === 0 ? c.planBp : `${k > 1 ? "+ " : ""}${locale === "fr" ? levers[k - 1].name : levers[k - 1].name_en}`;
+  const lever = selected ? levers[selected - 1] : null;
+  const breakdown = lever ? leverBreakdown(data, lever) : null;
+  // Volume en plus, cumulé comme les coûts : chaque scénario ajoute un levier.
+  const volumeUpTo = (k: number) => levers.filter((l) => l.level <= k).reduce((a, l) => a + (l.impact?.volume ?? 0), 0);
+  const hide = new Set([2, 5, 7]);
 
   return (
-    <div className="mt-6">
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="text-sm text-neutral-600">{c.raised}</span>
-        <div className="inline-flex rounded-lg border border-foreground/15 p-0.5" role="group">
-          {RAISE_OPTIONS.map((r) => (
-            <button
-              key={r}
-              onClick={() => setRaised(r)}
-              aria-pressed={raised === r}
-              className={`rounded-md px-3 py-1 text-sm transition-colors ${
-                raised === r ? "bg-foreground text-background" : "text-foreground hover:bg-foreground/5"
-              }`}
-            >
-              {eur(r, locale)}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-5 overflow-x-auto">
-        <table className="w-full min-w-[560px] border-collapse text-sm">
+    <div className="mt-5">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[640px] border-collapse text-sm">
           <thead>
             <tr className="border-b border-foreground/15 text-left align-bottom text-neutral-600">
               {c.scenarioTh.map((h, i) => (
-                <th
-                  key={h}
-                  className={`py-2 pr-4 font-medium ${i > 0 ? "text-right" : ""} ${i === 3 || i === 5 ? "hidden md:table-cell" : ""}`}
-                >
+                <th key={h} className={`py-2 pr-4 font-medium ${i > 0 ? "text-right" : ""} ${hide.has(i) ? "hidden lg:table-cell" : ""}`}>
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {rows.map((r) => (
-              <tr
-                key={r.k}
-                onClick={() => setSelected(r.k)}
-                className={`cursor-pointer border-b border-foreground/10 transition-colors ${
-                  selected === r.k ? "bg-brand/[0.06]" : "hover:bg-foreground/[0.03]"
-                }`}
-              >
-                <td className="py-3 pr-4 font-medium text-foreground">
-                  <span className="flex items-center gap-2">
-                    <span
-                      className="h-0.5 w-4 shrink-0 rounded"
-                      style={{ background: r.k === 0 ? MARSALA : selected === r.k ? SELECTED : "#bdb7af" }}
-                    />
-                    {name(r.k)}
-                  </span>
-                </td>
-                <td className="py-3 pr-4 text-right tabular-nums">{r.cost ? eur(r.cost, locale) : "0"}</td>
-                <td className="py-3 pr-4 text-right tabular-nums">{eur(r.burn2027, locale)}</td>
-                <td className="hidden py-3 pr-4 text-right tabular-nums md:table-cell">{c.months(r.runwayNoRevenue)}</td>
-                <td className="py-3 pr-4 text-right tabular-nums">
-                  {r.runwayBp === null ? c.beyond(horizon) : c.months(r.runwayBp)}
-                </td>
-                <td className="hidden whitespace-nowrap py-3 pr-4 text-right tabular-nums md:table-cell">
-                  {eur(r.low.value, locale)} ({month(r.low.month, locale)})
-                </td>
-                <td className="py-3 text-right tabular-nums">{eur(r.end, locale)}</td>
-              </tr>
-            ))}
+            {rows.map((r) => {
+              const l = r.k ? levers[r.k - 1] : null;
+              return (
+                <tr
+                  key={r.k}
+                  onClick={() => setSelected(r.k)}
+                  className={`cursor-pointer border-b border-foreground/10 transition-colors ${
+                    selected === r.k ? "bg-brand/[0.06]" : "hover:bg-foreground/[0.03]"
+                  }`}
+                >
+                  <td className="py-3 pr-4 font-medium text-foreground">
+                    <span className="flex items-center gap-2">
+                      <span
+                        className="h-0.5 w-4 shrink-0 rounded"
+                        style={{ background: r.k === 0 ? MARSALA : selected === r.k ? SELECTED : "#bdb7af" }}
+                      />
+                      {name(r.k)}
+                    </span>
+                  </td>
+                  <td className="py-3 pr-4 text-right tabular-nums">{l ? eur(r.cost - rows[r.k - 1].cost, locale) : "0"}</td>
+                  <td className="hidden py-3 pr-4 text-right tabular-nums lg:table-cell">{r.cost ? eur(r.cost, locale) : "0"}</td>
+                  <td className="py-3 pr-4 text-right tabular-nums">{r.k ? `+${eur(volumeUpTo(r.k), locale)}` : "0"}</td>
+                  <td className="py-3 pr-4 text-right tabular-nums">{eur(r.burn2027, locale)}</td>
+                  <td className="hidden py-3 pr-4 text-right tabular-nums lg:table-cell">{c.months(r.runwayNoRevenue)}</td>
+                  <td className="py-3 pr-4 text-right tabular-nums">{r.runwayBp === null ? c.beyond(horizon) : c.months(r.runwayBp)}</td>
+                  <td className="hidden whitespace-nowrap py-3 pr-4 text-right tabular-nums lg:table-cell">
+                    {eur(r.low.value, locale)} ({month(r.low.month, locale)})
+                  </td>
+                  <td className="py-3 text-right tabular-nums">{eur(r.end, locale)}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
       <p className="mt-2 text-sm text-neutral-600">{c.clickHint}</p>
 
+      {/* Détail du levier sélectionné : son coût expliqué, et ce qu'il doit rapporter. */}
+      <div className="mt-5 rounded-xl border border-foreground/10 bg-white/50 p-5">
+        {lever && breakdown ? (
+          <div className="grid gap-6 md:grid-cols-2">
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">
+                {lever.level}. {locale === "fr" ? lever.name : lever.name_en}
+              </h3>
+              <p className="mt-3 text-sm font-semibold text-foreground">{c.whyCost}</p>
+              <ul className="mt-2 space-y-1.5 text-sm text-neutral-700">
+                {breakdown.monthly.total > 0 && (
+                  <li className="flex justify-between gap-3">
+                    <span>{c.perMonth(eur(breakdown.monthly.perMonth, locale), breakdown.monthly.months)}</span>
+                    <span className="tabular-nums">{eur(breakdown.monthly.total, locale)}</span>
+                  </li>
+                )}
+                {breakdown.oneOff.amount > 0 && breakdown.oneOff.month && (
+                  <li className="flex justify-between gap-3">
+                    <span>{c.oneOff(eur(breakdown.oneOff.amount, locale), month(breakdown.oneOff.month, locale))}</span>
+                    <span className="tabular-nums">{eur(breakdown.oneOff.amount, locale)}</span>
+                  </li>
+                )}
+                {breakdown.closings.length > 0 && (
+                  <li>
+                    <span className="flex justify-between gap-3">
+                      <span>{c.coverage(pct(lever.pct_of_raised, locale))}</span>
+                      <span className="tabular-nums">{eur(breakdown.closings.reduce((a, x) => a + x.cost, 0), locale)}</span>
+                    </span>
+                    <span className="mt-1 block text-neutral-600">
+                      {breakdown.closings.map((x) => `${x.strategy} (${month(x.month, locale)}) ${eur(x.cost, locale)}`).join(", ")}
+                    </span>
+                  </li>
+                )}
+                <li className="flex justify-between gap-3 border-t border-foreground/10 pt-1.5 font-semibold text-foreground">
+                  <span />
+                  <span className="tabular-nums">{eur(breakdown.total, locale)}</span>
+                </li>
+              </ul>
+              <p className="mt-4 text-sm font-semibold text-foreground">{c.assumptions}</p>
+              <p className="mt-1 text-sm leading-6 text-neutral-700">{locale === "fr" ? lever.assumptions : lever.assumptions_en}</p>
+            </div>
+            {lever.impact && (
+              <div>
+                <p className="flex flex-wrap items-center gap-2 text-sm font-semibold text-foreground">
+                  {c.gain}
+                  {lever.impact.status === "proposition" && (
+                    <span className="rounded-full border border-dashed border-neutral-400 px-2 py-0.5 text-[11px] font-normal text-neutral-600">
+                      {c.proposal}
+                    </span>
+                  )}
+                </p>
+                <p className="mt-3 text-3xl font-semibold tracking-tight tabular-nums text-marsala">
+                  +{eur(lever.impact.volume, locale)}
+                </p>
+                <p className="text-sm text-neutral-600">
+                  {locale === "fr" ? "de volume" : "of volume"}, {(locale === "fr" ? lever.impact.axis : (AXIS_EN[lever.impact.axis] ?? lever.impact.axis)).toLowerCase()}
+                </p>
+                <p className="mt-3 text-sm leading-6 text-neutral-700">{locale === "fr" ? lever.impact.text : lever.impact.text_en}</p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <p className="text-sm text-neutral-600">{c.planHint}</p>
+        )}
+      </div>
+
       <CashChart rows={rows} selected={selected} locale={locale} name={name} />
 
       <p className="mt-4 text-sm leading-6 text-neutral-600">{c.notModelled}</p>
-
-      <h3 className="mt-10 text-sm font-semibold text-foreground">{c.leversTitle}</h3>
-      <ul className="mt-3 grid gap-4 sm:grid-cols-2">
-        {levers.map((l) => {
-          const added = rows[l.level].cost - rows[l.level - 1].cost;
-          return (
-            <li key={l.level} className={CARD}>
-              <h4 className="text-sm font-semibold text-foreground">
-                {l.level}. {locale === "fr" ? l.name : l.name_en}
-              </h4>
-              <p className="mt-2 text-lg font-semibold tabular-nums text-marsala">
-                +{eur(added, locale)}{" "}
-                <span className="text-sm font-normal text-neutral-600">{c.addedCost}</span>
-              </p>
-              <p className="mt-2 text-sm leading-6 text-neutral-700">
-                {locale === "fr" ? l.assumptions : l.assumptions_en}
-              </p>
-            </li>
-          );
-        })}
-      </ul>
     </div>
   );
 }
