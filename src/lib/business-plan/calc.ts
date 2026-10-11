@@ -75,7 +75,13 @@ export type BusinessPlanData = {
   cash_flows: CashFlow[];
   levers: Lever[];
   /** Objectifs de l'équipe, hors BP : ils pilotent les chiffres phares. */
-  targets?: { revenue_2027_locked: number; volume_early_2028: number; raise_time_months?: number };
+  targets?: {
+    revenue_2027_locked: number;
+    volume_early_2028: number;
+    raise_time_months?: number;
+    /** Trésorerie sous laquelle on ne veut pas descendre. */
+    cash_floor?: number;
+  };
   accelerated_pool?: AcceleratedPool;
   /** Indicateurs de plateforme, hors BP ; null tant qu'ils ne sont pas renseignés. */
   platform?: {

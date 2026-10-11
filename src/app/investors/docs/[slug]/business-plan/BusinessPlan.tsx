@@ -152,6 +152,7 @@ const copy = {
     planBp: "Plan BP",
     beyond: (n: number) => `> ${n} mois`,
     chartTitle: "Trésorerie mois par mois",
+    floor: (v: string) => `Plancher de trésorerie, ${v}`,
     raise: "Levée",
     clickHint: "Cliquez sur une ligne pour afficher sa courbe et le détail du levier.",
     pendingYear: (y: number) => `${y} : à venir avec le BP mis à jour, qui couvrira les stratégies jusqu'à leur échéance.`,
@@ -289,6 +290,7 @@ const copy = {
     planBp: "BP plan",
     beyond: (n: number) => `> ${n} months`,
     chartTitle: "Monthly cash position",
+    floor: (v: string) => `Cash floor, ${v}`,
     raise: "Raise",
     clickHint: "Click a row to show its curve and the lever's detail.",
     pendingYear: (y: number) => `${y}: coming with the updated BP, which will cover the strategies through to maturity.`,
@@ -1144,6 +1146,9 @@ function Runway({ data, raised, locale }: { data: BusinessPlanData; raised: numb
   // Volume en plus, cumulé comme les coûts : chaque scénario ajoute un levier.
   const volumeUpTo = (k: number) => levers.filter((l) => l.level <= k).reduce((a, l) => a + (l.impact?.volume ?? 0), 0);
   const hide = new Set([2, 5, 7]);
+  // Plancher de trésorerie voulu par l'équipe : la ligne rouge du graphique,
+  // et le point bas en rouge dans le tableau quand il passe dessous.
+  const floor = data.targets?.cash_floor ?? null;
 
   return (
     <div className="mt-5">
@@ -1192,7 +1197,10 @@ function Runway({ data, raised, locale }: { data: BusinessPlanData; raised: numb
                   <td className={`${py} pr-4 text-right tabular-nums`}>{eur(r.burn2027, locale)}</td>
                   <td className={`hidden ${py} pr-4 text-right tabular-nums lg:table-cell`}>{c.months(r.runwayNoRevenue)}</td>
                   <td className={`${py} pr-4 text-right tabular-nums`}>{r.runwayBp === null ? c.beyond(horizon) : c.months(r.runwayBp)}</td>
-                  <td className={`hidden whitespace-nowrap ${py} pr-4 text-right tabular-nums lg:table-cell`}>
+                  <td
+                    className={`hidden whitespace-nowrap ${py} pr-4 text-right tabular-nums lg:table-cell`}
+                    style={floor !== null && r.low.value < floor ? { color: NEGATIVE } : undefined}
+                  >
                     {eur(r.low.value, locale)} ({month(r.low.month, locale)})
                   </td>
                   <td className={`${py} text-right tabular-nums`}>{eur(r.end, locale)}</td>
@@ -1212,7 +1220,7 @@ function Runway({ data, raised, locale }: { data: BusinessPlanData; raised: numb
       </div>
       <p className="mt-2 text-sm text-neutral-600">{c.clickHint}</p>
 
-      <CashChart rows={rows} selected={selected} locale={locale} name={name} />
+      <CashChart rows={rows} selected={selected} locale={locale} name={name} floor={floor} />
 
       <p className="mt-4 text-sm leading-6 text-neutral-600">{c.notModelled}</p>
     </div>
@@ -1308,11 +1316,13 @@ function CashChart({
   selected,
   locale,
   name,
+  floor,
 }: {
   rows: ReturnType<typeof scenarios>;
   selected: number;
   locale: Locale;
   name: (k: number) => string;
+  floor: number | null;
 }) {
   const c = copy[locale];
   const [hover, setHover] = useState<number | null>(null);
@@ -1360,6 +1370,11 @@ function CashChart({
               </text>
             ) : null
           )}
+          {floor !== null && floor > yMin && floor < yMax && (
+            <g>
+              <line x1={P.left} x2={W - P.right} y1={y(floor)} y2={y(floor)} stroke={NEGATIVE} strokeWidth={1.25} strokeDasharray="6 4" />
+            </g>
+          )}
           {raiseIdx >= 0 && (
             <g>
               <line x1={x(raiseIdx)} x2={x(raiseIdx)} y1={P.top} y2={H - P.bottom} stroke="#9d978f" strokeDasharray="4 4" />
@@ -1405,6 +1420,16 @@ function CashChart({
           </div>
         )}
       </div>
+      {/* Le libellé du plancher vit sous le graphique : posé sur la ligne, il
+          chevauchait la levée et la montée de la trésorerie. */}
+      {floor !== null && (
+        <p className="mt-2 flex items-center gap-2 text-sm" style={{ color: NEGATIVE }}>
+          <svg aria-hidden width="24" height="6" className="shrink-0">
+            <line x1="0" x2="24" y1="3" y2="3" stroke={NEGATIVE} strokeWidth="1.5" strokeDasharray="5 3" />
+          </svg>
+          {c.floor(eur(floor, locale))}
+        </p>
+      )}
     </figure>
   );
 }
