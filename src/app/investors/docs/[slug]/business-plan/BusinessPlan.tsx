@@ -64,14 +64,14 @@ const copy = {
     kicker: "Minah SAS, business plan 2026-2028, scénario Best Case",
     f1Label: "En cours",
     f1Title: "Kupanda 1 se finalise, Kupanda 2 arrive",
-    f1a: (m: string) => `Kupanda 1, finalisation en cours (premier closing ${m})`,
-    f1b: "Kupanda 2, une bonne partie levée d'ici fin 2026",
+    f1Body: (k1: string, k2: string) =>
+      `Kupanda 1 (${k1}) en finalisation, Kupanda 2 (${k2}) en bonne partie levé d'ici fin 2026.`,
     f2Label: "Ce que ça verrouille",
-    f2Title: (v: string) => `Plus de ${v} de revenu net 2027, sécurisé avant fin 2026`,
+    f2Title: "de revenu net 2027, sécurisé avant fin 2026",
     f2Body: (k1: string, k2: string) =>
       `Kupanda 1 apporte ${k1} de revenu net en 2027 ; il suffit de lever ${k2} sur Kupanda 2 pour dépasser le million.`,
     f3Label: "Début 2028",
-    f3Title: (v: string) => `Plus de ${v} de volume levé`,
+    f3Title: "de volume levé d'ici début 2028",
     f3Body: (rev: string, vol: string) =>
       `Dans le BP actuel (${vol} levés), le chiffre d'affaires 2028 atteint ${rev}. Le BP est en cours de mise à jour sur l'objectif de 100 M€.`,
     netDef:
@@ -171,14 +171,14 @@ const copy = {
     kicker: "Minah SAS, 2026-2028 business plan, Best Case scenario",
     f1Label: "In progress",
     f1Title: "Kupanda 1 is closing, Kupanda 2 is next",
-    f1a: (m: string) => `Kupanda 1, being finalised (first closing ${m})`,
-    f1b: "Kupanda 2, a large part raised by end 2026",
+    f1Body: (k1: string, k2: string) =>
+      `Kupanda 1 (${k1}) being finalised, Kupanda 2 (${k2}) largely raised by end 2026.`,
     f2Label: "What it locks in",
-    f2Title: (v: string) => `Over ${v} of 2027 net revenue, secured before end 2026`,
+    f2Title: "of 2027 net revenue, secured before end 2026",
     f2Body: (k1: string, k2: string) =>
       `Kupanda 1 brings ${k1} of net revenue in 2027; raising ${k2} on Kupanda 2 is enough to pass one million.`,
     f3Label: "Early 2028",
-    f3Title: (v: string) => `Over ${v} of volume raised`,
+    f3Title: "of volume raised by early 2028",
     f3Body: (rev: string, vol: string) =>
       `In the current BP (${vol} raised), 2028 revenue reaches ${rev}. The BP is being updated on the €100M target.`,
     netDef:
@@ -498,62 +498,50 @@ function KeyFacts({ data, locale }: { data: BusinessPlanData; locale: Locale }) 
   const k2Needed = amountNeededFor(data, "Kupanda 2", target, ["Kupanda 1"]);
   const bpVolume = data.strategies.reduce((a, s) => a + s.amount_raised, 0);
   const rev2028 = pnlByYear(data).find((y) => y.year === 2028)?.rev ?? 0;
+  const k1Amount = k1?.amount_raised ?? 0;
+  const k2Amount = k2?.amount_raised ?? 0;
 
   const facts = [
     {
       label: c.f1Label,
+      value: eur(k1Amount + k2Amount, locale),
       title: c.f1Title,
-      big: (
-        <div className="grid grid-cols-2 gap-6">
-          <BigNumber value={eur(k1?.amount_raised ?? 0, locale)} caption={c.f1a(month(k1?.first_closing ?? RAISE_MONTH, locale))} />
-          <BigNumber value={eur(k2?.amount_raised ?? 0, locale)} caption={c.f1b} />
-        </div>
-      ),
+      body: c.f1Body(eur(k1Amount, locale), eur(k2Amount, locale)),
     },
     {
       label: c.f2Label,
-      title: c.f2Title(eur(target, locale)),
-      big: <BigNumber value={`> ${eur(target, locale)}`} caption={c.f2Body(eur(k1Net, locale), eur(k2Needed, locale))} />,
+      value: `> ${eur(target, locale)}`,
+      title: c.f2Title,
+      body: c.f2Body(eur(k1Net, locale), eur(k2Needed, locale)),
     },
     {
       label: c.f3Label,
-      title: c.f3Title(eur(volume, locale)),
-      big: <BigNumber value={`> ${eur(volume, locale)}`} caption={c.f3Body(eur(rev2028, locale), eur(bpVolume, locale))} />,
+      value: `> ${eur(volume, locale)}`,
+      title: c.f3Title,
+      body: c.f3Body(eur(rev2028, locale), eur(bpVolume, locale)),
     },
   ];
 
+  // Bandeau de trois colonnes séparées par des filets : les trois chiffres
+  // tiennent ensemble à l'écran et entrent l'un après l'autre.
   return (
-    <ol className="mt-6 divide-y divide-foreground/10 border-y border-foreground/10">
+    <ol className="mt-5 grid border-y border-foreground/10 md:grid-cols-3 md:divide-x md:divide-foreground/10">
       {facts.map((f, i) => (
-        <li key={i} className="py-10 sm:py-14">
-          <ScrollReveal delay={i === 0 ? 0 : 120}>
-            <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:items-center md:gap-12">
-              <div>
-                <p className="flex items-center gap-3 text-sm text-neutral-600">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand/10 font-mono text-sm font-semibold text-marsala">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  {f.label}
-                </p>
-                <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-[28px]">
-                  {f.title}
-                </h2>
-              </div>
-              {f.big}
-            </div>
+        <li key={i} className="border-foreground/10 py-6 max-md:border-t max-md:first:border-t-0 md:px-6 md:first:pl-0 md:last:pr-0">
+          <ScrollReveal delay={i * 150}>
+            <p className="flex items-center gap-2 text-sm text-neutral-600">
+              <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-brand/10 font-mono text-[11px] font-semibold text-marsala">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              {f.label}
+            </p>
+            <p className="mt-3 whitespace-nowrap text-3xl font-semibold tracking-tight tabular-nums text-marsala">{f.value}</p>
+            <p className="mt-1 text-sm font-semibold leading-snug text-foreground">{f.title}</p>
+            <p className="mt-2 text-sm leading-6 text-neutral-600">{f.body}</p>
           </ScrollReveal>
         </li>
       ))}
     </ol>
-  );
-}
-
-function BigNumber({ value, caption }: { value: string; caption: string }) {
-  return (
-    <div>
-      <p className="whitespace-nowrap text-4xl font-semibold tracking-tight tabular-nums text-marsala sm:text-5xl">{value}</p>
-      <p className="mt-2 text-[15px] leading-[1.7] text-neutral-700">{caption}</p>
-    </div>
   );
 }
 
