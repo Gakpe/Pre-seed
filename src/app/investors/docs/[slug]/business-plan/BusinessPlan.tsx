@@ -127,7 +127,7 @@ const copy = {
     chartTitle: "Trésorerie mois par mois",
     raise: "Levée",
     clickHint: "Cliquez sur une ligne pour afficher sa courbe et le détail du levier.",
-    planHint: "Le Plan BP n'ajoute aucun levier : choisissez une ligne pour voir le détail de son coût.",
+    pendingYear: (y: number) => `${y} : à venir avec le BP mis à jour, qui couvrira les stratégies jusqu'à leur échéance.`,
     whyCost: "Pourquoi ce coût",
     perMonth: (a: string, n: number) => `${a} par mois sur ${n} mois`,
     oneOff: (a: string, m: string) => `${a} ponctuels (${m})`,
@@ -234,7 +234,7 @@ const copy = {
     chartTitle: "Monthly cash position",
     raise: "Raise",
     clickHint: "Click a row to show its curve and the lever's detail.",
-    planHint: "The BP plan adds no lever: pick a row to see the detail of its cost.",
+    pendingYear: (y: number) => `${y}: coming with the updated BP, which will cover the strategies through to maturity.`,
     whyCost: "Why this cost",
     perMonth: (a: string, n: number) => `${a} per month over ${n} months`,
     oneOff: (a: string, m: string) => `${a} one-off (${m})`,
@@ -319,6 +319,9 @@ function month(m: string, locale: Locale) {
 }
 
 const CARD = "rounded-xl border border-foreground/10 bg-white/50 p-5";
+
+/** Dernière année que la partie 3 doit montrer : les stratégies courent jusque-là. */
+const LAST_YEAR = 2029;
 
 // ── Page ────────────────────────────────────────────────────────────────────
 
@@ -881,6 +884,23 @@ function PnlBars({ data, pnl, locale }: { data: BusinessPlanData; pnl: ReturnTyp
             </p>
           </div>
         ))}
+        {/* Les stratégies courent jusqu'en 2029 : l'année reste affichée, en
+            attente, tant que le BP ne la chiffre pas. Elle se remplit seule
+            dès que pnl_split contient 2029. */}
+        {!pnl.some((y) => y.year === LAST_YEAR) && (
+          <div>
+            <p className="text-sm font-semibold text-foreground">{LAST_YEAR}</p>
+            <div className="mt-2 space-y-1.5">
+              {[c.revenues, c.costs].map((label) => (
+                <div key={label} className="flex items-center gap-3">
+                  <span className="w-20 shrink-0 text-sm text-neutral-600">{label}</span>
+                  <span className="h-5 flex-1 rounded-sm border border-dashed border-neutral-300 bg-foreground/[0.03]" />
+                </div>
+              ))}
+            </div>
+            <p className="mt-2 text-sm text-neutral-600">{c.pendingYear(LAST_YEAR)}</p>
+          </div>
+        )}
         {hover && (
           <div
             className="pointer-events-none absolute z-10 w-64 -translate-x-1/2 -translate-y-full rounded-lg border border-foreground/10 bg-white px-3 py-2 text-xs leading-5 shadow-md"
@@ -935,8 +955,6 @@ function Runway({ data, raised, locale }: { data: BusinessPlanData; raised: numb
   const levers = [...data.levers].sort((a, b) => a.level - b.level);
   const name = (k: number) =>
     k === 0 ? c.planBp : `${k > 1 ? "+ " : ""}${locale === "fr" ? levers[k - 1].name : levers[k - 1].name_en}`;
-  const lever = selected ? levers[selected - 1] : null;
-  const breakdown = lever ? leverBreakdown(data, lever) : null;
   // Volume en plus, cumulé comme les coûts : chaque scénario ajoute un levier.
   const volumeUpTo = (k: number) => levers.filter((l) => l.level <= k).reduce((a, l) => a + (l.impact?.volume ?? 0), 0);
   const hide = new Set([2, 5, 7]);
@@ -957,15 +975,23 @@ function Runway({ data, raised, locale }: { data: BusinessPlanData; raised: numb
           <tbody>
             {rows.map((r) => {
               const l = r.k ? levers[r.k - 1] : null;
+              // Comme la partie 2 : la ligne choisie s'ouvre sur son détail, les
+              // autres se réduisent. Un second clic referme et revient au Plan BP.
+              const dimmed = selected !== 0 && selected !== r.k;
+              const py = dimmed ? "py-1.5" : "py-3";
               return (
+                <Fragment key={r.k}>
                 <tr
-                  key={r.k}
-                  onClick={() => setSelected(r.k)}
-                  className={`cursor-pointer border-b border-foreground/10 transition-colors ${
-                    selected === r.k ? "bg-brand/[0.06]" : "hover:bg-foreground/[0.03]"
+                  onClick={() => setSelected(selected === r.k ? 0 : r.k)}
+                  className={`cursor-pointer border-b border-foreground/10 transition-all ${
+                    selected === r.k && r.k !== 0
+                      ? "bg-brand/[0.06]"
+                      : dimmed
+                        ? "text-[13px] opacity-50 hover:opacity-80"
+                        : "hover:bg-foreground/[0.03]"
                   }`}
                 >
-                  <td className="py-3 pr-4 font-medium text-foreground">
+                  <td className={`${py} pr-4 font-medium text-foreground`}>
                     <span className="flex items-center gap-2">
                       <span
                         className="h-0.5 w-4 shrink-0 rounded"
@@ -974,17 +1000,25 @@ function Runway({ data, raised, locale }: { data: BusinessPlanData; raised: numb
                       {name(r.k)}
                     </span>
                   </td>
-                  <td className="py-3 pr-4 text-right tabular-nums">{l ? eur(r.cost - rows[r.k - 1].cost, locale) : "0"}</td>
-                  <td className="hidden py-3 pr-4 text-right tabular-nums lg:table-cell">{r.cost ? eur(r.cost, locale) : "0"}</td>
-                  <td className="py-3 pr-4 text-right tabular-nums">{r.k ? `+${eur(volumeUpTo(r.k), locale)}` : "0"}</td>
-                  <td className="py-3 pr-4 text-right tabular-nums">{eur(r.burn2027, locale)}</td>
-                  <td className="hidden py-3 pr-4 text-right tabular-nums lg:table-cell">{c.months(r.runwayNoRevenue)}</td>
-                  <td className="py-3 pr-4 text-right tabular-nums">{r.runwayBp === null ? c.beyond(horizon) : c.months(r.runwayBp)}</td>
-                  <td className="hidden whitespace-nowrap py-3 pr-4 text-right tabular-nums lg:table-cell">
+                  <td className={`${py} pr-4 text-right tabular-nums`}>{l ? eur(r.cost - rows[r.k - 1].cost, locale) : "0"}</td>
+                  <td className={`hidden ${py} pr-4 text-right tabular-nums lg:table-cell`}>{r.cost ? eur(r.cost, locale) : "0"}</td>
+                  <td className={`${py} pr-4 text-right tabular-nums`}>{r.k ? `+${eur(volumeUpTo(r.k), locale)}` : "0"}</td>
+                  <td className={`${py} pr-4 text-right tabular-nums`}>{eur(r.burn2027, locale)}</td>
+                  <td className={`hidden ${py} pr-4 text-right tabular-nums lg:table-cell`}>{c.months(r.runwayNoRevenue)}</td>
+                  <td className={`${py} pr-4 text-right tabular-nums`}>{r.runwayBp === null ? c.beyond(horizon) : c.months(r.runwayBp)}</td>
+                  <td className={`hidden whitespace-nowrap ${py} pr-4 text-right tabular-nums lg:table-cell`}>
                     {eur(r.low.value, locale)} ({month(r.low.month, locale)})
                   </td>
-                  <td className="py-3 text-right tabular-nums">{eur(r.end, locale)}</td>
+                  <td className={`${py} text-right tabular-nums`}>{eur(r.end, locale)}</td>
                 </tr>
+                {selected === r.k && l && (
+                  <tr className="border-b border-foreground/10 bg-brand/[0.03]">
+                    <td colSpan={9} className="px-1 py-5">
+                      <LeverDetail data={data} lever={l} locale={locale} />
+                    </td>
+                  </tr>
+                )}
+                </Fragment>
               );
             })}
           </tbody>
@@ -992,76 +1026,75 @@ function Runway({ data, raised, locale }: { data: BusinessPlanData; raised: numb
       </div>
       <p className="mt-2 text-sm text-neutral-600">{c.clickHint}</p>
 
-      {/* Détail du levier sélectionné : son coût expliqué, et ce qu'il doit rapporter. */}
-      <div className="mt-5 rounded-xl border border-foreground/10 bg-white/50 p-5">
-        {lever && breakdown ? (
-          <div className="grid gap-6 md:grid-cols-2">
-            <div>
-              <h3 className="text-sm font-semibold text-foreground">
-                {lever.level}. {locale === "fr" ? lever.name : lever.name_en}
-              </h3>
-              <p className="mt-3 text-sm font-semibold text-foreground">{c.whyCost}</p>
-              <ul className="mt-2 space-y-1.5 text-sm text-neutral-700">
-                {breakdown.monthly.total > 0 && (
-                  <li className="flex justify-between gap-3">
-                    <span>{c.perMonth(eur(breakdown.monthly.perMonth, locale), breakdown.monthly.months)}</span>
-                    <span className="tabular-nums">{eur(breakdown.monthly.total, locale)}</span>
-                  </li>
-                )}
-                {breakdown.oneOff.amount > 0 && breakdown.oneOff.month && (
-                  <li className="flex justify-between gap-3">
-                    <span>{c.oneOff(eur(breakdown.oneOff.amount, locale), month(breakdown.oneOff.month, locale))}</span>
-                    <span className="tabular-nums">{eur(breakdown.oneOff.amount, locale)}</span>
-                  </li>
-                )}
-                {breakdown.closings.length > 0 && (
-                  <li>
-                    <span className="flex justify-between gap-3">
-                      <span>{c.coverage(pct(lever.pct_of_raised, locale))}</span>
-                      <span className="tabular-nums">{eur(breakdown.closings.reduce((a, x) => a + x.cost, 0), locale)}</span>
-                    </span>
-                    <span className="mt-1 block text-neutral-600">
-                      {breakdown.closings.map((x) => `${x.strategy} (${month(x.month, locale)}) ${eur(x.cost, locale)}`).join(", ")}
-                    </span>
-                  </li>
-                )}
-                <li className="flex justify-between gap-3 border-t border-foreground/10 pt-1.5 font-semibold text-foreground">
-                  <span />
-                  <span className="tabular-nums">{eur(breakdown.total, locale)}</span>
-                </li>
-              </ul>
-              <p className="mt-4 text-sm font-semibold text-foreground">{c.assumptions}</p>
-              <p className="mt-1 text-sm leading-6 text-neutral-700">{locale === "fr" ? lever.assumptions : lever.assumptions_en}</p>
-            </div>
-            {lever.impact && (
-              <div>
-                <p className="flex flex-wrap items-center gap-2 text-sm font-semibold text-foreground">
-                  {c.gain}
-                  {lever.impact.status === "proposition" && (
-                    <span className="rounded-full border border-dashed border-neutral-400 px-2 py-0.5 text-[11px] font-normal text-neutral-600">
-                      {c.proposal}
-                    </span>
-                  )}
-                </p>
-                <p className="mt-3 text-3xl font-semibold tracking-tight tabular-nums text-marsala">
-                  +{eur(lever.impact.volume, locale)}
-                </p>
-                <p className="text-sm text-neutral-600">
-                  {locale === "fr" ? "de volume" : "of volume"}, {(locale === "fr" ? lever.impact.axis : (AXIS_EN[lever.impact.axis] ?? lever.impact.axis)).toLowerCase()}
-                </p>
-                <p className="mt-3 text-sm leading-6 text-neutral-700">{locale === "fr" ? lever.impact.text : lever.impact.text_en}</p>
-              </div>
-            )}
-          </div>
-        ) : (
-          <p className="text-sm text-neutral-600">{c.planHint}</p>
-        )}
-      </div>
-
       <CashChart rows={rows} selected={selected} locale={locale} name={name} />
 
       <p className="mt-4 text-sm leading-6 text-neutral-600">{c.notModelled}</p>
     </div>
+  );
+}
+
+function LeverDetail({ data, lever, locale }: { data: BusinessPlanData; lever: BusinessPlanData["levers"][number]; locale: Locale }) {
+  const c = copy[locale];
+  const breakdown = leverBreakdown(data, lever);
+  return (
+  <div className="grid gap-6 md:grid-cols-2">
+    <div>
+      <h3 className="text-sm font-semibold text-foreground">
+        {lever.level}. {locale === "fr" ? lever.name : lever.name_en}
+      </h3>
+      <p className="mt-3 text-sm font-semibold text-foreground">{c.whyCost}</p>
+      <ul className="mt-2 space-y-1.5 text-sm text-neutral-700">
+        {breakdown.monthly.total > 0 && (
+          <li className="flex justify-between gap-3">
+            <span>{c.perMonth(eur(breakdown.monthly.perMonth, locale), breakdown.monthly.months)}</span>
+            <span className="tabular-nums">{eur(breakdown.monthly.total, locale)}</span>
+          </li>
+        )}
+        {breakdown.oneOff.amount > 0 && breakdown.oneOff.month && (
+          <li className="flex justify-between gap-3">
+            <span>{c.oneOff(eur(breakdown.oneOff.amount, locale), month(breakdown.oneOff.month, locale))}</span>
+            <span className="tabular-nums">{eur(breakdown.oneOff.amount, locale)}</span>
+          </li>
+        )}
+        {breakdown.closings.length > 0 && (
+          <li>
+            <span className="flex justify-between gap-3">
+              <span>{c.coverage(pct(lever.pct_of_raised, locale))}</span>
+              <span className="tabular-nums">{eur(breakdown.closings.reduce((a, x) => a + x.cost, 0), locale)}</span>
+            </span>
+            <span className="mt-1 block text-neutral-600">
+              {breakdown.closings.map((x) => `${x.strategy} (${month(x.month, locale)}) ${eur(x.cost, locale)}`).join(", ")}
+            </span>
+          </li>
+        )}
+        <li className="flex justify-between gap-3 border-t border-foreground/10 pt-1.5 font-semibold text-foreground">
+          <span />
+          <span className="tabular-nums">{eur(breakdown.total, locale)}</span>
+        </li>
+      </ul>
+      <p className="mt-4 text-sm font-semibold text-foreground">{c.assumptions}</p>
+      <p className="mt-1 text-sm leading-6 text-neutral-700">{locale === "fr" ? lever.assumptions : lever.assumptions_en}</p>
+    </div>
+    {lever.impact && (
+      <div>
+        <p className="flex flex-wrap items-center gap-2 text-sm font-semibold text-foreground">
+          {c.gain}
+          {lever.impact.status === "proposition" && (
+            <span className="rounded-full border border-dashed border-neutral-400 px-2 py-0.5 text-[11px] font-normal text-neutral-600">
+              {c.proposal}
+            </span>
+          )}
+        </p>
+        <p className="mt-3 text-3xl font-semibold tracking-tight tabular-nums text-marsala">
+          +{eur(lever.impact.volume, locale)}
+        </p>
+        <p className="text-sm text-neutral-600">
+          {locale === "fr" ? "de volume" : "of volume"}, {(locale === "fr" ? lever.impact.axis : (AXIS_EN[lever.impact.axis] ?? lever.impact.axis)).toLowerCase()}
+        </p>
+        <p className="mt-3 text-sm leading-6 text-neutral-700">{locale === "fr" ? lever.impact.text : lever.impact.text_en}</p>
+      </div>
+    )}
+  </div>
   );
 }
 
