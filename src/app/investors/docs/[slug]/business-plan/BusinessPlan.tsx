@@ -153,6 +153,10 @@ const copy = {
     approx:
       "Approximation : intérêts et coupons étalés à partir du closing, frais de transaction reportés à 2028 si le closing y bascule.",
     cushion: (n: string, a: string) => `Si aucune nouvelle stratégie ne se levait, ${a} levés couvrent ${n} de burn (Plan BP).`,
+    techLead: "C'est pour ça que la tech compte.",
+    techBody:
+      "Plus Minah est branchée à la liquidité on-chain, où les taux de nos stratégies sont très compétitifs, plus elle tire parti de son avance de premier acteur sur les actifs africains on-chain, et plus chaque stratégie se lève vite. C'est l'objet du levier « Équipe tech ».",
+    techLink: "Voir la roadmap technique",
     defaultTitle: "Se protéger en cas de défaut",
     defaultRates: "Taux de défaut retenus par le BP",
     weighted: "moyenne pondérée par les montants",
@@ -260,6 +264,10 @@ const copy = {
     approx:
       "Approximation: interest and coupons spread from closing, transaction fees moved to 2028 if the closing slips into it.",
     cushion: (n: string, a: string) => `If no new strategy were raised, ${a} raised covers ${n} of burn (BP plan).`,
+    techLead: "This is why the tech matters.",
+    techBody:
+      "The more Minah is plugged into on-chain liquidity, where our strategies' rates are highly competitive, the more it benefits from its first-mover advantage on African on-chain assets, and the faster each strategy is raised. This is what the \u201cTech team\u201d lever is for.",
+    techLink: "See the technical roadmap",
     defaultTitle: "Protecting against defaults",
     defaultRates: "Default rates assumed in the BP",
     weighted: "weighted average by amount",
@@ -444,6 +452,18 @@ function RiskSection({ data, raised, locale }: { data: BusinessPlanData; raised:
           </dl>
           <p className="mt-2 text-xs leading-5 text-neutral-600">{c.approx}</p>
           <p className="mt-4 text-sm leading-6 text-neutral-700">{c.cushion(c.months(plan.runwayNoRevenue), eur(raised, locale))}</p>
+          {/* La réponse au risque de lenteur : la liquidité on-chain, donc la tech. */}
+          <div className="mt-5 border-t border-foreground/10 pt-4">
+            <p className="text-sm leading-6 text-neutral-700">
+              <span className="font-semibold text-foreground">{c.techLead}</span> {c.techBody}
+            </p>
+            <Link
+              href="/investors/docs/vision-technique"
+              className="mt-3 inline-block whitespace-nowrap rounded-lg text-sm font-medium text-marsala underline decoration-marsala/30 underline-offset-4 hover:decoration-marsala"
+            >
+              {c.techLink} →
+            </Link>
+          </div>
         </div>
 
         <div className={CARD}>
