@@ -17,6 +17,8 @@ export type Strategy = {
   default_rate: number;
   duration_months: number;
   status: "En cours de levée" | "À venir";
+  /** Canal de distribution principal ; null tant qu'il n'est pas renseigné. */
+  channel?: "direct" | "api" | "onchain" | null;
 };
 
 export type StrategyRevenue = {
@@ -51,6 +53,8 @@ export type Lever = {
   assumptions_en: string;
   /** Ce que le levier doit permettre de lever en plus (estimation hors BP). */
   impact?: { volume: number; axis: string; text: string; text_en: string; status?: string };
+  /** Ce que le levier débloque côté produit (levier tech). */
+  unlocks?: { fr: string; en: string }[];
 };
 
 export type AcceleratedPool = {
@@ -73,6 +77,13 @@ export type BusinessPlanData = {
   /** Objectifs de l'équipe, hors BP : ils pilotent les chiffres phares. */
   targets?: { revenue_2027_locked: number; volume_early_2028: number; raise_time_months?: number };
   accelerated_pool?: AcceleratedPool;
+  /** Indicateurs de plateforme, hors BP ; null tant qu'ils ne sont pas renseignés. */
+  platform?: {
+    launch_time_weeks: number | null;
+    marginal_cost: number | null;
+    api_channels: number | null;
+    onchain_share: number | null;
+  };
 };
 
 /** Mois de la levée : la trésorerie la reçoit à partir de ce mois. */
@@ -312,5 +323,48 @@ export function pipeline(d: BusinessPlanData) {
     amount: sum(list.map((s) => s.amount_raised)),
     net: sum(list.map((s) => s.net2027 + s.net2028)),
     maxAmount: Math.max(0, ...list.map((s) => s.amount_raised)),
+  };
+}
+
+// ── Lecture « plateforme » (ajout du 11/10/2026) ────────────────────────────
+
+/** Volume émis par année : montants des stratégies dont le premier closing tombe cette année-là. */
+export function volumeByYear(d: BusinessPlanData, year: number): number {
+  return sum(d.strategies.filter((s) => s.first_closing.startsWith(String(year))).map((s) => s.amount_raised));
+}
+
+/**
+ * Levier opérationnel : coûts fixes de la plateforme (tech, équipe et frais
+ * généraux) face au volume émis et au volume cumulé.
+ */
+export function operatingLeverage(d: BusinessPlanData) {
+  const years = [...new Set(d.pnl_split.map((l) => l.year))].sort();
+  let cumulated = 0;
+  return years.map((year) => {
+    const fixed = sum(
+      d.pnl_split
+        .filter((l) => l.year === year && l.side === "Dépenses" && (l.bucket === "Tech" || l.bucket.startsWith("Équipe")))
+        .map((l) => l.amount)
+    );
+    const emitted = volumeByYear(d, year);
+    cumulated += emitted;
+    return { year, fixed, emitted, cumulated, ratio: emitted ? fixed / emitted : 0 };
+  });
+}
+
+/** Take rate : frais de transaction et revenu net rapportés au volume émis. */
+export function takeRate(d: BusinessPlanData) {
+  const volume = sum(d.strategies.map((s) => s.amount_raised));
+  const fees = sum(d.strategy_revenue.map((r) => r.transaction_fees));
+  const net = sum(d.strategy_revenue.map((r) => r.net_revenue));
+  const years = [...new Set(d.strategy_revenue.map((r) => r.year))].sort();
+  return {
+    volume,
+    fees,
+    net,
+    feeRate: volume ? fees / volume : 0,
+    netRate: volume ? net / volume : 0,
+    firstYear: years[0],
+    lastYear: years[years.length - 1],
   };
 }

@@ -11,11 +11,13 @@ import {
   inProgress,
   leverBreakdown,
   netRevenue,
+  operatingLeverage,
   pipeline,
   pnlByYear,
   revenueByStrategy,
   riskView,
   scenarios,
+  takeRate,
   type BusinessPlanData,
   type PnlLine,
 } from "@/lib/business-plan/calc";
@@ -70,10 +72,10 @@ const copy = {
     f2Title: "de revenu net 2027, sécurisé avant fin 2026",
     f2Body: (k1: string, k2: string) =>
       `Kupanda 1 apporte ${k1} de revenu net en 2027 ; il suffit de lever ${k2} sur Kupanda 2 pour dépasser le million.`,
-    f3Label: "Début 2028",
-    f3Title: "de volume levé d'ici début 2028",
-    f3Body: (rev: string, vol: string) =>
-      `Dans le BP actuel (${vol} levés), le chiffre d'affaires 2028 atteint ${rev}. Le BP est en cours de mise à jour sur l'objectif de 100 M€.`,
+    f3Label: "Levier opérationnel",
+    f3Title: "de coûts tech et équipe rapportés au volume émis en 2027",
+    f3Body: (vol: string, fixed: string, fixed2: string, cum: string) =>
+      `${vol} émis sur la plateforme en 2027 pour ${fixed} de coûts tech et équipe. En 2028, ces coûts baissent (${fixed2}) quand le volume émis atteint ${cum} : la croissance ne multiplie pas les équipes.`,
     netDef:
       "Revenu net d'une stratégie : intérêts encaissés et frais de transaction, moins les coupons versés aux porteurs, avant coût du risque, partage de performance et distribution.",
     raised: "Montant levé",
@@ -90,8 +92,26 @@ const copy = {
     step2Body: (amount: string, net: string) =>
       `${amount} levés sur Kupanda 1 et 2, qui portent ${net} de revenu net en 2027.`,
     s2: "Ce qui arrive",
-    s3: "Revenus et dépenses en un coup d'œil",
+    s3: "Ce que la plateforme gagne",
     s4: "Cash burn, runway et accélération",
+    sTech: "Ce que la tech change",
+    takeVolume: (a: number, b: number) => `volume émis ${a}-${b}`,
+    takeFees: "de frais de transaction par euro émis",
+    takeNet: (a: number, b: number) => `de revenu net ${a}-${b} par euro émis`,
+    pnlDetail: "Détail du P&L",
+    techSectionLead:
+      "Chaque stratégie passe par la même infrastructure : émission, conformité, distribution et suivi sont outillés une fois, puis réutilisés. Ces indicateurs disent ce que la tech change au coût et à la vitesse d'une stratégie.",
+    metrics: [
+      { key: "launch_time_weeks", label: "pour lancer une nouvelle stratégie", unit: (v: string) => `${v}\u00a0semaines` },
+      { key: "marginal_cost", label: "de coût marginal pour une stratégie de plus", unit: (v: string) => v },
+      { key: "api_channels", label: "canaux de distribution branchés par API", unit: (v: string) => v },
+      { key: "onchain_share", label: "des flux réglés on-chain", unit: (v: string) => `${v}\u00a0%` },
+    ],
+    placeholderNote: "Surligné en jaune : chiffre à renseigner, absent du BP.",
+    channel: "Canal",
+    channels: { direct: "Direct", api: "Partenaire API", onchain: "Liquidité on-chain" },
+    toFill: "à renseigner",
+    unlocks: "Ce que ça débloque",
     open: "Déplier",
     close: "Replier",
     inProgress: "En cours de levée",
@@ -102,7 +122,7 @@ const copy = {
     defaultRate: "Taux de défaut retenu",
     duration: "Durée",
     fees: "Frais de transaction",
-    th: ["Stratégie", "Segment", "1er closing", "Montant", "Revenu net 2027", "Revenu net 2028"],
+    th: ["Stratégie", "Segment", "1er closing", "Montant", "Revenu net 2027", "Revenu net 2028", "Canal"],
     upcomingTotal: "Total",
     withPool: "dont le fonds de la levée accélérée",
     clickStrategy: "Cliquez sur une stratégie pour voir ses caractéristiques.",
@@ -148,7 +168,8 @@ const copy = {
     s5Lead:
       "Deux choses peuvent casser le plan : une stratégie qui ne se lève pas assez vite, et des défauts au-delà de ce que la structure absorbe. Voici comment le BP les prend en compte.",
     raiseTitle: "Lever vite",
-    raiseBase: (n: number) => `Hypothèse de base : une stratégie se lève en ${n}\u00a0mois après son lancement.`,
+    raiseBaseBefore: "Hypothèse de base : une stratégie se lève en",
+    raiseBaseAfter: "après son lancement.",
     pace: (a: string, n: number, from: string, to: string) =>
       `Le BP suppose ${a} levés sur ${n}\u00a0mois (${from} à ${to}).`,
     perMonthPace: "par mois en moyenne",
@@ -162,7 +183,7 @@ const copy = {
     cushion: (n: string, a: string) => `Si aucune nouvelle stratégie ne se levait, ${a} levés couvrent ${n} de burn (Plan BP).`,
     techLead: "C'est pour ça que la tech compte.",
     techBody:
-      "Plus Minah est branchée à la liquidité on-chain, où les taux de nos stratégies sont très compétitifs, plus elle tire parti de son avance de premier acteur sur les actifs africains on-chain, et plus chaque stratégie se lève vite. C'est l'objet du levier « Équipe tech ».",
+      "Plus Minah est branchée à la liquidité on-chain, où les taux de nos stratégies sont très compétitifs, plus elle tire parti de son avance de premier acteur sur les actifs africains on-chain, et plus chaque stratégie se lève vite. C'est l'objet du levier « Produit et tech ».",
     techLink: "Voir la roadmap technique",
     defaultTitle: "Se protéger en cas de défaut",
     defaultRates: "Taux de défaut retenus par le BP",
@@ -188,10 +209,10 @@ const copy = {
     f2Title: "of 2027 net revenue, secured before end 2026",
     f2Body: (k1: string, k2: string) =>
       `Kupanda 1 brings ${k1} of net revenue in 2027; raising ${k2} on Kupanda 2 is enough to pass one million.`,
-    f3Label: "Early 2028",
-    f3Title: "of volume raised by early 2028",
-    f3Body: (rev: string, vol: string) =>
-      `In the current BP (${vol} raised), 2028 revenue reaches ${rev}. The BP is being updated on the €100M target.`,
+    f3Label: "Operating leverage",
+    f3Title: "of tech and team costs relative to the volume issued in 2027",
+    f3Body: (vol: string, fixed: string, fixed2: string, cum: string) =>
+      `${vol} issued on the platform in 2027 for ${fixed} of tech and team costs. In 2028 these costs go down (${fixed2}) while issued volume reaches ${cum}: growth does not multiply teams.`,
     netDef:
       "Net revenue of a strategy: interest received and transaction fees, minus coupons paid to bondholders, before cost of risk, performance sharing and distribution.",
     raised: "Amount raised",
@@ -208,8 +229,26 @@ const copy = {
     step2Body: (amount: string, net: string) =>
       `${amount} raised on Kupanda 1 and 2, carrying ${net} of net revenue in 2027.`,
     s2: "What comes next",
-    s3: "Revenue and costs at a glance",
+    s3: "What the platform earns",
     s4: "Cash burn, runway and acceleration",
+    sTech: "What the tech changes",
+    takeVolume: (a: number, b: number) => `volume issued ${a}-${b}`,
+    takeFees: "of transaction fees per euro issued",
+    takeNet: (a: number, b: number) => `of ${a}-${b} net revenue per euro issued`,
+    pnlDetail: "P&L detail",
+    techSectionLead:
+      "Every strategy runs on the same infrastructure: issuance, compliance, distribution and monitoring are built once, then reused. These indicators show what the tech changes to the cost and speed of a strategy.",
+    metrics: [
+      { key: "launch_time_weeks", label: "to launch a new strategy", unit: (v: string) => `${v} weeks` },
+      { key: "marginal_cost", label: "marginal cost of one more strategy", unit: (v: string) => v },
+      { key: "api_channels", label: "distribution channels plugged in by API", unit: (v: string) => v },
+      { key: "onchain_share", label: "of flows settled on-chain", unit: (v: string) => `${v}%` },
+    ],
+    placeholderNote: "Highlighted in yellow: figure to be filled in, not in the BP.",
+    channel: "Channel",
+    channels: { direct: "Direct", api: "API partner", onchain: "On-chain liquidity" },
+    toFill: "to be filled in",
+    unlocks: "What it unlocks",
     open: "Expand",
     close: "Collapse",
     inProgress: "Raising",
@@ -220,7 +259,7 @@ const copy = {
     defaultRate: "Assumed default rate",
     duration: "Duration",
     fees: "Transaction fees",
-    th: ["Strategy", "Segment", "First closing", "Amount", "Net revenue 2027", "Net revenue 2028"],
+    th: ["Strategy", "Segment", "First closing", "Amount", "Net revenue 2027", "Net revenue 2028", "Channel"],
     upcomingTotal: "Total",
     withPool: "including the accelerated round fund",
     clickStrategy: "Click a strategy to see its characteristics.",
@@ -266,7 +305,8 @@ const copy = {
     s5Lead:
       "Two things can break the plan: a strategy that does not raise fast enough, and defaults beyond what the structure absorbs. Here is how the BP accounts for them.",
     raiseTitle: "Raising fast",
-    raiseBase: (n: number) => `Base assumption: a strategy is raised within ${n} months of its launch.`,
+    raiseBaseBefore: "Base assumption: a strategy is raised within",
+    raiseBaseAfter: "of its launch.",
     pace: (a: string, n: number, from: string, to: string) =>
       `The BP assumes ${a} raised over ${n} months (${from} to ${to}).`,
     perMonthPace: "per month on average",
@@ -280,7 +320,7 @@ const copy = {
     cushion: (n: string, a: string) => `If no new strategy were raised, ${a} raised covers ${n} of burn (BP plan).`,
     techLead: "This is why the tech matters.",
     techBody:
-      "The more Minah is plugged into on-chain liquidity, where our strategies' rates are highly competitive, the more it benefits from its first-mover advantage on African on-chain assets, and the faster each strategy is raised. This is what the \u201cTech team\u201d lever is for.",
+      "The more Minah is plugged into on-chain liquidity, where our strategies' rates are highly competitive, the more it benefits from its first-mover advantage on African on-chain assets, and the faster each strategy is raised. This is what the \u201cProduct and tech\u201d lever is for.",
     techLink: "See the technical roadmap",
     defaultTitle: "Protecting against defaults",
     defaultRates: "Default rates assumed in the BP",
@@ -424,15 +464,23 @@ export function BusinessPlan({ data, locale }: { data: BusinessPlanData; locale:
       </Section>
 
       <Section n="03" title={c.s3} c={c}>
-        <PnlBars data={data} pnl={pnl} locale={locale} />
+        <TakeRate data={data} locale={locale} />
+        <h3 className="mt-8 text-sm font-semibold text-foreground">{c.pnlDetail}</h3>
+        <div className="mt-4">
+          <PnlBars data={data} pnl={pnl} locale={locale} />
+        </div>
       </Section>
 
-      <Section n="04" title={c.s4} c={c}>
+      <Section n="04" title={c.sTech} c={c}>
+        <TechSection data={data} locale={locale} />
+      </Section>
+
+      <Section n="05" title={c.s4} c={c}>
         <RaiseToggle raised={raised} setRaised={setRaised} locale={locale} />
         <Runway data={data} raised={raised} locale={locale} />
       </Section>
 
-      <Section n="05" title={c.s5} c={c}>
+      <Section n="06" title={c.s5} c={c}>
         <RiskSection data={data} raised={raised} locale={locale} />
       </Section>
 
@@ -457,7 +505,9 @@ function RiskSection({ data, raised, locale }: { data: BusinessPlanData; raised:
           <h3 className="text-sm font-semibold text-foreground">{c.raiseTitle}</h3>
           {base ? (
             <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-neutral-700">
-              {c.raiseBase(base)}
+              <span>
+                {c.raiseBaseBefore} <Placeholder>{c.months(base)}</Placeholder> {c.raiseBaseAfter}
+              </span>
               <span className="rounded-full border border-dashed border-neutral-400 px-2 py-0.5 text-[11px] text-neutral-600">
                 {c.proposal}
               </span>
@@ -548,11 +598,13 @@ function KeyFacts({ data, locale }: { data: BusinessPlanData; locale: Locale }) 
   const k1 = data.strategies.find((s) => s.strategy === "Kupanda 1");
   const k2 = data.strategies.find((s) => s.strategy === "Kupanda 2");
   const target = data.targets?.revenue_2027_locked ?? 1_000_000;
-  const volume = data.targets?.volume_early_2028 ?? 100_000_000;
   const k1Net = netRevenue(data, "Kupanda 1", 2027);
   const k2Needed = amountNeededFor(data, "Kupanda 2", target, ["Kupanda 1"]);
-  const bpVolume = data.strategies.reduce((a, s) => a + s.amount_raised, 0);
-  const rev2028 = pnlByYear(data).find((y) => y.year === 2028)?.rev ?? 0;
+  // Le volume visé (100 M€) attend le BP mis à jour : en attendant, le
+  // troisième chiffre est le levier opérationnel, tiré du BP actuel.
+  const leverage = operatingLeverage(data);
+  const lev2027 = leverage.find((y) => y.year === 2027);
+  const lev2028 = leverage.find((y) => y.year === 2028);
   const k1Amount = k1?.amount_raised ?? 0;
   const k2Amount = k2?.amount_raised ?? 0;
 
@@ -571,9 +623,14 @@ function KeyFacts({ data, locale }: { data: BusinessPlanData; locale: Locale }) 
     },
     {
       label: c.f3Label,
-      value: `> ${eur(volume, locale)}`,
+      value: pct(lev2027?.ratio ?? 0, locale, 1),
       title: c.f3Title,
-      body: c.f3Body(eur(rev2028, locale), eur(bpVolume, locale)),
+      body: c.f3Body(
+        eur(lev2027?.emitted ?? 0, locale),
+        eur(lev2027?.fixed ?? 0, locale),
+        eur(lev2028?.fixed ?? 0, locale),
+        eur(lev2028?.cumulated ?? 0, locale)
+      ),
     },
   ];
 
@@ -679,6 +736,66 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
 
+// Chiffre absent du BP, à renseigner : surligné en jaune pour être repéré à la relecture.
+function Placeholder({ children }: { children: React.ReactNode }) {
+  return <mark className="whitespace-nowrap rounded-sm bg-yellow-200 px-1 text-foreground">{children}</mark>;
+}
+
+// ── Partie 3 : take rate ────────────────────────────────────────────────────
+
+function TakeRate({ data, locale }: { data: BusinessPlanData; locale: Locale }) {
+  const c = copy[locale];
+  const t = takeRate(data);
+  const cells = [
+    { value: eur(t.volume, locale), label: c.takeVolume(t.firstYear, t.lastYear) },
+    { value: pct(t.feeRate, locale, 1), label: c.takeFees },
+    { value: pct(t.netRate, locale, 1), label: c.takeNet(t.firstYear, t.lastYear) },
+  ];
+  return (
+    <dl className="grid border-y border-foreground/10 sm:grid-cols-3 sm:divide-x sm:divide-foreground/10">
+      {cells.map((x) => (
+        <div key={x.label} className="py-5 max-sm:border-t max-sm:border-foreground/10 max-sm:first:border-t-0 sm:px-6 sm:first:pl-0 sm:last:pr-0">
+          <dd className="text-3xl font-semibold tracking-tight tabular-nums text-marsala">{x.value}</dd>
+          <dt className="mt-1 text-sm text-neutral-600">{x.label}</dt>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+// ── Partie 4 : ce que la tech change ────────────────────────────────────────
+
+function TechSection({ data, locale }: { data: BusinessPlanData; locale: Locale }) {
+  const c = copy[locale];
+  const p = data.platform;
+  const show = (key: string, unit: (v: string) => string) => {
+    const v = p?.[key as keyof NonNullable<typeof p>];
+    if (v === null || v === undefined) return <Placeholder>{unit("X")}</Placeholder>;
+    if (key === "marginal_cost") return eur(v, locale);
+    return unit(trim(v, 1, locale));
+  };
+  return (
+    <div>
+      <p className="max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{c.techSectionLead}</p>
+      <dl className="mt-6 grid gap-px overflow-hidden rounded-xl bg-foreground/10 sm:grid-cols-2 lg:grid-cols-4">
+        {c.metrics.map((m) => (
+          <div key={m.key} className="bg-[#fbfaf7] p-5">
+            <dd className="text-2xl font-semibold tracking-tight tabular-nums text-marsala">{show(m.key, m.unit)}</dd>
+            <dt className="mt-1 text-sm text-neutral-600">{m.label}</dt>
+          </div>
+        ))}
+      </dl>
+      <p className="mt-2 text-xs text-neutral-600">{c.placeholderNote}</p>
+      <Link
+        href="/investors/docs/vision-technique"
+        className="mt-4 inline-block whitespace-nowrap rounded-lg text-sm font-medium text-marsala underline decoration-marsala/30 underline-offset-4 hover:decoration-marsala"
+      >
+        {c.techLink} →
+      </Link>
+    </div>
+  );
+}
+
 // ── Partie 2 : les stratégies à venir ───────────────────────────────────────
 
 function Upcoming({
@@ -716,6 +833,7 @@ function Upcoming({
             <tr className="border-b border-foreground/15 text-left text-neutral-600">
               <th className="py-2 pr-4 font-medium">{c.th[0]}</th>
               <th className="hidden py-2 pr-4 font-medium md:table-cell">{c.th[1]}</th>
+              <th className="hidden py-2 pr-4 font-medium lg:table-cell">{c.th[6]}</th>
               <th className="py-2 pr-4 font-medium">{c.th[2]}</th>
               <th className="py-2 pr-4 font-medium">{c.th[3]}</th>
               <th className="py-2 pr-4 text-right font-medium">{c.th[4]}</th>
@@ -739,6 +857,11 @@ function Upcoming({
                   <td className={`hidden ${pad(s.strategy)} pr-4 text-neutral-600 md:table-cell`}>
                     {FAMILY[s.family]?.[locale] ?? s.family}
                   </td>
+                  {/* Canal de distribution : ce qui montre que le volume vient des
+                      branchements techniques. À renseigner, d'où le surlignage. */}
+                  <td className={`hidden ${pad(s.strategy)} pr-4 text-neutral-700 lg:table-cell`}>
+                    {s.channel ? c.channels[s.channel] : <Placeholder>{c.toFill}</Placeholder>}
+                  </td>
                   <td className={`whitespace-nowrap ${pad(s.strategy)} pr-4 text-neutral-700`}>{month(s.first_closing, locale)}</td>
                   <td className={`${pad(s.strategy)} pr-4`}>
                     <div className="flex items-center gap-3">
@@ -751,7 +874,7 @@ function Upcoming({
                 </tr>
                 {selected === s.strategy && (
                   <tr className="border-b border-foreground/10 bg-brand/[0.03]">
-                    <td colSpan={6} className="px-1 py-5">
+                    <td colSpan={7} className="px-1 py-5">
                       <StrategyDetail data={data} name={s.strategy} locale={locale} />
                     </td>
                   </tr>
@@ -768,6 +891,7 @@ function Upcoming({
                     </span>
                   </td>
                   <td className={`hidden ${pad("pool")} pr-4 text-neutral-600 md:table-cell`}>{c.tbd}</td>
+                  <td className={`hidden ${pad("pool")} pr-4 text-neutral-600 lg:table-cell`}>{c.tbd}</td>
                   <td className={`${pad("pool")} pr-4 text-neutral-600`}>{c.tbd}</td>
                   <td className={`${pad("pool")} pr-4`}>
                     <div className="flex items-center gap-3">
@@ -780,7 +904,7 @@ function Upcoming({
                 </tr>
                 {selected === "pool" && (
                   <tr className="border-b border-foreground/10 bg-brand/[0.03]">
-                    <td colSpan={6} className="px-1 py-5 text-[15px] leading-[1.7] text-neutral-700">
+                    <td colSpan={7} className="px-1 py-5 text-[15px] leading-[1.7] text-neutral-700">
                       {locale === "fr" ? pool.description : pool.description_en}
                     </td>
                   </tr>
@@ -790,6 +914,7 @@ function Upcoming({
             <tr className="font-semibold text-foreground">
               <td className="py-3 pr-4">{c.upcomingTotal}</td>
               <td className="hidden md:table-cell" />
+              <td className="hidden lg:table-cell" />
               <td />
               <td className="py-3 pr-4 tabular-nums">{eur(up.amount + (pool?.amount ?? 0), locale)}</td>
               <td className="py-3 pr-4 text-right tabular-nums">{eur(up.list.reduce((a, s) => a + s.net2027, 0), locale)}</td>
@@ -1063,7 +1188,7 @@ function Runway({ data, raised, locale }: { data: BusinessPlanData; raised: numb
                   </td>
                   <td className={`${py} pr-4 text-right tabular-nums`}>{l ? eur(r.cost - rows[r.k - 1].cost, locale) : "0"}</td>
                   <td className={`hidden ${py} pr-4 text-right tabular-nums lg:table-cell`}>{r.cost ? eur(r.cost, locale) : "0"}</td>
-                  <td className={`${py} pr-4 text-right tabular-nums`}>{r.k ? `+${eur(volumeUpTo(r.k), locale)}` : "0"}</td>
+                  <td className={`${py} pr-4 text-right tabular-nums`}>{r.k ? <Placeholder>+{eur(volumeUpTo(r.k), locale)}</Placeholder> : "0"}</td>
                   <td className={`${py} pr-4 text-right tabular-nums`}>{eur(r.burn2027, locale)}</td>
                   <td className={`hidden ${py} pr-4 text-right tabular-nums lg:table-cell`}>{c.months(r.runwayNoRevenue)}</td>
                   <td className={`${py} pr-4 text-right tabular-nums`}>{r.runwayBp === null ? c.beyond(horizon) : c.months(r.runwayBp)}</td>
@@ -1103,7 +1228,20 @@ function LeverDetail({ data, lever, locale }: { data: BusinessPlanData; lever: B
       <h3 className="text-sm font-semibold text-foreground">
         {lever.level}. {locale === "fr" ? lever.name : lever.name_en}
       </h3>
-      <p className="mt-3 text-sm font-semibold text-foreground">{c.whyCost}</p>
+      {lever.unlocks && lever.unlocks.length > 0 && (
+        <>
+          <p className="mt-3 text-sm font-semibold text-foreground">{c.unlocks}</p>
+          <ul className="mt-2 space-y-1.5 text-sm text-neutral-700">
+            {lever.unlocks.map((u) => (
+              <li key={u.fr} className="flex gap-2">
+                <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-marsala" />
+                <span>{u[locale]}</span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      <p className={`${lever.unlocks?.length ? "mt-5" : "mt-3"} text-sm font-semibold text-foreground`}>{c.whyCost}</p>
       <ul className="mt-2 space-y-1.5 text-sm text-neutral-700">
         {breakdown.monthly.total > 0 && (
           <li className="flex justify-between gap-3">
@@ -1147,7 +1285,7 @@ function LeverDetail({ data, lever, locale }: { data: BusinessPlanData; lever: B
           )}
         </p>
         <p className="mt-3 text-3xl font-semibold tracking-tight tabular-nums text-marsala">
-          +{eur(lever.impact.volume, locale)}
+          <Placeholder>+{eur(lever.impact.volume, locale)}</Placeholder>
         </p>
         <p className="text-sm text-neutral-600">
           {locale === "fr" ? "de volume" : "of volume"}, {(locale === "fr" ? lever.impact.axis : (AXIS_EN[lever.impact.axis] ?? lever.impact.axis)).toLowerCase()}
