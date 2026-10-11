@@ -53,6 +53,18 @@ export type Lever = {
   assumptions_en: string;
   /** Ce que le levier doit permettre de lever en plus (estimation hors BP). */
   impact?: { volume: number; axis: string; text: string; text_en: string; status?: string };
+  /**
+   * Borne haute du coût (estimation hors BP) : retenue quand la levée est la
+   * plus haute, pour que l'argent en plus serve à accélérer. Les champs de
+   * premier niveau sont la borne basse.
+   */
+  high?: {
+    monthly_cost: number;
+    one_off_cost: number;
+    pct_of_raised: number;
+    assumptions: string;
+    assumptions_en: string;
+  };
   /** Ce que le levier débloque côté produit (levier tech). */
   unlocks?: { fr: string; en: string }[];
 };
@@ -153,20 +165,38 @@ export function pnlByYear(d: BusinessPlanData) {
 
 // ── Trésorerie et leviers d'accélération ────────────────────────────────────
 
-/** Coût d'un levier sur un mois donné (formule du brief). */
-export function leverCost(d: BusinessPlanData, l: Lever, month: string): number {
+export type Bound = "low" | "high";
+
+/** Borne retenue pour un montant levé : la haute pour la levée la plus haute. */
+export function boundFor(raised: number): Bound {
+  return raised >= RAISE_OPTIONS[RAISE_OPTIONS.length - 1] ? "high" : "low";
+}
+
+/** Paramètres de coût d'un levier pour une borne. */
+export function leverParams(l: Lever, bound: Bound) {
+  const h = bound === "high" ? l.high : undefined;
+  return {
+    monthly_cost: h?.monthly_cost ?? l.monthly_cost,
+    one_off_cost: h?.one_off_cost ?? l.one_off_cost,
+    pct_of_raised: h?.pct_of_raised ?? l.pct_of_raised,
+  };
+}
+
+/** Coût d'un levier sur un mois donné (formule du brief), pour une borne. */
+export function leverCost(d: BusinessPlanData, l: Lever, month: string, bound: Bound = "low"): number {
+  const p = leverParams(l, bound);
   let c = 0;
-  if (month >= l.start) c += l.monthly_cost;
-  if (l.one_off_month === month) c += l.one_off_cost;
-  if (l.pct_of_raised && month >= l.start) {
-    c += l.pct_of_raised * sum(d.strategies.filter((s) => s.first_closing === month).map((s) => s.amount_raised));
+  if (month >= l.start) c += p.monthly_cost;
+  if (l.one_off_month === month) c += p.one_off_cost;
+  if (p.pct_of_raised && month >= l.start) {
+    c += p.pct_of_raised * sum(d.strategies.filter((s) => s.first_closing === month).map((s) => s.amount_raised));
   }
   return c;
 }
 
 /** Coût mensuel du scénario k : leviers de niveau 1 à k ; k = 0, Plan BP. */
-function scenarioCost(d: BusinessPlanData, k: number, month: string): number {
-  return sum(d.levers.filter((l) => l.level <= k).map((l) => leverCost(d, l, month)));
+function scenarioCost(d: BusinessPlanData, k: number, month: string, bound: Bound): number {
+  return sum(d.levers.filter((l) => l.level <= k).map((l) => leverCost(d, l, month, bound)));
 }
 
 export type ScenarioRow = {
@@ -187,17 +217,17 @@ function monthsBetween(a: string, b: string): number {
   return (yb - ya) * 12 + (mb - ma);
 }
 
-export function scenarios(d: BusinessPlanData, raised: number): ScenarioRow[] {
+export function scenarios(d: BusinessPlanData, raised: number, bound: Bound = boundFor(raised)): ScenarioRow[] {
   const ks = [0, ...d.levers.map((l) => l.level).sort((a, b) => a - b)];
   return ks.map((k) => {
     let cumulated = 0;
     const series = d.cash_flows.map((c) => {
-      cumulated += scenarioCost(d, k, c.month);
+      cumulated += scenarioCost(d, k, c.month, bound);
       return { month: c.month, cash: c.cash_position + (c.month >= RAISE_MONTH ? raised : 0) - cumulated };
     });
     const cost = cumulated;
     const in2027 = d.cash_flows.filter((c) => c.month.startsWith("2027"));
-    const burn2027 = sum(in2027.map((c) => scenarioCost(d, k, c.month) - c.operations_cash)) / (in2027.length || 1);
+    const burn2027 = sum(in2027.map((c) => scenarioCost(d, k, c.month, bound) - c.operations_cash)) / (in2027.length || 1);
     const after = series.filter((s) => s.month >= RAISE_MONTH);
     const negative = after.find((s) => s.cash < 0);
     const low = after.reduce((m, s) => (s.cash < m.cash ? s : m), after[0]);
@@ -249,17 +279,19 @@ export function amountNeededFor(
 }
 
 /** Détail du coût d'un levier sur l'horizon du BP, pour expliquer son total. */
-export function leverBreakdown(d: BusinessPlanData, l: Lever) {
+export function leverBreakdown(d: BusinessPlanData, l: Lever, bound: Bound = "low") {
+  const p = leverParams(l, bound);
   const months = d.cash_flows.map((c) => c.month).filter((m) => m >= l.start);
-  const closings = l.pct_of_raised
+  const closings = p.pct_of_raised
     ? d.strategies
         .filter((s) => s.first_closing >= l.start && months.includes(s.first_closing))
-        .map((s) => ({ strategy: s.strategy, month: s.first_closing, cost: s.amount_raised * l.pct_of_raised }))
+        .map((s) => ({ strategy: s.strategy, month: s.first_closing, cost: s.amount_raised * p.pct_of_raised }))
     : [];
-  const monthly = l.monthly_cost * months.length;
-  const oneOff = l.one_off_month && d.cash_flows.some((c) => c.month === l.one_off_month) ? l.one_off_cost : 0;
+  const monthly = p.monthly_cost * months.length;
+  const oneOff = l.one_off_month && d.cash_flows.some((c) => c.month === l.one_off_month) ? p.one_off_cost : 0;
   return {
-    monthly: { perMonth: l.monthly_cost, months: months.length, total: monthly },
+    pct: p.pct_of_raised,
+    monthly: { perMonth: p.monthly_cost, months: months.length, total: monthly },
     oneOff: { amount: oneOff, month: l.one_off_month },
     closings,
     total: monthly + oneOff + sum(closings.map((c) => c.cost)),

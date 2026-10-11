@@ -6,6 +6,7 @@ import {
   RAISE_MONTH,
   RAISE_OPTIONS,
   amountNeededFor,
+  boundFor,
   delayImpact2027,
   horizonMonths,
   inProgress,
@@ -140,7 +141,7 @@ const copy = {
     fromStrategies: "Par stratégie",
     scenarioTh: [
       "Scénario",
-      "Coût du levier seul",
+      "Coût du levier seul, de la borne basse à la haute",
       "Coût cumulé",
       "Volume en plus, estimation",
       "Burn mensuel 2027",
@@ -152,6 +153,11 @@ const copy = {
     planBp: "Plan BP",
     beyond: (n: number) => `> ${n} mois`,
     chartTitle: "Trésorerie mois par mois",
+    boundNote: (raised: string, low: boolean) =>
+      low
+        ? `À ${raised} levés, le calcul retient la borne basse des coûts des leviers.`
+        : `À ${raised} levés, le calcul retient la borne haute : l'argent en plus sert à accélérer plus fort.`,
+    to: "à",
     floor: (v: string) => `Plancher de trésorerie, ${v}`,
     raise: "Levée",
     clickHint: "Cliquez sur une ligne pour afficher sa courbe et le détail du levier.",
@@ -278,7 +284,7 @@ const copy = {
     fromStrategies: "By strategy",
     scenarioTh: [
       "Scenario",
-      "Lever cost alone",
+      "Lever cost alone, low to high bound",
       "Cumulative cost",
       "Extra volume, estimate",
       "Monthly burn 2027",
@@ -290,6 +296,11 @@ const copy = {
     planBp: "BP plan",
     beyond: (n: number) => `> ${n} months`,
     chartTitle: "Monthly cash position",
+    boundNote: (raised: string, low: boolean) =>
+      low
+        ? `With ${raised} raised, the calculation uses the low bound of lever costs.`
+        : `With ${raised} raised, the calculation uses the high bound: the extra money goes into accelerating harder.`,
+    to: "to",
     floor: (v: string) => `Cash floor, ${v}`,
     raise: "Raise",
     clickHint: "Click a row to show its curve and the lever's detail.",
@@ -739,8 +750,14 @@ function Row({ label, value }: { label: string; value: string }) {
 }
 
 // Chiffre absent du BP, à renseigner : surligné en jaune pour être repéré à la relecture.
-function Placeholder({ children }: { children: React.ReactNode }) {
-  return <mark className="whitespace-nowrap rounded-sm bg-yellow-200 px-1 text-foreground">{children}</mark>;
+function Placeholder({ children, wrap = false }: { children: React.ReactNode; wrap?: boolean }) {
+  return (
+    <mark
+      className={`rounded-sm bg-yellow-200 px-1 text-foreground ${wrap ? "box-decoration-clone" : "whitespace-nowrap"}`}
+    >
+      {children}
+    </mark>
+  );
 }
 
 // ── Partie 3 : take rate ────────────────────────────────────────────────────
@@ -1149,9 +1166,12 @@ function Runway({ data, raised, locale }: { data: BusinessPlanData; raised: numb
   // Plancher de trésorerie voulu par l'équipe : la ligne rouge du graphique,
   // et le point bas en rouge dans le tableau quand il passe dessous.
   const floor = data.targets?.cash_floor ?? null;
+  // Tranche de coût : borne basse à 1,5 M€ levés, haute à 3 M€.
+  const bound = boundFor(raised);
 
   return (
     <div className="mt-5">
+      <p className="mb-3 text-sm text-neutral-600">{c.boundNote(eur(raised, locale), bound === "low")}</p>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] border-collapse text-sm">
           <thead>
@@ -1191,7 +1211,18 @@ function Runway({ data, raised, locale }: { data: BusinessPlanData; raised: numb
                       {name(r.k)}
                     </span>
                   </td>
-                  <td className={`${py} pr-4 text-right tabular-nums`}>{l ? eur(r.cost - rows[r.k - 1].cost, locale) : "0"}</td>
+                  <td className={`whitespace-nowrap ${py} pr-4 text-right tabular-nums`}>
+                    {l ? (
+                      <CostRange
+                        low={leverBreakdown(data, l, "low").total}
+                        high={l.high ? leverBreakdown(data, l, "high").total : null}
+                        bound={bound}
+                        locale={locale}
+                      />
+                    ) : (
+                      "0"
+                    )}
+                  </td>
                   <td className={`hidden ${py} pr-4 text-right tabular-nums lg:table-cell`}>{r.cost ? eur(r.cost, locale) : "0"}</td>
                   <td className={`${py} pr-4 text-right tabular-nums`}>{r.k ? <Placeholder>+{eur(volumeUpTo(r.k), locale)}</Placeholder> : "0"}</td>
                   <td className={`${py} pr-4 text-right tabular-nums`}>{eur(r.burn2027, locale)}</td>
@@ -1208,7 +1239,7 @@ function Runway({ data, raised, locale }: { data: BusinessPlanData; raised: numb
                 {selected === r.k && l && (
                   <tr className="border-b border-foreground/10 bg-brand/[0.03]">
                     <td colSpan={9} className="px-1 py-5">
-                      <LeverDetail data={data} lever={l} locale={locale} />
+                      <LeverDetail data={data} lever={l} bound={bound} locale={locale} />
                     </td>
                   </tr>
                 )}
@@ -1227,9 +1258,38 @@ function Runway({ data, raised, locale }: { data: BusinessPlanData; raised: numb
   );
 }
 
-function LeverDetail({ data, lever, locale }: { data: BusinessPlanData; lever: BusinessPlanData["levers"][number]; locale: Locale }) {
+// Tranche de coût d'un levier : la borne retenue en clair, l'autre en retrait.
+// La borne haute est une estimation hors BP, surlignée comme telle.
+function CostRange({ low, high, bound, locale }: { low: number; high: number | null; bound: "low" | "high"; locale: Locale }) {
   const c = copy[locale];
-  const breakdown = leverBreakdown(data, lever);
+  if (high === null) return <>{eur(low, locale)}</>;
+  const active = "font-semibold text-foreground";
+  const idle = "text-neutral-500";
+  return (
+    <span>
+      <span className={bound === "low" ? active : idle}>{eur(low, locale)}</span>
+      <span className="text-neutral-500"> {c.to} </span>
+      <span className={bound === "high" ? active : idle}>
+        <Placeholder>{eur(high, locale)}</Placeholder>
+      </span>
+    </span>
+  );
+}
+
+function LeverDetail({
+  data,
+  lever,
+  bound,
+  locale,
+}: {
+  data: BusinessPlanData;
+  lever: BusinessPlanData["levers"][number];
+  bound: "low" | "high";
+  locale: Locale;
+}) {
+  const c = copy[locale];
+  const breakdown = leverBreakdown(data, lever, bound);
+  const high = bound === "high" && lever.high;
   return (
   <div className="grid gap-6 md:grid-cols-2">
     <div>
@@ -1266,7 +1326,7 @@ function LeverDetail({ data, lever, locale }: { data: BusinessPlanData; lever: B
         {breakdown.closings.length > 0 && (
           <li>
             <span className="flex justify-between gap-3">
-              <span>{c.coverage(pct(lever.pct_of_raised, locale))}</span>
+              <span>{c.coverage(pct(breakdown.pct, locale))}</span>
               <span className="tabular-nums">{eur(breakdown.closings.reduce((a, x) => a + x.cost, 0), locale)}</span>
             </span>
             <span className="mt-1 block text-neutral-600">
@@ -1280,7 +1340,15 @@ function LeverDetail({ data, lever, locale }: { data: BusinessPlanData; lever: B
         </li>
       </ul>
       <p className="mt-4 text-sm font-semibold text-foreground">{c.assumptions}</p>
-      <p className="mt-1 text-sm leading-6 text-neutral-700">{locale === "fr" ? lever.assumptions : lever.assumptions_en}</p>
+      <p className="mt-1 text-sm leading-6 text-neutral-700">
+        {high ? (
+          <Placeholder wrap>{locale === "fr" ? lever.high!.assumptions : lever.high!.assumptions_en}</Placeholder>
+        ) : locale === "fr" ? (
+          lever.assumptions
+        ) : (
+          lever.assumptions_en
+        )}
+      </p>
     </div>
     {lever.impact && (
       <div>
