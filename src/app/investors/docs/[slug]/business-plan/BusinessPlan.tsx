@@ -82,6 +82,8 @@ const copy = {
     s1Lead:
       "Kupanda 1 et 2 sont nos deux premières grosses stratégies, en cours de levée. L'objectif : valider les deux d'ici le premier trimestre 2027, en deux étapes.",
     step: (n: number) => `Étape ${n}`,
+    s1Synthesis: (amount: string, net: string, share: string) =>
+      `Ensemble, Kupanda 1 et 2 représentent ${amount} levés et ${net} de revenu net en 2027, soit ${share} du revenu net 2027 de Minah.`,
     step1Title: (v: string) => `Plus de ${v} de revenu net 2027`,
     step1Body: (k2: string) => `Lever ${k2} sur Kupanda 2, en plus de Kupanda 1, suffit à le verrouiller.`,
     step2Title: "100\u00a0% de Kupanda 2 levé d'ici le T1 2027",
@@ -100,9 +102,6 @@ const copy = {
     defaultRate: "Taux de défaut retenu",
     duration: "Durée",
     fees: "Frais de transaction",
-    total: "Kupanda 1 + 2",
-    totalAmount: "Montant total",
-    share: "Part du revenu net 2027 de Minah",
     th: ["Stratégie", "Segment", "1er closing", "Montant", "Revenu net 2027", "Revenu net 2028"],
     upcomingTotal: "Total",
     withPool: "dont le fonds de la levée accélérée",
@@ -201,6 +200,8 @@ const copy = {
     s1Lead:
       "Kupanda 1 and 2 are our first two large strategies, currently being raised. The goal: close both by Q1 2027, in two steps.",
     step: (n: number) => `Step ${n}`,
+    s1Synthesis: (amount: string, net: string, share: string) =>
+      `Together, Kupanda 1 and 2 account for ${amount} raised and ${net} of net revenue in 2027, ${share} of Minah's 2027 net revenue.`,
     step1Title: (v: string) => `Over ${v} of 2027 net revenue`,
     step1Body: (k2: string) => `Raising ${k2} on Kupanda 2, on top of Kupanda 1, is enough to lock it in.`,
     step2Title: "100% of Kupanda 2 raised by Q1 2027",
@@ -219,9 +220,6 @@ const copy = {
     defaultRate: "Assumed default rate",
     duration: "Duration",
     fees: "Transaction fees",
-    total: "Kupanda 1 + 2",
-    totalAmount: "Total amount",
-    share: "Share of Minah's 2027 net revenue",
     th: ["Strategy", "Segment", "First closing", "Amount", "Net revenue 2027", "Net revenue 2028"],
     upcomingTotal: "Total",
     withPool: "including the accelerated round fund",
@@ -370,8 +368,30 @@ export function BusinessPlan({ data, locale }: { data: BusinessPlanData; locale:
 
       <Section n="01" title={c.s1} c={c}>
         <p className="max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{c.s1Lead}</p>
+        <ul className="mt-6 grid gap-4 md:grid-cols-2">
+          {ip.list.map((s) => (
+            <li key={s.strategy} className={`${CARD} flex flex-col`}>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="text-sm font-semibold text-foreground">{s.strategy}</h3>
+                <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[11px] font-medium text-marsala">
+                  {c.inProgress}
+                </span>
+              </div>
+              <p className="mt-4 text-3xl font-semibold tracking-tight tabular-nums text-marsala">
+                {eur(s.net2027, locale)}
+              </p>
+              <p className="text-sm text-neutral-600">{c.net2027}</p>
+              <dl className="mt-4 space-y-1.5 border-t border-foreground/10 pt-4 text-sm">
+                <Row label={c.amount} value={eur(s.amount_raised, locale)} />
+                <Row label={c.coupon} value={pct(s.bond_rate, locale)} />
+                <Row label={c.grossYield} value={pct(s.gross_yield, locale)} />
+                <Row label={c.fees} value={eur(s.fees, locale)} />
+              </dl>
+            </li>
+          ))}
+        </ul>
         {/* Les deux étapes, en bandeau à deux colonnes séparées d'un filet. */}
-        <ol className="mt-5 grid border-y border-foreground/10 sm:grid-cols-2 sm:divide-x sm:divide-foreground/10">
+        <ol className="mt-6 grid border-y border-foreground/10 sm:grid-cols-2 sm:divide-x sm:divide-foreground/10">
           {[
             {
               title: c.step1Title(eur(data.targets?.revenue_2027_locked ?? 1_000_000, locale)),
@@ -393,39 +413,10 @@ export function BusinessPlan({ data, locale }: { data: BusinessPlanData; locale:
             </li>
           ))}
         </ol>
-        <ul className="mt-6 grid gap-4 md:grid-cols-3">
-          {ip.list.map((s) => (
-            <li key={s.strategy} className={`${CARD} flex flex-col`}>
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <h3 className="text-sm font-semibold text-foreground">{s.strategy}</h3>
-                <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[11px] font-medium text-marsala">
-                  {c.inProgress}
-                </span>
-              </div>
-              <p className="mt-4 text-3xl font-semibold tracking-tight tabular-nums text-marsala">
-                {eur(s.net2027, locale)}
-              </p>
-              <p className="text-sm text-neutral-600">{c.net2027}</p>
-              <dl className="mt-4 space-y-1.5 border-t border-foreground/10 pt-4 text-sm">
-                <Row label={c.amount} value={eur(s.amount_raised, locale)} />
-                <Row label={c.coupon} value={pct(s.bond_rate, locale)} />
-                <Row label={c.grossYield} value={pct(s.gross_yield, locale)} />
-                <Row label={c.fees} value={eur(s.fees, locale)} />
-              </dl>
-            </li>
-          ))}
-          <li className={`${CARD} flex flex-col`}>
-            <h3 className="text-sm font-semibold text-foreground">{c.total}</h3>
-            <p className="mt-4 text-3xl font-semibold tracking-tight tabular-nums text-marsala">
-              {eur(ip.net2027, locale)}
-            </p>
-            <p className="text-sm text-neutral-600">{c.net2027}</p>
-            <dl className="mt-4 space-y-1.5 border-t border-foreground/10 pt-4 text-sm">
-              <Row label={c.totalAmount} value={eur(ip.amount, locale)} />
-              <Row label={c.share} value={pct(ip.share2027, locale, 0)} />
-            </dl>
-          </li>
-        </ul>
+        {/* Ce que disait la carte « Kupanda 1 + 2 », en une phrase. */}
+        <p className="mt-5 max-w-3xl text-[15px] leading-[1.8] text-neutral-700">
+          {c.s1Synthesis(eur(ip.amount, locale), eur(ip.net2027, locale), pct(ip.share2027, locale, 0))}
+        </p>
       </Section>
 
       <Section n="02" title={c.s2} c={c}>
