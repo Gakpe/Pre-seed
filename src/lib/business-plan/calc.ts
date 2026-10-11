@@ -95,6 +95,16 @@ export type BusinessPlanData = {
     cash_floor?: number;
   };
   accelerated_pool?: AcceleratedPool;
+  /**
+   * Marché secondaire on-chain, hors BP (proxy) : part du volume cumulé émis
+   * qui s'échange chaque année, et commission prélevée sur ces échanges.
+   */
+  secondary_market?: {
+    start: string;
+    share_by_year: Record<string, number>;
+    fee_rate: number;
+    status?: string;
+  };
   /** Indicateurs de plateforme, hors BP ; null tant qu'ils ne sont pas renseignés. */
   platform?: {
     launch_time_weeks: number | null;
@@ -405,4 +415,20 @@ export function takeRate(d: BusinessPlanData) {
     firstYear: years[0],
     lastYear: years[years.length - 1],
   };
+}
+
+/** Marché secondaire par année : volume cumulé émis, part échangée, volume et commission. */
+export function secondaryMarket(d: BusinessPlanData) {
+  const m = d.secondary_market;
+  if (!m) return null;
+  let cumulated = 0;
+  const years = [...new Set(d.strategies.map((s) => Number(s.first_closing.slice(0, 4))))].sort();
+  const rows = years.map((year) => {
+    cumulated += volumeByYear(d, year);
+    const share = m.share_by_year[String(year)] ?? 0;
+    const volume = cumulated * share;
+    return { year, base: cumulated, share, volume, revenue: volume * m.fee_rate };
+  });
+  const byYear = (y: number) => rows.find((r) => r.year === y);
+  return { ...m, rows, byYear };
 }

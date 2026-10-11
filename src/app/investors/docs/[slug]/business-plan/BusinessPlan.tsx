@@ -18,7 +18,7 @@ import {
   revenueByStrategy,
   riskView,
   scenarios,
-  takeRate,
+  secondaryMarket,
   type BusinessPlanData,
   type PnlLine,
 } from "@/lib/business-plan/calc";
@@ -93,13 +93,9 @@ const copy = {
     step2Body: (amount: string, net: string) =>
       `${amount} levés sur Kupanda 1 et 2, qui portent ${net} de revenu net en 2027.`,
     s2: "Ce qui arrive",
-    s3: "Ce que la plateforme gagne",
+    s3: "Revenus et dépenses en un coup d'œil",
     s4: "Cash burn, runway et accélération",
     sTech: "Ce que la tech change",
-    takeVolume: (a: number, b: number) => `volume émis ${a}-${b}`,
-    takeFees: "de frais de transaction par euro émis",
-    takeNet: (a: number, b: number) => `de revenu net ${a}-${b} par euro émis`,
-    pnlDetail: "Détail du P&L",
     techSectionLead:
       "Chaque stratégie passe par la même infrastructure : émission, conformité, distribution et suivi sont outillés une fois, puis réutilisés. Ces indicateurs disent ce que la tech change au coût et à la vitesse d'une stratégie.",
     metrics: [
@@ -109,9 +105,6 @@ const copy = {
       { key: "onchain_share", label: "des flux réglés on-chain", unit: (v: string) => `${v}\u00a0%` },
     ],
     placeholderNote: "Surligné en jaune : chiffre à renseigner, absent du BP.",
-    channel: "Canal",
-    channels: { direct: "Direct", api: "Partenaire API", onchain: "Liquidité on-chain" },
-    toFill: "à renseigner",
     unlocks: "Ce que ça débloque",
     open: "Déplier",
     close: "Replier",
@@ -123,11 +116,19 @@ const copy = {
     defaultRate: "Taux de défaut retenu",
     duration: "Durée",
     fees: "Frais de transaction",
-    th: ["Stratégie", "Segment", "1er closing", "Montant", "Revenu net 2027", "Revenu net 2028", "Canal"],
+    th: ["Stratégie", "Segment", "1er closing", "Montant", "Revenu net 2027", "Revenu net 2028"],
     upcomingTotal: "Total",
     withPool: "dont le fonds de la levée accélérée",
     clickStrategy: "Cliquez sur une stratégie pour voir ses caractéristiques.",
     poolTag: "Levée accélérée",
+    secName: "Marché secondaire on-chain",
+    secTag: "Estimation",
+    secSegment: "Toutes stratégies",
+    secStart: "S2 2027",
+    secLead: (s1: string, s2: string, fee: string) =>
+      `Les positions émises sur la plateforme s'échangent on-chain entre investisseurs. Proxy retenu : ${s1} du volume cumulé émis échangé en 2027, à partir du second semestre, puis ${s2} en 2028, avec ${fee} de commission sur chaque échange. Ces revenus ne sont pas dans le BP.`,
+    secTh: ["Année", "Volume cumulé émis", "Part échangée", "Volume secondaire", "Commission"],
+    totalIssued: "Total émis, hors marché secondaire",
     tbd: "à définir",
     byYear: "Par année",
     interest: "Intérêts",
@@ -236,13 +237,9 @@ const copy = {
     step2Body: (amount: string, net: string) =>
       `${amount} raised on Kupanda 1 and 2, carrying ${net} of net revenue in 2027.`,
     s2: "What comes next",
-    s3: "What the platform earns",
+    s3: "Revenue and costs at a glance",
     s4: "Cash burn, runway and acceleration",
     sTech: "What the tech changes",
-    takeVolume: (a: number, b: number) => `volume issued ${a}-${b}`,
-    takeFees: "of transaction fees per euro issued",
-    takeNet: (a: number, b: number) => `of ${a}-${b} net revenue per euro issued`,
-    pnlDetail: "P&L detail",
     techSectionLead:
       "Every strategy runs on the same infrastructure: issuance, compliance, distribution and monitoring are built once, then reused. These indicators show what the tech changes to the cost and speed of a strategy.",
     metrics: [
@@ -252,9 +249,6 @@ const copy = {
       { key: "onchain_share", label: "of flows settled on-chain", unit: (v: string) => `${v}%` },
     ],
     placeholderNote: "Highlighted in yellow: figure to be filled in, not in the BP.",
-    channel: "Channel",
-    channels: { direct: "Direct", api: "API partner", onchain: "On-chain liquidity" },
-    toFill: "to be filled in",
     unlocks: "What it unlocks",
     open: "Expand",
     close: "Collapse",
@@ -266,11 +260,19 @@ const copy = {
     defaultRate: "Assumed default rate",
     duration: "Duration",
     fees: "Transaction fees",
-    th: ["Strategy", "Segment", "First closing", "Amount", "Net revenue 2027", "Net revenue 2028", "Channel"],
+    th: ["Strategy", "Segment", "First closing", "Amount", "Net revenue 2027", "Net revenue 2028"],
     upcomingTotal: "Total",
     withPool: "including the accelerated round fund",
     clickStrategy: "Click a strategy to see its characteristics.",
     poolTag: "Accelerated round",
+    secName: "On-chain secondary market",
+    secTag: "Estimate",
+    secSegment: "All strategies",
+    secStart: "H2 2027",
+    secLead: (s1: string, s2: string, fee: string) =>
+      `Positions issued on the platform trade on-chain between investors. Proxy used: ${s1} of cumulative issued volume traded in 2027, from the second half, then ${s2} in 2028, with a ${fee} fee on each trade. This revenue is not in the BP.`,
+    secTh: ["Year", "Cumulative volume issued", "Share traded", "Secondary volume", "Fee"],
+    totalIssued: "Total issued, excluding secondary market",
     tbd: "to be defined",
     byYear: "By year",
     interest: "Interest",
@@ -477,11 +479,7 @@ export function BusinessPlan({ data, locale }: { data: BusinessPlanData; locale:
       </Section>
 
       <Section n="03" title={c.s3} c={c}>
-        <TakeRate data={data} locale={locale} />
-        <h3 className="mt-8 text-sm font-semibold text-foreground">{c.pnlDetail}</h3>
-        <div className="mt-4">
-          <PnlBars data={data} pnl={pnl} locale={locale} />
-        </div>
+        <PnlBars data={data} pnl={pnl} locale={locale} />
       </Section>
 
       <Section n="04" title={c.sTech} c={c}>
@@ -760,28 +758,6 @@ function Placeholder({ children, wrap = false }: { children: React.ReactNode; wr
   );
 }
 
-// ── Partie 3 : take rate ────────────────────────────────────────────────────
-
-function TakeRate({ data, locale }: { data: BusinessPlanData; locale: Locale }) {
-  const c = copy[locale];
-  const t = takeRate(data);
-  const cells = [
-    { value: eur(t.volume, locale), label: c.takeVolume(t.firstYear, t.lastYear) },
-    { value: pct(t.feeRate, locale, 1), label: c.takeFees },
-    { value: pct(t.netRate, locale, 1), label: c.takeNet(t.firstYear, t.lastYear) },
-  ];
-  return (
-    <dl className="grid border-y border-foreground/10 sm:grid-cols-3 sm:divide-x sm:divide-foreground/10">
-      {cells.map((x) => (
-        <div key={x.label} className="py-5 max-sm:border-t max-sm:border-foreground/10 max-sm:first:border-t-0 sm:px-6 sm:first:pl-0 sm:last:pr-0">
-          <dd className="text-3xl font-semibold tracking-tight tabular-nums text-marsala">{x.value}</dd>
-          <dt className="mt-1 text-sm text-neutral-600">{x.label}</dt>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
 // ── Partie 4 : ce que la tech change ────────────────────────────────────────
 
 function TechSection({ data, locale }: { data: BusinessPlanData; locale: Locale }) {
@@ -830,7 +806,9 @@ function Upcoming({
 }) {
   const c = copy[locale];
   const [selected, setSelected] = useState<string | null>(null);
-  const max = Math.max(up.maxAmount, pool?.amount ?? 0);
+  // Marché secondaire on-chain : une ligne d'estimation, hors BP et hors totaux.
+  const sec = secondaryMarket(data);
+  const max = Math.max(up.maxAmount, pool?.amount ?? 0, sec?.byYear(2028)?.volume ?? 0);
   const rowClass = (key: string) =>
     `cursor-pointer border-b border-foreground/10 transition-all ${
       selected === key ? "bg-brand/[0.06]" : selected ? "text-[13px] opacity-50 hover:opacity-80" : "hover:bg-foreground/[0.03]"
@@ -852,7 +830,6 @@ function Upcoming({
             <tr className="border-b border-foreground/15 text-left text-neutral-600">
               <th className="py-2 pr-4 font-medium">{c.th[0]}</th>
               <th className="hidden py-2 pr-4 font-medium md:table-cell">{c.th[1]}</th>
-              <th className="hidden py-2 pr-4 font-medium lg:table-cell">{c.th[6]}</th>
               <th className="py-2 pr-4 font-medium">{c.th[2]}</th>
               <th className="py-2 pr-4 font-medium">{c.th[3]}</th>
               <th className="py-2 pr-4 text-right font-medium">{c.th[4]}</th>
@@ -876,11 +853,6 @@ function Upcoming({
                   <td className={`hidden ${pad(s.strategy)} pr-4 text-neutral-600 md:table-cell`}>
                     {FAMILY[s.family]?.[locale] ?? s.family}
                   </td>
-                  {/* Canal de distribution : ce qui montre que le volume vient des
-                      branchements techniques. À renseigner, d'où le surlignage. */}
-                  <td className={`hidden ${pad(s.strategy)} pr-4 text-neutral-700 lg:table-cell`}>
-                    {s.channel ? c.channels[s.channel] : <Placeholder>{c.toFill}</Placeholder>}
-                  </td>
                   <td className={`whitespace-nowrap ${pad(s.strategy)} pr-4 text-neutral-700`}>{month(s.first_closing, locale)}</td>
                   <td className={`${pad(s.strategy)} pr-4`}>
                     <div className="flex items-center gap-3">
@@ -893,7 +865,7 @@ function Upcoming({
                 </tr>
                 {selected === s.strategy && (
                   <tr className="border-b border-foreground/10 bg-brand/[0.03]">
-                    <td colSpan={7} className="px-1 py-5">
+                    <td colSpan={6} className="px-1 py-5">
                       <StrategyDetail data={data} name={s.strategy} locale={locale} />
                     </td>
                   </tr>
@@ -910,7 +882,6 @@ function Upcoming({
                     </span>
                   </td>
                   <td className={`hidden ${pad("pool")} pr-4 text-neutral-600 md:table-cell`}>{c.tbd}</td>
-                  <td className={`hidden ${pad("pool")} pr-4 text-neutral-600 lg:table-cell`}>{c.tbd}</td>
                   <td className={`${pad("pool")} pr-4 text-neutral-600`}>{c.tbd}</td>
                   <td className={`${pad("pool")} pr-4`}>
                     <div className="flex items-center gap-3">
@@ -923,17 +894,79 @@ function Upcoming({
                 </tr>
                 {selected === "pool" && (
                   <tr className="border-b border-foreground/10 bg-brand/[0.03]">
-                    <td colSpan={7} className="px-1 py-5 text-[15px] leading-[1.7] text-neutral-700">
+                    <td colSpan={6} className="px-1 py-5 text-[15px] leading-[1.7] text-neutral-700">
                       {locale === "fr" ? pool.description : pool.description_en}
                     </td>
                   </tr>
                 )}
               </Fragment>
             )}
+            {sec && (
+              <Fragment>
+                <tr className={rowClass("secondary")} onClick={() => toggle("secondary")}>
+                  <td className={`${pad("secondary")} pr-4 font-medium text-foreground`}>
+                    <span className="flex flex-wrap items-center gap-2">
+                      {c.secName}
+                      <span className="rounded-full border border-dashed border-neutral-400 px-2 py-0.5 text-[11px] font-normal text-neutral-600">
+                        {c.secTag}
+                      </span>
+                    </span>
+                  </td>
+                  <td className={`hidden ${pad("secondary")} pr-4 text-neutral-600 md:table-cell`}>{c.secSegment}</td>
+                  <td className={`whitespace-nowrap ${pad("secondary")} pr-4 text-neutral-700`}>{c.secStart}</td>
+                  <td className={`${pad("secondary")} pr-4`}>
+                    <div className="flex items-center gap-3">
+                      <span className="w-16 shrink-0 tabular-nums text-neutral-700">
+                        <Placeholder>{eur(sec.byYear(2028)?.volume ?? 0, locale)}</Placeholder>
+                      </span>
+                      {bar(sec.byYear(2028)?.volume ?? 0, "#9d978f")}
+                    </div>
+                  </td>
+                  <td className={`${pad("secondary")} pr-4 text-right tabular-nums text-neutral-700`}>
+                    <Placeholder>{eur(sec.byYear(2027)?.revenue ?? 0, locale)}</Placeholder>
+                  </td>
+                  <td className={`${pad("secondary")} text-right tabular-nums text-neutral-700`}>
+                    <Placeholder>{eur(sec.byYear(2028)?.revenue ?? 0, locale)}</Placeholder>
+                  </td>
+                </tr>
+                {selected === "secondary" && (
+                  <tr className="border-b border-foreground/10 bg-brand/[0.03]">
+                    <td colSpan={6} className="px-1 py-5">
+                      <p className="max-w-3xl text-[15px] leading-[1.7] text-neutral-700">
+                        {c.secLead(
+                          pct(sec.share_by_year["2027"] ?? 0, locale, 0),
+                          pct(sec.share_by_year["2028"] ?? 0, locale, 0),
+                          pct(sec.fee_rate, locale, 1)
+                        )}
+                      </p>
+                      <table className="mt-4 w-full max-w-2xl text-sm">
+                        <thead>
+                          <tr className="text-left text-neutral-600">
+                            {c.secTh.map((h, i) => (
+                              <th key={h} className={`py-1 pr-3 font-medium ${i ? "text-right" : ""}`}>{h}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="tabular-nums">
+                          {sec.rows.filter((x) => x.share > 0).map((x) => (
+                            <tr key={x.year} className="border-t border-foreground/10">
+                              <td className="py-1.5 pr-3 text-foreground">{x.year}</td>
+                              <td className="py-1.5 pr-3 text-right text-neutral-700">{eur(x.base, locale)}</td>
+                              <td className="py-1.5 pr-3 text-right"><Placeholder>{pct(x.share, locale, 0)}</Placeholder></td>
+                              <td className="py-1.5 pr-3 text-right"><Placeholder>{eur(x.volume, locale)}</Placeholder></td>
+                              <td className="py-1.5 text-right"><Placeholder>{eur(x.revenue, locale)}</Placeholder></td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                )}
+              </Fragment>
+            )}
             <tr className="font-semibold text-foreground">
-              <td className="py-3 pr-4">{c.upcomingTotal}</td>
+              <td className="py-3 pr-4">{sec ? c.totalIssued : c.upcomingTotal}</td>
               <td className="hidden md:table-cell" />
-              <td className="hidden lg:table-cell" />
               <td />
               <td className="py-3 pr-4 tabular-nums">{eur(up.amount + (pool?.amount ?? 0), locale)}</td>
               <td className="py-3 pr-4 text-right tabular-nums">{eur(up.list.reduce((a, s) => a + s.net2027, 0), locale)}</td>
