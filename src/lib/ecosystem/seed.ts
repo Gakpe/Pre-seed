@@ -261,7 +261,7 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         {
           // 12/10/2026 (Julien) : remplace « Sereel, premier protocole ».
           title: { fr: "Première plateforme admin de distribution", en: "First distribution admin platform" },
-          metric: { fr: "1er Network Builder", en: "1st Network Builder" },
+          metric: { fr: "Plateforme admin interne", en: "In-house admin platform" },
           text: { fr: "Un premier **Network Builder** arrive par cette plateforme et y distribue les stratégies à son propre réseau.", en: "A first **Network Builder** comes through this platform and distributes the strategies to their own network." },
         },
         {
