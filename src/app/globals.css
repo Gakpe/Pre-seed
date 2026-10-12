@@ -660,3 +660,35 @@ body {
 .slide-in-left {
   animation: slide-in-left 0.32s ease-out both;
 }
+
+/* --- Roadmap écosystème : mise en page mobile ---
+   Les styles de la fiche sont en ligne ; les colonnes qui doivent s'empiler
+   passent par ces classes, seules à pouvoir porter une media query. */
+
+.eco-card {
+  padding: 26px 28px 28px;
+}
+
+.eco-stream {
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 24px;
+}
+
+.eco-photos {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 767px) {
+  .eco-card {
+    padding: 18px 14px 20px;
+  }
+
+  .eco-stream {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .eco-photos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

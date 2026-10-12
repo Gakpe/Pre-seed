@@ -123,7 +123,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
     return (
       <div style={{ marginTop: 16 }}>
         <div style={{ ...smallCaps, marginBottom: 8 }}>{c.actorsTitle}</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "10px 18px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(220px, 100%), 1fr))", gap: "10px 18px" }}>
           {cats.map(({ cat, actors }) => (
             <div key={cat}>
               <div style={{ fontSize: 11, fontWeight: 600, color: MUTED, marginBottom: 5 }}>{CATEGORY_LABEL[cat][l]}</div>
@@ -138,7 +138,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
   };
 
   const photoStrip = (photos: Photo[]) => (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginTop: 14 }}>
+    <div className="eco-photos" style={{ display: "grid", gap: 10, marginTop: 14 }}>
       {photos.map((p) => (
         <figure key={p.src} style={{ margin: 0 }}>
           <div style={{ aspectRatio: "16 / 10", overflow: "hidden", borderRadius: 10, background: HAIRLINE }}>
@@ -192,7 +192,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
       <p style={{ margin: "4px 0 10px", fontSize: 12.5, color: "#4B4039" }}>
         {l === "fr" ? "Nos souscripteurs sont toujours en dette senior, protégés par cinq niveaux :" : "Our subscribers are always senior debt, protected by five layers:"}
       </p>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: "8px 24px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(230px, 100%), 1fr))", gap: "8px 24px" }}>
         {layers.map((ly) => (
           <div key={ly.n} style={{ display: "flex", gap: 8, alignItems: "baseline", fontSize: 13, lineHeight: 1.5 }}>
             <span style={{ fontFamily: SERIF, color: ACCENT, minWidth: 12 }}>{ly.n}</span>
@@ -245,7 +245,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
             {o.status && <span style={{ ...smallCaps, color: ACCENT_TEXT, border: `1px solid ${ACCENT}`, borderRadius: 999, padding: "3px 10px" }}>{o.status[l]}</span>}
           </div>
           {o.subtitle && <p style={{ margin: "8px 0 0", fontSize: 13.5, color: "#4B4039", lineHeight: 1.7 }}>{rich(o.subtitle[l])}</p>}
-          <div style={{ marginTop: 14, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 1, background: LINE, border: `1px solid ${LINE}`, borderRadius: 10, overflow: "hidden" }}>
+          <div style={{ marginTop: 14, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(130px, 100%), 1fr))", gap: 1, background: LINE, border: `1px solid ${LINE}`, borderRadius: 10, overflow: "hidden" }}>
             {o.metrics.map((m, i) => (
               <div key={i} style={{ background: m.accent ? ACCENT : SURFACE, padding: "10px 12px" }}>
                 <div style={{ ...smallCaps, color: m.accent ? "rgba(255,255,255,0.92)" : FAINT }}>{m.k[l]}</div>
@@ -266,7 +266,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
   const companyCards = (companies: Company[], title?: string) => (
     <div style={{ marginTop: 18 }}>
       <div style={{ ...smallCaps, color: MUTED, marginBottom: 10 }}>{title ?? (l === "fr" ? "Scale-ups et opérateurs" : "Scale-ups & operators")}</div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 10 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(190px, 100%), 1fr))", gap: 10 }}>
         {companies.map((co) => (
           <div key={co.name[l]} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "14px 16px", background: SURFACE }}>
             <div style={{ fontFamily: SERIF, fontSize: 16, color: INK, lineHeight: 1.2 }}>
@@ -296,7 +296,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
     return (
       <div style={{ marginTop: 18 }}>
         <div style={{ ...smallCaps, color: MUTED, marginBottom: 10 }}>{CIRCLES_PATH.title[l]}</div>
-        <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 10 }}>
+        <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(190px, 100%), 1fr))", gap: 10 }}>
           {CIRCLES_PATH.steps.map((st, i) => {
             const state = i < activeAt ? "past" : i === activeAt ? "now" : "next";
             const phaseLabel = GROWTH_PHASES.find((g) => g.id === st.phase)!.label[l];
@@ -321,7 +321,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
   const eventCards = (ev: { title: { fr: string; en: string }; list: EventCard[] }) => (
     <div style={{ marginTop: 18 }}>
       <div style={{ ...smallCaps, color: MUTED, marginBottom: 10 }}>{ev.title[l]}</div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 10 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(230px, 100%), 1fr))", gap: 10 }}>
         {ev.list.map((e) => (
           <div key={e.name.en} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "14px 16px", background: SURFACE }}>
             {e.logo && (
@@ -346,7 +346,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
   // Leviers de la machine réseau : cartes avec intitulé, chiffre-phare et une
   // phrase. Une vraie mise en page du récit, pas un bloc de texte.
   const leverCards = (levers: Lever[]) => (
-    <div style={{ marginTop: 16, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 10 }}>
+    <div style={{ marginTop: 16, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(230px, 100%), 1fr))", gap: 10 }}>
       {levers.map((lv, i) => (
         <div key={i} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "14px 16px", background: SURFACE }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: INK }}>{lv.title[l]}</div>
@@ -366,7 +366,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
       <section style={{ background: SURFACE, border: `1px solid ${LINE}`, borderRadius: 16, padding: "22px 28px 24px", marginBottom: 20 }}>
         <div style={{ fontFamily: SERIF, fontSize: 19, color: INK }}>{FOUNDERS_INTRO.title[l]}</div>
         <p style={{ margin: "8px 0 0", fontSize: 14, lineHeight: 1.7, color: "#4B4039", maxWidth: 760 }}>{FOUNDERS_INTRO.body[l]}</p>
-        <div style={{ marginTop: 16, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 10 }}>
+        <div style={{ marginTop: 16, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(260px, 100%), 1fr))", gap: 10 }}>
           {FOUNDERS_INTRO.people.map((pe) => (
             <div key={pe.name} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "14px 16px" }}>
               <div style={{ ...smallCaps, color: MUTED }}>{pe.side[l]}</div>
@@ -428,7 +428,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
         </div>
       </div>
 
-      <section style={{ background: SURFACE, border: `1px solid ${LINE}`, borderRadius: 16, padding: "26px 28px 28px" }}>
+      <section className="eco-card" style={{ background: SURFACE, border: `1px solid ${LINE}`, borderRadius: 16 }}>
         {/* ── Frise des périodes ─────────────────────────────────────────── */}
         <div style={{ marginBottom: 22 }}>
           <div style={{ position: "relative", height: 15, marginBottom: 3 }}>
@@ -504,7 +504,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
             {STREAMS.map((s, si) => {
               const ch = NARRATIVE[phase][s];
               return (
-                <div key={s} style={{ display: "grid", gridTemplateColumns: "180px 1fr", gap: 24, padding: "20px 0", borderTop: `1px solid ${si === 0 ? LINE : HAIRLINE}` }}>
+                <div key={s} className="eco-stream" style={{ display: "grid", padding: "20px 0", borderTop: `1px solid ${si === 0 ? LINE : HAIRLINE}` }}>
                   <div>
                     <div style={{ fontFamily: SERIF, fontSize: 18, color: INK, lineHeight: 1.2 }}>{STREAM_META[s].label[l]}</div>
                     <div style={{ fontSize: 12, color: FAINT, marginTop: 4, lineHeight: 1.45 }}>{STREAM_META[s].sub[l]}</div>
@@ -599,7 +599,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
         {/* ── Vue d'ensemble : trois fils × cinq périodes, une phrase par case ── */}
         {overview && (
           <div style={{ overflowX: "auto", margin: "0 -4px", padding: 4 }}>
-            <div style={{ display: "grid", gridTemplateColumns: `140px repeat(${GROWTH_PHASES.length}, minmax(190px, 1fr))`, minWidth: 140 + 190 * GROWTH_PHASES.length }}>
+            <div style={{ display: "grid", gridTemplateColumns: `140px repeat(${GROWTH_PHASES.length}, minmax(min(190px, 100%), 1fr))`, minWidth: 140 + 190 * GROWTH_PHASES.length }}>
               <div style={{ borderBottom: `2px solid ${LINE}` }} />
               {GROWTH_PHASES.map((g, i) => (
                 <button key={g.id} type="button" onClick={() => go(i)} aria-pressed={i === idx} style={{ background: "transparent", border: "none", borderLeft: `1px solid ${HAIRLINE}`, borderBottom: `2px solid ${i === idx ? ACCENT : LINE}`, padding: "4px 10px 8px", cursor: "pointer", textAlign: "left" }}>
