@@ -64,6 +64,18 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
   // barres, observée ; quand elle passe au-dessus de la fenêtre, on affiche.
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [pastVolumes, setPastVolumes] = useState(false);
+  // Le bandeau se cale sous l'en-tête collant du site : posé à top 0, il
+  // passait dessous et restait invisible.
+  const [headerH, setHeaderH] = useState(0);
+  useEffect(() => {
+    const header = document.querySelector("header");
+    if (!header) return;
+    const update = () => setHeaderH(header.getBoundingClientRect().height);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(header);
+    return () => ro.disconnect();
+  }, []);
   useEffect(() => {
     const el = sentinelRef.current;
     if (!el) return;
@@ -72,8 +84,6 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
     return () => io.disconnect();
   }, []);
   const todayIdx = Math.max(0, GROWTH_PHASES.findIndex((g) => g.start <= ECO_TODAY && ECO_TODAY <= g.end));
-  const today = GROWTH_PHASES[todayIdx];
-  const last = GROWTH_PHASES[GROWTH_PHASES.length - 1];
 
   // ── Frise ────────────────────────────────────────────────────────────────
   const T0 = ms(GROWTH_PHASES[0].start), T1 = ms(GROWTH_PHASES[GROWTH_PHASES.length - 1].end);
@@ -369,38 +379,52 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
 
       {/* ── Bandeau fixe : où l'on est, ce qu'on regarde, où l'on va. Il ne
           s'affiche qu'une fois les volumes défilés hors de l'écran. ── */}
+      {/* ── Sélecteur de période fixe : au défilement, on garde sous les yeux
+          la période affichée, et l'on en change sans remonter. Il n'apparaît
+          qu'une fois les volumes sortis de l'écran. ── */}
       <div
+        data-eco-period-bar
         aria-hidden={!pastVolumes}
         style={{
-          position: "fixed", top: 0, left: 0, right: 0, zIndex: 30,
+          position: "fixed", top: headerH, left: 0, right: 0, zIndex: 29,
           padding: "8px 0", background: "rgba(246,244,239,.92)", backdropFilter: "blur(6px)",
-          transform: pastVolumes ? "translateY(0)" : "translateY(-110%)", opacity: pastVolumes ? 1 : 0,
+          borderBottom: `1px solid ${HAIRLINE}`,
+          transform: pastVolumes ? "translateY(0)" : "translateY(-120%)", opacity: pastVolumes ? 1 : 0,
           transition: "transform .25s ease, opacity .25s ease", pointerEvents: pastVolumes ? "auto" : "none",
         }}
       >
-        <div style={{ maxWidth: "72rem", margin: "0 auto", padding: "0 1.5rem" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px 22px", padding: "9px 14px", borderRadius: 10, border: `1px solid ${LINE}`, background: SURFACE, fontSize: 12.5 }}>
-            <span style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-              <span style={smallCaps}>{c.stickyToday}</span>
-              <span style={{ color: INK, fontWeight: 600 }}>{today.label[l]}</span>
-              <span style={{ color: MUTED }}>{today.volume[l]}</span>
-            </span>
-            {idx !== todayIdx && (
-              <span style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-                <span style={smallCaps}>{c.stickyShown}</span>
-                <span style={{ color: ACCENT, fontWeight: 600 }}>{current.label[l]}</span>
-                <span style={{ color: MUTED }}>{current.volume[l]}</span>
-              </span>
-            )}
-            <span style={{ display: "flex", alignItems: "baseline", gap: 8, marginLeft: "auto" }}>
-              <span style={smallCaps}>{c.stickyTarget}</span>
-              <span style={{ fontFamily: SERIF, color: INK, fontSize: 14 }}>{last.volume[l]}</span>
-            </span>
-            <span aria-hidden style={{ flexBasis: "100%", height: 3, borderRadius: 2, background: HAIRLINE, position: "relative", overflow: "hidden" }}>
-              <span style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${((todayIdx + 1) / GROWTH_PHASES.length) * 100}%`, background: "#D9D2C2" }} />
-              <span style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${((idx + 1) / GROWTH_PHASES.length) * 100}%`, background: ACCENT, opacity: .85 }} />
-            </span>
+        <div style={{ maxWidth: "72rem", margin: "0 auto", padding: "0 1.5rem", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          <div role="group" aria-label={c.stickyShown} style={{ display: "grid", gridTemplateColumns: `repeat(${GROWTH_PHASES.length}, minmax(0, 1fr))`, gap: 6, flex: "1 1 520px" }}>
+            {GROWTH_PHASES.map((g, i) => {
+              const active = i === idx;
+              return (
+                <button
+                  key={g.id}
+                  type="button"
+                  tabIndex={pastVolumes ? 0 : -1}
+                  onClick={() => go(i)}
+                  aria-pressed={active}
+                  style={{
+                    display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 1, minWidth: 0,
+                    padding: "6px clamp(6px, 1.6vw, 10px)", borderRadius: 8, cursor: "pointer", textAlign: "left",
+                    border: `1px solid ${active ? ACCENT : LINE}`,
+                    background: active ? ACCENT : i < idx ? "#EFEADE" : SURFACE,
+                    color: active ? "#fff" : INK, transition: "background .2s ease, border-color .2s ease",
+                  }}
+                >
+                  <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "clamp(10.5px, 2.9vw, 12px)", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "100%" }}>
+                    {g.label[l]}
+                    {i === todayIdx && <span title={c.stickyToday} style={{ width: 6, height: 6, borderRadius: 3, flexShrink: 0, background: active ? "#fff" : ACCENT }} />}
+                  </span>
+                  <span style={{ fontSize: "clamp(10px, 2.7vw, 11px)", opacity: active ? 0.85 : 1, color: active ? "#fff" : MUTED, whiteSpace: "nowrap" }}>{g.volume[l]}</span>
+                </button>
+              );
+            })}
           </div>
+          <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: MUTED, whiteSpace: "nowrap" }}>
+            <span style={{ width: 6, height: 6, borderRadius: 3, background: ACCENT }} />
+            {c.stickyToday}
+          </span>
         </div>
       </div>
 
