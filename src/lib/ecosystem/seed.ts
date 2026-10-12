@@ -259,9 +259,10 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
           text: { fr: "La plateforme bascule vers les professionnels, qui souscrivent en ligne : les **Network Builders**, brokers et banquiers privés, les ont déjà introduits.", en: "The platform turns to professionals, who subscribe online: the **Network Builders**, brokers and private bankers, have already introduced them." },
         },
         {
-          title: { fr: "Sereel, premier protocole", en: "Sereel, first protocol" },
-          metric: { fr: "API", en: "API" },
-          text: { fr: "Le premier protocole partenaire distribue les stratégies à ses propres clients via l'API.", en: "The first partner protocol distributes the strategies to its own clients through the API." },
+          // 12/10/2026 (Julien) : remplace « Sereel, premier protocole ».
+          title: { fr: "Première plateforme admin de distribution", en: "First distribution admin platform" },
+          metric: { fr: "1er Network Builder", en: "1st Network Builder" },
+          text: { fr: "Un premier **Network Builder** arrive par cette plateforme et y distribue les stratégies à son propre réseau.", en: "A first **Network Builder** comes through this platform and distributes the strategies to their own network." },
         },
         {
           title: { fr: "Broker londonien", en: "London broker" },
