@@ -34,6 +34,7 @@ import { LossCurves } from "./loss-curves";
 import { BackToTop } from "./back-to-top";
 import { ExitScenarios } from "./exit-scenarios";
 import { BusinessPlan } from "./business-plan/BusinessPlan";
+import { Impact } from "./impact";
 import { getBusinessPlan } from "@/lib/business-plan/data";
 
 export default async function DocPage({
@@ -142,6 +143,7 @@ export default async function DocPage({
     doc.slug === "term-sheet-kupanda" ||
     doc.slug === "scenarios-sortie" ||
     doc.slug === "business-plan" ||
+    doc.slug === "impact" ||
     note;
 
   // Ces fiches débordent en largeur, mais leur chapô reste dans une colonne
@@ -168,6 +170,7 @@ export default async function DocPage({
     doc.slug === "term-sheet-kupanda" ||
     doc.slug === "scenarios-sortie" ||
     doc.slug === "business-plan" ||
+    doc.slug === "impact" ||
     doc.slug === "gestion-du-risque" ||
     doc.slug === "roadmap-ecosysteme" ||
     gtmApercu ||
@@ -186,6 +189,7 @@ export default async function DocPage({
     doc.slug === "go-to-market-apercu" ||
     doc.slug === "scenarios-sortie" ||
     doc.slug === "business-plan" ||
+    doc.slug === "impact" ||
     doc.slug === "gestion-du-risque" ||
     team ||
     roadmap ||
@@ -196,6 +200,7 @@ export default async function DocPage({
     doc.slug === "pourquoi-minah" ||
     doc.slug === "gestion-du-risque" ||
     doc.slug === "business-plan" ||
+    doc.slug === "impact" ||
     note ||
     comparables;
 
@@ -297,6 +302,7 @@ export default async function DocPage({
       {/* Les chiffres sont lus côté serveur dans app_settings, jamais dans le
           code : la page ne s'affiche qu'aux sessions autorisées. */}
       {businessPlan && <BusinessPlan data={businessPlan} locale={locale} />}
+      {doc.slug === "impact" && <Impact locale={locale} />}
       {doc.slug === "cap-table" && (
         <CapTableInteractive title={t(locale, "docs.captable")} locale={locale} />
       )}

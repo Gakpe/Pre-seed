@@ -53,6 +53,16 @@ export const DRAFT_DOCS: DraftDoc[] = [
     access_level: 2,
     sort_order: 79,
   },
+  // 12/10/2026 (Julien) : l'impact, performance financière et extra-financière.
+  {
+    slug: "impact",
+    title: "Performance financière, performance d'impact",
+    title_en: "Financial performance, impact performance",
+    category: "Impact",
+    category_en: "Impact",
+    access_level: 1,
+    sort_order: 52,
+  },
 ];
 
 export const DRAFT_SLUGS = new Set(DRAFT_DOCS.map((d) => d.slug));
