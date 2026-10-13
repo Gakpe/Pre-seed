@@ -335,6 +335,10 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         fr: "Les tables où se concentre le capital : **Davos**, en parallèle du World Economic Forum, à l'Africa House et à l'Africa Collective ; l'**Africa CEO Forum** à Abidjan, réservé aux entreprises de plus de 10 M€ de chiffre d'affaires ; l'**Élysée**, pour une rencontre privée avec le président de la République et la diaspora ; **ChangeNOW** au Grand Palais ; le **Web Summit** à Doha.",
         en: "The tables where capital gathers: **Davos**, alongside the World Economic Forum, at Africa House and the Africa Collective; the **Africa CEO Forum** in Abidjan, reserved for companies above €10M revenue; the **Élysée**, for a private meeting with the French President and the diaspora; **ChangeNOW** at the Grand Palais; the **Web Summit** in Doha.",
       },
+      summary: {
+        fr: "Minah se montre là où se concentre le capital : Davos, l'Africa CEO Forum, l'Élysée, ChangeNOW, le Web Summit. Premiers Minah Circles, à Paris et à Lomé.",
+        en: "Minah shows up where capital gathers: Davos, the Africa CEO Forum, the Élysée, ChangeNOW, the Web Summit. First Minah Circles, in Paris and Lomé.",
+      },
       photoGroups: [
         {
           title: { fr: "Nos événements : les Minah Circles", en: "Our events: the Minah Circles" },
@@ -627,6 +631,10 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         fr: "Le **Minah Forum** devient la fenêtre d'émission annuelle de la dette privée africaine : les stratégies s'y ouvrent et nos partenaires y émettent leurs tranches. Les rencontres privées continuent à **Davos**, **Abidjan**, **New York** et **Paris**, et nous sommes invités aux grands événements mondiaux, où les allocataires rencontrent les États, les PME et les fintechs dont les deals alimentent nos stratégies.",
         en: "The **Minah Forum** becomes the annual issuance window of African private debt: strategies open there and our partners issue their tranches there. Private gatherings continue in **Davos**, **Abidjan**, **New York** and **Paris**, and we are invited to the key global events, where allocators meet the States, SMEs and fintechs whose deals feed our strategies.",
       },
+      summary: {
+        fr: "Le Minah Forum devient la fenêtre d'émission annuelle de la dette privée africaine : les stratégies s'y ouvrent, nos partenaires y émettent leurs tranches. Les rencontres privées continuent à Davos, Abidjan, New York et Paris.",
+        en: "The Minah Forum becomes the annual issuance window of African private debt: strategies open there and our partners issue their tranches there. Private gatherings continue in Davos, Abidjan, New York and Paris.",
+      },
       ladder: "distribution",
       showActors: false,
       aConfirmer: true,
@@ -682,8 +690,8 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         en: "One billion euros of African real assets, originated by partners as much as by Minah, on an infrastructure others use. Three asset families, brought to us by the network, the Forum and the AI agents:",
       },
       summary: {
-        fr: "Un milliard d'actifs réels africains, de trois familles : les États (T-bills tokenisés), les PME sous contrats publics (le cadre Kupanda répliqué pays après pays), les fintechs et scale-ups qui empruntent au vault. Le réseau, le Forum et les agents IA amènent les contreparties, originées par des partenaires autant que par Minah ; le cadre éprouvé sélectionne.",
-        en: "One billion of African real assets, from three families: States (tokenized T-bills), SMEs under public contracts (the Kupanda framework replicated country after country), fintechs and scale-ups borrowing from the vault. The network, the Forum and the AI agents bring the counterparties, originated by partners as much as by Minah; the proven framework selects.",
+        fr: "Un milliard d'actifs réels africains, de trois familles : les États (T-bills tokenisés), les PME sous contrats publics (cadre Kupanda répliqué pays après pays) et les fintechs qui empruntent au vault. Le réseau, le Forum et les agents IA amènent les contreparties.",
+        en: "One billion of African real assets, from three families: States (tokenized T-bills), SMEs under public contracts (the Kupanda framework replicated country after country) and fintechs borrowing from the vault. The network, the Forum and the AI agents bring the counterparties.",
       },
       levers: [
         { title: { fr: "Les États", en: "States" }, metric: { fr: "T-bills tokenisés", en: "Tokenized T-bills" }, text: { fr: "De la dette souveraine courte, qui se renouvelle : le second moteur, une fois le premier émetteur branché.", en: "Short sovereign debt that rolls over: the second engine, once the first issuer is plugged in." } },
@@ -708,8 +716,8 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         en: "We become the market. What the Africa CEO Forum is to the continent's business leaders, the **Minah Forum** is to African private debt: the place that defines the ecosystem and sends it its signals. Each panel theme says where the market is going; being a sponsor or an issuer there means ranking among the biggest players; and it is where the market meets.",
       },
       summary: {
-        fr: "Nous devenons le marché : le Minah Forum est à la dette privée africaine ce que l'Africa CEO Forum est aux dirigeants. Les thématiques envoient les signaux, les sponsors et émetteurs sont lus comme les plus gros acteurs, et le marché s'y rencontre : fenêtre d'émission, session secondaire, deal rooms. Une marque de dette se construit sur une chose : les deals signés sous son nom performent.",
-        en: "We become the market: the Minah Forum is to African private debt what the Africa CEO Forum is to business leaders. Themes send the signals, sponsors and issuers are read as the biggest players, and the market meets there: issuance window, secondary session, deal rooms. A debt brand is built on one thing: the deals signed under its name perform.",
+        fr: "Le Minah Forum est à la dette privée africaine ce que l'Africa CEO Forum est aux dirigeants : ses thématiques envoient les signaux, ses sponsors et émetteurs comptent parmi les plus gros acteurs, et le marché s'y rencontre – fenêtre d'émission, session secondaire, deal rooms.",
+        en: "The Minah Forum is to African private debt what the Africa CEO Forum is to business leaders: its themes send the signals, its sponsors and issuers rank among the biggest players, and the market meets there – issuance window, secondary session, deal rooms.",
       },
       ladder: "marche",
       levers: [
