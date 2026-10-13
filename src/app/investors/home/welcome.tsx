@@ -76,13 +76,23 @@ export function Welcome({
   // Fiches mises en avant consécutives regroupées sur une même étape : même
   // catégorie, ou toutes deux ouvertes pour la personne au-dessus de son
   // niveau (les deux roadmaps de Newform, par exemple).
-  const groups: WelcomeStep[][] = [];
-  for (const st of steps) {
-    const g = groups[groups.length - 1];
-    const last = g?.[g.length - 1];
-    if (last && (last.category === st.category || (last.openedForYou && st.openedForYou))) g.push(st);
-    else groups.push([st]);
-  }
+  // Deux regroupements possibles : par catégorie seulement, ou en réunissant
+  // aussi les fiches ouvertes pour la personne qui se suivent (les deux
+  // roadmaps de Newform sur une seule étape). On garde le plus fin si le
+  // message a assez de paragraphes pour une étape par groupe et une étape
+  // rendez-vous (Maven 11 : tech, puis écosystème) ; sinon le regroupé.
+  const groupBy = (mergeOpened: boolean) => {
+    const out: WelcomeStep[][] = [];
+    for (const st of steps) {
+      const g = out[out.length - 1];
+      const last = g?.[g.length - 1];
+      if (last && (last.category === st.category || (mergeOpened && last.openedForYou && st.openedForYou))) g.push(st);
+      else out.push([st]);
+    }
+    return out;
+  };
+  const fine = groupBy(false);
+  const groups = custom && paragraphs.length - 1 > fine.length ? fine : groupBy(true);
   // Un paragraphe de plus qu'il n'y a de groupes : le dernier met en lumière
   // le rendez-vous, comme la visite par défaut, et la visite se ferme dessus.
   const meetingStep = custom && paragraphs.length - 1 > groups.length;
