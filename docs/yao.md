@@ -154,3 +154,19 @@ Exemples :
 
 - Région EU (RGPD). Ne pas exfiltrer les données hors des réponses à Julien.
 - Un webhook direct remplacera le polling plus tard.
+
+## Langue par défaut des investisseurs (depuis le 13/10/2026)
+
+Le portail s'ouvre dans la langue fixée pour l'adresse de la personne (table
+`investor_locales`, `fr` ou `en`), tant qu'elle n'a pas choisi elle-même FR ou
+EN sur le site : son choix (cookie `minah_locale`) garde la main. Sans langue
+fixée, français.
+
+Yao la fixe d'après la langue des échanges mail, par le skill `minah-langue`
+(`~/.openclaw/workspace/skills/minah-langue/` sur l'Air) : `a-traiter` liste
+les adresses du portail sans langue, `fixer <fr|en> <email...> --note "..."`
+appelle le RPC `set_investor_locale` (source `yao`), `liste` montre l'état.
+Jamais d'écriture directe dans la table ; une langue fixée par l'équipe
+(source `admin`) ne s'écrase pas sans demande de Julien. Copie du skill dans
+`.context/yao-skill/` de ce workspace, à reporter dans GAK_OS
+(`scripts/yao-skills/`) avec les autres.
