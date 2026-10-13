@@ -18,7 +18,7 @@ export type EcoCopy = {
 };
 
 const fr: EcoCopy = {
-  intro: "Quatre périodes mènent de notre première stratégie live à un marché à part entière : Amorçage (0 à 2 M€), Traction (2 à 50 M€), Distribution (50 à 100 M€), puis la route vers 1 Md€. Dans chacune, trois fils disent qui finance et par quel canal, d'où viennent les actifs, et où Minah est vue. Déplacez le curseur pour suivre le chemin.",
+  intro: "Quatre périodes mènent de notre première stratégie live à un marché à part entière : Amorçage (0 à 2 M€), Traction (2 à 68 M€), Distribution (68 à 100 M€), puis la route vers 1 Md€. Dans chacune, trois fils disent qui finance et par quel canal, d'où viennent les actifs, et où Minah est vue. Et un fil rouge : notre vault branché sur les écosystèmes web3, car c'est par ces connexions que la dette privée africaine change de marché. Déplacez le curseur pour suivre le chemin.",
   today: "Aujourd'hui",
   viewPhase: "Cette période",
   viewOverview: "Vue d'ensemble",
@@ -35,7 +35,7 @@ const fr: EcoCopy = {
 };
 
 const en: EcoCopy = {
-  intro: "Four periods take us from our first live strategy to a fully fledged market: Seeding (€0 to €2M), Traction (€2M to €50M), Distribution (€50M to €100M), then the road to €1B. In each one, three threads tell who funds and through which channel, where the assets come from, and where Minah is seen. Move the cursor to follow the path.",
+  intro: "Four periods take us from our first live strategy to a fully fledged market: Seeding (€0 to €2M), Traction (€2M to €68M), Distribution (€68M to €100M), then the road to €1B. In each one, three threads tell who funds and through which channel, where the assets come from, and where Minah is seen. And one thread throughout: our vault plugged into web3 ecosystems, because these connections are how African private debt changes market. Move the cursor to follow the path.",
   today: "Today",
   viewPhase: "This period",
   viewOverview: "Whole picture",

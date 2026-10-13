@@ -351,6 +351,17 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
         <div key={i} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "14px 16px", background: SURFACE }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: INK }}>{lv.title[l]}</div>
           <div style={{ fontFamily: SERIF, fontSize: 20, color: ACCENT_TEXT, margin: "6px 0 8px", lineHeight: 1.15 }}>{lv.metric[l]}</div>
+          {lv.logos && (
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px 14px", margin: "0 0 8px" }}>
+              {lv.logos.map((lg) => (
+                <span key={lg.name} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: MUTED }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={lg.src} alt="" style={{ height: 16, width: "auto", maxWidth: 80, objectFit: "contain", display: "block" }} />
+                  {lg.name}
+                </span>
+              ))}
+            </div>
+          )}
           <p style={{ margin: 0, fontSize: 13, lineHeight: 1.6, color: "#4B4039" }}>{rich(lv.text[l])}</p>
         </div>
       ))}
@@ -563,15 +574,40 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
                     {ch.hub && (
                       <div>
                         <div aria-hidden style={{ position: "relative", height: 36 }}>
-                          {[12.5, 37.5, 62.5, 87.5].map((x) => (
+                          {Array.from({ length: ch.levers?.length ?? 4 }, (_, i) => (100 / (ch.levers?.length ?? 4)) * (i + 0.5)).map((x) => (
                             <span key={x} style={{ position: "absolute", left: `${x}%`, top: 0, width: 1, height: 13, background: "#D9D2C2" }} />
                           ))}
-                          <span style={{ position: "absolute", left: "12.5%", right: "12.5%", top: 13, height: 1, background: "#D9D2C2" }} />
+                          <span style={{ position: "absolute", left: `${50 / (ch.levers?.length ?? 4)}%`, right: `${50 / (ch.levers?.length ?? 4)}%`, top: 13, height: 1, background: "#D9D2C2" }} />
                           <span style={{ position: "absolute", left: "50%", top: 13, width: 2, height: 23, marginLeft: -1, background: ACCENT }} />
                         </div>
                         <div style={{ margin: "0 auto", maxWidth: 380, borderRadius: 12, borderTop: `3px solid ${ACCENT}`, background: INK, color: "#fff", textAlign: "center", padding: "14px 18px" }}>
                           <div style={{ fontFamily: SERIF, fontSize: 16 }}>{ch.hub.title[l]}</div>
                           <div style={{ fontSize: 11.5, marginTop: 3, color: "rgba(255,255,255,0.75)" }}>{ch.hub.sub[l]}</div>
+                        </div>
+                      </div>
+                    )}
+                    {ch.table && (
+                      <div style={{ marginTop: 18 }}>
+                        <div style={{ ...smallCaps, color: MUTED, marginBottom: 10 }}>{ch.table.title[l]}</div>
+                        <div style={{ overflowX: "auto" }}>
+                          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, lineHeight: 1.5 }}>
+                            <thead>
+                              <tr>{ch.table.head.map((h, i) => <th key={i} style={{ textAlign: i === 0 ? "left" : "right", padding: "6px 10px", borderBottom: `1px solid ${LINE}`, ...smallCaps, color: MUTED }}>{h[l]}</th>)}</tr>
+                            </thead>
+                            <tbody>
+                              {ch.table.rows.map((row, r) => {
+                                const last = r === ch.table!.rows.length - 1;
+                                return (
+                                  <tr key={r} style={{ background: last ? "#FFFBF6" : "transparent" }}>
+                                    {row.map((cell, c) => {
+                                      const tbd = /à définir|to be defined/.test(cell[l]);
+                                      return <td key={c} style={{ textAlign: c === 0 ? "left" : "right", padding: "8px 10px", borderBottom: `1px solid ${HAIRLINE}`, color: tbd ? FAINT : c === 0 || last ? INK : "#4B4039", fontWeight: c === 0 || last ? 600 : 400, fontStyle: tbd ? "italic" : "normal", whiteSpace: "nowrap" }}>{cell[l]}</td>;
+                                    })}
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
                         </div>
                       </div>
                     )}

@@ -31,10 +31,10 @@ export const GROWTH_PHASES: Array<{
 }> = [
   { id: "amorcage", start: "2026-02-01", end: "2026-10-31", label: { fr: "Amorçage", en: "Seeding" }, volume: { fr: "0 à 2 M€", en: "€0 to €2M" }, volumeMEur: 2,
     tagline: { fr: "On entre là où le risque est déjà géré : Kupanda, co-construit avec Africa Rise, est déjà live. 2 M€, 12 mois, 20 % de coupon, des PME sous contrats d'État en Zambie, et cinq niveaux de protection.", en: "We enter where risk is already managed: Kupanda, co-built with Africa Rise, is already live. €2M, 12 months, 20% coupon, SMEs under State contracts in Zambia, and five layers of protection." } },
-  { id: "traction", start: "2026-11-01", end: "2027-12-31", label: { fr: "Traction", en: "Traction" }, volume: { fr: "2 à 50 M€", en: "€2M to €50M" }, volumeMEur: 50,
-    tagline: { fr: "Nous ne changeons pas de métier : exactement la même chose, à plus grande échelle. La machine réseau devient mondiale, les rails on-chain se multiplient, et le pipeline passe de 2 à 50 M€.", en: "We are not changing jobs: exactly the same thing, at larger scale. The network machine goes global, on-chain rails multiply, and the pipeline grows from €2M to €50M." } },
-  { id: "distribution", start: "2028-01-01", end: "2028-12-31", label: { fr: "Distribution", en: "Distribution" }, volume: { fr: "50 à 100 M€", en: "€50M to €100M" }, volumeMEur: 100,
-    tagline: { fr: "Trois écosystèmes nourrissent trois moteurs, dette privée, dette souveraine, liquidité crypto ; chacun a été ouvert une période avant d'être nécessaire.", en: "Three ecosystems feed three engines, private debt, sovereign debt, crypto liquidity; each was opened one period before it was needed." } },
+  { id: "traction", start: "2026-11-01", end: "2027-12-31", label: { fr: "Traction", en: "Traction" }, volume: { fr: "2 à 68 M€", en: "€2M to €68M" }, volumeMEur: 68,
+    tagline: { fr: "Nous ne changeons pas de métier : exactement la même chose, à plus grande échelle. La machine réseau devient mondiale, les rails on-chain se multiplient, et le pipeline passe de 2 à 68 M€.", en: "We are not changing jobs: exactly the same thing, at larger scale. The network machine goes global, on-chain rails multiply, and the pipeline grows from €2M to €68M." } },
+  { id: "distribution", start: "2028-01-01", end: "2028-12-31", label: { fr: "Distribution", en: "Distribution" }, volume: { fr: "68 à 100 M€", en: "€68M to €100M" }, volumeMEur: 100,
+    tagline: { fr: "Le capital institutionnel se branche : une ancre DFI ou fonds de fonds et les licences débloquent les plus gros tickets, pendant que les actifs se diversifient. L'étape qui porte l'encours de 68 à 100 M€.", en: "Institutional capital switches on: a DFI or fund-of-funds anchor and the licences unlock the largest tickets, while the assets diversify. The step that carries the book from €68M to €100M." } },
   { id: "marche", start: "2029-01-01", end: "2029-12-31", label: { fr: "Marché", en: "Market" }, volume: { fr: "Road to 1 Md€", en: "Road to €1B" }, volumeMEur: 1000,
     tagline: { fr: "L'écosystème devient le marché : des places de liquidité et des institutions branchées en direct, préparées pendant la distribution, portent le milliard.", en: "The ecosystem becomes the market: liquidity venues and institutions plugged in directly, prepared during distribution, carry the billion." } },
 ];
@@ -131,6 +131,8 @@ export type EventCard = {
 };
 export type Lever = {
   title: Bilingual;
+  /** Logos des acteurs nommés dans la carte. */
+  logos?: { src: string; name: string }[];
   metric: Bilingual;
   text: Bilingual;
 };
@@ -166,6 +168,8 @@ export type Chapter = {
   companies?: Company[];
   /** Leviers de la machine réseau, en cartes (distribution). */
   levers?: Lever[];
+  /** Tableau chiffré (trajectoire) : en-tête et lignes, première colonne en gras. */
+  table?: { title: Bilingual; head: Bilingual[]; rows: Bilingual[][] };
   /** Événements clés où Minah veut être présente, avec un intitulé de bloc. */
   events?: { title: Bilingual; list: EventCard[] };
   /** Échelle d'évolution des Minah Circles (CIRCLES_PATH), avec la phase dont
@@ -184,7 +188,7 @@ export const CIRCLES_PATH: {
   title: Bilingual;
   steps: { phase: GrowthPhase; title: Bilingual; sub: Bilingual }[];
 } = {
-  title: { fr: "Les Minah Circles, étape par étape", en: "The Minah Circles, step by step" },
+  title: { fr: "Des Minah Circles au marché, étape par étape", en: "From the Minah Circles to the market, step by step" },
   steps: [
     {
       phase: "amorcage",
@@ -193,18 +197,18 @@ export const CIRCLES_PATH: {
     },
     {
       phase: "traction",
-      title: { fr: "Une montée en gamme, de nouvelles villes", en: "A higher tier, new cities" },
-      sub: { fr: "Les meilleurs investisseurs, des éditions à Davos (Suisse), New York (États-Unis), Paris (France) et Abidjan (Côte d'Ivoire), et d'autres événements qui s'ouvrent.", en: "Top investors, editions in Davos (Switzerland), New York (United States), Paris (France) and Abidjan (Côte d'Ivoire), and other events opening up." },
+      title: { fr: "Des fenêtres de souscription", en: "Subscription windows" },
+      sub: { fr: "Les meilleurs investisseurs, à Davos (Suisse), New York (États-Unis), Paris (France) et Abidjan (Côte d'Ivoire). Chaque édition ouvre une stratégie on-chain : on y souscrit en séance.", en: "Top investors, in Davos (Switzerland), New York (United States), Paris (France) and Abidjan (Côte d'Ivoire). Each edition opens a strategy on-chain: subscriptions happen in the room." },
     },
     {
       phase: "distribution",
-      title: { fr: "Un vrai forum", en: "A real forum" },
-      sub: { fr: "Un forum annuel des investisseurs, tandis que les rencontres privées continuent dans leurs villes dédiées. Nous sommes invités aux grands événements mondiaux.", en: "An annual investor forum, while the private gatherings continue in their dedicated cities. We are invited to the key global events." },
+      title: { fr: "Un forum qui émet", en: "A forum that issues" },
+      sub: { fr: "Le Minah Forum devient la fenêtre d'émission annuelle : nos partenaires y émettent leurs tranches. Les rencontres privées continuent dans leurs villes.", en: "The Minah Forum becomes the annual issuance window: our partners issue their tranches there. Private gatherings continue in their cities." },
     },
     {
       phase: "marche",
-      title: { fr: "L'un des plus gros forums", en: "One of the biggest forums" },
-      sub: { fr: "Le Minah Forum compte parmi les plus gros, et nous restons invités aux grands événements mondiaux.", en: "The Minah Forum stands among the biggest, and we remain invited to the key global events." },
+      title: { fr: "Le marché", en: "The market" },
+      sub: { fr: "Ce que l'Africa CEO Forum est aux dirigeants, le Minah Forum l'est au marché de la dette : le lieu qui définit l'écosystème et envoie les signaux.", en: "What the Africa CEO Forum is to business leaders, the Minah Forum is to the debt market: the place that defines the ecosystem and sends the signals." },
     },
   ],
 };
@@ -244,8 +248,8 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         en: "From the founders' direct network to professionals subscribing online, in three steps.",
       },
       summary: {
-        fr: "Le réseau direct des fondateurs (moins de dix investisseurs), puis les professionnels en ligne : dix investisseurs qualifiés introduits par les Network Builders, Sereel sur l'API, un broker londonien sur Kupanda I et II. 5 M€ de liquidité d'ici novembre.",
-        en: "The founders' direct network (under ten investors), then professionals online: ten qualified investors introduced by the Network Builders, Sereel on the API, a London broker on Kupanda I and II. €5M of liquidity by November.",
+        fr: "Le réseau direct des fondateurs (moins de dix investisseurs), puis les professionnels en ligne : dix investisseurs qualifiés introduits par les Network Builders, une première plateforme admin de distribution, un broker londonien sur Kupanda 1 et 2. 5 M€ de liquidité d'ici novembre.",
+        en: "The founders' direct network (under ten investors), then professionals online: ten qualified investors introduced by the Network Builders, a first distribution admin platform, a London broker on Kupanda 1 and 2. €5M of liquidity by November.",
       },
       levers: [
         {
@@ -267,7 +271,7 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         {
           title: { fr: "Broker londonien", en: "London broker" },
           metric: { fr: "Tickets de 5 M€", en: "€5M tickets" },
-          text: { fr: "Un broker londonien aligne des tickets pour finaliser le placement de Kupanda I et Kupanda II.", en: "A London broker is lining up tickets to finalise the placement of Kupanda I and Kupanda II." },
+          text: { fr: "Un broker londonien aligne des tickets pour finaliser le placement de Kupanda 1 et Kupanda 2.", en: "A London broker is lining up tickets to finalise the placement of Kupanda 1 and Kupanda 2." },
         },
       ],
       panel: {
@@ -287,13 +291,13 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         en: "Our first strategy, already live.",
       },
       summary: {
-        fr: "Kupanda, live : 2 M€ à 12 mois, 20 % annuel, des PME sous contrats d'État en Zambie, cinq niveaux de protection. Co-construit avec Africa Rise, 10 M$ déjà investis sans défaut.",
-        en: "Kupanda, live: €2M over 12 months, 20% annual, SMEs under State contracts in Zambia, five layers of protection. Co-built with Africa Rise, $10M already invested without default.",
+        fr: "Kupanda 1, live : 2 M€ à 12 mois, 20 % annuel, des PME sous contrats d'État en Zambie, cinq niveaux de protection. Co-construit avec Africa Rise, 10 M$ déjà investis sans défaut.",
+        en: "Kupanda 1, live: €2M over 12 months, 20% annual, SMEs under State contracts in Zambia, five layers of protection. Co-built with Africa Rise, $10M already invested without default.",
       },
       showActors: false,
       offerings: [
         {
-          name: { fr: "Kupanda", en: "Kupanda" },
+          name: { fr: "Kupanda 1", en: "Kupanda 1" },
           tag: { fr: "Dette privée · 12 mois", en: "Private debt · 12 months" },
           status: { fr: "LIVE", en: "LIVE" },
           subtitle: {
@@ -350,8 +354,8 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         en: "On the capital side, the network machine takes shape.",
       },
       summary: {
-        fr: "La machine réseau prend forme : les Network Builders passent de 5 à 25, trois accords on-chain (Stellar, Canton Network), trois protocoles de plus sur l'API, cinq accords de distribution brokers. Le volume passe de 2 à 50 M€.",
-        en: "The network machine takes shape: Network Builders grow from 5 to 25, three on-chain agreements (Stellar, Canton Network), three more protocols on the API, five broker distribution agreements. Volume grows from €2M to €50M.",
+        fr: "La machine réseau prend forme : les Network Builders passent de 5 à 25, trois accords on-chain (Stellar, Canton Network), trois protocoles de plus sur l'API, cinq accords de distribution brokers. Le volume passe de 2 à 68 M€.",
+        en: "The network machine takes shape: Network Builders grow from 5 to 25, three on-chain agreements (Stellar, Canton Network), three more protocols on the API, five broker distribution agreements. Volume grows from €2M to €68M.",
       },
       levers: [
         {
@@ -361,23 +365,25 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         },
         {
           title: { fr: "On-chain : le canal s'ouvre", en: "On-chain: the channel opens" },
+          logos: [{ src: "/partners/stellar-logo.png", name: "Stellar" }, { src: "/partners/canton-logo.svg", name: "Canton Network" }],
           metric: { fr: "3 accords on-chain", en: "3 on-chain agreements" },
-          text: { fr: "Ce n'est que le début, et la vision est déjà enclenchée. Premier signal, **Stellar** : un investissement de 2 M$ en discussion dans Kupanda, et Minah comme son canal d'investissement en Afrique. Deuxième, **Canton Network**, second rail institutionnel : les discussions sont engagées. L'enjeu : brancher les **30 Md$** de liquidité on-chain sur nos stratégies – aucun canal comme le nôtre n'existe vers l'Afrique.", en: "This is just the start, and the vision is already underway. First signal, **Stellar**: a $2M investment in discussion into Kupanda, and Minah as its investment channel in Africa. Second, **Canton Network**, a second institutional rail: discussions are engaged. The stake: connecting the **$30B** of on-chain liquidity to our strategies – no channel like ours exists toward Africa." },
+          text: { fr: "Ce n'est que le début, et la vision est déjà enclenchée. Premier signal, **Stellar** : un investissement de 2 M$ en discussion dans Kupanda, et Minah comme son canal d'investissement en Afrique. Deuxième, **Canton Network**, second rail institutionnel : les discussions sont engagées.", en: "This is just the start, and the vision is already underway. First signal, **Stellar**: a $2M investment in discussion into Kupanda, and Minah as its investment channel in Africa. Second, **Canton Network**, a second institutional rail: discussions are engaged." },
         },
         {
           title: { fr: "API", en: "API" },
           metric: { fr: "+3 protocoles", en: "+3 protocols" },
-          text: { fr: "Trois protocoles de plus se branchent sur l'API, sur le modèle de Sereel ; un partenaire bancaire assure les entrées et sorties en euros pour les souscripteurs sans wallet.", en: "Three more protocols connect to the API, on the Sereel model; a banking partner handles euro on- and off-ramps for subscribers without a wallet." },
+          text: { fr: "Trois protocoles de plus se branchent sur l'API, sur le même principe ; un partenaire bancaire assure les entrées et sorties en euros pour les souscripteurs sans wallet.", en: "Three more protocols connect to the API, on the same principle; a banking partner handles euro on- and off-ramps for subscribers without a wallet." },
         },
         {
           title: { fr: "Brokers", en: "Brokers" },
+          logos: [{ src: "/partners/atlantic.png", name: "Atlantic Financials" }],
           metric: { fr: "5 accords de distribution", en: "5 distribution agreements" },
           text: { fr: "Après le premier test avec **Atlantic Financial**, broker londonien qui place des tickets de 1 à 4 M€ dans Kupanda, nous signons cinq accords de distribution : des brokers qui placent nos stratégies auprès de leurs clients institutionnels.", en: "After the first test with **Atlantic Financial**, the London broker placing €1–4M tickets into Kupanda, we sign five distribution agreements: brokers placing our strategies with their institutional clients." },
         },
       ],
       panel: {
         title: { fr: "Volume", en: "Volume" },
-        amount: { fr: "2 → 50 M€", en: "€2M → €50M" },
+        amount: { fr: "2 → 68 M€", en: "€2M → €68M" },
         note: { fr: "en cours", en: "underway" },
         cols: [],
       },
@@ -388,25 +394,26 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
     },
     sous_jacents: {
       text: {
-        fr: "Trois stratégies en structuration.",
-        en: "Three strategies in structuring.",
+        fr: "Cinq stratégies d'ici fin 2027, 66 M€ émis. Trois familles, du cadre éprouvé au capital-risque.",
+        en: "Five strategies by end 2027, €66M issued. Three families, from the proven framework to venture capital.",
       },
       summary: {
-        fr: "Trois stratégies en structuration : Kupanda II (12 M€, contrat cadre signé avec la Zambie), Esgni (15 M€, Wave et Yango en discussion), et des tranches de fonds de crédit privé (TLG Capital, Enko Capital).",
-        en: "Three strategies in structuring: Kupanda II (€12M, framework signed with Zambia), Esgni (€15M, Wave and Yango in discussion), and private credit fund tranches (TLG Capital, Enko Capital).",
+        fr: "Cinq stratégies d'ici fin 2027, 66 M€ émis : Kupanda 2 (10 M€, janvier) puis Kupanda 3 (25 M€, octobre) sur le cadre zambien ; Esgni 1 (6 M€, février), PME d'Afrique de l'Ouest ; deux stratégies startups, Afrique de l'Est (10 M€, mars) et de l'Ouest (15 M€, juillet), Wave et Yango en discussion. En plus, hors business plan : des tranches de fonds de crédit privé (TLG, Enko).",
+        en: "Five strategies by end 2027, €66M issued: Kupanda 2 (€10M, January) then Kupanda 3 (€25M, October) on the Zambian framework; Esgni 1 (€6M, February), West African SMEs; two startup strategies, East Africa (€10M, March) and West Africa (€15M, July), Wave and Yango in discussion. On top, outside the business plan: private credit fund tranches (TLG, Enko).",
       },
       showActors: false,
       offerings: [
         {
-          name: { fr: "Kupanda II", en: "Kupanda II" },
-          tag: { fr: "Dette privée · 12 mois", en: "Private debt · 12 months" },
+          name: { fr: "Kupanda 2, puis Kupanda 3", en: "Kupanda 2, then Kupanda 3" },
+          tag: { fr: "PME d'Afrique de l'Est · dette privée · 12 mois", en: "East African SMEs · private debt · 12 months" },
           status: { fr: "ACCORD SIGNÉ", en: "FRAMEWORK SIGNED" },
           subtitle: {
-            fr: "Un contrat cadre signé avec la **République de Zambie**, une obligation in fine de 12 M€ à 12 mois, 20 % annuel, adossée à des contrats publics déjà attribués. La contrepartie finale est un État, et le contrat est dans la data room. Financement en fonds de roulement de sociétés des secteurs infrastructure et énergie en Afrique de l'Est, adossées à des accords gouvernementaux.",
-            en: "A framework agreement signed with the **Republic of Zambia**, a €12M 12-month bullet bond at 20% annual, backed by already-awarded public contracts. The final counterparty is a State, and the contract is in the data room. Working-capital financing for infrastructure and energy companies in East Africa, backed by government agreements.",
+            fr: "Un contrat cadre signé avec la **République de Zambie**, une obligation in fine de 10 M€ à 12 mois, 20 % annuel, adossée à des contrats publics déjà attribués. La contrepartie finale est un État, et le contrat est dans la data room. Financement en fonds de roulement de sociétés des secteurs infrastructure et énergie en Afrique de l'Est, adossées à des accords gouvernementaux. Kupanda 3 suit en octobre 2027, 25 M€ sur le même cadre.",
+            en: "A framework agreement signed with the **Republic of Zambia**, a €10M 12-month bullet bond at 20% annual, backed by already-awarded public contracts. The final counterparty is a State, and the contract is in the data room. Working-capital financing for infrastructure and energy companies in East Africa, backed by government agreements. Kupanda 3 follows in October 2027, €25M on the same framework.",
           },
           metrics: [
-            { k: { fr: "Montant", en: "Amount" }, v: { fr: "12 M€", en: "€12M" }, accent: true },
+            { k: { fr: "Montant", en: "Amount" }, v: { fr: "10 M€", en: "€10M" }, accent: true },
+            { k: { fr: "Premier closing", en: "First closing" }, v: { fr: "Janvier 2027", en: "January 2027" } },
             { k: { fr: "Durée", en: "Duration" }, v: { fr: "12 mois", en: "12 mo" } },
             { k: { fr: "Coupon fixe", en: "Fixed coupon" }, v: { fr: "20 %", en: "20%" } },
             { k: { fr: "Afrique de l'Est", en: "East Africa" }, v: { fr: "Infra · Énergie", en: "Infra · Energy" } },
@@ -422,15 +429,26 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
           ],
         },
         {
-          name: { fr: "Esgni", en: "Esgni" },
-          tag: { fr: "Dette privée diversifiée · 24 mois", en: "Diversified private debt · 24 months" },
-          status: { fr: "OUVRE LE 26 JANV. 2027", en: "OPENS JAN 26, 2027" },
-          subtitle: { fr: "Capital risque pour startups technologiques innovantes", en: "Venture capital for innovative tech startups" },
+          name: { fr: "Esgni 1", en: "Esgni 1" },
+          tag: { fr: "PME d'Afrique de l'Ouest · dette privée", en: "West African SMEs · private debt" },
+          status: { fr: "PREMIER CLOSING FÉVRIER 2027", en: "FIRST CLOSING FEBRUARY 2027" },
+          subtitle: { fr: "Le cadre Kupanda transposé à l'Afrique de l'Ouest : des PME génératrices de cash, en dette senior. Esgni 2 suit en janvier 2028, à 20 M€.", en: "The Kupanda framework carried to West Africa: cash-generative SMEs, in senior debt. Esgni 2 follows in January 2028, at €20M." },
           metrics: [
+            { k: { fr: "Montant", en: "Amount" }, v: { fr: "6 M€", en: "€6M" }, accent: true },
+            { k: { fr: "Premier closing", en: "First closing" }, v: { fr: "Février 2027", en: "February 2027" } },
+            { k: { fr: "Suite", en: "Next" }, v: { fr: "Esgni 2, 20 M€", en: "Esgni 2, €20M" } },
+          ],
+        },
+        {
+          name: { fr: "Startups, Afrique de l'Est et de l'Ouest", en: "Startups, East and West Africa" },
+          tag: { fr: "Capital-risque · 24 mois", en: "Venture capital · 24 months" },
+          status: { fr: "PREMIERS CLOSINGS MARS ET JUILLET 2027", en: "FIRST CLOSINGS MARCH AND JULY 2027" },
+          subtitle: { fr: "Capital-risque pour startups technologiques innovantes : une stratégie Afrique de l'Est, une stratégie Afrique de l'Ouest.", en: "Venture capital for innovative tech startups: one East Africa strategy, one West Africa strategy." },
+          metrics: [
+            { k: { fr: "Afrique de l'Est", en: "East Africa" }, v: { fr: "10 M€ · mars", en: "€10M · March" }, accent: true },
+            { k: { fr: "Afrique de l'Ouest", en: "West Africa" }, v: { fr: "15 M€ · juillet", en: "€15M · July" }, accent: true },
             { k: { fr: "Rendement cible", en: "Target yield" }, v: { fr: "9 – 15 %", en: "9 – 15%" } },
             { k: { fr: "Ticket minimum", en: "Minimum ticket" }, v: { fr: "À définir", en: "To be defined" } },
-            { k: { fr: "Allocation", en: "Allocation" }, v: { fr: "15,0 M€", en: "€15.0M" } },
-            { k: { fr: "Durée", en: "Term" }, v: { fr: "24 mois", en: "24 months" } },
           ],
           companies: {
             title: { fr: "Scale-ups & opérateurs – en discussion pour devenir nos sous-jacents", en: "Scale-ups & operators – in discussion to become our underlyings" },
@@ -481,7 +499,7 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
             { src: "/partners/tlg.png", name: "TLG Capital" },
             { src: "/partners/enko.png", name: "Enko Capital" },
           ],
-          status: { fr: "EN DISCUSSION", en: "IN DISCUSSION" },
+          status: { fr: "EN DISCUSSION · HORS BUSINESS PLAN", en: "IN DISCUSSION · OUTSIDE THE BUSINESS PLAN" },
           subtitle: {
             fr: "En discussion avec des fonds de crédit privé comme **TLG Capital** et **Enko Capital** : des tranches prises dans leurs opérations, distribuées à notre réseau, avec d'autres fonds de crédit privé à venir.",
             en: "In discussion with private credit funds such as **TLG Capital** and **Enko Capital**: tranches taken in their operations, distributed to our network, with more private credit funds to come.",
@@ -531,12 +549,12 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
   distribution: {
     distribution: {
       text: {
-        fr: "Côté liquidité, toutes les sources de capital convergent sur la même infrastructure :",
-        en: "On the liquidity side, every source of capital converges on the same infrastructure:",
+        fr: "À cette échelle, le capital institutionnel se branche : une ancre DFI ou fonds de fonds entre, les licences débloquent les plus gros tickets, et chaque canal souscrit sur la même infrastructure, jusqu'aux agents IA.",
+        en: "At this scale, institutional capital switches on: a DFI or fund-of-funds anchor comes in, the licences unlock the largest tickets, and every channel subscribes on the same infrastructure, all the way to AI agents.",
       },
       summary: {
-        fr: "Toutes les liquidités convergent sur la même infrastructure : on-chain, acteurs traditionnels et large allocators (ancre DFI ou fonds de fonds), fonds et institutions par l'API, jusqu'aux agents IA.",
-        en: "Every liquidity converges on the same infrastructure: on-chain, traditional players and large allocators (DFI or fund-of-funds anchor), funds and institutions through the API, all the way to AI agents.",
+        fr: "Le capital institutionnel se branche : une ancre DFI ou fonds de fonds et les licences qui débloquent les plus gros tickets, la liquidité on-chain (30 Md$), les fonds et institutions par l'API, jusqu'aux agents IA – tous sur la même infrastructure.",
+        en: "Institutional capital switches on: a DFI or fund-of-funds anchor and the licences that unlock the largest tickets, on-chain liquidity ($30B), funds and institutions through the API, all the way to AI agents – all on the same infrastructure.",
       },
       hub: {
         title: { fr: "Minah – une seule infrastructure", en: "Minah – one infrastructure" },
@@ -544,14 +562,15 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
       },
       levers: [
         {
-          title: { fr: "Liquidité on-chain", en: "On-chain liquidity" },
-          metric: { fr: "30 Md$", en: "$30B" },
-          text: { fr: "Les allocataires crypto-natifs investissent directement dans le vault.", en: "Crypto-native allocators invest directly into the vault." },
+          title: { fr: "L'ancre institutionnelle", en: "The institutional anchor" },
+          metric: { fr: "Ancre DFI · fonds de fonds", en: "DFI · fund-of-funds anchor" },
+          text: { fr: "Une **DFI** ou un **fonds de fonds** entre au capital : l'investisseur de référence qu'il faut du track record pour décrocher, et les licences supplémentaires qui débloquent les plus gros tickets.", en: "A **DFI** or a **fund-of-funds** comes in: the cornerstone investor it takes a track record to land, and the additional licences that unlock the largest tickets." },
         },
         {
-          title: { fr: "Acteurs traditionnels & large allocators", en: "Traditional players & large allocators" },
-          metric: { fr: "Ancre DFI · fonds de fonds", en: "DFI · fund-of-funds anchor" },
-          text: { fr: "La liquidité des acteurs traditionnels ; une ancre DFI ou fonds de fonds, et les licences supplémentaires qui débloquent les plus gros tickets.", en: "Liquidity from traditional players; a DFI or fund-of-funds anchor, and the additional licences that unlock the largest tickets." },
+          title: { fr: "Liquidité on-chain", en: "On-chain liquidity" },
+          logos: [{ src: "/partners/stellar-logo.png", name: "Stellar" }, { src: "/partners/canton-logo.svg", name: "Canton Network" }, { src: "/partners/blend.png", name: "Blend" }, { src: "/partners/ethos.png", name: "Ethos" }, { src: "/partners/base.png", name: "Base" }],
+          metric: { fr: "30 Md$", en: "$30B" },
+          text: { fr: "Après Stellar et Canton, le vault s'étend aux écosystèmes web3 avec **Blend**, **Ethos** et **Base** : les allocataires crypto-natifs y souscrivent en direct. L'enjeu : brancher les **30 Md$** de liquidité on-chain sur nos stratégies – aucun canal comme le nôtre n'existe vers l'Afrique.", en: "After Stellar and Canton, the vault extends into web3 ecosystems with **Blend**, **Ethos** and **Base**: crypto-native allocators subscribe directly. The stake: connecting the **$30B** of on-chain liquidity to our strategies – no channel like ours exists toward Africa." },
         },
         {
           title: { fr: "Fonds & institutions, par l'API", en: "Funds & institutions, through the API" },
@@ -569,12 +588,12 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
     },
     sous_jacents: {
       text: {
-        fr: "Côté sous-jacents, la même logique – trois sources d'actifs convergent :",
-        en: "On the underlying side, the same logic – three sources of assets converge:",
+        fr: "Côté actifs, trois sources portent l'encours à 100 M€ :",
+        en: "On the asset side, three sources carry the book to €100M:",
       },
       summary: {
-        fr: "La même logique côté actifs : tranches de fonds de crédit privé, PME sous contrats publics, fintechs africaines. Au total, 100 M€ d'AUM tracés on-chain de bout en bout.",
-        en: "The same logic on the asset side: private credit fund tranches, SMEs under government contracts, African fintechs. In total, €100M AUM tracked on-chain end to end.",
+        fr: "Trois sources d'actifs portent l'encours à 100 M€, tracés on-chain de bout en bout : les tranches de fonds de crédit privé, les PME sous contrats publics (cadre Kupanda) et les fintechs africaines.",
+        en: "Three asset sources carry the book to €100M, tracked on-chain end to end: private credit fund tranches, SMEs under public contracts (Kupanda framework) and African fintechs.",
       },
       levers: [
         {
@@ -605,8 +624,8 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
     },
     marche: {
       text: {
-        fr: "Les **Minah Circles** deviennent un vrai forum : un forum annuel des investisseurs, et les rencontres privées continuent dans leurs villes dédiées, **Davos**, **Abidjan**, **New York** et **Paris**. Minah est invitée aux grands événements mondiaux : les allocataires, fonds et institutions y rencontrent les États, les PME et les fintechs dont les deals alimentent nos stratégies, en marge des grandes tables où le capital circule déjà, l'Africa CEO Forum et le World Economic Forum.",
-        en: "The **Minah Circles** become a real forum: an annual investor forum, while the private gatherings carry on in their dedicated cities, **Davos**, **Abidjan**, **New York** and **Paris**. Minah is invited to the key global events: allocators, funds and institutions meet there the States, SMEs and fintechs whose deals feed our strategies, alongside the big tables where capital already travels, the Africa CEO Forum and the World Economic Forum.",
+        fr: "Le **Minah Forum** devient la fenêtre d'émission annuelle de la dette privée africaine : les stratégies s'y ouvrent et nos partenaires y émettent leurs tranches. Les rencontres privées continuent à **Davos**, **Abidjan**, **New York** et **Paris**, et nous sommes invités aux grands événements mondiaux, où les allocataires rencontrent les États, les PME et les fintechs dont les deals alimentent nos stratégies.",
+        en: "The **Minah Forum** becomes the annual issuance window of African private debt: strategies open there and our partners issue their tranches there. Private gatherings continue in **Davos**, **Abidjan**, **New York** and **Paris**, and we are invited to the key global events, where allocators meet the States, SMEs and fintechs whose deals feed our strategies.",
       },
       ladder: "distribution",
       showActors: false,
@@ -616,48 +635,42 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
   marche: {
     distribution: {
       text: {
-        fr: "Une position Minah se cède : principal et rendement séparés, marché secondaire, sortie avant l'échéance.",
-        en: "A Minah position can be sold: principal and yield separated, secondary market, exit before maturity.",
+        fr: "Un milliard d'euros par an se mesure en flux : avec des obligations à douze mois, tout l'encours se réémet chaque année. Trois moteurs le portent, et nous n'en originons qu'un seul nous-mêmes :",
+        en: "One billion euros a year is measured as a flow: with twelve-month bonds, the whole book is reissued every year. Three engines carry it, and we originate only one of them ourselves:",
       },
       summary: {
-        fr: "Une position Minah se cède : principal et rendement séparés, marché secondaire, sortie avant l'échéance. Des places de liquidité et des teneurs de marché se branchent ; un token ouvre toutes les stratégies, et la dette privée africaine, d'ordinaire bloquée jusqu'à l'échéance, devient liquide.",
-        en: "A Minah position can be sold: principal and yield separated, secondary market, exit before maturity. Liquidity venues and market makers plug in; one token opens every strategy, and African private debt, usually locked until maturity, becomes liquid.",
+        fr: "Un milliard par an est un flux : nos émissions, réémises chaque année ; les tranches que les fonds partenaires émettent sur nos rails ; le marché secondaire, où chaque position échangée est du volume. Trois conditions : un émetteur souverain, deux fonds partenaires sur les rails, un secondaire actif.",
+        en: "One billion a year is a flow: our issuance, reissued every year; the tranches partner funds issue on our rails; the secondary market, where every traded position is volume. Three conditions: a sovereign issuer, two partner funds on the rails, an active secondary.",
       },
       levers: [
         {
-          title: { fr: "Principal et rendement séparés", en: "Principal and yield, separated" },
-          metric: { fr: "Deux jambes", en: "Two legs" },
-          text: { fr: "Chaque position se découpe en une jambe principal et une jambe rendement, que l'on peut détenir ou céder séparément.", en: "Each position splits into a principal leg and a yield leg, which can be held or sold separately." },
+          title: { fr: "Nos émissions", en: "Our issuance" },
+          metric: { fr: "Réémises chaque année", en: "Reissued every year" },
+          text: { fr: "Kupanda, Esgni, les stratégies startups et les suivantes : des obligations courtes. 100 M€ d'encours à douze mois, c'est 100 M€ émis par an.", en: "Kupanda, Esgni, the startup strategies and the next ones: short bonds. €100M outstanding at twelve months is €100M issued a year." },
         },
         {
-          title: { fr: "Marché secondaire", en: "Secondary market" },
-          metric: { fr: "Entre investisseurs", en: "Between investors" },
-          text: { fr: "Les positions s'échangent avant l'échéance : les places de liquidité et les teneurs de marché se branchent, les institutions aussi, en direct.", en: "Positions trade before maturity: liquidity venues and market makers plug in, and so do institutions, directly." },
+          title: { fr: "Les émissions de nos partenaires", en: "Our partners' issuance" },
+          metric: { fr: "Leurs tranches, nos rails", en: "Their tranches, our rails" },
+          text: { fr: "Les fonds de crédit privé émettent leurs tranches sur notre infrastructure : TLG, Enko, puis d'autres. Chaque partenaire branché multiplie le volume sans grossir l'équipe.", en: "Private credit funds issue their tranches on our infrastructure: TLG, Enko, then others. Every partner plugged in multiplies volume without growing the team." },
         },
         {
-          title: { fr: "Sortie avant l'échéance", en: "Exit before maturity" },
-          metric: { fr: "Plus d'attente", en: "No more waiting" },
-          text: { fr: "Un investisseur n'attend plus le terme : la dette privée africaine, d'ordinaire bloquée jusqu'à l'échéance, devient liquide.", en: "An investor no longer waits for the term: African private debt, usually locked until maturity, becomes liquid." },
-        },
-        {
-          title: { fr: "Un token, toutes les stratégies", en: "One token, every strategy" },
-          metric: { fr: "Un seul accès", en: "A single access" },
-          text: { fr: "Un token ouvre toutes les stratégies Minah, du premier Kupanda aux plus récentes.", en: "One token opens every Minah strategy, from the first Kupanda to the most recent." },
+          title: { fr: "Le marché secondaire", en: "The secondary market" },
+          metric: { fr: "Les positions s'échangent", en: "Positions trade" },
+          text: { fr: "Principal et rendement séparés, sortie avant l'échéance, places de liquidité et teneurs de marché branchés, le vault ouvert aux écosystèmes web3. Chaque position échangée est du volume sans nouvelle origination – et chaque investisseur sait qu'il pourra sortir.", en: "Principal and yield separated, exit before maturity, liquidity venues and market makers plugged in, the vault open to web3 ecosystems. Every traded position is volume without new origination – and every investor knows they can exit." },
         },
       ],
-      split: {
-        source: { fr: "Une position Minah", en: "A Minah position" },
-        parts: [
-          { fr: "Principal", en: "Principal" },
-          { fr: "Rendement", en: "Yield" },
-        ],
-        market: {
-          title: { fr: "Marché secondaire", en: "Secondary market" },
-          sub: { fr: "Des places de liquidité et des teneurs de marché se branchent", en: "Liquidity venues and market makers plug in" },
-        },
-        badges: [
-          { fr: "Sortie avant l'échéance", en: "Exit before maturity" },
-          { fr: "Un token ouvre toutes les stratégies", en: "One token opens every strategy" },
+      hub: {
+        title: { fr: "1 Md€ par an", en: "€1B a year" },
+        sub: { fr: "Nos émissions + celles de nos partenaires + le secondaire", en: "Our issuance + our partners' + the secondary" },
+      },
+      panel: {
+        title: { fr: "Ce qui doit être vrai pour le milliard", en: "What has to be true for the billion" },
+        amount: { fr: "3", en: "3" },
+        note: { fr: "conditions", en: "conditions" },
+        cols: [
+          { h: { fr: "Un émetteur souverain", en: "A sovereign issuer" }, d: { fr: "Des T-bills tokenisés qui se renouvellent", en: "Tokenized T-bills that roll over" } },
+          { h: { fr: "Deux fonds partenaires sur les rails", en: "Two partner funds on the rails" }, d: { fr: "Leurs tranches émises chez nous", en: "Their tranches issued with us" } },
+          { h: { fr: "Un marché secondaire actif", en: "An active secondary market" }, d: { fr: "Places de liquidité et teneurs de marché", en: "Liquidity venues and market makers" } },
         ],
       },
       showActors: false,
@@ -665,36 +678,25 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
     },
     sous_jacents: {
       text: {
-        fr: "Un milliard d'euros d'actifs réels africains, originés par des partenaires autant que par Minah : États, PME, fintechs, dans plusieurs pays et plusieurs devises, sur une infrastructure que d'autres utilisent.",
-        en: "One billion euros of African real assets, originated by partners as much as by Minah: States, SMEs, fintechs, across several countries and currencies, on an infrastructure others use.",
+        fr: "Un milliard d'euros d'actifs réels africains, originés par des partenaires autant que par Minah, sur une infrastructure que d'autres utilisent. Trois familles d'actifs, que le réseau, le Forum et les agents IA amènent à nous :",
+        en: "One billion euros of African real assets, originated by partners as much as by Minah, on an infrastructure others use. Three asset families, brought to us by the network, the Forum and the AI agents:",
       },
       summary: {
-        fr: "Un milliard d'euros d'actifs réels africains, originés par des partenaires autant que par Minah : États, PME, fintechs, dans plusieurs pays et plusieurs devises, sur une infrastructure que d'autres utilisent. L'équipe et les agents IA sourcent les meilleurs deals en Afrique.",
-        en: "One billion euros of African real assets, originated by partners as much as by Minah: States, SMEs, fintechs, across several countries and currencies, on an infrastructure others use. The team and AI agents source the best deals in Africa.",
+        fr: "Un milliard d'actifs réels africains, de trois familles : les États (T-bills tokenisés), les PME sous contrats publics (le cadre Kupanda répliqué pays après pays), les fintechs et scale-ups qui empruntent au vault. Le réseau, le Forum et les agents IA amènent les contreparties, originées par des partenaires autant que par Minah ; le cadre éprouvé sélectionne.",
+        en: "One billion of African real assets, from three families: States (tokenized T-bills), SMEs under public contracts (the Kupanda framework replicated country after country), fintechs and scale-ups borrowing from the vault. The network, the Forum and the AI agents bring the counterparties, originated by partners as much as by Minah; the proven framework selects.",
       },
       levers: [
-        {
-          title: { fr: "Originés par des partenaires", en: "Originated by partners" },
-          metric: { fr: "Autant que par Minah", en: "As much as by Minah" },
-          text: { fr: "Des partenaires amènent leurs propres deals sur une infrastructure que d'autres utilisent.", en: "Partners bring their own deals onto an infrastructure others use." },
-        },
-        {
-          title: { fr: "Sourcés par l'équipe", en: "Sourced by the team" },
-          metric: { fr: "Les meilleurs deals d'Afrique", en: "Africa's best deals" },
-          text: { fr: "L'équipe Minah ouvre les portes des États, des PME et des fintechs.", en: "The Minah team opens the doors to States, SMEs and fintechs." },
-        },
-        {
-          title: { fr: "Sourcés par les agents IA", en: "Sourced by AI agents" },
-          metric: { fr: "Aux côtés de l'équipe", en: "Alongside the team" },
-          text: { fr: "Des agents IA parcourent le continent et font remonter les meilleurs deals à l'équipe.", en: "AI agents scan the continent and surface the best deals to the team." },
-        },
+        { title: { fr: "Les États", en: "States" }, metric: { fr: "T-bills tokenisés", en: "Tokenized T-bills" }, text: { fr: "De la dette souveraine courte, qui se renouvelle : le second moteur, une fois le premier émetteur branché.", en: "Short sovereign debt that rolls over: the second engine, once the first issuer is plugged in." } },
+        { title: { fr: "Les PME sous contrats publics", en: "SMEs under public contracts" }, metric: { fr: "Le cadre Kupanda, répliqué", en: "The Kupanda framework, replicated" }, text: { fr: "Dette senior, cinq protections, émission on-chain : le cadre éprouvé en Zambie se réplique pays après pays, et sert de filtre à chaque nouveau deal.", en: "Senior debt, five protections, on-chain issuance: the framework proven in Zambia replicates country after country, and filters every new deal." } },
+        { title: { fr: "Les fintechs et scale-ups", en: "Fintechs and scale-ups" }, metric: { fr: "Empruntent au vault", en: "Borrow from the vault" }, text: { fr: "Les entreprises génératrices de cash du continent empruntent directement au vault, sans intermédiaire.", en: "The continent's cash-generative companies borrow directly from the vault, without intermediary." } },
+        { title: { fr: "Sourcés par le réseau et les agents IA", en: "Sourced by the network and AI agents" }, metric: { fr: "Les contreparties viennent à nous", en: "Counterparties come to us" }, text: { fr: "Le réseau, le Forum et ses deal rooms, les agents IA amènent les contreparties à nous ; chaque deal honoré en attire un meilleur.", en: "The network, the Forum and its deal rooms, the AI agents bring the counterparties to us; every honoured deal attracts a better one." } },
       ],
       panel: {
         title: { fr: "Sur la route de", en: "On the road to" },
         amount: { fr: "1 Md€", en: "€1B" },
         note: { fr: "d'actifs réels africains", en: "of African real assets" },
         cols: [
-          { h: { fr: "États · PME · fintechs", en: "States · SMEs · fintechs" }, d: { fr: "Dans plusieurs pays et plusieurs devises", en: "Across several countries and currencies" } },
+          { h: { fr: "Sourcés par l'équipe et les agents IA", en: "Sourced by the team and AI agents" }, d: { fr: "Dans plusieurs pays et plusieurs devises, tracés on-chain de bout en bout", en: "Across several countries and currencies, tracked on-chain end to end" } },
         ],
       },
       showActors: false,
@@ -702,24 +704,29 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
     },
     marche: {
       text: {
-        fr: "Le Minah Forum devient l'un des plus gros forums de la dette privée africaine, et Minah reste invitée aux grands événements mondiaux : une couche de l'écosystème, la référence que citent les tables où elle a commencé par être invitée.",
-        en: "The Minah Forum becomes one of the biggest forums of African private debt, and Minah remains invited to the key global events: a layer of the ecosystem, the reference cited by the tables where it started out as a guest.",
+        fr: "Nous devenons le marché. Ce que l'Africa CEO Forum est aux dirigeants du continent, le **Minah Forum** l'est à la dette privée africaine : le lieu qui définit l'écosystème et lui envoie ses signaux. Chaque thématique de panel dit où va le marché ; être sponsor ou émetteur y signifie compter parmi les plus gros acteurs ; et c'est là que le marché se rencontre.",
+        en: "We become the market. What the Africa CEO Forum is to the continent's business leaders, the **Minah Forum** is to African private debt: the place that defines the ecosystem and sends it its signals. Each panel theme says where the market is going; being a sponsor or an issuer there means ranking among the biggest players; and it is where the market meets.",
       },
       summary: {
-        fr: "Le Minah Forum devient l'un des plus gros forums de la dette privée africaine, deal rooms comprises, et Minah reste invitée aux grands événements mondiaux : la référence que citent les tables où elle a commencé par être invitée.",
-        en: "The Minah Forum becomes one of the biggest forums of African private debt, deal rooms included, and Minah remains invited to the key global events: the reference cited by the tables where it started out as a guest.",
+        fr: "Nous devenons le marché : le Minah Forum est à la dette privée africaine ce que l'Africa CEO Forum est aux dirigeants. Les thématiques envoient les signaux, les sponsors et émetteurs sont lus comme les plus gros acteurs, et le marché s'y rencontre : fenêtre d'émission, session secondaire, deal rooms. Une marque de dette se construit sur une chose : les deals signés sous son nom performent.",
+        en: "We become the market: the Minah Forum is to African private debt what the Africa CEO Forum is to business leaders. Themes send the signals, sponsors and issuers are read as the biggest players, and the market meets there: issuance window, secondary session, deal rooms. A debt brand is built on one thing: the deals signed under its name perform.",
       },
       ladder: "marche",
       levers: [
         {
-          title: { fr: "Minah Forum et deal rooms", en: "Minah Forum and deal rooms" },
-          metric: { fr: "L'un des plus gros forums", en: "One of the biggest forums" },
-          text: { fr: "Le forum annuel de la dette privée africaine : chefs d'État, DFI, allocateurs mondiaux et gérants autour des mêmes tables. Ses deal rooms sont celles des opérations de l'année : les plus grosses s'y originent, s'y négocient et s'y signent.", en: "The annual forum of African private debt: heads of state, DFIs, global allocators and fund managers around the same tables. Its deal rooms are the year's deals: the largest operations are originated, negotiated and signed there." },
+          title: { fr: "Les thématiques envoient les signaux", en: "Themes send the signals" },
+          metric: { fr: "L'agenda du marché", en: "The market's agenda" },
+          text: { fr: "Les panels du Forum fixent l'agenda de la dette privée africaine pour l'année : quels secteurs, quelles structures, quels rails. Le reste de l'écosystème s'aligne.", en: "The Forum's panels set the agenda of African private debt for the year: which sectors, which structures, which rails. The rest of the ecosystem aligns." },
         },
         {
-          title: { fr: "Les rencontres privées", en: "Private gatherings" },
-          metric: { fr: "Davos · Abidjan · New York · Paris", en: "Davos · Abidjan · New York · Paris" },
-          text: { fr: "Toute l'année, dans les villes où le capital se décide, et aux grands événements mondiaux où l'on nous invite.", en: "All year round, in the cities where capital decides, and at the key global events we are invited to." },
+          title: { fr: "Les sponsors et émetteurs sont le marché", en: "Sponsors and issuers are the market" },
+          metric: { fr: "Être vu, c'est compter", en: "Being seen is ranking" },
+          text: { fr: "Fonds, DFI, banques, protocoles : sponsoriser le Forum ou y émettre une tranche, c'est être lu comme l'un des plus gros acteurs du continent.", en: "Funds, DFIs, banks, protocols: sponsoring the Forum or issuing a tranche there means being read as one of the continent's biggest players." },
+        },
+        {
+          title: { fr: "Là où le marché se rencontre", en: "Where the market meets" },
+          metric: { fr: "Émission · secondaire · deal rooms", en: "Issuance · secondary · deal rooms" },
+          text: { fr: "La fenêtre d'émission annuelle, la session de marché secondaire et les deal rooms où les opérations de l'année s'originent, se négocient et se signent. Une marque de dette se construit sur une chose : les deals signés sous son nom performent.", en: "The annual issuance window, the secondary market session and the deal rooms where the year's operations are originated, negotiated and signed. A debt brand is built on one thing: the deals signed under its name perform." },
         },
       ],
       showActors: false,
@@ -797,7 +804,7 @@ export const ACTORS: Actor[] = [
   { id: "sumsub", stream: "sous_jacents", category: "infrastructure", name: { fr: "Sumsub", en: "Sumsub" }, depuis: "amorcage", logo: "/partners/sumsub.png", url: "https://sumsub.com" },
   { id: "premier-projet", stream: "sous_jacents", category: "pme", name: { fr: "Premier projet ouest-africain", en: "First West African project" }, depuis: "amorcage", named: false },
   { id: "zambie", stream: "sous_jacents", category: "gouvernements", name: { fr: "République de Zambie", en: "Republic of Zambia" }, depuis: "amorcage" },
-  { id: "kupanda", stream: "sous_jacents", category: "pme", name: { fr: "Kupanda, 12 M€", en: "Kupanda, €12M" }, depuis: "traction" },
+  { id: "kupanda", stream: "sous_jacents", category: "pme", name: { fr: "Kupanda, 10 M€", en: "Kupanda, €10M" }, depuis: "traction" },
   { id: "contrats-publics", stream: "sous_jacents", category: "pme", name: { fr: "Pipeline de contrats publics, 15 à 20 M€", en: "Public contract pipeline, €15M to €20M" }, depuis: "distribution", named: false, aConfirmer: true },
   { id: "canton", stream: "sous_jacents", category: "infrastructure", name: { fr: "Canton Network", en: "Canton Network" }, depuis: "traction", logo: "/partners/canton.png", url: "https://www.canton.network" },
   { id: "souverain", stream: "sous_jacents", category: "souverain", name: { fr: "Émetteur de dette souveraine tokenisée", en: "Tokenised sovereign debt issuer" }, depuis: "distribution", named: false, aConfirmer: true },
