@@ -659,8 +659,6 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
           </div>
         )}
       </section>
-
-      <p style={{ marginTop: 28, fontSize: 12, color: FAINT }}>{c.footer}</p>
     </div>
   );
 }

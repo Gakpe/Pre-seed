@@ -31,10 +31,10 @@ export const GROWTH_PHASES: Array<{
 }> = [
   { id: "amorcage", start: "2026-02-01", end: "2026-10-31", label: { fr: "Amorçage", en: "Seeding" }, volume: { fr: "0 à 2 M€", en: "€0 to €2M" }, volumeMEur: 2,
     tagline: { fr: "On entre là où le risque est déjà géré : Kupanda, co-construit avec Africa Rise, est déjà live. 2 M€, 12 mois, 20 % de coupon, des PME sous contrats d'État en Zambie, et cinq niveaux de protection.", en: "We enter where risk is already managed: Kupanda, co-built with Africa Rise, is already live. €2M, 12 months, 20% coupon, SMEs under State contracts in Zambia, and five layers of protection." } },
-  { id: "traction", start: "2026-11-01", end: "2027-12-31", label: { fr: "Traction", en: "Traction" }, volume: { fr: "2 à 68 M€", en: "€2M to €68M" }, volumeMEur: 68,
-    tagline: { fr: "Nous ne changeons pas de métier : exactement la même chose, à plus grande échelle. La machine réseau devient mondiale, les rails on-chain se multiplient, et le pipeline passe de 2 à 68 M€.", en: "We are not changing jobs: exactly the same thing, at larger scale. The network machine goes global, on-chain rails multiply, and the pipeline grows from €2M to €68M." } },
-  { id: "distribution", start: "2028-01-01", end: "2028-12-31", label: { fr: "Distribution", en: "Distribution" }, volume: { fr: "68 à 100 M€", en: "€68M to €100M" }, volumeMEur: 100,
-    tagline: { fr: "Le capital institutionnel se branche : une ancre DFI ou fonds de fonds et les licences débloquent les plus gros tickets, pendant que les actifs se diversifient. L'étape qui porte l'encours de 68 à 100 M€.", en: "Institutional capital switches on: a DFI or fund-of-funds anchor and the licences unlock the largest tickets, while the assets diversify. The step that carries the book from €68M to €100M." } },
+  { id: "traction", start: "2026-11-01", end: "2027-12-31", label: { fr: "Traction", en: "Traction" }, volume: { fr: "2 à 62 M€", en: "€2M to €62M" }, volumeMEur: 62,
+    tagline: { fr: "Nous ne changeons pas de métier : exactement la même chose, à plus grande échelle. La machine réseau devient mondiale, les rails on-chain se multiplient, et le pipeline passe de 2 à 62 M€.", en: "We are not changing jobs: exactly the same thing, at larger scale. The network machine goes global, on-chain rails multiply, and the pipeline grows from €2M to €62M." } },
+  { id: "distribution", start: "2028-01-01", end: "2028-12-31", label: { fr: "Distribution", en: "Distribution" }, volume: { fr: "62 à 100 M€", en: "€62M to €100M" }, volumeMEur: 100,
+    tagline: { fr: "Le capital institutionnel se branche : une ancre DFI ou fonds de fonds et les licences débloquent les plus gros tickets, pendant que les actifs se diversifient. L'étape qui porte l'encours de 62 à 100 M€.", en: "Institutional capital switches on: a DFI or fund-of-funds anchor and the licences unlock the largest tickets, while the assets diversify. The step that carries the book from €62M to €100M." } },
   { id: "marche", start: "2029-01-01", end: "2029-12-31", label: { fr: "Marché", en: "Market" }, volume: { fr: "Road to 1 Md€", en: "Road to €1B" }, volumeMEur: 1000,
     tagline: { fr: "L'écosystème devient le marché : des places de liquidité et des institutions branchées en direct, préparées pendant la distribution, portent le milliard.", en: "The ecosystem becomes the market: liquidity venues and institutions plugged in directly, prepared during distribution, carry the billion." } },
 ];
@@ -360,8 +360,8 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         en: "On the capital side, the network machine takes shape.",
       },
       summary: {
-        fr: "La machine réseau prend forme : les Network Builders passent de 5 à 25, trois accords on-chain (Stellar, Canton Network), trois protocoles de plus sur l'API, cinq accords brokers, Marex (véhicule avec code ISIN) et Silver Birch en discussion. Le volume passe de 2 à 68 M€.",
-        en: "The network machine takes shape: Network Builders grow from 5 to 25, three on-chain agreements (Stellar, Canton Network), three more protocols on the API, five broker agreements, Marex (vehicle with an ISIN code) and Silver Birch in discussion. Volume grows from €2M to €68M.",
+        fr: "La machine réseau prend forme : les Network Builders passent de 5 à 25, trois accords on-chain (Stellar, Canton Network), trois protocoles de plus sur l'API, cinq accords brokers, Marex (véhicule avec code ISIN) et Silver Birch en discussion. Le volume passe de 2 à 62 M€.",
+        en: "The network machine takes shape: Network Builders grow from 5 to 25, three on-chain agreements (Stellar, Canton Network), three more protocols on the API, five broker agreements, Marex (vehicle with an ISIN code) and Silver Birch in discussion. Volume grows from €2M to €62M.",
       },
       levers: [
         {
@@ -401,7 +401,7 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
       ],
       panel: {
         title: { fr: "Volume", en: "Volume" },
-        amount: { fr: "2 → 68 M€", en: "€2M → €68M" },
+        amount: { fr: "2 → 62 M€", en: "€2M → €62M" },
         note: { fr: "en cours", en: "underway" },
         cols: [],
       },
