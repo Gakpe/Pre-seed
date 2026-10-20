@@ -69,6 +69,7 @@ const P = {
   circleParis: { src: "/brand/gtm/field-12.jpg?v=3", pos: "center 40%", t: { fr: "Minah Circle, Paris, France", en: "Minah Circle, Paris, France" }, d: { fr: "Le rendez-vous annuel, avec ChangeNOW et la Fondation Stellar.", en: "The annual gathering, with ChangeNOW and the Stellar Foundation." } },
   lome: { src: "/brand/gtm/field-4.jpg", t: { fr: "Congrès panafricain, Lomé, Togo", en: "Pan-African Congress, Lomé, Togo" }, d: { fr: "Prise de parole et modération.", en: "Keynote and moderation." } },
   roche: { src: "/brand/gtm/field-23.jpg", t: { fr: "Cocktail privé, Abidjan, Côte d'Ivoire", en: "Private cocktail, Abidjan, Côte d'Ivoire" }, d: { fr: "Avec Roche et des investisseurs.", en: "With Roche and investors." } },
+  tlg: { src: "/brand/gtm/field-24.jpg", pos: "center 40%", t: { fr: "Rencontre avec TLG Capital", en: "Meeting with TLG Capital" }, d: { fr: "Ils ont confirmé leur volonté de co-construire des stratégies avec nous.", en: "They confirmed their willingness to co-build strategies with us." } },
 } satisfies Record<string, Photo>;
 
 // Blocs structurés d'un fil, pour rendre les données lisibles plutôt que de les
@@ -248,8 +249,8 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         en: "From the founders' direct network to professionals subscribing online, in three steps.",
       },
       summary: {
-        fr: "Le réseau direct des fondateurs (moins de dix investisseurs), puis les professionnels en ligne : dix investisseurs qualifiés introduits par les Network Builders, une première plateforme admin de distribution, un broker londonien sur Kupanda 1 et 2. 5 M€ de liquidité d'ici novembre.",
-        en: "The founders' direct network (under ten investors), then professionals online: ten qualified investors introduced by the Network Builders, a first distribution admin platform, a London broker on Kupanda 1 and 2. €5M of liquidity by November.",
+        fr: "Le réseau direct des fondateurs (moins de dix investisseurs), puis dix investisseurs qualifiés introduits par les Network Builders, une première plateforme admin de distribution et Atlantic Financials, qui a confirmé 5 à 10 M€ d'ici la fin de l'année sur Kupanda 1 et 2.",
+        en: "The founders' direct network (under ten investors), then ten qualified investors introduced by the Network Builders, a first distribution admin platform and Atlantic Financials, which confirmed €5M to €10M by the end of the year on Kupanda 1 and 2.",
       },
       levers: [
         {
@@ -269,9 +270,10 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
           text: { fr: "Un premier **Network Builder** arrive par cette plateforme et y distribue les stratégies à son propre réseau.", en: "A first **Network Builder** comes through this platform and distributes the strategies to their own network." },
         },
         {
-          title: { fr: "Broker londonien", en: "London broker" },
-          metric: { fr: "Tickets de 5 M€", en: "€5M tickets" },
-          text: { fr: "Un broker londonien aligne des tickets pour finaliser le placement de Kupanda 1 et Kupanda 2.", en: "A London broker is lining up tickets to finalise the placement of Kupanda 1 and Kupanda 2." },
+          title: { fr: "Atlantic Financials, broker londonien", en: "Atlantic Financials, London broker" },
+          logos: [{ src: "/partners/atlantic.png", name: "Atlantic Financials" }],
+          metric: { fr: "5 à 10 M€ confirmés", en: "€5M to €10M confirmed" },
+          text: { fr: "Notre partenaire nous a confirmé une ligne d'investissement de 5 à 10 M€ d'ici la fin de l'année sur nos stratégies Kupanda 1 et Kupanda 2.", en: "Our partner has confirmed an investment line of €5M to €10M by the end of the year on our Kupanda 1 and Kupanda 2 strategies." },
         },
       ],
       panel: {
@@ -358,8 +360,8 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         en: "On the capital side, the network machine takes shape.",
       },
       summary: {
-        fr: "La machine réseau prend forme : les Network Builders passent de 5 à 25, trois accords on-chain (Stellar, Canton Network), trois protocoles de plus sur l'API, cinq accords de distribution brokers. Le volume passe de 2 à 68 M€.",
-        en: "The network machine takes shape: Network Builders grow from 5 to 25, three on-chain agreements (Stellar, Canton Network), three more protocols on the API, five broker distribution agreements. Volume grows from €2M to €68M.",
+        fr: "La machine réseau prend forme : les Network Builders passent de 5 à 25, trois accords on-chain (Stellar, Canton Network), trois protocoles de plus sur l'API, cinq accords brokers, Marex (véhicule avec code ISIN) et Silver Birch en discussion. Le volume passe de 2 à 68 M€.",
+        en: "The network machine takes shape: Network Builders grow from 5 to 25, three on-chain agreements (Stellar, Canton Network), three more protocols on the API, five broker agreements, Marex (vehicle with an ISIN code) and Silver Birch in discussion. Volume grows from €2M to €68M.",
       },
       levers: [
         {
@@ -382,7 +384,19 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
           title: { fr: "Brokers", en: "Brokers" },
           logos: [{ src: "/partners/atlantic.png", name: "Atlantic Financials" }],
           metric: { fr: "5 accords de distribution", en: "5 distribution agreements" },
-          text: { fr: "Après le premier test avec **Atlantic Financial**, broker londonien qui place des tickets de 1 à 4 M€ dans Kupanda, nous signons cinq accords de distribution : des brokers qui placent nos stratégies auprès de leurs clients institutionnels.", en: "After the first test with **Atlantic Financial**, the London broker placing €1–4M tickets into Kupanda, we sign five distribution agreements: brokers placing our strategies with their institutional clients." },
+          text: { fr: "Après le premier test avec **Atlantic Financials**, broker londonien qui a confirmé une ligne de 5 à 10 M€ sur Kupanda 1 et 2, nous signons cinq accords de distribution : des brokers qui placent nos stratégies auprès de leurs clients institutionnels.", en: "After the first test with **Atlantic Financials**, the London broker that confirmed a €5M to €10M line on Kupanda 1 and 2, we sign five distribution agreements: brokers placing our strategies with their institutional clients." },
+        },
+        {
+          title: { fr: "Marex : un véhicule avec code ISIN", en: "Marex: a vehicle with an ISIN code" },
+          logos: [{ src: "/partners/marex.png", name: "Marex" }],
+          metric: { fr: "Nouveau canal", en: "New channel" },
+          text: { fr: "Nous structurons un nouveau canal pour accéder au réseau de distribution de **Marex**, via un véhicule d'investissement doté d'un code ISIN. Les travaux ont démarré et nous en attendons des volumes significatifs.", en: "We are structuring a new channel into **Marex**'s distribution network, through an investment vehicle with an ISIN code. Work has started and we expect significant volumes from it." },
+        },
+        {
+          title: { fr: "Silver Birch : accélérer la distribution", en: "Silver Birch: accelerating distribution" },
+          logos: [{ src: "/partners/silver-birch.png", name: "Silver Birch" }],
+          metric: { fr: "15 à 20 M€ en UEMOA", en: "€15M to €20M in WAEMU" },
+          text: { fr: "Nous avons ouvert des discussions avec **Silver Birch** pour accélérer la distribution de nos nouvelles stratégies, à commencer par une stratégie de working capital de 15 à 20 M€ en zone UEMOA.", en: "We have opened discussions with **Silver Birch** to accelerate the distribution of our new strategies, starting with a €15M to €20M working capital strategy in the WAEMU zone." },
         },
       ],
       panel: {
@@ -398,12 +412,12 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
     },
     sous_jacents: {
       text: {
-        fr: "Cinq stratégies d'ici fin 2027, 66 M€ émis. Trois familles, du cadre éprouvé au capital-risque.",
-        en: "Five strategies by end 2027, €66M issued. Three families, from the proven framework to venture capital.",
+        fr: "Quatre stratégies d'ici fin 2027, 60 M€ émis. Deux familles, du cadre éprouvé au capital-risque.",
+        en: "Four strategies by end 2027, €60M issued. Two families, from the proven framework to venture capital.",
       },
       summary: {
-        fr: "Cinq stratégies d'ici fin 2027, 66 M€ émis : Kupanda 2 (10 M€, janvier) puis Kupanda 3 (25 M€, octobre) sur le cadre zambien ; Esgni 1 (6 M€, février), PME d'Afrique de l'Ouest ; deux stratégies startups, Afrique de l'Est (10 M€, mars) et de l'Ouest (15 M€, juillet), Wave et Yango en discussion. En plus, hors business plan : des tranches de fonds de crédit privé (TLG, Enko).",
-        en: "Five strategies by end 2027, €66M issued: Kupanda 2 (€10M, January) then Kupanda 3 (€25M, October) on the Zambian framework; Esgni 1 (€6M, February), West African SMEs; two startup strategies, East Africa (€10M, March) and West Africa (€15M, July), Wave and Yango in discussion. On top, outside the business plan: private credit fund tranches (TLG, Enko).",
+        fr: "Quatre stratégies d'ici fin 2027, 60 M€ émis : Kupanda 2 (10 M€) et Kupanda 3 (25 M€) sur le cadre zambien, puis deux stratégies startups, Afrique de l'Est (10 M€) et de l'Ouest (15 M€). Hors business plan : des tranches de crédit privé, TLG Capital ayant confirmé vouloir co-construire avec nous.",
+        en: "Four strategies by end 2027, €60M issued: Kupanda 2 (€10M) and Kupanda 3 (€25M) on the Zambian framework, then two startup strategies, East Africa (€10M) and West Africa (€15M). Outside the business plan: private credit tranches, with TLG Capital confirmed to co-build with us.",
       },
       showActors: false,
       offerings: [
@@ -430,17 +444,6 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
             { n: 3, title: { fr: "Recours direct ministère", en: "Direct ministry recourse" }, detail: { fr: "Lettres d'engagement", en: "Engagement letters" } },
             { n: 4, title: { fr: "Swap de change · Zanaco", en: "Currency swap · Zanaco" }, detail: { fr: "ZMW / USD", en: "ZMW / USD" } },
             { n: 5, title: { fr: "Réserve de trésorerie", en: "Cash reserve" }, detail: { fr: "Détenue par Africa Rise", en: "Held by Africa Rise" } },
-          ],
-        },
-        {
-          name: { fr: "Esgni 1", en: "Esgni 1" },
-          tag: { fr: "PME d'Afrique de l'Ouest · dette privée", en: "West African SMEs · private debt" },
-          status: { fr: "PREMIER CLOSING FÉVRIER 2027", en: "FIRST CLOSING FEBRUARY 2027" },
-          subtitle: { fr: "Le cadre Kupanda transposé à l'Afrique de l'Ouest : des PME génératrices de cash, en dette senior. Esgni 2 suit en janvier 2028, à 20 M€.", en: "The Kupanda framework carried to West Africa: cash-generative SMEs, in senior debt. Esgni 2 follows in January 2028, at €20M." },
-          metrics: [
-            { k: { fr: "Montant", en: "Amount" }, v: { fr: "6 M€", en: "€6M" }, accent: true },
-            { k: { fr: "Premier closing", en: "First closing" }, v: { fr: "Février 2027", en: "February 2027" } },
-            { k: { fr: "Suite", en: "Next" }, v: { fr: "Esgni 2, 20 M€", en: "Esgni 2, €20M" } },
           ],
         },
         {
@@ -503,10 +506,10 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
             { src: "/partners/tlg.png", name: "TLG Capital" },
             { src: "/partners/enko.png", name: "Enko Capital" },
           ],
-          status: { fr: "EN DISCUSSION · HORS BUSINESS PLAN", en: "IN DISCUSSION · OUTSIDE THE BUSINESS PLAN" },
+          status: { fr: "TLG CONFIRMÉ · HORS BUSINESS PLAN", en: "TLG CONFIRMED · OUTSIDE THE BUSINESS PLAN" },
           subtitle: {
-            fr: "En discussion avec des fonds de crédit privé comme **TLG Capital** et **Enko Capital** : des tranches prises dans leurs opérations, distribuées à notre réseau, avec d'autres fonds de crédit privé à venir.",
-            en: "In discussion with private credit funds such as **TLG Capital** and **Enko Capital**: tranches taken in their operations, distributed to our network, with more private credit funds to come.",
+            fr: "Nous avons rencontré **TLG Capital**, qui a confirmé sa volonté de co-construire des stratégies avec nous, au format Minah (tech enabler) : nous intégrerons des tranches dans nos prochains produits, distribuées à notre réseau. Discussions en cours avec **Enko Capital**, et d'autres fonds de crédit privé à venir.",
+            en: "We have met **TLG Capital**, which has confirmed its willingness to co-build strategies with us, in the Minah format (tech enabler): we will integrate tranches into our next products, distributed to our network. Discussions are under way with **Enko Capital**, and more private credit funds are to come.",
           },
           metrics: [
             { k: { fr: "Tranche TLG", en: "TLG tranche" }, v: { fr: "20 M€", en: "€20M" }, accent: true },
@@ -515,6 +518,7 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
           ],
         },
       ],
+      photos: [P.tlg],
     },
     marche: {
       text: {
