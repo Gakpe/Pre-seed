@@ -437,8 +437,11 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
   const strategyCards = (offerings: Offering[]) => (
     <div style={{ marginTop: 16, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))", gap: 10 }}>
       {offerings.map((o) => {
-        const hero = o.metrics.find((m) => m.accent) ?? o.metrics[0];
-        const rest = o.metrics.filter((m) => m !== hero);
+        // Tous les chiffres mis en avant ont le même traitement, côte à côte (ex. les deux
+        // stratégies startups : 10 et 15 M€) ; sinon le premier d'entre eux passe pour le plus important.
+        const heroes = o.metrics.filter((m) => m.accent);
+        const main = heroes.length ? heroes : [o.metrics[0]];
+        const rest = o.metrics.filter((m) => !main.includes(m));
         return (
           <div key={o.name.en} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "14px 16px", background: SURFACE }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
@@ -448,7 +451,14 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
               </div>
               {o.status && <span style={{ flex: "none", border: `1px solid ${ACCENT}`, borderRadius: 999, padding: "2px 10px", fontSize: 11.5, color: ACCENT_TEXT }}>{sentence(o.status[l])}</span>}
             </div>
-            <div style={{ fontFamily: SERIF, fontSize: 20, color: ACCENT_TEXT, margin: "8px 0 6px", lineHeight: 1.15 }}>{hero.v[l]}</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 28px", margin: "8px 0 6px" }}>
+              {main.map((m, i) => (
+                <div key={i}>
+                  {main.length > 1 && <div style={{ fontSize: 12, color: MUTED }}>{m.k[l]}</div>}
+                  <div style={{ fontFamily: SERIF, fontSize: 20, color: ACCENT_TEXT, lineHeight: 1.15 }}>{m.v[l]}</div>
+                </div>
+              ))}
+            </div>
             {o.logos && (
               <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px 14px", margin: "0 0 8px" }}>
                 {o.logos.map((lg) => (
@@ -701,7 +711,12 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
                           <span key={lg.name} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: MUTED }}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={lg.src} alt="" style={{ height: 16, width: "auto", maxWidth: 70, objectFit: "contain", display: "block" }} />
-                            {lg.name}
+                            {cd.logoNote && cd.logos!.length === 1 ? (
+                              <>
+                                <span aria-hidden style={{ flex: "none", width: 5, height: 5, borderRadius: 999, background: ACCENT }} />
+                                {cd.logoNote[l]}
+                              </>
+                            ) : lg.name}
                           </span>
                         ))}
                       </div>

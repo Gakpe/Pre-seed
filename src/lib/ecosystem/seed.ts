@@ -148,7 +148,7 @@ export type Bridge = {
 };
 /** Carte de synthèse d'un fil sur une phase : un chiffre en vedette, une légende
  *  courte, deux repères au plus et, au besoin, les logos des partenaires nommés. */
-export type Card = { hero: Bilingual; caption: Bilingual; points: Bilingual[]; logos?: { src: string; name: string }[] };
+export type Card = { hero: Bilingual; caption: Bilingual; points: Bilingual[]; logos?: { src: string; name: string }[]; logoNote?: Bilingual };
 export type Lever = {
   title: Bilingual;
   /** Logos des acteurs nommés dans la carte. */
@@ -464,7 +464,7 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
             { k: { fr: "Afrique de l'Est", en: "East Africa" }, v: { fr: "10 M€ · mars", en: "€10M · March" }, accent: true },
             { k: { fr: "Afrique de l'Ouest", en: "West Africa" }, v: { fr: "15 M€ · juillet", en: "€15M · July" }, accent: true },
             { k: { fr: "Rendement cible", en: "Target yield" }, v: { fr: "9 – 15 %", en: "9 – 15%" } },
-            { k: { fr: "Ticket minimum", en: "Minimum ticket" }, v: { fr: "À définir", en: "To be defined" } },
+            { k: { fr: "Ticket minimum", en: "Minimum ticket" }, v: { fr: "25 M€", en: "€25M" } },
           ],
           companies: {
             title: { fr: "Scale-ups & opérateurs – en discussion pour devenir nos sous-jacents", en: "Scale-ups & operators – in discussion to become our underlyings" },
@@ -798,7 +798,7 @@ export const CARDS: Record<GrowthPhase, Record<Stream, Card>> = {
   },
   traction: {
     distribution: { hero: { fr: "5 → 25", en: "5 → 25" }, caption: { fr: "Network Builders", en: "Network Builders" }, points: [{ fr: "3 accords on-chain, 5 accords brokers", en: "3 on-chain agreements, 5 broker agreements" }, { fr: "Marex lancé (code ISIN), Silver Birch en discussion", en: "Marex started (ISIN code), Silver Birch in discussion" }], logos: [{ src: "/partners/stellar-logo.png", name: "Stellar" }, { src: "/partners/canton-logo.svg", name: "Canton Network" }, { src: "/partners/marex.png", name: "Marex" }, { src: "/partners/silver-birch.png", name: "Silver Birch" }] },
-    sous_jacents: { hero: { fr: "62 M€", en: "€62M" }, caption: { fr: "de volume cumulé fin 2027", en: "of cumulative volume by end 2027" }, points: [{ fr: "Kupanda 1 (2 M€), puis 4 stratégies : 60 M€ émis en 2027", en: "Kupanda 1 (€2M), then 4 strategies: €60M issued in 2027" }, { fr: "Kupanda 2 et 3 (35 M€), startups Est et Ouest (25 M€)", en: "Kupanda 2 and 3 (€35M), East and West startups (€25M)" }], logos: [{ src: "/partners/tlg.png", name: "TLG Capital" }] },
+    sous_jacents: { hero: { fr: "62 M€", en: "€62M" }, caption: { fr: "de volume cumulé fin 2027", en: "of cumulative volume by end 2027" }, points: [{ fr: "Kupanda 1 (2 M€), puis 4 stratégies : 60 M€ émis en 2027", en: "Kupanda 1 (€2M), then 4 strategies: €60M issued in 2027" }, { fr: "Kupanda 2 et 3 (35 M€), startups Est et Ouest (25 M€)", en: "Kupanda 2 and 3 (€35M), East and West startups (€25M)" }], logos: [{ src: "/partners/tlg.png", name: "TLG Capital" }], logoNote: { fr: "Tranche de TLG", en: "TLG tranche" } },
     marche: { hero: { fr: "4 villes", en: "4 cities" }, caption: { fr: "les Minah Circles montent en gamme", en: "the Minah Circles move up a tier" }, points: [{ fr: "Davos, New York, Paris, Abidjan", en: "Davos, New York, Paris, Abidjan" }, { fr: "AFSIC et FT Africa Summit, à Londres", en: "AFSIC and FT Africa Summit, in London" }] },
   },
   distribution: {
