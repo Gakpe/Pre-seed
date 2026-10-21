@@ -359,8 +359,8 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         en: "The tables where capital gathers: **Davos**, alongside the World Economic Forum, at Africa House and the Africa Collective; the **Africa CEO Forum** in Abidjan, reserved for companies above €10M revenue; the **Élysée**, for a private meeting with the French President and the diaspora; **ChangeNOW** at the Grand Palais; the **Web Summit** in Doha.",
       },
       summary: {
-        fr: "Minah se montre là où se concentre le capital : Davos, l'Africa CEO Forum, l'Élysée, ChangeNOW, le Web Summit. Premiers Minah Circles, à Paris et à Lomé.",
-        en: "Minah shows up where capital gathers: Davos, the Africa CEO Forum, the Élysée, ChangeNOW, the Web Summit. First Minah Circles, in Paris and Lomé.",
+        fr: "Minah se montre là où se concentre le capital : Davos, l'Africa CEO Forum, l'Élysée, ChangeNOW, le Web Summit, ainsi que nos Minah Circles, à Paris et à Lomé.",
+        en: "Minah shows up where capital gathers: Davos, the Africa CEO Forum, the Élysée, ChangeNOW, the Web Summit, as well as our own Minah Circles, in Paris and Lomé.",
       },
       photoGroups: [
         {
@@ -427,12 +427,12 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
     },
     sous_jacents: {
       text: {
-        fr: "Quatre stratégies d'ici fin 2027, 60 M€ émis. Deux familles, du cadre éprouvé au capital-risque.",
-        en: "Four strategies by end 2027, €60M issued. Two families, from the proven framework to venture capital.",
+        fr: "Quatre stratégies en 2027, 60 M€ émis : avec Kupanda 1, 62 M€ de volume cumulé. Deux familles, du cadre éprouvé au capital-risque.",
+        en: "Four strategies in 2027, €60M issued: with Kupanda 1, €62M of cumulative volume. Two families, from the proven framework to venture capital.",
       },
       summary: {
-        fr: "Quatre stratégies d'ici fin 2027, 60 M€ émis : Kupanda 2 (10 M€) et Kupanda 3 (25 M€) sur le cadre zambien, puis deux stratégies startups, Afrique de l'Est (10 M€) et de l'Ouest (15 M€). Hors business plan : des tranches de crédit privé, TLG Capital ayant confirmé vouloir co-construire avec nous.",
-        en: "Four strategies by end 2027, €60M issued: Kupanda 2 (€10M) and Kupanda 3 (€25M) on the Zambian framework, then two startup strategies, East Africa (€10M) and West Africa (€15M). Outside the business plan: private credit tranches, with TLG Capital confirmed to co-build with us.",
+        fr: "Quatre stratégies en 2027, 60 M€ émis, soit 62 M€ de volume cumulé avec Kupanda 1 : Kupanda 2 (10 M€) et Kupanda 3 (25 M€) sur le cadre zambien, puis deux stratégies startups, Afrique de l'Est (10 M€) et de l'Ouest (15 M€). Hors business plan : des tranches de crédit privé, TLG Capital ayant confirmé vouloir co-construire avec nous.",
+        en: "Four strategies in 2027, €60M issued, which makes €62M of cumulative volume with Kupanda 1: Kupanda 2 (€10M) and Kupanda 3 (€25M) on the Zambian framework, then two startup strategies, East Africa (€10M) and West Africa (€15M). Outside the business plan: private credit tranches, with TLG Capital confirmed to co-build with us.",
       },
       showActors: false,
       offerings: [
@@ -798,7 +798,7 @@ export const CARDS: Record<GrowthPhase, Record<Stream, Card>> = {
   },
   traction: {
     distribution: { hero: { fr: "5 → 25", en: "5 → 25" }, caption: { fr: "Network Builders", en: "Network Builders" }, points: [{ fr: "3 accords on-chain, 5 accords brokers", en: "3 on-chain agreements, 5 broker agreements" }, { fr: "Marex lancé (code ISIN), Silver Birch en discussion", en: "Marex started (ISIN code), Silver Birch in discussion" }], logos: [{ src: "/partners/stellar-logo.png", name: "Stellar" }, { src: "/partners/canton-logo.svg", name: "Canton Network" }, { src: "/partners/marex.png", name: "Marex" }, { src: "/partners/silver-birch.png", name: "Silver Birch" }] },
-    sous_jacents: { hero: { fr: "60 M€", en: "€60M" }, caption: { fr: "de volume émis en 2027", en: "of volume issued in 2027" }, points: [{ fr: "Kupanda 2 (10 M€) et Kupanda 3 (25 M€)", en: "Kupanda 2 (€10M) and Kupanda 3 (€25M)" }, { fr: "Startups Afrique de l'Est (10 M€) et de l'Ouest (15 M€)", en: "Startups East Africa (€10M) and West Africa (€15M)" }], logos: [{ src: "/partners/tlg.png", name: "TLG Capital" }] },
+    sous_jacents: { hero: { fr: "62 M€", en: "€62M" }, caption: { fr: "de volume cumulé fin 2027", en: "of cumulative volume by end 2027" }, points: [{ fr: "Kupanda 1 (2 M€), puis 4 stratégies : 60 M€ émis en 2027", en: "Kupanda 1 (€2M), then 4 strategies: €60M issued in 2027" }, { fr: "Kupanda 2 et 3 (35 M€), startups Est et Ouest (25 M€)", en: "Kupanda 2 and 3 (€35M), East and West startups (€25M)" }], logos: [{ src: "/partners/tlg.png", name: "TLG Capital" }] },
     marche: { hero: { fr: "4 villes", en: "4 cities" }, caption: { fr: "les Minah Circles montent en gamme", en: "the Minah Circles move up a tier" }, points: [{ fr: "Davos, New York, Paris, Abidjan", en: "Davos, New York, Paris, Abidjan" }, { fr: "AFSIC et FT Africa Summit, à Londres", en: "AFSIC and FT Africa Summit, in London" }] },
   },
   distribution: {
