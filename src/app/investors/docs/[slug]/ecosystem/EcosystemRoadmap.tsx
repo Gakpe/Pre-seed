@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Locale } from "@/lib/i18n";
-import { ACTORS, CATEGORIES, CATEGORY_LABEL, CIRCLES_PATH, ECO_TODAY, FOUNDERS_INTRO, GROWTH_PHASES, NARRATIVE, STREAMS, STREAM_META, type Actor, type Company, type EventCard, type GrowthPhase, type Layer, type Bridge, type Lever, type Offering, type Panel, type Partner, type Photo, type Stream } from "@/lib/ecosystem/seed";
+import { ACTORS, BUILDUP, CARDS, CATEGORIES, CATEGORY_LABEL, CIRCLES_PATH, ECO_TODAY, FOUNDERS_INTRO, GROWTH_PHASES, NARRATIVE, STREAMS, STREAM_META, type Actor, type Company, type EventCard, type GrowthPhase, type Layer, type Bridge, type Lever, type Offering, type Panel, type Partner, type Photo, type Stream } from "@/lib/ecosystem/seed";
 import { useState as useLocalState } from "react";
 import { ecoCopy } from "@/lib/ecosystem/i18n";
 
@@ -57,6 +57,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
   const dateLocale = l === "fr" ? "fr-FR" : "en-US";
   const [phase, setPhase] = useState<GrowthPhase>(initialPhase);
   const [overview, setOverview] = useState(false);
+  const [detail, setDetail] = useState(false);
   const idx = phaseIdx(phase);
   const current = GROWTH_PHASES[idx];
   // Le bandeau collant n'apparaît qu'une fois les volumes sortis de l'écran :
@@ -188,7 +189,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
   // protection numérotés (numéro orangé, intitulé en encre, précision en gris).
   const riskLayers = (layers: Layer[]) => (
     <div style={{ marginTop: 16, borderTop: `1px solid ${HAIRLINE}`, paddingTop: 12 }}>
-      <div style={{ ...smallCaps, color: MUTED }}>{l === "fr" ? "La thèse de gestion du risque" : "The risk management thesis"}</div>
+      <div style={{ fontSize: 13, fontWeight: 600, color: INK }}>{l === "fr" ? "La thèse de gestion du risque" : "The risk management thesis"}</div>
       <p style={{ margin: "4px 0 10px", fontSize: 12.5, color: "#4B4039" }}>
         {l === "fr" ? "Nos souscripteurs sont toujours en dette senior, protégés par cinq niveaux :" : "Our subscribers are always senior debt, protected by five layers:"}
       </p>
@@ -280,13 +281,61 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
     );
   };
 
+  // Vue cumulative : pour le capital et pour les sous-jacents, un bloc par période
+  // déjà atteinte, empilés dans l'ordre. Celui de la période affichée est mis en
+  // avant (fond ivoire, bordure orange) ; les précédents restent lisibles, plus
+  // discrets. À la dernière période, la carte est complète.
+  const buildUp = (ph: GrowthPhase) => {
+    const upTo = phaseIdx(ph);
+    return (
+      <div style={{ marginTop: 22 }}>
+        <div style={{ fontSize: 14, fontWeight: 600, color: INK, marginBottom: 10 }}>{c.buildTitle}</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: 14 }}>
+          {(["distribution", "sous_jacents"] as const).map((side) => {
+            const total = GROWTH_PHASES.slice(0, upTo + 1).reduce((a, g) => a + BUILDUP[side][g.id].length, 0);
+            const added = BUILDUP[side][ph].length;
+            return (
+              <div key={side} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "14px 16px 16px", background: SURFACE }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "2px 12px", marginBottom: 10 }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: INK }}>{STREAM_META[side].label[l]}</span>
+                  <span style={{ fontSize: 12, color: ACCENT_TEXT }}>{c.buildAdded.replace("{n}", String(added)).replace("{t}", String(total))}</span>
+                </div>
+                <div style={{ display: "grid", gap: 8 }}>
+                  {GROWTH_PHASES.slice(0, upTo + 1).map((g) => {
+                    const now = g.id === ph;
+                    return (
+                      <div key={g.id} style={{ borderRadius: 10, padding: "10px 12px", border: now ? `1px solid ${ACCENT}` : `1px solid ${HAIRLINE}`, background: now ? "#FFFBF6" : "#FBFAF6" }}>
+                        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
+                          <span style={{ fontSize: 12.5, fontWeight: 600, color: now ? INK : MUTED }}>{g.label[l]}</span>
+                          <span style={{ fontSize: 11.5, color: now ? ACCENT_TEXT : FAINT }}>{now ? c.newHere : c.buildSince}</span>
+                        </div>
+                        <ul style={{ listStyle: "none", margin: "6px 0 0", padding: 0, display: "grid", gap: 4 }}>
+                          {BUILDUP[side][g.id].map((it) => (
+                            <li key={it.en} style={{ display: "flex", gap: 8, fontSize: 12.5, lineHeight: 1.45, color: now ? "#4B4039" : MUTED }}>
+                              <span aria-hidden style={{ flex: "none", width: 5, height: 5, borderRadius: 999, background: now ? ACCENT : "#C9C1B3", marginTop: 6 }} />
+                              {it[l]}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
   // Stratégie à venir, en carte « offre » : badge d'ouverture, descriptif et
   // une ligne de métriques jointives (rendement, ticket, allocation, durée).
-  const offeringCards = (offerings: Offering[]) => (
+  const offeringCards = (offerings: Offering[], compact = false) => (
     <div style={{ marginTop: 18, display: "grid", gap: 12 }}>
       {offerings.map((o) => (
         <div key={o.name.en} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "16px 18px", background: SURFACE }}>
-          {o.partner && partnerHeader(o.partner)}
+          {!compact && o.partner && partnerHeader(o.partner)}
           <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", justifyContent: "space-between", gap: "6px 16px" }}>
             <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
               <span style={{ fontFamily: SERIF, fontSize: 18, color: INK }}>{o.name[l]}</span>
@@ -301,7 +350,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
             </div>
             {o.status && <span style={{ ...smallCaps, color: ACCENT_TEXT, border: `1px solid ${ACCENT}`, borderRadius: 999, padding: "3px 10px" }}>{o.status[l]}</span>}
           </div>
-          {o.subtitle && <p style={{ margin: "8px 0 0", fontSize: 13.5, color: "#4B4039", lineHeight: 1.7 }}>{rich(o.subtitle[l])}</p>}
+          {!compact && o.subtitle && <p style={{ margin: "8px 0 0", fontSize: 13.5, color: "#4B4039", lineHeight: 1.7 }}>{rich(o.subtitle[l])}</p>}
           <div style={{ marginTop: 14, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(130px, 100%), 1fr))", gap: 1, background: LINE, border: `1px solid ${LINE}`, borderRadius: 10, overflow: "hidden" }}>
             {o.metrics.map((m, i) => (
               <div key={i} style={{ background: m.accent ? ACCENT : SURFACE, padding: "10px 12px" }}>
@@ -311,8 +360,8 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
             ))}
           </div>
           {o.layers && o.layers.length > 0 && riskLayers(o.layers)}
-          {o.companies && companyCards(o.companies.list, o.companies.title[l])}
-          {o.note && <p style={{ margin: "10px 0 0", fontSize: 12.5, color: MUTED, fontStyle: "italic" }}>{o.note[l]}</p>}
+          {!compact && o.companies && companyCards(o.companies.list, o.companies.title[l])}
+          {!compact && o.note && <p style={{ margin: "10px 0 0", fontSize: 12.5, color: MUTED, fontStyle: "italic" }}>{o.note[l]}</p>}
         </div>
       ))}
     </div>
@@ -375,6 +424,56 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
 
   // Événements clés : logo (quand on l'a), nom (lien vers le site), lieu et
   // dates en tête, puis une phrase.
+  // Fiche de stratégie, dans la même grammaire que les cartes de leviers : nom et
+  // intitulé en tête, montant en serif orangé, quelques lignes clé/valeur, puis les
+  // couches de protection quand il y en a. Le statut garde sa pastille, en casse normale.
+  const KEEP_UPPER = new Set(["TLG", "ISIN", "DFI", "API", "UEMOA", "WAEMU"]);
+  const sentence = (t: string) => {
+    const x = t.split(" ").map((w) => (/[A-ZÀ-Ý]{2,}/.test(w) && w === w.toUpperCase() && !KEEP_UPPER.has(w) ? w.toLowerCase() : w)).join(" ");
+    return x.charAt(0).toUpperCase() + x.slice(1);
+  };
+  const strategyCards = (offerings: Offering[]) => (
+    <div style={{ marginTop: 16, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))", gap: 10 }}>
+      {offerings.map((o) => {
+        const hero = o.metrics.find((m) => m.accent) ?? o.metrics[0];
+        const rest = o.metrics.filter((m) => m !== hero);
+        return (
+          <div key={o.name.en} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "14px 16px", background: SURFACE }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: INK }}>{o.name[l]}</div>
+                {o.tag && <div style={{ fontSize: 12, color: FAINT, marginTop: 2 }}>{o.tag[l]}</div>}
+              </div>
+              {o.status && <span style={{ flex: "none", border: `1px solid ${ACCENT}`, borderRadius: 999, padding: "2px 10px", fontSize: 11.5, color: ACCENT_TEXT }}>{sentence(o.status[l])}</span>}
+            </div>
+            <div style={{ fontFamily: SERIF, fontSize: 20, color: ACCENT_TEXT, margin: "8px 0 6px", lineHeight: 1.15 }}>{hero.v[l]}</div>
+            {o.logos && (
+              <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px 14px", margin: "0 0 8px" }}>
+                {o.logos.map((lg) => (
+                  <span key={lg.name} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: MUTED }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={lg.src} alt="" style={{ height: 16, width: "auto", maxWidth: 70, objectFit: "contain", display: "block" }} />
+                    {lg.name}
+                  </span>
+                ))}
+              </div>
+            )}
+            <div style={{ display: "grid", gap: 0 }}>
+              {rest.map((m, i) => (
+                <div key={i} style={{ display: "flex", justifyContent: "space-between", gap: 12, padding: "5px 0", borderTop: `1px solid ${HAIRLINE}`, fontSize: 12.5 }}>
+                  <span style={{ color: MUTED }}>{m.k[l]}</span>
+                  <span style={{ color: INK, fontWeight: 600, textAlign: "right" }}>{m.v[l]}</span>
+                </div>
+              ))}
+            </div>
+            {o.layers && o.layers.length > 0 && riskLayers(o.layers)}
+            {o.note && <p style={{ margin: "10px 0 0", fontSize: 12.5, color: MUTED }}>{o.note[l]}</p>}
+          </div>
+        );
+      })}
+    </div>
+  );
+
   const eventCards = (ev: { title: { fr: string; en: string }; list: EventCard[] }) => (
     <div style={{ marginTop: 18 }}>
       <div style={{ ...smallCaps, color: MUTED, marginBottom: 10 }}>{ev.title[l]}</div>
@@ -566,124 +665,77 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
           <p style={{ fontFamily: SERIF, fontSize: 18, lineHeight: 1.55, color: INK, margin: "0 auto", maxWidth: 780 }}>{current.tagline[l]}</p>
         </div>
 
-        {/* ── Cette période : trois fils racontés ─────────────────────────── */}
+        {/* ── Cette période : équipe, trois cartes, pont, puis le détail à la demande ── */}
         {!overview && (
           <div>
-            {STREAMS.map((s, si) => {
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", marginBottom: 14 }}>
+              <span style={{ fontSize: 13, fontWeight: 600, color: INK }}>{c.teamLabel}</span>
+              <span aria-hidden style={{ display: "inline-flex", gap: 4 }}>
+                {Array.from({ length: 2 + current.team.resources }, (_, k) => (
+                  <span key={k} style={{ width: 14, height: 14, borderRadius: 999, background: k < 2 ? "#C9C1B3" : ACCENT }} />
+                ))}
+              </span>
+              <span style={{ fontSize: 13, color: MUTED }}>{current.team.label[l]}</span>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(260px, 100%), 1fr))", gap: 14 }}>
+              {STREAMS.map((s) => {
+                const cd = CARDS[phase][s];
+                return (
+                  <div key={s} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "16px 18px", background: SURFACE }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: INK }}>{STREAM_META[s].label[l]}</div>
+                    <div style={{ fontFamily: SERIF, fontSize: 30, lineHeight: 1.1, color: ACCENT_TEXT, margin: "12px 0 4px" }}>{cd.hero[l]}</div>
+                    <div style={{ fontSize: 13, lineHeight: 1.5, color: MUTED }}>{cd.caption[l]}</div>
+                    <ul style={{ listStyle: "none", margin: "12px 0 0", padding: 0, display: "grid", gap: 6 }}>
+                      {cd.points.map((pt) => (
+                        <li key={pt.en} style={{ display: "flex", gap: 8, fontSize: 13, lineHeight: 1.45, color: "#4B4039" }}>
+                          <span aria-hidden style={{ flex: "none", width: 5, height: 5, borderRadius: 999, background: ACCENT, marginTop: 7 }} />
+                          {pt[l]}
+                        </li>
+                      ))}
+                    </ul>
+                    {cd.logos && (
+                      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px 14px", marginTop: 12 }}>
+                        {cd.logos.map((lg) => (
+                          <span key={lg.name} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: MUTED }}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={lg.src} alt="" style={{ height: 16, width: "auto", maxWidth: 70, objectFit: "contain", display: "block" }} />
+                            {lg.name}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            {buildUp(phase)}
+            {NARRATIVE[phase].distribution.bridge && bridgeChart(NARRATIVE[phase].distribution.bridge!)}
+            <button type="button" onClick={() => setDetail((d) => !d)} aria-expanded={detail} style={{ marginTop: 18, padding: "8px 16px", borderRadius: 8, border: `1px solid ${LINE}`, background: SURFACE, cursor: "pointer", fontSize: 13, color: INK }}>
+              {detail ? c.hideDetail : c.showDetail}
+            </button>
+          </div>
+        )}
+
+        {/* ── Le détail : un court paragraphe par fil, puis ses cartes ─────── */}
+        {!overview && detail && (
+          <div style={{ marginTop: 18 }}>
+            {STREAMS.map((s) => {
               const ch = NARRATIVE[phase][s];
               return (
-                <div key={s} className="eco-stream" style={{ display: "grid", padding: "20px 0", borderTop: `1px solid ${si === 0 ? LINE : HAIRLINE}` }}>
-                  <div>
-                    <div style={{ fontFamily: SERIF, fontSize: 18, color: INK, lineHeight: 1.2 }}>{STREAM_META[s].label[l]}</div>
-                    <div style={{ fontSize: 12, color: FAINT, marginTop: 4, lineHeight: 1.45 }}>{STREAM_META[s].sub[l]}</div>
-                    {draft && ch.aConfirmer && <div style={{ marginTop: 8, display: "inline-block", fontSize: 10.5, padding: "2px 8px", borderRadius: 999, border: "1px dashed #C9C1B3", color: MUTED }}>{c.toConfirm}</div>}
-                  </div>
-                  <div style={{ minWidth: 0 }}>
-                    <p style={{ margin: 0, fontSize: 15, lineHeight: 1.8, color: "#4B4039", maxWidth: 760 }}>{rich(ch.text[l])}</p>
-                    {ch.ladder && circlesLadder(ch.ladder)}
-                    {/* Graphique de scission : la position se découpe en
-                        deux jambes, qui se rejoignent sur le marché
-                        secondaire. Même grammaire de rail que le hub. */}
-                    {ch.split && (
-                      <div style={{ marginTop: 16 }}>
-                        <div style={{ margin: "0 auto", maxWidth: 320, borderRadius: 12, borderTop: `3px solid ${ACCENT}`, background: INK, color: "#fff", textAlign: "center", padding: "12px 16px", fontFamily: SERIF, fontSize: 15 }}>
-                          {ch.split.source[l]}
-                        </div>
-                        <div aria-hidden style={{ position: "relative", height: 30 }}>
-                          <span style={{ position: "absolute", left: "50%", top: 0, width: 1, height: 10, background: "#D9D2C2" }} />
-                          <span style={{ position: "absolute", left: "25%", right: "25%", top: 10, height: 1, background: "#D9D2C2" }} />
-                          {[25, 75].map((x) => (
-                            <span key={x} style={{ position: "absolute", left: `${x}%`, top: 10, width: 1, height: 20, background: "#D9D2C2" }} />
-                          ))}
-                        </div>
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-                          {ch.split.parts.map((part) => (
-                            <div key={part.en} style={{ justifySelf: "center", border: `1px solid ${LINE}`, borderRadius: 10, background: SURFACE, padding: "9px 22px", fontFamily: SERIF, fontSize: 15, color: INK }}>
-                              {part[l]}
-                            </div>
-                          ))}
-                        </div>
-                        <div aria-hidden style={{ position: "relative", height: 30 }}>
-                          {[25, 75].map((x) => (
-                            <span key={x} style={{ position: "absolute", left: `${x}%`, top: 0, width: 1, height: 10, background: "#D9D2C2" }} />
-                          ))}
-                          <span style={{ position: "absolute", left: "25%", right: "25%", top: 10, height: 1, background: "#D9D2C2" }} />
-                          <span style={{ position: "absolute", left: "50%", top: 10, width: 2, height: 20, marginLeft: -1, background: ACCENT }} />
-                        </div>
-                        <div style={{ border: `1px dashed ${ACCENT}`, borderRadius: 12, background: "#FFFBF6", padding: "14px 18px", textAlign: "center" }}>
-                          <div style={{ fontFamily: SERIF, fontSize: 16, color: INK }}>{ch.split.market.title[l]}</div>
-                          <div style={{ fontSize: 12.5, color: MUTED, marginTop: 3 }}>{ch.split.market.sub[l]}</div>
-                        </div>
-                        <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 10, marginTop: 12 }}>
-                          {ch.split.badges.map((b) => (
-                            <span key={b.en} style={{ border: `1px solid ${LINE}`, borderRadius: 8, background: SURFACE, padding: "5px 12px", fontSize: 12, color: INK }}>
-                              {b[l]}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {ch.bridge && bridgeChart(ch.bridge)}
-                    {ch.levers && ch.levers.length > 0 && leverCards(ch.levers)}
-                    {ch.events && eventCards(ch.events)}
-                    {/* Graphique de convergence, en rail : un tombant sous
-                        chaque carte, un collecteur horizontal, une descente
-                        orangée vers le nœud central. */}
-                    {ch.hub && (
-                      <div>
-                        <div aria-hidden style={{ position: "relative", height: 36 }}>
-                          {Array.from({ length: ch.levers?.length ?? 4 }, (_, i) => (100 / (ch.levers?.length ?? 4)) * (i + 0.5)).map((x) => (
-                            <span key={x} style={{ position: "absolute", left: `${x}%`, top: 0, width: 1, height: 13, background: "#D9D2C2" }} />
-                          ))}
-                          <span style={{ position: "absolute", left: `${50 / (ch.levers?.length ?? 4)}%`, right: `${50 / (ch.levers?.length ?? 4)}%`, top: 13, height: 1, background: "#D9D2C2" }} />
-                          <span style={{ position: "absolute", left: "50%", top: 13, width: 2, height: 23, marginLeft: -1, background: ACCENT }} />
-                        </div>
-                        <div style={{ margin: "0 auto", maxWidth: 380, borderRadius: 12, borderTop: `3px solid ${ACCENT}`, background: INK, color: "#fff", textAlign: "center", padding: "14px 18px" }}>
-                          <div style={{ fontFamily: SERIF, fontSize: 16 }}>{ch.hub.title[l]}</div>
-                          <div style={{ fontSize: 11.5, marginTop: 3, color: "rgba(255,255,255,0.75)" }}>{ch.hub.sub[l]}</div>
-                        </div>
-                      </div>
-                    )}
-                    {ch.table && (
-                      <div style={{ marginTop: 18 }}>
-                        <div style={{ ...smallCaps, color: MUTED, marginBottom: 10 }}>{ch.table.title[l]}</div>
-                        <div style={{ overflowX: "auto" }}>
-                          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5, lineHeight: 1.5 }}>
-                            <thead>
-                              <tr>{ch.table.head.map((h, i) => <th key={i} style={{ textAlign: i === 0 ? "left" : "right", padding: "6px 10px", borderBottom: `1px solid ${LINE}`, ...smallCaps, color: MUTED }}>{h[l]}</th>)}</tr>
-                            </thead>
-                            <tbody>
-                              {ch.table.rows.map((row, r) => {
-                                const last = r === ch.table!.rows.length - 1;
-                                return (
-                                  <tr key={r} style={{ background: last ? "#FFFBF6" : "transparent" }}>
-                                    {row.map((cell, c) => {
-                                      const tbd = /à définir|to be defined/.test(cell[l]);
-                                      return <td key={c} style={{ textAlign: c === 0 ? "left" : "right", padding: "8px 10px", borderBottom: `1px solid ${HAIRLINE}`, color: tbd ? FAINT : c === 0 || last ? INK : "#4B4039", fontWeight: c === 0 || last ? 600 : 400, fontStyle: tbd ? "italic" : "normal", whiteSpace: "nowrap" }}>{cell[l]}</td>;
-                                    })}
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    )}
-                    {ch.panel && liquidityPanel(ch.panel)}
-                    {/* La grille d'acteurs s'efface sur un bloc à encart, sauf
-                        demande explicite (showActors). */}
-                    {(ch.showActors ?? !ch.panel) && actorGrid(s)}
-                    {ch.offerings && ch.offerings.length > 0 && offeringCards(ch.offerings)}
-                    {ch.companies && ch.companies.length > 0 && companyCards(ch.companies)}
-                    {ch.footnote && <p style={{ margin: "14px 0 0", fontSize: 12.5, lineHeight: 1.6, color: MUTED, fontStyle: "italic", maxWidth: 760 }}>{ch.footnote[l]}</p>}
-                    {ch.photos && ch.photos.length > 0 && photoStrip(ch.photos)}
-                    {ch.photoGroups?.map((grp) => (
-                      <div key={grp.title[l]} style={{ marginTop: 20 }}>
-                        <div style={{ ...smallCaps, color: MUTED, paddingBottom: 6, borderBottom: `1px solid ${HAIRLINE}` }}>{grp.title[l]}</div>
-                        {photoStrip(grp.photos)}
-                      </div>
-                    ))}
-                  </div>
+                <div key={s} style={{ padding: "18px 0", borderTop: `1px solid ${HAIRLINE}` }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: INK }}>{STREAM_META[s].label[l]}</div>
+                  {!(ch.levers?.length || ch.offerings?.length) && <p style={{ margin: "6px 0 0", fontSize: 14, lineHeight: 1.7, color: "#4B4039", maxWidth: 760 }}>{rich((ch.summary ?? ch.text)[l])}</p>}
+                  {ch.ladder && circlesLadder(ch.ladder)}
+                  {ch.levers && ch.levers.length > 0 && leverCards(ch.levers)}
+                  {ch.offerings && ch.offerings.length > 0 && strategyCards(ch.offerings)}
+                  {ch.events && eventCards(ch.events)}
+                  {ch.photos && ch.photos.length > 0 && photoStrip(ch.photos)}
+                  {ch.photoGroups?.map((grp) => (
+                    <div key={grp.title[l]} style={{ marginTop: 14 }}>
+                      <div style={{ fontSize: 12.5, fontWeight: 600, color: MUTED }}>{grp.title[l]}</div>
+                      {photoStrip(grp.photos)}
+                    </div>
+                  ))}
                 </div>
               );
             })}

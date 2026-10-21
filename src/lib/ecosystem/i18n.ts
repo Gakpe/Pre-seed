@@ -11,13 +11,19 @@ export type EcoCopy = {
   toConfirm: string;
   actorsTitle: string;
   newHere: string;
+  showDetail: string;
+  hideDetail: string;
+  teamLabel: string;
+  buildTitle: string;
+  buildAdded: string;
+  buildSince: string;
   stickyToday: string;
   stickyShown: string;
   stickyTarget: string;
 };
 
 const fr: EcoCopy = {
-  intro: "Quatre périodes mènent de notre première stratégie live à un marché à part entière : Amorçage (0 à 2 M€), Traction (2 à 62 M€), Distribution (62 à 100 M€), puis la route vers 1 Md€. Dans chacune, trois fils racontent le go-to-market : qui finance et par quel canal, d'où viennent les actifs, et où Minah est vue. Déplacez le curseur pour suivre le chemin.",
+  intro: "Quatre périodes mènent de notre première stratégie live à un marché à part entière : Amorçage (0 à 2 M€), Traction (2 à 62 M€), Distribution (62 à 100 M€), puis la route vers 1 Md€. Dans chacune, trois fils racontent le go-to-market : qui finance et par quel canal, quels sous-jacents sont financés, et où Minah est vue. Déplacez le curseur pour suivre le chemin.",
   today: "Aujourd'hui",
   viewPhase: "Cette période",
   viewOverview: "Vue d'ensemble",
@@ -30,10 +36,16 @@ const fr: EcoCopy = {
   stickyShown: "Période affichée",
   stickyTarget: "Cible",
   newHere: "nouveau sur cette période",
+  showDetail: "Voir le détail",
+  hideDetail: "Masquer le détail",
+  teamLabel: "Équipe",
+  buildTitle: "Ce qui s'ajoute à chaque étape",
+  buildAdded: "+{n} sur cette période · {t} au total",
+  buildSince: "Déjà en place",
 };
 
 const en: EcoCopy = {
-  intro: "Four periods take us from our first live strategy to a fully fledged market: Seeding (€0 to €2M), Traction (€2M to €62M), Distribution (€62M to €100M), then the road to €1B. In each one, three threads tell the go-to-market: who funds and through which channel, where the assets come from, and where Minah is seen. Move the cursor to follow the path.",
+  intro: "Four periods take us from our first live strategy to a fully fledged market: Seeding (€0 to €2M), Traction (€2M to €62M), Distribution (€62M to €100M), then the road to €1B. In each one, three threads tell the go-to-market: who funds and through which channel, which underlyings are financed, and where Minah is seen. Move the cursor to follow the path.",
   today: "Today",
   viewPhase: "This period",
   viewOverview: "Whole picture",
@@ -46,6 +58,12 @@ const en: EcoCopy = {
   stickyShown: "Period shown",
   stickyTarget: "Target",
   newHere: "new in this period",
+  showDetail: "Show detail",
+  hideDetail: "Hide detail",
+  teamLabel: "Team",
+  buildTitle: "What each step adds",
+  buildAdded: "+{n} in this period · {t} in total",
+  buildSince: "Already in place",
 };
 
 export function ecoCopy(locale: Locale): EcoCopy {
