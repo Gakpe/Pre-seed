@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Locale } from "@/lib/i18n";
-import { ACTORS, CATEGORIES, CATEGORY_LABEL, CIRCLES_PATH, ECO_TODAY, FOUNDERS_INTRO, GROWTH_PHASES, NARRATIVE, STREAMS, STREAM_META, type Actor, type Company, type EventCard, type GrowthPhase, type Layer, type Lever, type Offering, type Panel, type Partner, type Photo, type Stream } from "@/lib/ecosystem/seed";
+import { ACTORS, CATEGORIES, CATEGORY_LABEL, CIRCLES_PATH, ECO_TODAY, FOUNDERS_INTRO, GROWTH_PHASES, NARRATIVE, STREAMS, STREAM_META, type Actor, type Company, type EventCard, type GrowthPhase, type Layer, type Bridge, type Lever, type Offering, type Panel, type Partner, type Photo, type Stream } from "@/lib/ecosystem/seed";
 import { useState as useLocalState } from "react";
 import { ecoCopy } from "@/lib/ecosystem/i18n";
 
@@ -222,6 +222,63 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
       </div>
     </div>
   );
+
+  // Pont de volume en cascade : une base, des étapes qui s'empilent, une cible.
+  // Même grammaire que les cartes de la page (bordure LINE, fond SURFACE, chiffres
+  // en serif), orange pour les étapes, encre pour la cible. Défile à l'horizontale
+  // sur petit écran plutôt que d'écraser les barres.
+  const bridgeChart = (b: Bridge) => {
+    const H = 210, GAPW = 10, n = b.steps.length;
+    const max = Math.max(...b.steps.map((st) => st.value)), k = H / max;
+    const nb = "\u00a0";
+    const money = (v: number, kind: "base" | "step" | "total") => {
+      const big = v >= 1000;
+      const num = big ? String(v / 1000) : String(v);
+      if (l === "fr") return `${kind === "step" ? "+" : ""}${num}${nb}${big ? "Md€" : "M€"}`;
+      return `${kind === "step" ? "+" : ""}€${num}${big ? "B" : "M"}`;
+    };
+    let cum = 0;
+    const cols = b.steps.map((st) => {
+      const from = st.kind === "step" ? cum : 0;
+      cum = st.kind === "step" ? cum + st.value : st.kind === "base" ? st.value : cum;
+      return { st, from, to: from + st.value };
+    });
+    const aria = b.steps.map((st) => `${st.label[l]} ${money(st.value, st.kind)}`).join(", ");
+    const fill = (kind: "base" | "step" | "total") => (kind === "step" ? ACCENT : kind === "total" ? INK : "#D9D2C2");
+    return (
+      <div style={{ marginTop: 16, border: `1px solid ${LINE}`, borderRadius: 12, padding: "16px 18px 18px", background: SURFACE }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start", justifyContent: "space-between", gap: "8px 16px" }}>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: INK }}>{b.title[l]}</div>
+            <div style={{ fontSize: 12.5, color: MUTED, marginTop: 3 }}>{b.sub[l]}</div>
+          </div>
+          {b.tag && <span style={{ border: `1px dashed ${ACCENT}`, borderRadius: 8, background: "#FFFBF6", padding: "3px 10px", fontSize: 11.5, color: ACCENT_TEXT, whiteSpace: "nowrap" }}>{b.tag[l]}</span>}
+        </div>
+        <div style={{ fontSize: 12, color: FAINT, marginTop: 12 }}>{b.unit[l]}</div>
+        <div style={{ overflowX: "auto" }}>
+          <div role="img" aria-label={aria} style={{ minWidth: 560, marginTop: 6 }}>
+            <div style={{ display: "grid", gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))`, columnGap: GAPW, borderBottom: `1px solid ${LINE}` }}>
+              {cols.map(({ st, from, to }, i) => (
+                <div key={st.label.en} style={{ position: "relative", height: H + 30 }}>
+                  <div style={{ position: "absolute", left: 0, right: 0, bottom: to * k + 6, textAlign: "center", fontFamily: SERIF, fontSize: 15, color: st.kind === "step" ? ACCENT_TEXT : INK, whiteSpace: "nowrap" }}>{money(st.value, st.kind)}</div>
+                  <div style={{ position: "absolute", left: 0, right: 0, bottom: from * k, height: st.value * k, background: fill(st.kind), borderRadius: 4 }} />
+                  {i < n - 2 && <span aria-hidden style={{ position: "absolute", left: "100%", width: GAPW, bottom: to * k, borderTop: "1px dashed #C9C1B3" }} />}
+                </div>
+              ))}
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))`, columnGap: GAPW, marginTop: 8 }}>
+              {cols.map(({ st }) => (
+                <div key={st.label.en} style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: INK, lineHeight: 1.3 }}>{st.label[l]}</div>
+                  {st.note && <div style={{ fontSize: 11.5, color: MUTED, marginTop: 3, lineHeight: 1.4 }}>{st.note[l]}</div>}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   // Stratégie à venir, en carte « offre » : badge d'ouverture, descriptif et
   // une ligne de métriques jointives (rendement, ticket, allocation, durée).
@@ -566,6 +623,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
                         </div>
                       </div>
                     )}
+                    {ch.bridge && bridgeChart(ch.bridge)}
                     {ch.levers && ch.levers.length > 0 && leverCards(ch.levers)}
                     {ch.events && eventCards(ch.events)}
                     {/* Graphique de convergence, en rail : un tombant sous

@@ -34,9 +34,9 @@ export const GROWTH_PHASES: Array<{
   { id: "traction", start: "2026-11-01", end: "2027-12-31", label: { fr: "Traction", en: "Traction" }, volume: { fr: "2 à 62 M€", en: "€2M to €62M" }, volumeMEur: 62,
     tagline: { fr: "Nous ne changeons pas de métier : exactement la même chose, à plus grande échelle. La machine réseau devient mondiale, les rails on-chain se multiplient, et le pipeline passe de 2 à 62 M€.", en: "We are not changing jobs: exactly the same thing, at larger scale. The network machine goes global, on-chain rails multiply, and the pipeline grows from €2M to €62M." } },
   { id: "distribution", start: "2028-01-01", end: "2028-12-31", label: { fr: "Distribution", en: "Distribution" }, volume: { fr: "62 à 100 M€", en: "€62M to €100M" }, volumeMEur: 100,
-    tagline: { fr: "Le capital institutionnel se branche : une ancre DFI ou fonds de fonds et les licences débloquent les plus gros tickets, pendant que les actifs se diversifient. L'étape qui porte l'encours de 62 à 100 M€.", en: "Institutional capital switches on: a DFI or fund-of-funds anchor and the licences unlock the largest tickets, while the assets diversify. The step that carries the book from €62M to €100M." } },
+    tagline: { fr: "Le capital institutionnel se branche : une ancre DFI ou fonds de fonds et les licences débloquent les plus gros tickets, pendant que les actifs se diversifient. L'étape qui porte l'encours de 62 à 100 M€. Une première ressource interne rejoint l'équipe.", en: "Institutional capital switches on: a DFI or fund-of-funds anchor and the licences unlock the largest tickets, while the assets diversify. The step that carries the book from €62M to €100M. A first internal resource joins the team." } },
   { id: "marche", start: "2029-01-01", end: "2029-12-31", label: { fr: "Marché", en: "Market" }, volume: { fr: "Road to 1 Md€", en: "Road to €1B" }, volumeMEur: 1000,
-    tagline: { fr: "L'écosystème devient le marché : des places de liquidité et des institutions branchées en direct, préparées pendant la distribution, portent le milliard.", en: "The ecosystem becomes the market: liquidity venues and institutions plugged in directly, prepared during distribution, carry the billion." } },
+    tagline: { fr: "L'écosystème devient le marché : des places de liquidité et des institutions branchées en direct, préparées pendant la distribution, portent le milliard. Nous construisons avec deux ressources internes et un réseau de network builders.", en: "The ecosystem becomes the market: liquidity venues and institutions plugged in directly, prepared during distribution, carry the billion. We build it with two internal resources and a network of Network Builders." } },
 ];
 
 export const STREAM_META: Record<Stream, { label: Bilingual; sub: Bilingual }> = {
@@ -130,6 +130,16 @@ export type EventCard = {
   logo?: string;
   href?: string;
 };
+/** Un pont de volume, en cascade : une base, des étapes qui s'empilent, une cible.
+ *  Dessiné au-dessus des leviers du fil (phase Marché, distribution). */
+export type Bridge = {
+  title: Bilingual;
+  sub: Bilingual;
+  unit: Bilingual;
+  /** Mention affichée à côté du titre quand la répartition n'est pas validée. */
+  tag?: Bilingual;
+  steps: { label: Bilingual; value: number; kind: "base" | "step" | "total"; note?: Bilingual }[];
+};
 export type Lever = {
   title: Bilingual;
   /** Logos des acteurs nommés dans la carte. */
@@ -147,6 +157,8 @@ export type Chapter = {
   /** Nœud de convergence dessiné sous les cartes de leviers : toutes les
    *  sources convergent vers la même infrastructure (phase 3, liquidité). */
   hub?: { title: Bilingual; sub: Bilingual };
+  /** Pont de volume en cascade (voir Bridge), dessiné avant les leviers. */
+  bridge?: Bridge;
   /** Graphique de scission : une position se découpe (principal, rendement)
    *  puis circule sur le marché secondaire (Road to 1 Md€, distribution). */
   split?: {
@@ -647,34 +659,55 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
   marche: {
     distribution: {
       text: {
-        fr: "Un milliard d'euros par an se mesure en flux : avec des obligations à douze mois, tout l'encours se réémet chaque année. Trois moteurs le portent, et nous n'en originons qu'un seul nous-mêmes :",
-        en: "One billion euros a year is measured as a flow: with twelve-month bonds, the whole book is reissued every year. Three engines carry it, and we originate only one of them ourselves:",
+        fr: "Un milliard d'euros par an se mesure en flux : avec des obligations à douze mois, tout l'encours se réémet chaque année. Cinq sources le portent, et nous n'en originons qu'une seule nous-mêmes :",
+        en: "One billion euros a year is measured as a flow: with twelve-month bonds, the whole book is reissued every year. Five sources carry it, and we originate only one of them ourselves:",
       },
       summary: {
-        fr: "Un milliard par an est un flux : nos émissions, réémises chaque année ; les tranches que les fonds partenaires émettent sur nos rails ; le marché secondaire, où chaque position échangée est du volume. Trois conditions : un émetteur souverain, deux fonds partenaires sur les rails, un secondaire actif.",
-        en: "One billion a year is a flow: our issuance, reissued every year; the tranches partner funds issue on our rails; the secondary market, where every traded position is volume. Three conditions: a sovereign issuer, two partner funds on the rails, an active secondary.",
+        fr: "Un milliard par an, de cinq sources : nos émissions réémises, les tranches partenaires, cinq brokers à 50 M€, la liquidité on-chain captée par notre infrastructure, les institutions et le secondaire.",
+        en: "One billion a year, from five sources: our issuance reissued, partner tranches, five brokers at €50M, on-chain liquidity captured by our infrastructure, institutions and the secondary.",
+      },
+      bridge: {
+        title: { fr: "Le pont vers 1 Md€", en: "The bridge to €1B" },
+        sub: { fr: "Minah connecte toutes les formes de liquidité aux meilleurs sous-jacents.", en: "Minah connects every form of liquidity to the best underlyings." },
+        unit: { fr: "Volume émis par an, en M€", en: "Volume issued per year, €M" },
+        tag: { fr: "Répartition indicative", en: "Indicative split" },
+        steps: [
+          { label: { fr: "Volume 2028", en: "2028 volume" }, value: 100, kind: "base", note: { fr: "ancre et licences", en: "anchor and licences" } },
+          { label: { fr: "Nos émissions", en: "Own issuance" }, value: 100, kind: "step", note: { fr: "obligations à 12 mois, réémises", en: "12-month bonds, reissued" } },
+          { label: { fr: "Tranches partenaires", en: "Partners' tranches" }, value: 200, kind: "step", note: { fr: "environ 100 M€ chacun", en: "about €100M each" } },
+          { label: { fr: "Brokers", en: "Brokers" }, value: 250, kind: "step", note: { fr: "5 accords × 50 M€ par an", en: "5 agreements × €50M a year" } },
+          { label: { fr: "Liquidité on‑chain", en: "On‑chain liquidity" }, value: 200, kind: "step", note: { fr: "moins de 1 % des 30 Md$", en: "under 1% of the $30B" } },
+          { label: { fr: "Institutions, secondaire", en: "Institutions, secondary" }, value: 150, kind: "step", note: { fr: "Marex, ancre DFI", en: "Marex, DFI anchor" } },
+          { label: { fr: "Cible 2029", en: "2029 target" }, value: 1000, kind: "total", note: { fr: "le Minah Forum devient le marché", en: "the Minah Forum becomes the market" } },
+        ],
       },
       levers: [
         {
           title: { fr: "Nos émissions", en: "Our issuance" },
-          metric: { fr: "Réémises chaque année", en: "Reissued every year" },
-          text: { fr: "Kupanda, Esgni, les stratégies startups et les suivantes : des obligations courtes. 100 M€ d'encours à douze mois, c'est 100 M€ émis par an.", en: "Kupanda, Esgni, the startup strategies and the next ones: short bonds. €100M outstanding at twelve months is €100M issued a year." },
+          metric: { fr: "+100 M€", en: "+€100M" },
+          text: { fr: "Des obligations à douze mois : 100 M€ d'encours, c'est 100 M€ émis par an. Chaque nouvelle stratégie s'ajoute.", en: "Twelve-month bonds: €100M outstanding is €100M issued a year. Every new strategy adds to it." },
         },
         {
-          title: { fr: "Les émissions de nos partenaires", en: "Our partners' issuance" },
-          metric: { fr: "Leurs tranches, nos rails", en: "Their tranches, our rails" },
-          text: { fr: "Les fonds de crédit privé émettent leurs tranches sur notre infrastructure : TLG, Enko, puis d'autres. Chaque partenaire branché multiplie le volume sans grossir l'équipe.", en: "Private credit funds issue their tranches on our infrastructure: TLG, Enko, then others. Every partner plugged in multiplies volume without growing the team." },
+          title: { fr: "Les tranches de nos partenaires", en: "Our partners' tranches" },
+          metric: { fr: "+200 M€", en: "+€200M" },
+          text: { fr: "Deux partenaires de la taille de TLG, environ 100 M€ chacun, émettent sur nos rails sans grossir l'équipe.", en: "Two partners the size of TLG, about €100M each, issue on our rails without growing the team." },
         },
         {
-          title: { fr: "Le marché secondaire", en: "The secondary market" },
-          metric: { fr: "Les positions s'échangent", en: "Positions trade" },
-          text: { fr: "Principal et rendement séparés, sortie avant l'échéance, places de liquidité et teneurs de marché branchés, le vault ouvert aux écosystèmes web3. Chaque position échangée est du volume sans nouvelle origination – et chaque investisseur sait qu'il pourra sortir.", en: "Principal and yield separated, exit before maturity, liquidity venues and market makers plugged in, the vault open to web3 ecosystems. Every traded position is volume without new origination – and every investor knows they can exit." },
+          title: { fr: "Les brokers", en: "Brokers" },
+          metric: { fr: "+250 M€", en: "+€250M" },
+          text: { fr: "Cinq accords, environ 50 M€ de deals par an avec chaque broker.", en: "Five agreements, about €50M of deals a year with each broker." },
+        },
+        {
+          title: { fr: "La liquidité on-chain", en: "On-chain liquidity" },
+          metric: { fr: "+200 M€", en: "+€200M" },
+          text: { fr: "Moins de 1 % des 30 Md$ de liquidité on-chain captés par notre infrastructure : les allocataires crypto-natifs souscrivent en direct.", en: "Under 1% of the $30B of on-chain liquidity captured by our infrastructure: crypto-native allocators subscribe directly." },
+        },
+        {
+          title: { fr: "Institutions et secondaire", en: "Institutions and secondary" },
+          metric: { fr: "+150 M€", en: "+€150M" },
+          text: { fr: "Le véhicule à code ISIN de Marex et une ancre DFI ou fonds de fonds, puis un secondaire qui accélère le volume.", en: "Marex's ISIN-coded vehicle and a DFI or fund-of-funds anchor, then a secondary market that speeds up volume." },
         },
       ],
-      hub: {
-        title: { fr: "1 Md€ par an", en: "€1B a year" },
-        sub: { fr: "Nos émissions + celles de nos partenaires + le secondaire", en: "Our issuance + our partners' + the secondary" },
-      },
       panel: {
         title: { fr: "Ce qui doit être vrai pour le milliard", en: "What has to be true for the billion" },
         amount: { fr: "3", en: "3" },
