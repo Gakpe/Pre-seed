@@ -57,7 +57,9 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
   const dateLocale = l === "fr" ? "fr-FR" : "en-US";
   const [phase, setPhase] = useState<GrowthPhase>(initialPhase);
   const [overview, setOverview] = useState(false);
-  const [detail, setDetail] = useState(false);
+  // Le détail est ouvert pour une phase donnée : il se referme dès qu'on passe à une autre étape.
+  const [detailFor, setDetailFor] = useState<GrowthPhase | null>(null);
+  const detail = detailFor === phase;
   const idx = phaseIdx(phase);
   const current = GROWTH_PHASES[idx];
   // Le bandeau collant n'apparaît qu'une fois les volumes sortis de l'écran :
@@ -710,7 +712,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
             </div>
             {buildUp(phase)}
             {NARRATIVE[phase].distribution.bridge && bridgeChart(NARRATIVE[phase].distribution.bridge!)}
-            <button type="button" onClick={() => setDetail((d) => !d)} aria-expanded={detail} style={{ marginTop: 18, padding: "8px 16px", borderRadius: 8, border: `1px solid ${LINE}`, background: SURFACE, cursor: "pointer", fontSize: 13, color: INK }}>
+            <button type="button" onClick={() => setDetailFor(detail ? null : phase)} aria-expanded={detail} style={{ marginTop: 18, padding: "8px 16px", borderRadius: 8, border: `1px solid ${LINE}`, background: SURFACE, cursor: "pointer", fontSize: 13, color: INK }}>
               {detail ? c.hideDetail : c.showDetail}
             </button>
           </div>
