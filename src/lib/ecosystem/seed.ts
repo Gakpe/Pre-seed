@@ -34,12 +34,12 @@ export const GROWTH_PHASES: Array<{
   { id: "amorcage", start: "2026-02-01", end: "2026-10-31", label: { fr: "Amorçage", en: "Seeding" }, volume: { fr: "0 à 2 M€", en: "€0 to €2M" }, volumeMEur: 2,
     team: { resources: 0, label: { fr: "Les fondateurs", en: "The founders" } },
     tagline: { fr: "On entre là où le risque est déjà géré : Kupanda, co-construit avec Africa Rise, est déjà live. 2 M€, 12 mois, 20 % de coupon, des PME sous contrats d'État en Zambie, et cinq niveaux de protection.", en: "We enter where risk is already managed: Kupanda, co-built with Africa Rise, is already live. €2M, 12 months, 20% coupon, SMEs under State contracts in Zambia, and five layers of protection." } },
-  { id: "traction", start: "2026-11-01", end: "2027-12-31", label: { fr: "Traction", en: "Traction" }, volume: { fr: "2 à 62 M€", en: "€2M to €62M" }, volumeMEur: 62,
+  { id: "traction", start: "2026-11-01", end: "2027-12-31", label: { fr: "Traction", en: "Traction" }, volume: { fr: "2 à 60 M€", en: "€2M to €60M" }, volumeMEur: 60,
     team: { resources: 0, label: { fr: "Les fondateurs", en: "The founders" } },
-    tagline: { fr: "Nous ne changeons pas de métier : exactement la même chose, à plus grande échelle. La machine réseau devient mondiale, les rails on-chain se multiplient, et le pipeline passe de 2 à 62 M€.", en: "We are not changing jobs: exactly the same thing, at larger scale. The network machine goes global, on-chain rails multiply, and the pipeline grows from €2M to €62M." } },
-  { id: "distribution", start: "2028-01-01", end: "2028-12-31", label: { fr: "Distribution", en: "Distribution" }, volume: { fr: "62 à 100 M€", en: "€62M to €100M" }, volumeMEur: 100,
+    tagline: { fr: "Nous ne changeons pas de métier : exactement la même chose, à plus grande échelle. La machine réseau devient mondiale, les rails on-chain se multiplient, et le pipeline passe de 2 à 60 M€.", en: "We are not changing jobs: exactly the same thing, at larger scale. The network machine goes global, on-chain rails multiply, and the pipeline grows from €2M to €60M." } },
+  { id: "distribution", start: "2028-01-01", end: "2028-12-31", label: { fr: "Distribution", en: "Distribution" }, volume: { fr: "60 à 100 M€", en: "€60M to €100M" }, volumeMEur: 100,
     team: { resources: 1, label: { fr: "Les fondateurs et une première ressource interne", en: "The founders and a first internal resource" } },
-    tagline: { fr: "Le capital institutionnel se branche : une ancre DFI ou fonds de fonds et les licences débloquent les plus gros tickets, pendant que les sous-jacents se diversifient. L'étape qui porte le volume de 62 à 100 M€.", en: "Institutional capital switches on: a DFI or fund-of-funds anchor and the licences unlock the largest tickets, while the underlyings diversify. The step that carries the volume from €62M to €100M." } },
+    tagline: { fr: "Le capital institutionnel se branche : une ancre DFI ou fonds de fonds et les licences débloquent les plus gros tickets, pendant que les sous-jacents se diversifient. L'étape qui porte le volume de 60 à 100 M€.", en: "Institutional capital switches on: a DFI or fund-of-funds anchor and the licences unlock the largest tickets, while the underlyings diversify. The step that carries the volume from €60M to €100M." } },
   { id: "marche", start: "2029-01-01", end: "2029-12-31", label: { fr: "Marché", en: "Market" }, volume: { fr: "Road to 1 Md€", en: "Road to €1B" }, volumeMEur: 1000,
     team: { resources: 2, label: { fr: "Les fondateurs, deux ressources internes et un réseau de network builders", en: "The founders, two internal resources and a network of Network Builders" } },
     tagline: { fr: "L'écosystème devient le marché : des places de liquidité et des institutions branchées en direct, préparées pendant la distribution, portent le milliard.", en: "The ecosystem becomes the market: liquidity venues and institutions plugged in directly, prepared during distribution, carry the billion." } },
@@ -381,8 +381,8 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         en: "On the capital side, the network machine takes shape.",
       },
       summary: {
-        fr: "La machine réseau prend forme : les Network Builders passent de 5 à 25, trois accords on-chain (Stellar, Canton Network), trois protocoles de plus sur l'API, cinq accords brokers, Marex (véhicule avec code ISIN) et Silver Birch en discussion. Le volume passe de 2 à 62 M€.",
-        en: "The network machine takes shape: Network Builders grow from 5 to 25, three on-chain agreements (Stellar, Canton Network), three more protocols on the API, five broker agreements, Marex (vehicle with an ISIN code) and Silver Birch in discussion. Volume grows from €2M to €62M.",
+        fr: "La machine réseau prend forme : les Network Builders passent de 5 à 25, trois accords on-chain (Stellar, Canton Network), trois protocoles de plus sur l'API, cinq accords brokers, Marex (véhicule avec code ISIN) et Silver Birch en discussion. Le volume passe de 2 à 60 M€.",
+        en: "The network machine takes shape: Network Builders grow from 5 to 25, three on-chain agreements (Stellar, Canton Network), three more protocols on the API, five broker agreements, Marex (vehicle with an ISIN code) and Silver Birch in discussion. Volume grows from €2M to €60M.",
       },
       levers: [
         {
@@ -427,12 +427,12 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
     },
     sous_jacents: {
       text: {
-        fr: "Quatre stratégies en 2027, 60 M€ émis : avec Kupanda 1, 62 M€ de volume cumulé. Deux familles, du cadre éprouvé au capital-risque.",
-        en: "Four strategies in 2027, €60M issued: with Kupanda 1, €62M of cumulative volume. Two families, from the proven framework to venture capital.",
+        fr: "Quatre stratégies en 2027, 60 M€ émis. Deux familles, du cadre éprouvé au capital-risque.",
+        en: "Four strategies in 2027, €60M issued. Two families, from the proven framework to venture capital.",
       },
       summary: {
-        fr: "Quatre stratégies en 2027, 60 M€ émis, soit 62 M€ de volume cumulé avec Kupanda 1 : Kupanda 2 (10 M€) et Kupanda 3 (25 M€) sur le cadre zambien, puis deux stratégies startups, Afrique de l'Est (10 M€) et de l'Ouest (15 M€). Hors business plan : des tranches de crédit privé, TLG Capital ayant confirmé vouloir co-construire avec nous.",
-        en: "Four strategies in 2027, €60M issued, which makes €62M of cumulative volume with Kupanda 1: Kupanda 2 (€10M) and Kupanda 3 (€25M) on the Zambian framework, then two startup strategies, East Africa (€10M) and West Africa (€15M). Outside the business plan: private credit tranches, with TLG Capital confirmed to co-build with us.",
+        fr: "Quatre stratégies en 2027, 60 M€ émis : Kupanda 2 (10 M€) et Kupanda 3 (25 M€) sur le cadre zambien, puis deux stratégies startups, Afrique de l'Est (10 M€) et de l'Ouest (15 M€). Hors business plan : des tranches de crédit privé, TLG Capital ayant confirmé vouloir co-construire avec nous.",
+        en: "Four strategies in 2027, €60M issued: Kupanda 2 (€10M) and Kupanda 3 (€25M) on the Zambian framework, then two startup strategies, East Africa (€10M) and West Africa (€15M). Outside the business plan: private credit tranches, with TLG Capital confirmed to co-build with us.",
       },
       showActors: false,
       offerings: [
@@ -798,7 +798,7 @@ export const CARDS: Record<GrowthPhase, Record<Stream, Card>> = {
   },
   traction: {
     distribution: { hero: { fr: "5 → 25", en: "5 → 25" }, caption: { fr: "Network Builders", en: "Network Builders" }, points: [{ fr: "3 accords on-chain, 5 accords brokers", en: "3 on-chain agreements, 5 broker agreements" }, { fr: "Marex lancé (code ISIN), Silver Birch en discussion", en: "Marex started (ISIN code), Silver Birch in discussion" }], logos: [{ src: "/partners/stellar-logo.png", name: "Stellar" }, { src: "/partners/canton-logo.svg", name: "Canton Network" }, { src: "/partners/marex.png", name: "Marex" }, { src: "/partners/silver-birch.png", name: "Silver Birch" }] },
-    sous_jacents: { hero: { fr: "62 M€", en: "€62M" }, caption: { fr: "de volume cumulé fin 2027", en: "of cumulative volume by end 2027" }, points: [{ fr: "Kupanda 1 (2 M€), puis 4 stratégies : 60 M€ émis en 2027", en: "Kupanda 1 (€2M), then 4 strategies: €60M issued in 2027" }, { fr: "Kupanda 2 et 3 (35 M€), startups Est et Ouest (25 M€)", en: "Kupanda 2 and 3 (€35M), East and West startups (€25M)" }], logos: [{ src: "/partners/tlg.png", name: "TLG Capital" }], logoNote: { fr: "Tranche de TLG", en: "TLG tranche" } },
+    sous_jacents: { hero: { fr: "60 M€", en: "€60M" }, caption: { fr: "émis en 2027", en: "issued in 2027" }, points: [{ fr: "Kupanda 1 (2 M€), puis 4 stratégies en 2027", en: "Kupanda 1 (€2M), then 4 strategies in 2027" }, { fr: "Kupanda 2 et 3 (35 M€), startups Est et Ouest (25 M€)", en: "Kupanda 2 and 3 (€35M), East and West startups (€25M)" }], logos: [{ src: "/partners/tlg.png", name: "TLG Capital" }], logoNote: { fr: "Tranche de TLG", en: "TLG tranche" } },
     marche: { hero: { fr: "4 villes", en: "4 cities" }, caption: { fr: "les Minah Circles montent en gamme", en: "the Minah Circles move up a tier" }, points: [{ fr: "Davos, New York, Paris, Abidjan", en: "Davos, New York, Paris, Abidjan" }, { fr: "AFSIC et FT Africa Summit, à Londres", en: "AFSIC and FT Africa Summit, in London" }] },
   },
   distribution: {
