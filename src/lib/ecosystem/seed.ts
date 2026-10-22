@@ -431,8 +431,8 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
         en: "Four strategies in 2027, €60M issued. Two families, from the proven framework to venture capital.",
       },
       summary: {
-        fr: "Quatre stratégies en 2027, 60 M€ émis : Kupanda 2 (10 M€) et Kupanda 3 (25 M€) sur le cadre zambien, puis deux stratégies startups, Afrique de l'Est (10 M€) et de l'Ouest (15 M€). Hors business plan : des tranches de crédit privé, TLG Capital ayant confirmé vouloir co-construire avec nous.",
-        en: "Four strategies in 2027, €60M issued: Kupanda 2 (€10M) and Kupanda 3 (€25M) on the Zambian framework, then two startup strategies, East Africa (€10M) and West Africa (€15M). Outside the business plan: private credit tranches, with TLG Capital confirmed to co-build with us.",
+        fr: "Quatre stratégies en 2027, 60 M€ émis : Kupanda 2 (10 M€) et Kupanda 3 (25 M€) sur le cadre zambien, puis deux stratégies startups, Afrique de l'Est (10 M€) et de l'Ouest (15 M€). Esgni 1 (6 M€, février 2027) et Esgni 2 (20 M€, janvier 2028) transposent le cadre Kupanda à l'Afrique de l'Ouest. Hors business plan : des tranches de crédit privé, TLG Capital ayant confirmé vouloir co-construire avec nous.",
+        en: "Four strategies in 2027, €60M issued: Kupanda 2 (€10M) and Kupanda 3 (€25M) on the Zambian framework, then two startup strategies, East Africa (€10M) and West Africa (€15M). Esgni 1 (€6M, February 2027) and Esgni 2 (€20M, January 2028) carry the Kupanda framework to West Africa. Outside the business plan: private credit tranches, with TLG Capital confirmed to co-build with us.",
       },
       showActors: false,
       offerings: [
@@ -454,6 +454,17 @@ export const NARRATIVE: Record<GrowthPhase, Record<Stream, Chapter>> = {
             { k: { fr: "Niveaux de protection", en: "Layers of protection" }, v: { fr: "5", en: "5" } },
           ],
           note: { fr: "Mêmes cinq niveaux de protection que Kupanda 1.", en: "The same five layers of protection as Kupanda 1." },
+        },
+        {
+          name: { fr: "Esgni 1, puis Esgni 2", en: "Esgni 1, then Esgni 2" },
+          tag: { fr: "PME d'Afrique de l'Ouest · dette privée", en: "West African SMEs · private debt" },
+          status: { fr: "PREMIER CLOSING FÉVRIER 2027", en: "FIRST CLOSING FEBRUARY 2027" },
+          subtitle: { fr: "Le cadre Kupanda transposé à l'Afrique de l'Ouest : des PME génératrices de cash, en dette senior. Esgni 2 suit en janvier 2028, à 20 M€.", en: "The Kupanda framework carried to West Africa: cash-generative SMEs, in senior debt. Esgni 2 follows in January 2028, at €20M." },
+          metrics: [
+            { k: { fr: "Esgni 1", en: "Esgni 1" }, v: { fr: "6 M€ · février 2027", en: "€6M · February 2027" }, accent: true },
+            { k: { fr: "Esgni 2", en: "Esgni 2" }, v: { fr: "20 M€ · janvier 2028", en: "€20M · January 2028" }, accent: true },
+          ],
+          note: { fr: "Le cadre Kupanda transposé à l'Afrique de l'Ouest : des PME génératrices de cash, en dette senior.", en: "The Kupanda framework carried to West Africa: cash-generative SMEs, in senior debt." },
         },
         {
           name: { fr: "Startups, Afrique de l'Est et de l'Ouest", en: "Startups, East and West Africa" },
@@ -772,9 +783,9 @@ export const BUILDUP: Record<"distribution" | "sous_jacents", Record<GrowthPhase
     ],
     traction: [
       { fr: "Kupanda 2 et 3 : PME d'Afrique de l'Est, même cadre", en: "Kupanda 2 and 3: East African SMEs, same framework" },
-      { fr: "Deux stratégies startups : Afrique de l'Est et de l'Ouest", en: "Two startup strategies: East and West Africa" },
+      { fr: "Esgni 1 et 2 : PME d'Afrique de l'Ouest, même cadre", en: "Esgni 1 and 2: West African SMEs, same framework" },
+      { fr: "Deux stratégies startups : Afrique de l'Est et de l'Ouest (Wave, Yango, Caterpillar Afrique en discussion)", en: "Two startup strategies: East and West Africa (Wave, Yango, Caterpillar Africa in discussion)" },
       { fr: "Tranches de crédit privé : TLG confirmé, Enko en discussion", en: "Private credit tranches: TLG confirmed, Enko in discussion" },
-      { fr: "Wave, Yango, Caterpillar Afrique en discussion", en: "Wave, Yango, Caterpillar Africa in discussion" },
     ],
     distribution: [
       { fr: "Cadre Kupanda répliqué dans d'autres pays", en: "Kupanda framework replicated in other countries" },

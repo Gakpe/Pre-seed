@@ -373,7 +373,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
   // reste des sous-jacents (carte encadrée, nom en serif, puces orangées).
   const companyCards = (companies: Company[], title?: string) => (
     <div style={{ marginTop: 18 }}>
-      <div style={{ ...smallCaps, color: MUTED, marginBottom: 10 }}>{title ?? (l === "fr" ? "Scale-ups et opérateurs" : "Scale-ups & operators")}</div>
+      <div style={{ fontSize: 13, fontWeight: 600, color: INK, marginBottom: 10 }}>{title ?? (l === "fr" ? "Scale-ups et opérateurs" : "Scale-ups & operators")}</div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(190px, 100%), 1fr))", gap: 10 }}>
         {companies.map((co) => (
           <div key={co.name[l]} style={{ border: `1px solid ${LINE}`, borderRadius: 12, padding: "14px 16px", background: SURFACE }}>
@@ -435,6 +435,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
     return x.charAt(0).toUpperCase() + x.slice(1);
   };
   const strategyCards = (offerings: Offering[]) => (
+    <>
     <div style={{ marginTop: 16, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))", gap: 10 }}>
       {offerings.map((o) => {
         // Tous les chiffres mis en avant ont le même traitement, côte à côte (ex. les deux
@@ -484,6 +485,10 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
         );
       })}
     </div>
+    {offerings.filter((o) => o.companies).map((o) => (
+      <div key={`${o.name.en}-companies`}>{companyCards(o.companies!.list, o.companies!.title[l])}</div>
+    ))}
+    </>
   );
 
   const eventCards = (ev: { title: { fr: string; en: string }; list: EventCard[] }) => (
@@ -709,14 +714,16 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
                       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px 14px", marginTop: 12 }}>
                         {cd.logos.map((lg) => (
                           <span key={lg.name} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: MUTED }}>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={lg.src} alt="" style={{ height: 16, width: "auto", maxWidth: 70, objectFit: "contain", display: "block" }} />
-                            {cd.logoNote && cd.logos!.length === 1 ? (
+                            {/* Quand une note accompagne le logo seul : le point et le texte d'abord, le logo après. */}
+                            {cd.logoNote && cd.logos!.length === 1 && (
                               <>
                                 <span aria-hidden style={{ flex: "none", width: 5, height: 5, borderRadius: 999, background: ACCENT }} />
                                 {cd.logoNote[l]}
                               </>
-                            ) : lg.name}
+                            )}
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={lg.src} alt={lg.name} style={{ height: 16, width: "auto", maxWidth: 70, objectFit: "contain", display: "block" }} />
+                            {!(cd.logoNote && cd.logos!.length === 1) && lg.name}
                           </span>
                         ))}
                       </div>
