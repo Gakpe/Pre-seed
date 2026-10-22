@@ -35,14 +35,14 @@ export const GROWTH_PHASES: Array<{
     team: { resources: 0, label: { fr: "Les fondateurs", en: "The founders" } },
     tagline: { fr: "On entre là où le risque est déjà géré : Kupanda, co-construit avec Africa Rise, est déjà live. 2 M€, 12 mois, 20 % de coupon, des PME sous contrats d'État en Zambie, et cinq niveaux de protection.", en: "We enter where risk is already managed: Kupanda, co-built with Africa Rise, is already live. €2M, 12 months, 20% coupon, SMEs under State contracts in Zambia, and five layers of protection." } },
   { id: "traction", start: "2026-11-01", end: "2027-12-31", label: { fr: "Traction", en: "Traction" }, volume: { fr: "2 à 60 M€", en: "€2M to €60M" }, volumeMEur: 60,
-    team: { resources: 0, label: { fr: "Les fondateurs", en: "The founders" } },
-    tagline: { fr: "Nous ne changeons pas de métier : exactement la même chose, à plus grande échelle. La machine réseau devient mondiale, les rails on-chain se multiplient, et le pipeline passe de 2 à 60 M€.", en: "We are not changing jobs: exactly the same thing, at larger scale. The network machine goes global, on-chain rails multiply, and the pipeline grows from €2M to €60M." } },
+    team: { resources: 1, label: { fr: "Les fondateurs et un premier **sales**", en: "The founders and a first **sales** hire" } },
+    tagline: { fr: "Nous ne changeons pas de métier : exactement la même chose, à plus grande échelle. La machine réseau devient mondiale, les rails on-chain se multiplient, et le pipeline passe de 2 à 60 M€. Un premier sales rejoint les fondateurs.", en: "We are not changing jobs: exactly the same thing, at larger scale. The network machine goes global, on-chain rails multiply, and the pipeline grows from €2M to €60M. A first sales hire joins the founders." } },
   { id: "distribution", start: "2028-01-01", end: "2028-12-31", label: { fr: "Distribution", en: "Distribution" }, volume: { fr: "60 à 100 M€", en: "€60M to €100M" }, volumeMEur: 100,
-    team: { resources: 1, label: { fr: "Les fondateurs et une première ressource interne", en: "The founders and a first internal resource" } },
-    tagline: { fr: "Le capital institutionnel se branche : une ancre DFI ou fonds de fonds et les licences débloquent les plus gros tickets, pendant que les sous-jacents se diversifient. L'étape qui porte le volume de 60 à 100 M€.", en: "Institutional capital switches on: a DFI or fund-of-funds anchor and the licences unlock the largest tickets, while the underlyings diversify. The step that carries the volume from €60M to €100M." } },
+    team: { resources: 2, label: { fr: "Les fondateurs et une **équipe sales** qui se met en place", en: "The founders and a **sales team** taking shape" } },
+    tagline: { fr: "Le capital institutionnel se branche : une ancre DFI ou fonds de fonds et les licences débloquent les plus gros tickets, pendant que les sous-jacents se diversifient. L'étape qui porte le volume de 60 à 100 M€. Une équipe sales se met en place.", en: "Institutional capital switches on: a DFI or fund-of-funds anchor and the licences unlock the largest tickets, while the underlyings diversify. The step that carries the volume from €60M to €100M. A sales team takes shape." } },
   { id: "marche", start: "2029-01-01", end: "2029-12-31", label: { fr: "Marché", en: "Market" }, volume: { fr: "Road to 1 Md€", en: "Road to €1B" }, volumeMEur: 1000,
-    team: { resources: 2, label: { fr: "Les fondateurs, deux ressources internes et un réseau de network builders", en: "The founders, two internal resources and a network of Network Builders" } },
-    tagline: { fr: "L'écosystème devient le marché : des places de liquidité et des institutions branchées en direct, préparées pendant la distribution, portent le milliard.", en: "The ecosystem becomes the market: liquidity venues and institutions plugged in directly, prepared during distribution, carry the billion." } },
+    team: { resources: 2, label: { fr: "Les fondateurs, l'**équipe sales** et un réseau de network builders", en: "The founders, the **sales team** and a network of Network Builders" } },
+    tagline: { fr: "L'écosystème devient le marché : des places de liquidité et des institutions branchées en direct, préparées pendant la distribution, portent le milliard. L'équipe sales est en place.", en: "The ecosystem becomes the market: liquidity venues and institutions plugged in directly, prepared during distribution, carry the billion. The sales team is in place." } },
 ];
 
 export const STREAM_META: Record<Stream, { label: Bilingual; sub: Bilingual }> = {
@@ -757,6 +757,7 @@ export const BUILDUP: Record<"distribution" | "sous_jacents", Record<GrowthPhase
       { fr: "Première plateforme admin de distribution", en: "First distribution admin platform" },
     ],
     traction: [
+      { fr: "Un premier sales rejoint les fondateurs", en: "A first sales hire joins the founders" },
       { fr: "Network Builders : de 5 à 25", en: "Network Builders: from 5 to 25" },
       { fr: "Trois accords on-chain : Stellar, Canton", en: "Three on-chain agreements: Stellar, Canton" },
       { fr: "Trois protocoles de plus sur l'API", en: "Three more protocols on the API" },
@@ -765,6 +766,7 @@ export const BUILDUP: Record<"distribution" | "sous_jacents", Record<GrowthPhase
       { fr: "Silver Birch : discussions ouvertes", en: "Silver Birch: discussions opened" },
     ],
     distribution: [
+      { fr: "L'équipe sales se met en place", en: "The sales team takes shape" },
       { fr: "Ancre DFI ou fonds de fonds", en: "DFI or fund-of-funds anchor" },
       { fr: "Licences pour les plus gros tickets", en: "Licences for the largest tickets" },
       { fr: "Liquidité on-chain étendue : Blend, Ethos, Base", en: "On-chain liquidity extended: Blend, Ethos, Base" },

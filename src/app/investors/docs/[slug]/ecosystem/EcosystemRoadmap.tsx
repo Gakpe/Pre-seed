@@ -692,7 +692,7 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
                   <span key={k} style={{ width: 14, height: 14, borderRadius: 999, background: k < 2 ? "#C9C1B3" : ACCENT }} />
                 ))}
               </span>
-              <span style={{ fontSize: 13, color: MUTED }}>{current.team.label[l]}</span>
+              <span style={{ fontSize: 13, color: MUTED }}>{rich(current.team.label[l])}</span>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(260px, 100%), 1fr))", gap: 14 }}>
               {STREAMS.map((s) => {
@@ -779,14 +779,28 @@ export function EcosystemRoadmap({ locale, draft = false, initialPhase = "amorca
               ))}
               {STREAMS.map((s, si) => (
                 <div key={s} style={{ display: "contents" }}>
-                  <div style={{ padding: "12px 12px 12px 0", borderBottom: si === STREAMS.length - 1 ? "none" : `1px solid ${HAIRLINE}`, position: "sticky", left: 0, background: SURFACE, zIndex: 2 }}>
+                  <div style={{ padding: "12px 12px 12px 0", borderBottom: `1px solid ${HAIRLINE}`, position: "sticky", left: 0, background: SURFACE, zIndex: 2 }}>
                     <div style={{ fontFamily: SERIF, fontSize: 15, color: INK }}>{STREAM_META[s].label[l]}</div>
                   </div>
                   {GROWTH_PHASES.map((g, i) => (
-                    <div key={`${s}-${g.id}`} style={{ background: i === idx ? "#FCFBF7" : "transparent", borderLeft: `1px solid ${HAIRLINE}`, borderBottom: si === STREAMS.length - 1 ? "none" : `1px solid ${HAIRLINE}`, padding: "12px 10px", fontSize: 12.5, lineHeight: 1.6, color: "#4B4039" }}>
+                    <div key={`${s}-${g.id}`} style={{ background: i === idx ? "#FCFBF7" : "transparent", borderLeft: `1px solid ${HAIRLINE}`, borderBottom: `1px solid ${HAIRLINE}`, padding: "12px 10px", fontSize: 12.5, lineHeight: 1.6, color: "#4B4039" }}>
                       {rich((NARRATIVE[g.id][s].summary ?? NARRATIVE[g.id][s].text)[l])}
                     </div>
                   ))}
+                </div>
+              ))}
+              {/* Équipe : le sales, puis l'équipe sales, lisibles d'une période à l'autre. */}
+              <div style={{ padding: "12px 12px 12px 0", position: "sticky", left: 0, background: SURFACE, zIndex: 2 }}>
+                <div style={{ fontFamily: SERIF, fontSize: 15, color: INK }}>{c.teamLabel}</div>
+              </div>
+              {GROWTH_PHASES.map((g, i) => (
+                <div key={`team-${g.id}`} style={{ background: i === idx ? "#FCFBF7" : "transparent", borderLeft: `1px solid ${HAIRLINE}`, padding: "12px 10px", fontSize: 12.5, lineHeight: 1.6, color: "#4B4039" }}>
+                  <span aria-hidden style={{ display: "inline-flex", gap: 3, marginRight: 8, verticalAlign: "middle" }}>
+                    {Array.from({ length: 2 + g.team.resources }, (_, k) => (
+                      <span key={k} style={{ width: 9, height: 9, borderRadius: 999, background: k < 2 ? "#C9C1B3" : ACCENT }} />
+                    ))}
+                  </span>
+                  {rich(g.team.label[l])}
                 </div>
               ))}
             </div>
