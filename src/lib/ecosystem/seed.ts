@@ -818,7 +818,7 @@ export const CARDS: Record<GrowthPhase, Record<Stream, Card>> = {
     marche: { hero: { fr: "Minah Forum", en: "Minah Forum" }, caption: { fr: "fenêtre d'émission annuelle", en: "annual issuance window" }, points: [{ fr: "Rencontres privées à Davos, Abidjan, New York, Paris", en: "Private gatherings in Davos, Abidjan, New York, Paris" }] },
   },
   marche: {
-    distribution: { hero: { fr: "1 Md€ / an", en: "€1B a year" }, caption: { fr: "un flux, porté par cinq sources", en: "a flow, carried by five sources" }, points: [{ fr: "Brokers : 5 × 50 M€ par an", en: "Brokers: 5 × €50M a year" }, { fr: "Liquidité on-chain captée par notre infrastructure", en: "On-chain liquidity captured by our infrastructure" }] },
+    distribution: { hero: { fr: "1 Md€", en: "€1B" }, caption: { fr: "un flux, porté par cinq sources", en: "a flow, carried by five sources" }, points: [{ fr: "Brokers : 5 × 50 M€ par an", en: "Brokers: 5 × €50M a year" }, { fr: "Liquidité on-chain captée par notre infrastructure", en: "On-chain liquidity captured by our infrastructure" }] },
     sous_jacents: { hero: { fr: "1 Md€", en: "€1B" }, caption: { fr: "de volume par an, trois familles", en: "of volume a year, three families" }, points: [{ fr: "États : T-bills tokenisés", en: "States: tokenized T-bills" }, { fr: "PME sous contrats publics, fintechs", en: "SMEs under public contracts, fintechs" }] },
     marche: { hero: { fr: "La référence", en: "The reference" }, caption: { fr: "de la dette privée africaine", en: "of African private debt" }, points: [{ fr: "Deal rooms et session de marché secondaire", en: "Deal rooms and a secondary market session" }, { fr: "Ce que l'Africa CEO Forum est aux dirigeants", en: "What the Africa CEO Forum is to business leaders" }] },
   },
