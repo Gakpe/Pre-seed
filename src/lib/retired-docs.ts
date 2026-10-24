@@ -63,6 +63,17 @@ export const DRAFT_DOCS: DraftDoc[] = [
     access_level: 1,
     sort_order: 52,
   },
+  // 24/10/2026 (Julien) : la due diligence de l'opération Kupanda, des
+  // souscripteurs aux PME, protections, documents et questions par profil.
+  {
+    slug: "kupanda-due-diligence",
+    title: "Due diligence Kupanda",
+    title_en: "Kupanda due diligence",
+    category: "Kupanda",
+    category_en: "Kupanda",
+    access_level: 2,
+    sort_order: 73,
+  },
 ];
 
 export const DRAFT_SLUGS = new Set(DRAFT_DOCS.map((d) => d.slug));

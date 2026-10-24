@@ -35,6 +35,8 @@ import { BackToTop } from "./back-to-top";
 import { ExitScenarios } from "./exit-scenarios";
 import { BusinessPlan } from "./business-plan/BusinessPlan";
 import { Impact } from "./impact";
+import { KupandaDueDiligence } from "./kupanda-dd/KupandaDueDiligence";
+import { DD_DOCS, type Profile } from "@/lib/kupanda-dd";
 import { getBusinessPlan } from "@/lib/business-plan/data";
 
 export default async function DocPage({
@@ -47,6 +49,11 @@ export default async function DocPage({
   let doc: DocumentRow | null;
   // Dernier intérêt Kupanda de la personne, pour le bas de la term sheet.
   let kupandaInterest: { tranche: string; created_at: string } | null = null;
+  // Due diligence Kupanda : les fiches liées que la personne peut ouvrir, et
+  // son profil présumé (une structure renseignée vaut institutionnel).
+  let ddOpenSlugs: string[] = [];
+  let ddProfile: Profile = "particulier";
+  const ddSlugs = DD_DOCS.flatMap((d) => (d.kind.type === "dataroom" ? [d.kind.slug] : []));
   if (demo) {
     // Pas de session Supabase en démo : service role + filtrage de niveau à la
     // main, ouvertures de l'onboarding rejoué comprises.
@@ -63,6 +70,20 @@ export default async function DocPage({
         onboarding?.unlocked_slugs.includes(slug))
         ? row
         : null;
+    if (slug === "kupanda-due-diligence") {
+      const { data: rows } = await createAdminClient()
+        .from("documents")
+        .select("slug, access_level")
+        .in("slug", ddSlugs);
+      ddOpenSlugs = (rows ?? [])
+        .filter(
+          (r) =>
+            r.access_level <= (demo.level2 ? 2 : 1) ||
+            onboarding?.unlocked_slugs.includes(r.slug)
+        )
+        .map((r) => r.slug);
+      ddProfile = demo.entity ? "institutionnel" : "particulier";
+    }
   } else {
     const supabase = await createClient();
     const {
@@ -89,8 +110,19 @@ export default async function DocPage({
         .maybeSingle();
       kupandaInterest = last;
     }
+
+    if (slug === "kupanda-due-diligence") {
+      // RLS : seules reviennent les fiches visibles pour cette personne.
+      const [{ data: rows }, { data: me }] = await Promise.all([
+        supabase.from("documents").select("slug").in("slug", ddSlugs),
+        createAdminClient().from("investors").select("entity").eq("id", user.id).maybeSingle(),
+      ]);
+      ddOpenSlugs = (rows ?? []).map((r) => r.slug);
+      ddProfile = me?.entity ? "institutionnel" : "particulier";
+    }
   }
   if (!doc || RETIRED_SLUGS.has(doc.slug)) notFound();
+  ddOpenSlugs = ddOpenSlugs.filter((s) => !RETIRED_SLUGS.has(s) && !UNAVAILABLE_SLUGS.has(s));
   // Brouillon : ouvert dans une session démo (ouverte par un admin), jamais
   // ailleurs, même si sa ligne existe déjà en base.
   if (DRAFT_SLUGS.has(doc.slug) && !demo) notFound();
@@ -124,6 +156,8 @@ export default async function DocPage({
   // Les comparables : une matrice et une colonne de texte côte à côte, plus
   // large encore, avec des marges un peu plus généreuses.
   const comparables = doc.slug === "comparables";
+  // La due diligence Kupanda : un schéma et son panneau de détail côte à côte.
+  const kupandaDd = doc.slug === "kupanda-due-diligence";
   // L'aperçu du go-to-market (niveau 1) porte la machine à réseau de la slide :
   // deux côtés et un centre, aussi large que l'équipe. Son chapô vit dans le
   // composant, celui de la base n'est plus affiché.
@@ -173,6 +207,7 @@ export default async function DocPage({
     doc.slug === "impact" ||
     doc.slug === "gestion-du-risque" ||
     doc.slug === "roadmap-ecosysteme" ||
+    kupandaDd ||
     gtmApercu ||
     note;
 
@@ -191,6 +226,7 @@ export default async function DocPage({
     doc.slug === "business-plan" ||
     doc.slug === "impact" ||
     doc.slug === "gestion-du-risque" ||
+    kupandaDd ||
     team ||
     roadmap ||
     comparables ||
@@ -211,10 +247,12 @@ export default async function DocPage({
 
   return (
     <main
-      className={`mx-auto w-full flex-1 py-12 ${comparables ? "max-w-[84rem] px-10" : "px-6"} ${
+      className={`mx-auto w-full flex-1 py-12 ${comparables ? "max-w-[84rem] px-10" : kupandaDd ? "max-w-[92rem] px-4 sm:px-6" : "px-6"} ${
         // La roadmap technique a rejoint la largeur des fiches du niveau 1
         // le 08/10/2026 : sa frise et sa vue d'ensemble y tiennent.
-        team || doc.slug === "roadmap-ecosysteme" || gtmApercu
+        kupandaDd
+          ? ""
+          : team || doc.slug === "roadmap-ecosysteme" || gtmApercu
             ? "max-w-6xl"
           : extraWide
             ? "max-w-5xl"
@@ -303,6 +341,14 @@ export default async function DocPage({
           code : la page ne s'affiche qu'aux sessions autorisées. */}
       {businessPlan && <BusinessPlan data={businessPlan} locale={locale} />}
       {doc.slug === "impact" && <Impact locale={locale} />}
+      {kupandaDd && (
+        <KupandaDueDiligence
+          locale={locale}
+          openSlugs={ddOpenSlugs}
+          profile={ddProfile}
+          demo={Boolean(demo)}
+        />
+      )}
       {doc.slug === "cap-table" && (
         <CapTableInteractive title={t(locale, "docs.captable")} locale={locale} />
       )}

@@ -692,3 +692,97 @@ body {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* --- Due diligence Kupanda : panneau de détail ---
+   Au large, un tiroir qui glisse depuis la droite de la scène, la scène se
+   resserrant à côté. Sous 1024 px, une feuille qui monte du bas de l'écran.
+   Le contenu entre par la droite, ligne après ligne, à chaque changement de
+   sélection (la clé React rejoue l'animation). */
+
+@keyframes dd-enter {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.dd-stagger > * {
+  animation: dd-enter 420ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.dd-stagger > *:nth-child(2) { animation-delay: 60ms; }
+.dd-stagger > *:nth-child(3) { animation-delay: 120ms; }
+.dd-stagger > *:nth-child(4) { animation-delay: 180ms; }
+.dd-stagger > *:nth-child(5) { animation-delay: 240ms; }
+.dd-stagger > *:nth-child(n + 6) { animation-delay: 300ms; }
+
+.dd-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  width: 460px;
+  overflow-y: auto;
+  border-left: 1px solid rgb(43 26 22 / 0.1);
+  box-shadow: -16px 0 40px rgb(43 26 22 / 0.08);
+  transform: translateX(102%);
+  visibility: hidden;
+  transition:
+    transform 500ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    visibility 0s linear 500ms;
+}
+
+.dd-drawer[data-open="true"] {
+  transform: none;
+  visibility: visible;
+  transition: transform 500ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.dd-backdrop {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .dd-drawer {
+    position: fixed;
+    inset: auto 0 0 0;
+    top: auto;
+    z-index: 60;
+    width: auto;
+    max-height: 82dvh;
+    border-left: 0;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -12px 40px rgb(43 26 22 / 0.18);
+    transform: translateY(105%);
+    transition:
+      transform 380ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      visibility 0s linear 380ms;
+  }
+
+  /* L'état ouvert après l'état fermé : à spécificité égale, l'ordre tranche. */
+  .dd-drawer[data-open="true"] {
+    transform: none;
+    visibility: visible;
+    transition: transform 380ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  .dd-backdrop[data-open="true"] {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dd-stagger > * {
+    animation: none;
+  }
+
+  .dd-drawer,
+  .dd-drawer[data-open="true"] {
+    transition: none;
+  }
+}
