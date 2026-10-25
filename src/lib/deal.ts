@@ -10,8 +10,8 @@ export const deal = {
   minTicket: "100 K€",
   leadWanted: "500 K€",
   matchingFund: "500 K€ en soft commitment",
-  engagedLabel: "925 K€ d'engagements à date, pondérés",
-  progressPct: 62,
+  engagedLabel: "1 M€ d'engagements à date, pondérés",
+  progressPct: 67,
   tranches: ["< 100 K€", "< 250 K€", "< 500 K€", "500 K€+ (lead)"],
   // Lien de prise de RDV Cal.com (pitch pre-seed, équipe complète).
   meetingUrl: "https://cal.com/julien-gakpe-1icblz/pre-seed-pitch-minah-full-team",
@@ -24,7 +24,7 @@ const dealEn = {
   minTicket: "€100K",
   leadWanted: "€500K",
   matchingFund: "€500K soft commitment",
-  engagedLabel: "€925K of weighted commitments to date",
+  engagedLabel: "€1M of weighted commitments to date",
   tranches: ["< €100K", "< €250K", "< €500K", "€500K+ (lead)"],
 } as const;
 
@@ -72,8 +72,9 @@ export const commitments: Commitment[] = [
   {
     id: "institutionnel",
     role: { fr: "Acteur institutionnel", en: "Institutional investor" },
+    // Pondéré à 75 % depuis le 25/10/2026 (Julien), 50 % auparavant.
     gross: 300_000,
-    weight: 0.5,
+    weight: 0.75,
     status: "discussion",
   },
   {
@@ -86,7 +87,7 @@ export const commitments: Commitment[] = [
   },
 ];
 
-// Somme pondérée des lignes ci-dessus, à titre de contrôle : 1 025 000 €.
+// Somme pondérée des lignes ci-dessus, à titre de contrôle : 1 100 000 €.
 export const commitmentsWeightedSum = commitments.reduce(
   (sum, line) => sum + line.gross * line.weight,
   0
@@ -97,5 +98,6 @@ export const commitmentsWeightedSum = commitments.reduce(
 // À réaligner avec les lignes dès qu'une pondération est arrêtée.
 // 08/10/2026 : +100 K€ pondérés (business angel porté à 300 K€), même marge
 // de prudence de 100 K€ sous la somme des lignes.
-// 25/10/2026 : +125 K€ pondérés (VC porté à 300 K€ à 75 %), même marge.
-export const commitmentsTotal = 925_000;
+// 25/10/2026 : +125 K€ pondérés (VC porté à 300 K€ à 75 %), puis +75 K€
+// (institutionnel pondéré à 75 %), même marge.
+export const commitmentsTotal = 1_000_000;
