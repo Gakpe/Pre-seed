@@ -130,7 +130,7 @@ export const ACTORS: (DdItem & { short: Bi; figure: Bi })[] = [
       { label: { fr: "Rang", en: "Seniority" }, value: { fr: "Dette senior", en: "Senior debt" } },
       { label: { fr: "Collatéral", en: "Collateral" }, value: { fr: "La créance sur le contrat public", en: "The receivable on the public contract" } },
       { label: { fr: "Durée d'un financement", en: "Financing term" }, value: { fr: "3 à 5 mois, 3 en moyenne", en: "3 to 5 months, 3 on average" } },
-      { label: { fr: "Défaut à ce jour", en: "Defaults to date" }, value: { fr: "Aucun, sur plus de 2 M€ déployés", en: "None, on over €2M deployed" } },
+      { label: { fr: "Défaut à ce jour", en: "Defaults to date" }, value: { fr: "Aucun, sur 10 M€ déployés", en: "None, on €10M deployed" } },
     ],
     points: [
       { fr: "Chaque PME est titulaire d'un marché public signé : l'État zambien est l'acheteur final, et le financement est remboursé sur son règlement.", en: "Each SME holds a signed public contract: the Zambian State is the final buyer, and the financing is repaid from its settlement." },
@@ -305,11 +305,11 @@ export const USE_CASES: DdItem[] = [
 
 export const PROTECTION_EXTRA: Record<string, { cover: Fact[]; docs: string[] }> = {
   performance: {
-    cover: [{ label: { fr: "Montant couvert", en: "Amount covered" }, value: null }],
+    cover: [{ label: { fr: "Montant couvert", en: "Amount covered" }, value: { fr: "c. 300 K€", en: "c. €300K" } }],
     docs: ["bond", "risk-deck"],
   },
   credit: {
-    cover: [{ label: { fr: "Couverture", en: "Coverage" }, value: null }],
+    cover: [{ label: { fr: "Couverture", en: "Coverage" }, value: { fr: "c. 300 K€", en: "c. €300K" } }],
     docs: ["insurance", "risk-deck"],
   },
   systemique: {
@@ -320,83 +320,8 @@ export const PROTECTION_EXTRA: Record<string, { cover: Fact[]; docs: string[] }>
     docs: ["partnership", "swap"],
   },
   residuel: {
-    cover: [{ label: { fr: "Réserve de Minah SAS", en: "Minah SAS reserve" }, value: null }],
+    // Pas de montant affiché pour la réserve (Julien, 25/10/2026).
+    cover: [],
     docs: ["risk-architecture"],
   },
-};
-
-// --- Questions fréquentes, selon le profil -----------------------------------
-
-export type Profile = "institutionnel" | "particulier";
-export type Faq = { q: Bi; a: Bi };
-
-export const FAQ: Record<Profile, Faq[]> = {
-  institutionnel: [
-    {
-      q: { fr: "Qui est ma contrepartie, et à quel rang ?", en: "Who is my counterparty, and at what seniority?" },
-      a: { fr: "Minah SAS, émetteur unique d'une obligation in fine de droit français. Elle doit intérêts et principal quelle que soit la performance des actifs. Au niveau des actifs, chaque financement est une dette senior, collatéralisée par la créance sur un contrat public signé.", en: "Minah SAS, sole issuer of a French-law bullet bond. It owes interest and principal whatever the performance of the assets. At asset level, each financing is senior debt, collateralised by the receivable on a signed public contract." },
-    },
-    {
-      q: { fr: "Jusqu'où la structure absorbe-t-elle les pertes ?", en: "How far does the structure absorb losses?" },
-      a: { fr: "Jusqu'à 30 % de pertes cumulées, soit 6,5 fois le niveau historique, inférieur à 5 %. Au-delà, l'investisseur perd une partie de sa performance, pas son capital. Le détail figure dans l'architecture de risque et le deck risk Kupanda.", en: "Up to 30% cumulative losses, 6.5 times the historical level, which is below 5%. Beyond that, the investor loses part of the return, not the capital. The detail is in the risk architecture and the Kupanda risk deck." },
-    },
-    {
-      q: { fr: "Que se passe-t-il si Minah SAS fait défaut ?", en: "What happens if Minah SAS defaults?" },
-      a: { fr: "Les fonds des investisseurs sont juridiquement séparés des actifs opérationnels de Minah. La masse des obligataires, représentée par Julca, a une capacité juridique propre en droit français : elle peut faire valoir les droits des porteurs et recouvrer les actifs sans Minah.", en: "Investor funds are legally separated from Minah's operating assets. The bondholder body, represented by Julca, has its own legal capacity under French law: it can enforce holders' rights and recover the assets without Minah." },
-    },
-    {
-      q: { fr: "Comment le risque de change est-il traité ?", en: "How is currency risk handled?" },
-      a: { fr: "Le capital est structuré en dollars au niveau d'Africa Rise, et un currency swap avec Zanaco Bank sécurise la disponibilité en USD à maturité. Le coupon reste dû par Minah SAS, indépendamment de la kwacha.", en: "Capital is structured in dollars at Africa Rise level, and a currency swap with Zanaco Bank secures USD availability at maturity. The coupon remains owed by Minah SAS, regardless of the kwacha." },
-    },
-    {
-      q: { fr: "Comment les contrats financés sont-ils vérifiés ?", en: "How are the financed contracts verified?" },
-      a: { fr: "Africa Rise mène la due diligence de chaque PME : solidité financière, qualité des garanties, contrepartie. Les ministères des PME et de l'Administration locale confirment ensuite que chaque contrat est authentique, attribué et budgété.", en: "Africa Rise runs the due diligence on each SME: financial strength, quality of collateral, counterparty. The ministries of SMEs and Local Government then confirm each contract is genuine, awarded and budgeted." },
-    },
-    {
-      q: { fr: "Quel reporting recevrai-je ?", en: "What reporting will I receive?" },
-      a: { fr: "Un suivi de performance par Africa Rise, prévu à l'accord de partenariat, et un registre on-chain sur Stellar, consultable à tout moment. Fréquence : __à préciser__.", en: "Performance monitoring by Africa Rise, set in the partnership agreement, and an on-chain register on Stellar, available at any time. Frequency: __to be confirmed__." },
-    },
-    {
-      q: { fr: "Quel cadre réglementaire s'applique ?", en: "Which regulatory framework applies?" },
-      a: { fr: "Le placement privé de droit français, réservé aux investisseurs avertis (article L.411-2 du Code monétaire et financier). L'offre est fermée aux ressortissants américains non accrédités (FATCA, Regulation S).", en: "French private placement, reserved for qualified investors (article L.411-2 of the French Monetary and Financial Code). The offer is closed to non-accredited US persons (FATCA, Regulation S)." },
-    },
-    {
-      q: { fr: "Peut-on investir un ticket plus large ?", en: "Can we invest a larger ticket?" },
-      a: { fr: "Oui, sur Kupanda 2 : une émission de 10 M€ en préparation, sur la même structure, avec une ligne d'investissement de 7 M€ déjà en discussion. Parlons-en de vive voix.", en: "Yes, on Kupanda 2: a €10M issuance in preparation, on the same structure, with a €7M investment line already under discussion. Let's discuss it in person." },
-    },
-  ],
-  particulier: [
-    {
-      q: { fr: "Combien faut-il investir au minimum ?", en: "What is the minimum investment?" },
-      a: { fr: "30 000 €, soit trois obligations de 10 000 €, auxquels s'ajoutent 3,5 % de frais : 31 050 € au total.", en: "€30,000, i.e. three €10,000 bonds, plus 3.5% fees: €31,050 in total." },
-    },
-    {
-      q: { fr: "Quand suis-je payé ?", en: "When do I get paid?" },
-      a: { fr: "Deux fois : un premier coupon à 6 mois, puis le second coupon et votre capital à 12 mois. Pour 30 000 € : 3 000 € à 6 mois, 33 000 € à 12 mois.", en: "Twice: a first coupon at 6 months, then the second coupon and your capital at 12 months. For €30,000: €3,000 at 6 months, €33,000 at 12 months." },
-    },
-    {
-      q: { fr: "Puis-je récupérer mon argent avant 12 mois ?", en: "Can I get my money back before 12 months?" },
-      a: { fr: "Non, l'obligation ne prévoit pas de remboursement anticipé. En actifs numériques, le token peut être cédé à un autre investisseur vérifié ; des services de liquidité sont en développement.", en: "No, the bond has no early redemption. In digital assets, the token can be transferred to another verified investor; liquidity services are in development." },
-    },
-    {
-      q: { fr: "Comment souscrire ?", en: "How do I subscribe?" },
-      a: { fr: "Sur minah.io, après vérification de votre identité (KYC). Vous payez par virement, ou en USDC, USDT, BTC, ETH ou XLM ; vos remboursements arrivent par le même moyen.", en: "On minah.io, after identity checks (KYC). You pay by bank transfer, or in USDC, USDT, BTC, ETH or XLM; repayments come back the same way." },
-    },
-    {
-      q: { fr: "Et si une entreprise financée ne rembourse pas ?", en: "What if a financed company does not repay?" },
-      a: { fr: "Vous restez payé : Minah SAS doit intérêts et capital quelle que soit la performance des entreprises. Quatre protections s'empilent avant d'atteindre votre rendement, et aucun défaut n'a été enregistré à ce jour.", en: "You are still paid: Minah SAS owes interest and capital whatever the companies' performance. Four protections stack up before your return is affected, and no default has been recorded to date." },
-    },
-    {
-      q: { fr: "Et si Minah faisait faillite ?", en: "What if Minah went bankrupt?" },
-      a: { fr: "Votre argent est séparé de celui de l'entreprise. Les porteurs sont regroupés dans une masse des obligataires, qui peut agir en justice en leur nom, sans démarche individuelle.", en: "Your money is kept apart from the company's. Holders are grouped in a bondholder body, which can take legal action on their behalf, with no individual steps." },
-    },
-    {
-      q: { fr: "Les 20 % sont-ils nets d'impôts ?", en: "Is the 20% net of tax?" },
-      a: { fr: "Non, les rendements sont présentés bruts des taxes applicables dans votre pays de résidence.", en: "No, returns are shown before the taxes that apply in your country of residence." },
-    },
-    {
-      q: { fr: "Je suis américain : puis-je investir ?", en: "I am a US citizen: can I invest?" },
-      a: { fr: "Seulement si vous êtes investisseur accrédité, sur auto-certification. Avec une double nationalité, vous pouvez souscrire au titre de l'autre : écrivez-nous.", en: "Only as an accredited investor, on self-certification. With dual nationality, you may subscribe under the other one: write to us." },
-    },
-  ],
 };

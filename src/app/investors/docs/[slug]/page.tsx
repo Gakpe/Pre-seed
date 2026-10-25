@@ -36,7 +36,7 @@ import { ExitScenarios } from "./exit-scenarios";
 import { BusinessPlan } from "./business-plan/BusinessPlan";
 import { Impact } from "./impact";
 import { KupandaDueDiligence } from "./kupanda-dd/KupandaDueDiligence";
-import { DD_DOCS, type Profile } from "@/lib/kupanda-dd";
+import { DD_DOCS } from "@/lib/kupanda-dd";
 import { getBusinessPlan } from "@/lib/business-plan/data";
 
 export default async function DocPage({
@@ -49,10 +49,8 @@ export default async function DocPage({
   let doc: DocumentRow | null;
   // Dernier intérêt Kupanda de la personne, pour le bas de la term sheet.
   let kupandaInterest: { tranche: string; created_at: string } | null = null;
-  // Due diligence Kupanda : les fiches liées que la personne peut ouvrir, et
-  // son profil présumé (une structure renseignée vaut institutionnel).
+  // Due diligence Kupanda : les fiches liées que la personne peut ouvrir.
   let ddOpenSlugs: string[] = [];
-  let ddProfile: Profile = "particulier";
   const ddSlugs = DD_DOCS.flatMap((d) => (d.kind.type === "dataroom" ? [d.kind.slug] : []));
   if (demo) {
     // Pas de session Supabase en démo : service role + filtrage de niveau à la
@@ -82,7 +80,6 @@ export default async function DocPage({
             onboarding?.unlocked_slugs.includes(r.slug)
         )
         .map((r) => r.slug);
-      ddProfile = demo.entity ? "institutionnel" : "particulier";
     }
   } else {
     const supabase = await createClient();
@@ -113,12 +110,8 @@ export default async function DocPage({
 
     if (slug === "kupanda-due-diligence") {
       // RLS : seules reviennent les fiches visibles pour cette personne.
-      const [{ data: rows }, { data: me }] = await Promise.all([
-        supabase.from("documents").select("slug").in("slug", ddSlugs),
-        createAdminClient().from("investors").select("entity").eq("id", user.id).maybeSingle(),
-      ]);
+      const { data: rows } = await supabase.from("documents").select("slug").in("slug", ddSlugs);
       ddOpenSlugs = (rows ?? []).map((r) => r.slug);
-      ddProfile = me?.entity ? "institutionnel" : "particulier";
     }
   }
   if (!doc || RETIRED_SLUGS.has(doc.slug)) notFound();
@@ -345,7 +338,6 @@ export default async function DocPage({
         <KupandaDueDiligence
           locale={locale}
           openSlugs={ddOpenSlugs}
-          profile={ddProfile}
           demo={Boolean(demo)}
         />
       )}

@@ -6,11 +6,9 @@ import {
   ACTORS,
   USE_CASES,
   DD_DOCS,
-  FAQ,
   FLOWS,
   PROTECTION_EXTRA,
   type DdItem,
-  type Profile,
 } from "@/lib/kupanda-dd";
 import { RISK_LEVELS } from "@/lib/risk-levels";
 import type { Locale } from "@/lib/i18n";
@@ -36,7 +34,12 @@ const copy = {
       { value: "20 %", label: "Coupon annuel" },
       { value: "12 mois", label: "In fine, sans remboursement anticipé" },
       { value: "3 à 5 mois", label: "Par cycle de financement" },
-      { value: "0 défaut", label: "Sur plus de 2 M€ déployés" },
+      { value: "0 défaut", label: "Sur 10 M€ déployés" },
+    ],
+    headline: [
+      { value: "20 %", label: "Rendement brut par an" },
+      { value: "16,5 %", label: "Rendement net par an" },
+      { value: "12 mois", label: "Maturité, in fine" },
     ],
     tabsLabel: "Vues de l'opération",
     tabFlow: "Le flux de l'opération",
@@ -70,9 +73,6 @@ const copy = {
     s3Lead: "Les fiches de la data room s'ouvrent directement. Les autres documents sont envoyés sur demande : l'équipe la reçoit et revient vers vous.",
     inDataroom: "Dans la data room",
     onRequest: "Sur demande",
-    s4: "Vos questions",
-    profileLabel: "Vous investissez en",
-    profiles: { institutionnel: "Institutionnel", particulier: "Particulier" } as Record<Profile, string>,
     disclaimer: "Document de synthèse, sans valeur contractuelle. Seules les conditions définitives de l'émission font foi. Un investissement obligataire comporte un risque de perte en capital ; l'offre est réservée aux investisseurs avertis.",
     // Panneau
     kicker: { actor: "Acteur", flow: "Flux", protection: "Protection", usecase: "Cas d'usage" },
@@ -108,7 +108,12 @@ const copy = {
       { value: "20%", label: "Annual coupon" },
       { value: "12 months", label: "Bullet, no early redemption" },
       { value: "3 to 5 months", label: "Per financing cycle" },
-      { value: "0 default", label: "On over €2M deployed" },
+      { value: "0 default", label: "On €10M deployed" },
+    ],
+    headline: [
+      { value: "20%", label: "Gross annual return" },
+      { value: "16.5%", label: "Net annual return" },
+      { value: "12 months", label: "Bullet maturity" },
     ],
     tabsLabel: "Views of the deal",
     tabFlow: "How the deal flows",
@@ -142,9 +147,6 @@ const copy = {
     s3Lead: "Data room pages open directly. Other documents are sent on request: the team receives it and gets back to you.",
     inDataroom: "In the data room",
     onRequest: "On request",
-    s4: "Your questions",
-    profileLabel: "You invest as",
-    profiles: { institutionnel: "Institution", particulier: "Individual" } as Record<Profile, string>,
     disclaimer: "Summary document, with no contractual value. Only the final terms of the issuance are binding. A bond investment carries a risk of capital loss; the offer is reserved for qualified investors.",
     kicker: { actor: "Actor", flow: "Flow", protection: "Protection", usecase: "Use case" },
     cases: "Use cases",
@@ -240,14 +242,11 @@ type RequestState = "sending" | "sent" | "error";
 export function KupandaDueDiligence({
   locale,
   openSlugs,
-  profile,
   demo = false,
 }: {
   locale: Locale;
   /** Fiches de la data room que la personne peut ouvrir. */
   openSlugs: string[];
-  /** Profil présumé, pour les questions affichées d'abord. */
-  profile: Profile;
   demo?: boolean;
 }) {
   const c = copy[locale];
@@ -363,7 +362,18 @@ export function KupandaDueDiligence({
 
   return (
     <div className="mt-6">
-      <p className="max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{c.lead}</p>
+      {/* Le chapô à gauche, les trois chiffres de l'obligation à droite. */}
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-12">
+        <p className="max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{c.lead}</p>
+        <dl className="grid grid-cols-3 border-y border-foreground/10 lg:min-w-[30rem]">
+          {c.headline.map((f, i) => (
+            <div key={f.label} className={`py-4 ${i ? "border-l border-foreground/10 pl-5" : ""}`}>
+              <dd className="whitespace-nowrap text-3xl font-semibold tracking-tight tabular-nums text-marsala">{f.value}</dd>
+              <dt className="mt-1 text-sm leading-5 text-neutral-600">{f.label}</dt>
+            </div>
+          ))}
+        </dl>
+      </div>
 
       {/* Kupanda 1, puis Kupanda 2 : la même stratégie, émission après émission. */}
       <div className="mt-6">
@@ -531,7 +541,6 @@ export function KupandaDueDiligence({
       </section>
 
       {/* 02, les questions */}
-      <Faqs locale={locale} c={c} initial={profile} />
 
       <p className="mt-14 border-t border-foreground/10 pt-4 text-xs leading-5 text-neutral-600">{c.disclaimer}</p>
     </div>
@@ -926,95 +935,7 @@ function DocRow({ id, ctx, compact = false }: { id: string; ctx: DocCtx; compact
   );
 }
 
-// --- Questions fréquentes ----------------------------------------------------------
-
-function Faqs({ locale, c, initial }: { locale: Locale; c: Copy; initial: Profile }) {
-  const [profile, setProfile] = useState<Profile>(initial);
-  const [open, setOpen] = useState<number | null>(0);
-  const items = FAQ[profile];
-
-  return (
-    <section className="mt-16">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <SectionTitle n="02">{c.s4}</SectionTitle>
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-neutral-600">{c.profileLabel}</span>
-          <div role="radiogroup" aria-label={c.profileLabel} className="flex rounded-lg border border-foreground/15 bg-white/50 p-0.5">
-            {(["institutionnel", "particulier"] as Profile[]).map((p) => (
-              <button
-                key={p}
-                type="button"
-                role="radio"
-                aria-checked={profile === p}
-                onClick={() => {
-                  setProfile(p);
-                  setOpen(0);
-                }}
-                className={`cursor-pointer rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                  profile === p ? "bg-white text-foreground shadow-sm" : "text-neutral-600 hover:text-foreground"
-                }`}
-              >
-                {c.profiles[p]}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-      <ul key={profile} className="dd-stagger mt-6 border-t border-foreground/10">
-        {items.map((f, i) => {
-          const on = open === i;
-          return (
-            <li key={f.q.fr} className="border-b border-foreground/10">
-              <button
-                type="button"
-                aria-expanded={on}
-                onClick={() => setOpen(on ? null : i)}
-                className="flex w-full cursor-pointer items-center justify-between gap-6 py-4 text-left"
-              >
-                <span className="text-[15px] font-semibold leading-snug text-foreground">{f.q[locale]}</span>
-                <span
-                  aria-hidden
-                  className={`grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-brand/10 text-marsala transition-transform duration-200 ${on ? "rotate-45" : ""}`}
-                >
-                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2.25} strokeLinecap="round">
-                    <path d="M12 5v14M5 12h14" />
-                  </svg>
-                </span>
-              </button>
-              <div
-                className={`grid transition-[grid-template-rows] duration-300 ease-out ${on ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
-              >
-                <div className="overflow-hidden">
-                  <p className="max-w-3xl pb-5 text-[15px] leading-[1.8] text-neutral-700">
-                    <WithPlaceholders text={f.a[locale]} />
-                  </p>
-                </div>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    </section>
-  );
-}
-
 // Montant ou précision à renseigner, absent de nos données : surligné.
 function Placeholder({ children }: { children: React.ReactNode }) {
   return <mark className="whitespace-nowrap rounded-sm bg-yellow-200 px-1 text-foreground">{children}</mark>;
 }
-
-// « __à préciser__ » dans un texte : surligné comme les montants à renseigner.
-function WithPlaceholders({ text }: { text: string }) {
-  return (
-    <>
-      {text.split(/(__[^_]+__)/g).map((part, i) =>
-        part.startsWith("__") && part.endsWith("__") ? (
-          <Placeholder key={i}>{part.slice(2, -2)}</Placeholder>
-        ) : (
-          part
-        )
-      )}
-    </>
-  );
-}
-
