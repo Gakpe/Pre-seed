@@ -566,9 +566,7 @@ function Steps({
                 {g.label}
               </p>
               <ol
-                className={`relative flex gap-1.5 rounded-lg md:block md:space-y-0.5 md:border-l-2 md:pl-1 md:transition-colors ${
-                  active ? "md:border-brand/60" : "md:border-foreground/10"
-                }`}
+                className="relative flex gap-1.5 md:block md:space-y-0.5"
               >
                 {g.items.map((it) => {
                   const on = selected === it.id;
