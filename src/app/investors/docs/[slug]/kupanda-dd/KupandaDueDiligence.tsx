@@ -73,7 +73,6 @@ const copy = {
     s3Lead: "Les fiches de la data room s'ouvrent directement. Les autres documents sont envoyés sur demande : l'équipe la reçoit et revient vers vous.",
     inDataroom: "Dans la data room",
     onRequest: "Sur demande",
-    disclaimer: "Document de synthèse, sans valeur contractuelle. Seules les conditions définitives de l'émission font foi. Un investissement obligataire comporte un risque de perte en capital ; l'offre est réservée aux investisseurs avertis.",
     // Panneau
     kicker: { actor: "Acteur", flow: "Flux", protection: "Protection", usecase: "Cas d'usage" },
     cases: "Les cas d'usage",
@@ -147,7 +146,6 @@ const copy = {
     s3Lead: "Data room pages open directly. Other documents are sent on request: the team receives it and gets back to you.",
     inDataroom: "In the data room",
     onRequest: "On request",
-    disclaimer: "Summary document, with no contractual value. Only the final terms of the issuance are binding. A bond investment carries a risk of capital loss; the offer is reserved for qualified investors.",
     kicker: { actor: "Actor", flow: "Flow", protection: "Protection", usecase: "Use case" },
     cases: "Use cases",
     series: [
@@ -542,7 +540,6 @@ export function KupandaDueDiligence({
 
       {/* 02, les questions */}
 
-      <p className="mt-14 border-t border-foreground/10 pt-4 text-xs leading-5 text-neutral-600">{c.disclaimer}</p>
     </div>
   );
 }
