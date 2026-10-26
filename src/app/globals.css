@@ -747,7 +747,7 @@ body {
   display: none;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1279px) {
   .dd-drawer {
     position: fixed;
     inset: auto 0 0 0;
@@ -773,6 +773,13 @@ body {
 
   .dd-backdrop[data-open="true"] {
     display: block;
+  }
+}
+
+/* Sur tablette et petit écran, la feuille laisse voir le haut de la scène. */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .dd-drawer {
+    max-height: 60dvh;
   }
 }
 

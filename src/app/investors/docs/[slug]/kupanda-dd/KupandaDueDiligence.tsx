@@ -244,8 +244,10 @@ export function KupandaDueDiligence({
   const [requests, setRequests] = useState<Record<string, RequestState>>({});
   // Portrait au téléphone, paysage au-delà ; le panneau devient une feuille
   // sous 1024 px.
-  const tall = useMedia("(max-width: 767px)");
-  const large = useMedia("(min-width: 1024px)");
+  const tall = useMedia("(max-width: 1023px)");
+  // Le panneau en tiroir à droite ne laisse assez de carte qu'à partir de
+  // 1280 px ; en dessous, c'est la feuille du bas.
+  const large = useMedia("(min-width: 1280px)");
   const motion = !useMedia("(prefers-reduced-motion: reduce)");
   const layout: Layout = tall ? "tall" : "wide";
 
@@ -410,13 +412,13 @@ export function KupandaDueDiligence({
         ))}
       </div>
 
-      <p className="mt-3 text-sm text-neutral-600 md:hidden">{tab === "flux" ? c.hintFlow : c.hintRisk}</p>
+      <p className="mt-3 text-sm text-neutral-600 lg:hidden">{tab === "flux" ? c.hintFlow : c.hintRisk}</p>
 
       {/* La scène : elle tient dans l'écran ; au large, le panneau glisse
           depuis la droite et la scène se resserre à côté. */}
       <div
         role="tabpanel"
-        className="relative mt-4 overflow-hidden rounded-xl border border-foreground/10 bg-[radial-gradient(ellipse_at_60%_35%,#fffdfa_0%,#f7f3ec_70%)] md:grid md:h-[min(780px,calc(100dvh-10.5rem))] md:min-h-[520px] md:grid-cols-[236px_minmax(0,1fr)]"
+        className="relative mt-4 overflow-hidden rounded-xl border border-foreground/10 bg-[radial-gradient(ellipse_at_60%_35%,#fffdfa_0%,#f7f3ec_70%)] lg:grid lg:h-[min(780px,calc(100dvh-10.5rem))] lg:min-h-[520px] lg:grid-cols-[236px_minmax(0,1fr)]"
       >
         {/* Les étapes : un clic met en lumière la partie du schéma. */}
         <Steps
@@ -434,7 +436,7 @@ export function KupandaDueDiligence({
           selected={selected}
           onSelect={toggle}
         />
-        <div className="relative max-md:aspect-[2/3]">
+        <div className="relative max-lg:mx-auto max-lg:aspect-[2/3] max-lg:max-h-[80dvh]">
           {/* Un clic dans le vide referme le détail et revient à la vue
               d'ensemble ; les éléments cliquables ont role="button". */}
           <div
@@ -452,7 +454,7 @@ export function KupandaDueDiligence({
                 onSelect={toggle}
                 labels={labels}
                 motion={motion}
-                focus={large ? (groupOf(selected)?.id ?? null) : null}
+                focus={!tall ? (groupOf(selected)?.id ?? null) : null}
                 cover={open && large ? DRAWER_W : 0}
               />
             ) : (
@@ -460,7 +462,7 @@ export function KupandaDueDiligence({
                 key={layout}
                 locale={locale}
                 layout={layout}
-                selected={large ? selected : null}
+                selected={!tall ? selected : null}
                 onSelect={toggle}
                 motion={motion}
                 cover={open && large ? DRAWER_W : 0}
@@ -468,7 +470,7 @@ export function KupandaDueDiligence({
             )}
           </div>
           <p
-            className={`pointer-events-none absolute right-4 top-4 rounded-lg border border-foreground/10 bg-white/80 px-3 py-1.5 text-xs text-neutral-600 backdrop-blur transition-opacity duration-300 max-md:hidden ${
+            className={`pointer-events-none absolute right-4 top-4 rounded-lg border border-foreground/10 bg-white/80 px-3 py-1.5 text-xs text-neutral-600 backdrop-blur transition-opacity duration-300 max-lg:hidden ${
               open ? "opacity-0" : "opacity-100"
             }`}
           >
@@ -551,9 +553,9 @@ function Steps({
   onSelect: (id: string) => void;
 }) {
   return (
-    <nav aria-label={title} className="border-foreground/10 max-md:border-b md:overflow-y-auto md:border-r md:bg-white/40">
-      <h3 className="px-4 pt-4 text-sm font-semibold text-foreground max-md:sr-only">{title}</h3>
-      <div className="flex gap-4 overflow-x-auto px-3 py-3 md:block md:space-y-4 md:px-2 md:pt-3 md:pb-4">
+    <nav aria-label={title} className="border-foreground/10 max-lg:border-b lg:overflow-y-auto lg:border-r lg:bg-white/40">
+      <h3 className="px-4 pt-4 text-sm font-semibold text-foreground max-lg:sr-only">{title}</h3>
+      <div className="flex gap-4 overflow-x-auto px-3 py-3 lg:block lg:space-y-4 lg:px-2 lg:pt-3 lg:pb-4">
         {groups.map((g) => {
           const active = g.items.some((it) => it.id === selected);
           return (
@@ -566,7 +568,7 @@ function Steps({
                 {g.label}
               </p>
               <ol
-                className="relative flex gap-1.5 md:block md:space-y-0.5"
+                className="relative flex gap-1.5 lg:block lg:space-y-0.5"
               >
                 {g.items.map((it) => {
                   const on = selected === it.id;
@@ -576,10 +578,10 @@ function Steps({
                         type="button"
                         aria-pressed={on}
                         onClick={() => onSelect(it.id)}
-                        className={`flex w-full cursor-pointer items-center gap-2.5 whitespace-nowrap rounded-lg px-2 py-1.5 text-left text-sm transition-colors max-md:border md:whitespace-normal ${
+                        className={`flex w-full cursor-pointer items-center gap-2.5 whitespace-nowrap rounded-lg px-2 py-1.5 text-left text-sm transition-colors max-lg:border lg:whitespace-normal ${
                           on
-                            ? "bg-brand/10 font-semibold text-marsala max-md:border-brand/30"
-                            : "text-neutral-700 hover:bg-foreground/[0.04] hover:text-foreground max-md:border-foreground/10 max-md:bg-white/60"
+                            ? "bg-brand/10 font-semibold text-marsala max-lg:border-brand/30"
+                            : "text-neutral-700 hover:bg-foreground/[0.04] hover:text-foreground max-lg:border-foreground/10 max-lg:bg-white/60"
                         }`}
                       >
                         {it.n ? (

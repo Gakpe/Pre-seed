@@ -96,9 +96,10 @@ export function ZambiaZoom({
   const y0 = Math.min(...P.map((q) => q.y));
   const y1 = Math.max(...P.map((q) => q.y));
   const cx = (x0 + x1) / 2;
-  const cardW = px(230);
+  // Assez étroit pour tenir à côté du panneau de détail dès 1280 px.
+  const cardW = px(196);
   const cardH = px(58);
-  const mid = px(150);
+  const mid = px(100);
   const rowY = y1 + px(30);
   const stateBox = { x: cx - px(170), y: y0 - px(22) - px(124), w: px(340), h: px(124) };
   const cards = {
