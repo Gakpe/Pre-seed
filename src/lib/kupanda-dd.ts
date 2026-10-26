@@ -336,7 +336,7 @@ export const PROTECTION_EXTRA: Record<string, { scope: Bi; cover: Fact[]; notes?
     scope: PORTFOLIO,
     cover: [
       { label: { fr: "Garantie Africa Rise", en: "Africa Rise guarantee" }, value: { fr: "Jusqu'à 2 M€", en: "Up to €2M" } },
-      { label: { fr: "Currency swap Zanaco", en: "Zanaco currency swap" }, value: null },
+      { label: { fr: "Currency swap Zanaco", en: "Zanaco currency swap" }, value: { fr: "Tous les montants déployés, exposés en USD", en: "All deployed amounts, exposed in USD" } },
     ],
     docs: ["partnership", "swap"],
   },
