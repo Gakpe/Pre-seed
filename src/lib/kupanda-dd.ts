@@ -207,7 +207,7 @@ export const FLOWS: (DdItem & { from: string; to: string; label: Bi })[] = [
     kind: "flow",
     from: "africa-rise",
     to: "pme",
-    label: { fr: "Cycles de 3 à 5 mois", en: "3 to 5-month cycles" },
+    label: { fr: "Fonds de roulement, cycles de 3 à 5 mois", en: "Working capital, 3 to 5-month cycles" },
     title: { fr: "Le financement des PME", en: "Financing the SMEs" },
     tag: { fr: "D'Africa Rise vers les PME sous contrat", en: "From Africa Rise to SMEs under contract" },
     facts: [

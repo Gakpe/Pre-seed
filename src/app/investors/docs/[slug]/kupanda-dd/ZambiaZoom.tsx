@@ -148,6 +148,9 @@ export function ZambiaZoom({
           return <FlowPath key={id} d={d} active={on("reglement")} motion={motion} k={k} id={`rg-${id}`} />;
         })}
         <Chip x={x1 + px(30)} y={(y0 + y1) / 2} text={labels.reglement} k={k} active={on("reglement")} />
+        {/* Le payeur public : ZESCO, l'entité d'État de l'électricité. */}
+        <rect x={x1 + px(30) - px(36)} y={(y0 + y1) / 2 - px(84)} width={px(72)} height={px(62)} rx={px(8)} fill="#fff" stroke="rgb(43 26 22 / 0.14)" vectorEffect="non-scaling-stroke" filter="url(#dd-shadow)" />
+        <image href="/partners/zesco.png" x={x1 + px(30) - px(30)} y={(y0 + y1) / 2 - px(80)} width={px(60)} height={px(54)} preserveAspectRatio="xMidYMid meet" />
       </g>
 
       {/* Financement : Africa Rise, en dessous, finance les deux PME */}
