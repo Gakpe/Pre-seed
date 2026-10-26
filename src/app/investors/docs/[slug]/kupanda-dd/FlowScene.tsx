@@ -63,8 +63,8 @@ const copy = {
     state: "État zambien",
     stateSub: "2 ministères",
     smes: [
-      { id: "uc-infrastructure", t: "Infrastructure", s: "Mobilier scolaire" },
-      { id: "uc-energie", t: "Énergie", s: "Centrales solaires" },
+      { id: "uc-infrastructure", t: "Infrastructure", s: "Cantines scolaires" },
+      { id: "uc-energie", t: "Énergie", s: "Contrat ZESCO" },
     ],
     pme: "PME sous contrat",
     zoomZambia: "Les PME en Zambie",
@@ -85,8 +85,8 @@ const copy = {
     state: "Zambian State",
     stateSub: "2 ministries",
     smes: [
-      { id: "uc-infrastructure", t: "Infrastructure", s: "School furniture" },
-      { id: "uc-energie", t: "Energy", s: "Solar plants" },
+      { id: "uc-infrastructure", t: "Infrastructure", s: "School canteens" },
+      { id: "uc-energie", t: "Energy", s: "ZESCO contract" },
     ],
     pme: "SMEs under contract",
     zoomZambia: "The SMEs in Zambia",

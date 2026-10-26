@@ -24,23 +24,23 @@ const copy = {
   fr: {
     province: "Province de Lusaka",
     africaRise: "Africa Rise",
-    africaRiseSub: "Finance et suit les PME",
+    africaRiseSub: "Suit les financements",
     state: "État zambien",
     stateSub: "Acheteur final des contrats",
     cases: {
-      "uc-infrastructure": { t: "Infrastructure", s: "Mobilier scolaire, Éducation" },
-      "uc-energie": { t: "Énergie", s: "Centrales solaires" },
+      "uc-infrastructure": { t: "Infrastructure", s: "Cantines de toutes les écoles" },
+      "uc-energie": { t: "Énergie", s: "Contrat avec ZESCO" },
     },
   },
   en: {
     province: "Lusaka Province",
     africaRise: "Africa Rise",
-    africaRiseSub: "Finances and monitors the SMEs",
+    africaRiseSub: "Monitors the financings",
     state: "Zambian State",
     stateSub: "Final buyer of the contracts",
     cases: {
-      "uc-infrastructure": { t: "Infrastructure", s: "School furniture, Education" },
-      "uc-energie": { t: "Energy", s: "Solar plants" },
+      "uc-infrastructure": { t: "Infrastructure", s: "Canteens for every school" },
+      "uc-energie": { t: "Energy", s: "Contract with ZESCO" },
     },
   },
 } as const;
@@ -55,7 +55,7 @@ export function zambiaBox(cam: Camera): Box {
   const y0 = Math.min(...ys);
   const y1 = Math.max(...ys);
   const h = y1 - y0;
-  return { x: x0 - (x1 - x0) * 0.1, y: y0 - h * 0.8, w: (x1 - x0) * 1.2, h: h * 2.55 };
+  return { x: x0 - (x1 - x0) * 0.1, y: y0 - h * 0.8, w: (x1 - x0) * 1.2, h: h * 3.05 };
 }
 
 type PickFn = (id: string, label: string) => Record<string, unknown>;
@@ -87,22 +87,25 @@ export function ZambiaZoom({
 
   const outline = (ring: [number, number][]) => toPath(ring.map(([lo, la]) => project(cam, lo, la))) + "Z";
 
-  // Le pays à l'écran : l'État au-dessus, une rangée de cartes dessous
-  // (Infrastructure, Africa Rise, Énergie). Tailles en pixels d'écran.
+  // Le pays à l'écran : l'État au-dessus, les deux PME dessous, bien
+  // écartées, et Africa Rise centré en dessous, qui les finance par deux
+  // flèches montantes. Tailles en pixels d'écran.
   const P = ZAMBIA_FINE.map(([lo, la]) => project(cam, lo, la));
   const x0 = Math.min(...P.map((q) => q.x));
   const x1 = Math.max(...P.map((q) => q.x));
   const y0 = Math.min(...P.map((q) => q.y));
   const y1 = Math.max(...P.map((q) => q.y));
   const cx = (x0 + x1) / 2;
-  const gap = px(14);
-  const cardW = Math.min(px(210), ((x1 - x0) * 1.08 - gap * 2) / 3);
-  const cardH = px(56);
-  const rowY = y1 + px(34);
+  const cardW = px(230);
+  const cardH = px(58);
+  const mid = px(150);
+  const rowY = y1 + px(30);
   const stateBox = { x: cx - px(170), y: y0 - px(22) - px(124), w: px(340), h: px(124) };
-  const slot = (i: number) => ({ x: cx - cardW * 1.5 - gap + i * (cardW + gap), y: rowY, w: cardW, h: cardH });
-  const cards = { "uc-infrastructure": slot(0), "uc-energie": slot(2) };
-  const arBox = slot(1);
+  const cards = {
+    "uc-infrastructure": { x: cx - mid / 2 - cardW, y: rowY, w: cardW, h: cardH },
+    "uc-energie": { x: cx + mid / 2, y: rowY, w: cardW, h: cardH },
+  };
+  const arBox = { x: cx - cardW / 2, y: rowY + cardH + px(78), w: cardW, h: cardH };
   const site = (id: keyof typeof SITES) => project(cam, ...SITES[id]);
   const pmeOn = on("pme");
   const ids = Object.keys(SITES) as (keyof typeof SITES)[];
@@ -147,16 +150,26 @@ export function ZambiaZoom({
         <Chip x={x1 + px(30)} y={(y0 + y1) / 2} text={labels.reglement} k={k} active={on("reglement")} />
       </g>
 
-      {/* Financement : Africa Rise vers les deux PME, dans la rangée */}
+      {/* Financement : Africa Rise, en dessous, finance les deux PME */}
       <g {...pick("financement", labels.financementAria)}>
         {ids.map((id) => {
           const b = cards[id];
           const left = id === "uc-infrastructure";
-          const fy = arBox.y + arBox.h / 2;
-          const d = left ? `M${arBox.x} ${fy}L${b.x + b.w + px(2)} ${fy}` : `M${arBox.x + arBox.w} ${fy}L${b.x - px(2)} ${fy}`;
-          return <FlowPath key={id} d={d} active={on("financement")} motion={motion} k={k} id={`fn-${id}`} />;
+          const sx = left ? arBox.x + px(40) : arBox.x + arBox.w - px(40);
+          const sy = arBox.y - px(2);
+          const tx = b.x + b.w / 2;
+          const ty = b.y + b.h + px(4);
+          const d = `M${sx} ${sy}C${sx} ${sy - px(34)},${tx} ${ty + px(34)},${tx} ${ty}`;
+          const head = `M${tx - px(5)} ${ty + px(8)}L${tx} ${ty}L${tx + px(5)} ${ty + px(8)}`;
+          const active = on("financement");
+          return (
+            <g key={id}>
+              <FlowPath d={d} active={active} motion={motion} k={k} id={`fn-${id}`} />
+              <path d={head} fill="none" stroke={active ? ACCENT : "#2b1a16"} strokeOpacity={active ? 1 : 0.5} strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+            </g>
+          );
         })}
-        <Chip x={cx} y={rowY + cardH + px(26)} text={labels.financement} k={k} active={on("financement")} />
+        <Chip x={cx} y={rowY + cardH + px(44)} text={labels.financement} k={k} active={on("financement")} />
       </g>
 
       {/* Les deux PME, une par cas d'usage, reliées à leur site */}

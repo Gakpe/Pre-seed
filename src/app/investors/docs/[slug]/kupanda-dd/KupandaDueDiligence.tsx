@@ -28,7 +28,7 @@ import { RiskScene } from "./RiskScene";
 
 const copy = {
   fr: {
-    lead: "Kupanda est une stratégie qui se décline en émissions successives, sur les mêmes termes : Kupanda 1, 2 M€, est en cours, et Kupanda 2, 10 M€, arrive. Des investisseurs du monde entier souscrivent une obligation émise à Paris ; l'argent part en Zambie, où Africa Rise finance des PME titulaires de marchés publics signés, puis revient avec le coupon.",
+    lead: "Kupanda est une stratégie qui se décline en émissions successives, sur les mêmes termes : Kupanda 1, 2 M€, est en cours, et Kupanda 2, 10 M€, arrive. Des investisseurs du monde entier souscrivent une obligation émise à Paris ; l'argent part principalement en Zambie, et pour une partie au Kenya, où Africa Rise finance des PME titulaires de marchés publics signés, puis revient avec le coupon.",
     facts: [
       { value: "2 M€", label: "Kupanda 1, l'émission en cours" },
       { value: "20 %", label: "Coupon annuel" },
@@ -102,7 +102,7 @@ const copy = {
     returnRail: "Retour aux souscripteurs",
   },
   en: {
-    lead: "Kupanda is a strategy rolled out in successive issuances, on the same terms: Kupanda 1, €2M, is live, and Kupanda 2, €10M, is coming. Investors from around the world subscribe to a bond issued in Paris; the money goes to Zambia, where Africa Rise finances SMEs holding signed public contracts, then comes back with the coupon.",
+    lead: "Kupanda is a strategy rolled out in successive issuances, on the same terms: Kupanda 1, €2M, is live, and Kupanda 2, €10M, is coming. Investors from around the world subscribe to a bond issued in Paris; the money goes mainly to Zambia, with part going to Kenya, where Africa Rise finances SMEs holding signed public contracts, then comes back with the coupon.",
     facts: [
       { value: "€2M", label: "Kupanda 1, the live issuance" },
       { value: "20%", label: "Annual coupon" },
