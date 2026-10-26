@@ -172,7 +172,8 @@ export function RiskScene({
       {[...RISK_LEVELS].reverse().map((l) => {
         const i = l.index - 1;
         const y = slabY(i);
-        const cover = PROTECTION_EXTRA[l.id]?.cover[0];
+        const extra = PROTECTION_EXTRA[l.id];
+        const cover = extra?.cover[0];
         const value = cover?.value?.[locale] ?? null;
         const critical = l.index === 4;
         const midY = y + g.t / 2;
@@ -200,6 +201,11 @@ export function RiskScene({
                 dark={critical}
               />
             )}
+            {wide && !cover && extra && (
+              <text x={g.x + g.w + g.dx + 66} y={midY - g.dy / 2 + 4} fontSize={11.5} fontWeight={600} fill="#7a2e1f">
+                {extra.scope[locale]}
+              </text>
+            )}
             {wide && cover && (
               <g>
                 <line x1={g.x + g.w + g.dx + 8} y1={midY - g.dy / 2} x2={g.x + g.w + g.dx + 56} y2={midY - g.dy / 2} stroke="#2b1a16" strokeOpacity="0.3" />
@@ -214,8 +220,8 @@ export function RiskScene({
                 ) : (
                   <Mark x={g.x + g.w + g.dx + 66} y={midY - g.dy / 2 + 14} text={c.toFill} fs={1.1} />
                 )}
-                <text x={g.x + g.w + g.dx + 66} y={midY - g.dy / 2 + 32} fontSize={11} fill="#57534e">
-                  {l.name[locale]}
+                <text x={g.x + g.w + g.dx + 66} y={midY - g.dy / 2 + 32} fontSize={11} fontWeight={600} fill="#7a2e1f">
+                  {extra?.scope[locale]}
                 </text>
               </g>
             )}

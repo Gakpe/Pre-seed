@@ -309,16 +309,31 @@ export const USE_CASES: DdItem[] = [
 // (risk-levels) ; ce fichier n'y ajoute que la hauteur couverte et les
 // documents.
 
-export const PROTECTION_EXTRA: Record<string, { cover: Fact[]; docs: string[] }> = {
+export const PORTFOLIO_COVER_NOTE: Bi = {
+  fr: "À l'étude : un performance bond et une assurance défaut de crédit au niveau du portefeuille. Peut-être dès Kupanda 2, en 2027 au plus tard. C'est plus coûteux, mais cela accélérera notre distribution institutionnelle.",
+  en: "Under review: a performance bond and credit default insurance at portfolio level. Possibly from Kupanda 2, in 2027 at the latest. It costs more, but it will speed up our institutional distribution.",
+};
+
+const ASSET: Bi = { fr: "Par actif sous-jacent", en: "Per underlying asset" };
+const PORTFOLIO: Bi = { fr: "Au niveau du portefeuille", en: "At portfolio level" };
+
+// Niveaux 1 et 2 : par actif sous-jacent ; niveaux 3 et 4 : sur le
+// portefeuille (Julien, 26/10/2026).
+export const PROTECTION_EXTRA: Record<string, { scope: Bi; cover: Fact[]; notes?: Bi[]; docs: string[] }> = {
   performance: {
+    scope: ASSET,
     cover: [{ label: { fr: "Montant couvert", en: "Amount covered" }, value: { fr: "c. 300 K€", en: "c. €300K" } }],
+    notes: [PORTFOLIO_COVER_NOTE],
     docs: ["bond", "risk-deck"],
   },
   credit: {
+    scope: ASSET,
     cover: [{ label: { fr: "Couverture", en: "Coverage" }, value: { fr: "c. 300 K€", en: "c. €300K" } }],
+    notes: [PORTFOLIO_COVER_NOTE],
     docs: ["insurance", "risk-deck"],
   },
   systemique: {
+    scope: PORTFOLIO,
     cover: [
       { label: { fr: "Garantie Africa Rise", en: "Africa Rise guarantee" }, value: { fr: "Jusqu'à 2 M€", en: "Up to €2M" } },
       { label: { fr: "Currency swap Zanaco", en: "Zanaco currency swap" }, value: null },
@@ -327,6 +342,7 @@ export const PROTECTION_EXTRA: Record<string, { cover: Fact[]; docs: string[] }>
   },
   residuel: {
     // Pas de montant affiché pour la réserve (Julien, 25/10/2026).
+    scope: PORTFOLIO,
     cover: [],
     docs: ["risk-architecture"],
   },

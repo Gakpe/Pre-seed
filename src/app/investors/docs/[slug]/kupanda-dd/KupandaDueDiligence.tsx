@@ -7,6 +7,7 @@ import {
   USE_CASES,
   DD_DOCS,
   FLOWS,
+  PORTFOLIO_COVER_NOTE,
   PROTECTION_EXTRA,
   type DdItem,
 } from "@/lib/kupanda-dd";
@@ -51,6 +52,7 @@ const copy = {
     hintRisk: "Cliquez sur une protection pour voir ce qu'elle couvre, à quelle hauteur, et sur quel document.",
     stepsRisk: "Les étages",
     socleKicker: "Socle",
+    scopeLabel: "Niveau de protection",
     socleTitle: "Le socle juridique",
     socleTag: "Ce qui protège les obligataires quoi qu'il arrive",
     s2: "La sécurité, étage par étage",
@@ -60,15 +62,6 @@ const copy = {
       { title: "Une obligation directe", body: "Minah SAS doit intérêts et principal, quelle que soit la performance des actifs sous-jacents." },
       { title: "La masse des obligataires", body: "Représentée par Julca, elle agit au nom de tous les porteurs, sans action individuelle." },
     ],
-    gaugeTitle: "Jusqu'où la structure tient",
-    gaugeCaption: "Pertes cumulées sur les financements, sur 12 mois.",
-    gaugeMarks: [
-      { v: 4.6, value: "< 5 %", label: "Historique" },
-      { v: 15, value: "15 %", label: "Scénario central" },
-      { v: 30, value: "30 %", label: "Point mort, 6,5 × l'historique" },
-    ],
-    gaugeAbsorbed: "Absorbé par les protections",
-    gaugeBeyond: "Perte partielle de performance, sans perte de capital",
     s3: "Les documents",
     s3Lead: "Les fiches de la data room s'ouvrent directement. Les autres documents sont envoyés sur demande : l'équipe la reçoit et revient vers vous.",
     inDataroom: "Dans la data room",
@@ -124,6 +117,7 @@ const copy = {
     hintRisk: "Click a protection to see what it covers, up to what amount, and on which document.",
     stepsRisk: "The layers",
     socleKicker: "Foundation",
+    scopeLabel: "Protection level",
     socleTitle: "The legal foundation",
     socleTag: "What protects bondholders whatever happens",
     s2: "Security, layer by layer",
@@ -133,15 +127,6 @@ const copy = {
       { title: "A direct obligation", body: "Minah SAS owes interest and principal, whatever the performance of the underlying assets." },
       { title: "The bondholder body", body: "Represented by Julca, it acts on behalf of all holders, with no individual action." },
     ],
-    gaugeTitle: "How far the structure holds",
-    gaugeCaption: "Cumulative losses on the financings, over 12 months.",
-    gaugeMarks: [
-      { v: 4.6, value: "< 5%", label: "Historical" },
-      { v: 15, value: "15%", label: "Base case" },
-      { v: 30, value: "30%", label: "Breakeven, 6.5× historical" },
-    ],
-    gaugeAbsorbed: "Absorbed by the protections",
-    gaugeBeyond: "Partial loss of return, no loss of capital",
     s3: "Documents",
     s3Lead: "Data room pages open directly. Other documents are sent on request: the team receives it and gets back to you.",
     inDataroom: "In the data room",
@@ -281,13 +266,17 @@ export function KupandaDueDiligence({
           kicker: `${c.level} ${l.index}`,
           title: l.name[locale],
           tag: l.protection.name[locale],
-          facts: (extra?.cover ?? []).map((f) => ({
-            label: f.label[locale],
-            value: f.value?.[locale] ?? null,
-          })),
+          facts: [
+            ...(extra ? [{ label: c.scopeLabel, value: extra.scope[locale] }] : []),
+            ...(extra?.cover ?? []).map((f) => ({
+              label: f.label[locale],
+              value: f.value?.[locale] ?? null,
+            })),
+          ],
           points: [
             `${l.trigger.lead[locale]} ${l.trigger.body[locale]}`,
             l.protection.body[locale],
+            ...(extra?.notes ?? []).map((n) => n[locale]),
           ],
           docs: extra?.docs ?? [],
         },
@@ -514,7 +503,9 @@ export function KupandaDueDiligence({
           ))}
         </dl>
       ) : (
-        <LossGauge c={c} />
+        <p className="mt-6 max-w-4xl rounded-xl border border-foreground/10 bg-white/60 px-5 py-4 text-sm leading-6 text-neutral-700">
+          {PORTFOLIO_COVER_NOTE[locale]}
+        </p>
       )}
 
       {/* 01, les documents */}
@@ -635,66 +626,6 @@ function useMedia(query: string): boolean {
   return match;
 }
 
-
-// Jauge des pertes cumulées : jusqu'au point mort, tout est absorbé.
-function LossGauge({ c }: { c: Copy }) {
-  const MAX = 40;
-  const pct = (v: number) => `${(v / MAX) * 100}%`;
-  return (
-    <div className="mt-10">
-      <h3 className="text-sm font-semibold text-foreground">{c.gaugeTitle}</h3>
-      <p className="mt-1 text-sm text-neutral-600">{c.gaugeCaption}</p>
-      <div className="relative mt-14 mb-20">
-        <div className="relative h-3 overflow-hidden rounded-full bg-foreground/[0.06]">
-          <div className="absolute inset-y-0 left-0 bg-brand/25" style={{ width: pct(30) }} />
-          <div
-            className="absolute inset-y-0 right-0"
-            style={{
-              left: pct(30),
-              backgroundImage:
-                "repeating-linear-gradient(135deg, rgb(43 26 22 / 0.22) 0 2px, transparent 2px 7px)",
-            }}
-          />
-        </div>
-        {c.gaugeMarks.map((m, i) => {
-          const above = i === 1;
-          return (
-            <div
-              key={m.label}
-              className="absolute top-1/2 -translate-x-1/2"
-              style={{ left: pct(m.v) }}
-            >
-              <span className="absolute left-1/2 h-7 w-px -translate-x-1/2 bg-foreground/45" style={{ top: -14 }} />
-              <span
-                className={`absolute left-1/2 w-44 -translate-x-1/2 text-center ${above ? "bottom-5" : "top-5"}`}
-              >
-                <span className="block text-sm font-semibold tabular-nums text-marsala">{m.value}</span>
-                <span className="block text-xs leading-4 text-neutral-600">{m.label}</span>
-              </span>
-            </div>
-          );
-        })}
-      </div>
-      <ul className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-neutral-600">
-        <li className="flex items-center gap-2">
-          <span aria-hidden className="h-2.5 w-5 rounded-sm bg-brand/25" />
-          {c.gaugeAbsorbed}
-        </li>
-        <li className="flex items-center gap-2">
-          <span
-            aria-hidden
-            className="h-2.5 w-5 rounded-sm"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(135deg, rgb(43 26 22 / 0.3) 0 2px, transparent 2px 6px)",
-            }}
-          />
-          {c.gaugeBeyond}
-        </li>
-      </ul>
-    </div>
-  );
-}
 
 // --- Le panneau de détail ---------------------------------------------------------
 
