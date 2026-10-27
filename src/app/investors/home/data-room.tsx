@@ -15,6 +15,7 @@ export function DataRoom({
   startIndex = 1,
   columns = 1,
   opened = [],
+  justForYou = [],
 }: {
   docs: DocumentRow[];
   locale: Locale;
@@ -24,6 +25,8 @@ export function DataRoom({
   // Chaque ligne porte data-tour="doc-<slug>" : la visite guidée met en
   // lumière les fiches d'un onboarding par ce repère.
   opened?: string[];
+  /** Brouillons ouverts à cette seule personne par son onboarding. */
+  justForYou?: string[];
 }) {
   const pathname = usePathname();
 
@@ -108,13 +111,18 @@ export function DataRoom({
                   >
                     <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
                       {title}
-                      {opened.includes(doc.slug) && (
+                      {justForYou.includes(doc.slug) && (
+                        <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[11px] font-medium text-marsala">
+                          {t(locale, "home.docs.justForYou")}
+                        </span>
+                      )}
+                      {opened.includes(doc.slug) && !justForYou.includes(doc.slug) && (
                         <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[11px] font-medium text-marsala">
                           {t(locale, "home.docs.openedForYou")}
                         </span>
                       )}
                       {/* Brouillon : seule une démo le liste, la mention le rappelle. */}
-                      {DRAFT_SLUGS.has(doc.slug) && (
+                      {DRAFT_SLUGS.has(doc.slug) && !justForYou.includes(doc.slug) && (
                         <span className="rounded-full border border-dashed border-neutral-400 px-2 py-0.5 text-[11px] text-neutral-600">
                           {t(locale, "home.docs.draft")}
                         </span>

@@ -51,6 +51,8 @@ export default async function DocPage({
   let kupandaInterest: { tranche: string; created_at: string } | null = null;
   // Due diligence Kupanda : les fiches liées que la personne peut ouvrir.
   let ddOpenSlugs: string[] = [];
+  // Brouillon ouvert à la personne connectée par son onboarding.
+  let privateDraft = false;
   const ddSlugs = DD_DOCS.flatMap((d) => (d.kind.type === "dataroom" ? [d.kind.slug] : []));
   if (demo) {
     // Pas de session Supabase en démo : service role + filtrage de niveau à la
@@ -95,6 +97,16 @@ export default async function DocPage({
       .eq("slug", slug)
       .maybeSingle();
     doc = data as DocumentRow | null;
+    // Brouillon ouvert à cette personne par son onboarding (« rien que pour
+    // vous ») : il n'est pas en base, la RLS ne le renvoie donc pas.
+    const draft = DRAFT_DOCS.find((d) => d.slug === slug);
+    if (!doc && draft && user.email) {
+      const mine = await getOnboarding(user.email);
+      if (mine?.unlocked_slugs.includes(slug)) {
+        doc = draftRow(draft) as DocumentRow;
+        privateDraft = true;
+      }
+    }
 
     if (slug === "term-sheet-kupanda") {
       // Table sans policy : lecture avec la clé service, filtrée sur la personne.
@@ -118,7 +130,7 @@ export default async function DocPage({
   ddOpenSlugs = ddOpenSlugs.filter((s) => !RETIRED_SLUGS.has(s) && !UNAVAILABLE_SLUGS.has(s));
   // Brouillon : ouvert dans une session démo (ouverte par un admin), jamais
   // ailleurs, même si sa ligne existe déjà en base.
-  if (DRAFT_SLUGS.has(doc.slug) && !demo) notFound();
+  if (DRAFT_SLUGS.has(doc.slug) && !demo && !privateDraft) notFound();
   // Fiche en pause : fermée aux investisseurs, ouverte aux admins pour la
   // retravailler, sauf en démo où l'on montre ce que voit un investisseur.
   // En local seulement, le cookie minah_preview_paused=1 les ouvre aussi dans

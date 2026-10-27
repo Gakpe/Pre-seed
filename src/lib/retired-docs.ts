@@ -29,7 +29,9 @@ export const UNAVAILABLE_SLUGS = new Set([
 
 // Brouillons : fiches en cours de réalisation, définies ici et pas encore en
 // base. Invisibles pour les investisseurs ; une session démo (ouverte par un
-// admin) les liste et les ouvre, en local comme en ligne. Pour publier : créer
+// admin) les liste et les ouvre, en local comme en ligne. Exception : un
+// onboarding peut ouvrir un brouillon à une personne précise (son slug dans
+// `unlocked_slugs`), qui le voit alors marqué « rien que pour vous ». Pour publier : créer
 // la ligne dans `documents` (mêmes slug, titres, catégorie, niveau), puis
 // retirer l'entrée d'ici.
 export type DraftDoc = {
@@ -67,8 +69,9 @@ export const DRAFT_DOCS: DraftDoc[] = [
   // souscripteurs aux PME, protections, documents et questions par profil.
   {
     slug: "kupanda-due-diligence",
-    title: "Due diligence Kupanda",
-    title_en: "Kupanda due diligence",
+    // Titre du 27/10/2026 (Julien), ouvert à Newform pour leurs Q&A.
+    title: "Kupanda Due Diligence « Virtual Strategic Dataroom »",
+    title_en: "Kupanda Due Diligence “Virtual Strategic Dataroom”",
     category: "Kupanda",
     category_en: "Kupanda",
     access_level: 2,

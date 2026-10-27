@@ -143,10 +143,17 @@ export default async function InvestorHomePage() {
       .from("documents")
       .select("*")
       .order("sort_order");
-    documents = data as DocumentRow[] | null;
+    // Brouillons ouverts à cette personne par son onboarding : absents de la
+    // base, la RLS ne les renvoie pas ; on les ajoute ici.
+    const mine = new Set(onboarding?.unlocked_slugs ?? []);
+    const drafts = DRAFT_DOCS.filter((d) => mine.has(d.slug)).map(draftRow) as DocumentRow[];
+    documents = [...((data ?? []) as DocumentRow[]), ...drafts].sort((a, b) => a.sort_order - b.sort_order);
   }
+  // Brouillons « rien que pour vous » : ouverts par l'onboarding, hors démo
+  // comme en démo.
+  const justForYou = DRAFT_DOCS.filter((d) => onboarding?.unlocked_slugs.includes(d.slug)).map((d) => d.slug);
   const docs = (documents ?? []).filter(
-    (d) => !RETIRED_SLUGS.has(d.slug) && (demo || !DRAFT_SLUGS.has(d.slug))
+    (d) => !RETIRED_SLUGS.has(d.slug) && (demo || !DRAFT_SLUGS.has(d.slug) || justForYou.includes(d.slug))
   );
   const level2Unlocked = investor.level2_access;
   // Les fiches que l'onboarding ouvre au-dessus du niveau de la personne
@@ -475,6 +482,7 @@ export default async function InvestorHomePage() {
               locale={locale}
               columns={2}
               opened={[...openedForYou]}
+              justForYou={justForYou}
             />
           </div>
         </section>
@@ -509,6 +517,7 @@ export default async function InvestorHomePage() {
                     // niveau 1 : codé à 8, il doublait le 08 de la levée.
                     startIndex={countCategories(level1) + 1}
                     columns={2}
+                    justForYou={justForYou}
                   />
                 ) : (
                   <p className="text-sm text-neutral-500">
