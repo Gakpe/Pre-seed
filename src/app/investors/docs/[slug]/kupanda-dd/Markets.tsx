@@ -6,10 +6,11 @@ import type { Locale } from "@/lib/i18n";
 import { MARKETS, REGIONAL_CONTEXT } from "@/lib/kupanda-client";
 
 // Onglet « Où va l'argent » de la due diligence, version souscripteurs. À
-// gauche, l'Afrique en points (même semis que la scène du flux, à plat), la
-// Zambie et le Kenya en orange, chacun avec son repère qui pulse ; un clic
-// sur un pays ouvre sa fiche à droite, qui entre ligne après ligne
-// (dd-stagger). Le contenu vit dans src/lib/kupanda-client.ts.
+// gauche, une vignette : l'Afrique en points (même semis que la scène du
+// flux, à plat), la Zambie et le Kenya en orange, chacun avec son repère qui
+// pulse ; un clic sur un pays ouvre sa fiche à droite, qui entre ligne après
+// ligne (dd-stagger). La carte reste une vignette de 360 px (Coralie, 30/10/2026), d'où des
+// libellés larges dans le viewBox. Le contenu vit dans src/lib/kupanda-client.ts.
 
 const copy = {
   fr: {
@@ -17,14 +18,12 @@ const copy = {
     hint: "Cliquez sur un pays",
     pick: "Choisir un pays",
     partners: "Les deux ministères partenaires",
-    cities: { zambia: "Lusaka", kenya: "Nairobi" } as Record<string, string>,
   },
   en: {
     alt: "Map of Africa: Zambia, the main market, and Kenya, the expansion market, in orange. Click a country to open its sheet.",
     hint: "Click a country",
     pick: "Pick a country",
     partners: "The two partner ministries",
-    cities: { zambia: "Lusaka", kenya: "Nairobi" } as Record<string, string>,
   },
 } as const;
 
@@ -100,10 +99,10 @@ export function Markets({ locale }: { locale: Locale }) {
     <div>
       <p className="max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{REGIONAL_CONTEXT[locale]}</p>
 
-      <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-10">
-        {/* La carte */}
-        <div className="relative">
-          <svg viewBox={`0 0 ${W} ${H}`} className="mx-auto w-full max-w-[520px]" role="img" aria-label={c.alt}>
+      <div className="mt-6 grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)] lg:gap-10">
+        {/* La vignette */}
+        <div className="mx-auto w-full max-w-[360px] lg:mx-0">
+          <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={c.alt}>
             <defs>
               <radialGradient id="dd-mk-glow" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stopColor="#f26404" stopOpacity="0.32" />
@@ -112,7 +111,7 @@ export function Markets({ locale }: { locale: Locale }) {
             </defs>
             {/* Le continent */}
             {dots.map((d, i) =>
-              d.country ? null : <circle key={i} cx={d.x} cy={d.y} r={2.4} fill="#2c1716" fillOpacity={0.16} />
+              d.country ? null : <circle key={i} cx={d.x} cy={d.y} r={3.2} fill="#2c1716" fillOpacity={0.16} />
             )}
             {/* Les deux pays : points, halo, contour et repère. */}
             {MARKETS.map((m) => {
@@ -122,29 +121,25 @@ export function Markets({ locale }: { locale: Locale }) {
               const y = py(la);
               return (
                 <g key={m.id} {...pick(m.id)} aria-label={`${m.title[locale]}, ${m.kicker[locale]}`} style={{ opacity: on ? 1 : 0.55, transition: "opacity 300ms" }}>
-                  <ellipse cx={x} cy={y} rx={70} ry={56} fill="url(#dd-mk-glow)" />
-                  <path d={outlines[m.id as "zambia" | "kenya"]} fill="#f26404" fillOpacity={on ? 0.14 : 0.08} stroke="#f26404" strokeOpacity={on ? 0.8 : 0.45} strokeWidth={1.4} strokeLinejoin="round" />
+                  <ellipse cx={x} cy={y} rx={90} ry={72} fill="url(#dd-mk-glow)" />
+                  <path d={outlines[m.id as "zambia" | "kenya"]} fill="#f26404" fillOpacity={on ? 0.16 : 0.08} stroke="#f26404" strokeOpacity={on ? 0.85 : 0.45} strokeWidth={2.5} strokeLinejoin="round" />
                   {dots
                     .filter((d) => d.country === m.id)
                     .map((d, i) => (
-                      <circle key={i} cx={d.x} cy={d.y} r={2.8} fill="#f26404" fillOpacity={0.9} />
+                      <circle key={i} cx={d.x} cy={d.y} r={3.6} fill="#f26404" fillOpacity={0.9} />
                     ))}
                   {/* Le repère et son onde */}
-                  <circle cx={x} cy={y} r={10} fill="none" stroke="#f26404" strokeWidth={1.5} className={on ? "dd-pulse" : ""} style={{ transformOrigin: `${x}px ${y}px`, opacity: on ? 1 : 0 }} />
-                  <circle cx={x} cy={y} r={5.5} fill="#61100d" stroke="#fff" strokeWidth={2} />
-                  <text x={x + 14} y={y - 8} fontSize={15} fontWeight={600} fill="#2c1716">
+                  <circle cx={x} cy={y} r={16} fill="none" stroke="#f26404" strokeWidth={3} className={on ? "dd-pulse" : ""} style={{ transformOrigin: `${x}px ${y}px`, opacity: on ? 1 : 0 }} />
+                  <circle cx={x} cy={y} r={9} fill="#61100d" stroke="#fff" strokeWidth={3} />
+                  {/* Un seul libellé, large : la vignette fait 360 px. */}
+                  <text x={x + 20} y={y + 10} fontSize={30} fontWeight={600} fill="#2c1716">
                     {m.title[locale].replace(/^(La|Le)\s/, "")}
-                  </text>
-                  <text x={x + 14} y={y + 9} fontSize={12} fill="#525252">
-                    {c.cities[m.id]} · {m.kicker[locale]}
                   </text>
                 </g>
               );
             })}
           </svg>
-          <p className="pointer-events-none absolute left-0 top-0 rounded-lg border border-foreground/10 bg-white/80 px-3 py-1.5 text-xs text-neutral-600 backdrop-blur">
-            {c.hint}
-          </p>
+          <p className="mt-2 text-center text-xs text-neutral-600 lg:text-left">{c.hint}</p>
         </div>
 
         {/* La fiche du pays : le sélecteur, puis le contenu qui entre. */}

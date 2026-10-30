@@ -39,7 +39,7 @@ export const SIM = {
   maxBonds: 200,
   couponRate: 0.2,
   feeRate: 0.035,
-  presets: [3, 5, 10, 30],
+  presets: [3, 5, 10, 30, 100],
 } as const;
 
 export type Simulation = {
