@@ -783,8 +783,28 @@ body {
   }
 }
 
+/* Repère d'un pays sur la carte « où va l'argent » : une onde qui s'élargit. */
+@keyframes dd-pulse {
+  from {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+.dd-pulse {
+  animation: dd-pulse 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .dd-stagger > * {
+    animation: none;
+  }
+
+  .dd-pulse {
     animation: none;
   }
 

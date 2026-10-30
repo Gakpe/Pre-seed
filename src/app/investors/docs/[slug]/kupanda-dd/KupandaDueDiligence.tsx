@@ -8,14 +8,18 @@ import {
   DD_DOCS,
   FLOWS,
   PORTFOLIO_COVER_NOTE,
+  PORTFOLIO_COVER_NOTE_CLIENT,
   PROTECTION_EXTRA,
   type DdItem,
 } from "@/lib/kupanda-dd";
 import { RISK_LEVELS } from "@/lib/risk-levels";
 import type { Locale } from "@/lib/i18n";
 import { SectionTitle } from "../section-title";
+import { CONTACT_EMAIL, SCENARIOS } from "@/lib/kupanda-client";
 import { FlowScene, type Layout } from "./FlowScene";
 import { RiskScene } from "./RiskScene";
+import { Simulator } from "./Simulator";
+import { Markets } from "./Markets";
 
 // Fiche « Due diligence Kupanda » (brouillon) : de quoi instruire l'opération,
 // des souscripteurs aux PME zambiennes. Deux schémas cliquables, le chemin du
@@ -26,6 +30,15 @@ import { RiskScene } from "./RiskScene";
 //
 // Le contenu vit dans src/lib/kupanda-dd.ts ; les protections reprennent la
 // cascade validée de src/lib/risk-levels.ts.
+//
+// Deux publics. `audience="investor"` (la data room) : les documents sont
+// ouvrables dans la data room ou à demander, la demande part par l'API des
+// questions. `audience="client"` (la page souscripteurs, /kupanda) : mêmes
+// schémas, mêmes panneaux et même volet documents, mais tout est sur demande,
+// par un email prérempli à l'équipe : un souscripteur n'a pas de compte. En
+// plus, deux onglets, la simulation et « où va l'argent », et sous la cascade
+// de risque les scénarios « que se passe-t-il si… » du mémorandum. Rien n'y
+// est dit deux fois : ce que les panneaux détaillent n'est pas repris ailleurs.
 
 const copy = {
   fr: {
@@ -37,6 +50,15 @@ const copy = {
       { value: "3 à 5 mois", label: "Par cycle de financement" },
       { value: "0 défaut", label: "Sur 10 M€ déployés" },
     ],
+    leadClient: "Kupanda finance le besoin en fonds de roulement de PME zambiennes titulaires de marchés publics signés, dans l'infrastructure et l'énergie. Vous souscrivez une obligation de droit français émise par Minah SAS, à Paris. L'argent est déployé en Zambie par Africa Rise, notre partenaire local, puis revient avec le coupon. Quatre vues : le chemin du capital, acteur par acteur ; les protections et ce qui se passe si l'une d'elles est sollicitée ; une simulation sur le montant de votre choix ; les deux pays où l'argent travaille.",
+    s3LeadClient: "Les documents sont envoyés sur demande : votre email prérempli part à l'équipe, qui revient vers vous.",
+    requestSubject: (title: string) => `Demande de document Kupanda : ${title}`,
+    requestBody: (title: string) => `Bonjour,\n\nJe souhaite recevoir le document suivant : ${title}.\n\nNom et entité :\n`,
+    tabSim: "La simulation",
+    tabSimShort: "Simulation",
+    tabMarkets: "Où va l'argent",
+    tabMarketsShort: "Les pays",
+    scenarios: "Que se passe-t-il si…",
     headline: [
       { value: "20 %", label: "Rendement brut par an" },
       { value: "16,5 %", label: "Rendement net par an" },
@@ -102,6 +124,15 @@ const copy = {
       { value: "3 to 5 months", label: "Per financing cycle" },
       { value: "0 default", label: "On €10M deployed" },
     ],
+    leadClient: "Kupanda finances the working capital of Zambian SMEs holding signed public contracts, in infrastructure and energy. You subscribe to a French-law bond issued by Minah SAS, in Paris. The money is deployed in Zambia by Africa Rise, our local partner, then comes back with the coupon. Four views: the path of the capital, actor by actor; the protections and what happens if one of them is called on; a simulation on the amount of your choice; the two countries where the money works.",
+    s3LeadClient: "Documents are sent on request: your prefilled email goes to the team, who gets back to you.",
+    requestSubject: (title: string) => `Kupanda document request: ${title}`,
+    requestBody: (title: string) => `Hello,\n\nI would like to receive the following document: ${title}.\n\nName and entity:\n`,
+    tabSim: "Simulation",
+    tabSimShort: "Simulation",
+    tabMarkets: "Where the money goes",
+    tabMarketsShort: "Countries",
+    scenarios: "What happens if…",
     headline: [
       { value: "20%", label: "Gross annual return" },
       { value: "16.5%", label: "Net annual return" },
@@ -226,13 +257,30 @@ export function KupandaDueDiligence({
   locale,
   openSlugs,
   demo = false,
+  audience = "investor",
 }: {
   locale: Locale;
   /** Fiches de la data room que la personne peut ouvrir. */
   openSlugs: string[];
   demo?: boolean;
+  /** Souscripteurs : sans documents, voir l'en-tête du fichier. */
+  audience?: "investor" | "client";
 }) {
   const c = copy[locale];
+  const client = audience === "client";
+  const lead = client ? c.leadClient : c.lead;
+  const hintRisk = c.hintRisk;
+  const coverNote = client ? PORTFOLIO_COVER_NOTE_CLIENT : PORTFOLIO_COVER_NOTE;
+  // Les onglets simulation et pays n'existent que pour les souscripteurs.
+  const tabs: Tab[] = client ? ["flux", "risque", "simulation", "pays"] : ["flux", "risque"];
+  const tabLabel = (t: Tab, short: boolean) =>
+    t === "flux"
+      ? short ? c.tabFlowShort : c.tabFlow
+      : t === "risque"
+        ? short ? c.tabRiskShort : c.tabRisk
+        : t === "simulation"
+          ? short ? c.tabSimShort : c.tabSim
+          : short ? c.tabMarketsShort : c.tabMarkets;
   const [tab, setTab] = useState<Tab>("flux");
   const [selected, setSelectedState] = useState<string | null>(null);
   // Le dernier élément ouvert reste affiché pendant que le panneau se referme.
@@ -253,10 +301,10 @@ export function KupandaDueDiligence({
 
   const caseRefs = USE_CASES.map((u) => ({ id: u.id, title: u.title[locale], tag: u.tag[locale] }));
   const flowDetails = new Map<string, Detail>(
-    [...ACTORS, ...FLOWS, ...USE_CASES].map((it) => [
-      it.id,
-      it.id === "pme" ? { ...fromItem(it, locale, c), cases: caseRefs } : fromItem(it, locale, c),
-    ])
+    [...ACTORS, ...FLOWS, ...USE_CASES].map((it) => {
+      const d = fromItem(it, locale, c);
+      return [it.id, it.id === "pme" ? { ...d, cases: caseRefs } : d];
+    })
   );
   const riskDetails = new Map<string, Detail>(
     RISK_LEVELS.map((l) => {
@@ -278,7 +326,7 @@ export function KupandaDueDiligence({
           points: [
             `${l.trigger.lead[locale]} ${l.trigger.body[locale]}`,
             l.protection.body[locale],
-            ...(extra?.notes ?? []).map((n) => n[locale]),
+            ...(extra?.notes ?? []).map((n) => (n === PORTFOLIO_COVER_NOTE ? coverNote : n)[locale]),
           ],
           docs: extra?.docs ?? [],
         },
@@ -346,14 +394,14 @@ export function KupandaDueDiligence({
     [demo]
   );
 
-  const docCtx = { locale, c, openSlugs, requests, requestDoc };
+  const docCtx = { locale, c, openSlugs, requests, requestDoc, client };
   const toggle = (id: string) => setSelected(selected === id ? null : id);
 
   return (
     <div className="mt-6">
       {/* Le chapô à gauche, les trois chiffres de l'obligation à droite. */}
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-12">
-        <p className="max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{c.lead}</p>
+        <p className="max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{lead}</p>
         <dl className="grid grid-cols-3 border-y border-foreground/10 lg:min-w-[30rem]">
           {c.headline.map((f, i) => (
             <div key={f.label} className={`py-4 ${i ? "border-l border-foreground/10 pl-5" : ""}`}>
@@ -391,7 +439,7 @@ export function KupandaDueDiligence({
 
       {/* Les deux onglets de la scène */}
       <div role="tablist" aria-label={c.tabsLabel} className="mt-6 flex gap-1 border-b border-foreground/10">
-        {(["flux", "risque"] as Tab[]).map((t) => (
+        {tabs.map((t) => (
           <button
             key={t}
             role="tab"
@@ -406,13 +454,24 @@ export function KupandaDueDiligence({
               tab === t ? "border-brand text-foreground" : "border-transparent text-neutral-600 hover:text-foreground"
             }`}
           >
-            <span className="max-sm:hidden">{t === "flux" ? c.tabFlow : c.tabRisk}</span>
-            <span className="sm:hidden">{t === "flux" ? c.tabFlowShort : c.tabRiskShort}</span>
+            <span className="max-sm:hidden">{tabLabel(t, false)}</span>
+            <span className="sm:hidden">{tabLabel(t, true)}</span>
           </button>
         ))}
       </div>
 
-      <p className="mt-3 text-sm text-neutral-600 lg:hidden">{tab === "flux" ? c.hintFlow : c.hintRisk}</p>
+      {tab === "simulation" || tab === "pays" ? (
+        // Les onglets simulation et pays (souscripteurs) : pas de scène ni de
+        // panneau, le contenu prend le cadre.
+        <div
+          role="tabpanel"
+          className="mt-4 rounded-xl border border-foreground/10 bg-[radial-gradient(ellipse_at_60%_35%,#fffdfa_0%,#f7f3ec_70%)] px-5 py-6 sm:px-8 sm:py-8"
+        >
+          {tab === "simulation" ? <Simulator locale={locale} /> : <Markets locale={locale} />}
+        </div>
+      ) : (
+      <>
+      <p className="mt-3 text-sm text-neutral-600 lg:hidden">{tab === "flux" ? c.hintFlow : hintRisk}</p>
 
       {/* La scène : elle tient dans l'écran ; au large, le panneau glisse
           depuis la droite et la scène se resserre à côté. */}
@@ -474,7 +533,7 @@ export function KupandaDueDiligence({
               open ? "opacity-0" : "opacity-100"
             }`}
           >
-            {tab === "flux" ? c.hintFlow : c.hintRisk}
+            {tab === "flux" ? c.hintFlow : hintRisk}
           </p>
         </div>
         <DetailPanel
@@ -504,22 +563,46 @@ export function KupandaDueDiligence({
             </div>
           ))}
         </dl>
+      ) : client ? (
+        // Souscripteurs : les scénarios du mémo, chacun renvoyé vers l'étage
+        // de la cascade qui joue. La note « à l'étude » reste dans les
+        // panneaux des niveaux 1 et 2, elle n'est pas répétée ici.
+        <section className="mt-6">
+          <h3 className="text-sm font-semibold text-foreground">{c.scenarios}</h3>
+          <div className="mt-2 grid gap-4 lg:grid-cols-2">
+            {SCENARIOS.map((sc) => (
+              <article key={sc.q.fr} className="rounded-xl border border-foreground/10 bg-white/50 px-5 py-4">
+                <h4 className="text-sm font-semibold text-foreground">{sc.q[locale]}</h4>
+                <p className="mt-1.5 text-sm leading-6 text-neutral-700">{sc.a[locale]}</p>
+              </article>
+            ))}
+          </div>
+        </section>
       ) : (
         <p className="mt-6 max-w-4xl rounded-xl border border-foreground/10 bg-white/60 px-5 py-4 text-sm leading-6 text-neutral-700">
-          {PORTFOLIO_COVER_NOTE[locale]}
+          {coverNote[locale]}
         </p>
       )}
+      </>
+      )}
 
-      {/* 01, les documents */}
+      {/* 01, les documents. Souscripteurs : tout est sur demande, en deux
+          colonnes pour la lecture. */}
       <section className="mt-16">
         <SectionTitle n="01">{c.s3}</SectionTitle>
-        <p className="mt-4 max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{c.s3Lead}</p>
+        <p className="mt-4 max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{client ? c.s3LeadClient : c.s3Lead}</p>
         <div className="mt-6 grid gap-x-10 gap-y-8 lg:grid-cols-2">
-          {[
-            { title: c.inDataroom, docs: DD_DOCS.filter((d) => d.kind.type === "dataroom") },
-            { title: c.onRequest, docs: DD_DOCS.filter((d) => d.kind.type === "request") },
-          ].map((group) => (
-            <div key={group.title}>
+          {(client
+            ? [
+                { title: c.onRequest, docs: DD_DOCS.slice(0, Math.ceil(DD_DOCS.length / 2)) },
+                { title: "\u00a0", docs: DD_DOCS.slice(Math.ceil(DD_DOCS.length / 2)) },
+              ]
+            : [
+                { title: c.inDataroom, docs: DD_DOCS.filter((d) => d.kind.type === "dataroom") },
+                { title: c.onRequest, docs: DD_DOCS.filter((d) => d.kind.type === "request") },
+              ]
+          ).map((group, gi) => (
+            <div key={gi}>
               <h3 className="text-sm font-semibold text-foreground">{group.title}</h3>
               <ul className="mt-2 divide-y divide-foreground/10 border-y border-foreground/10">
                 {group.docs.map((d) => (
@@ -530,14 +613,11 @@ export function KupandaDueDiligence({
           ))}
         </div>
       </section>
-
-      {/* 02, les questions */}
-
     </div>
   );
 }
 
-type Tab = "flux" | "risque";
+type Tab = "flux" | "risque" | "simulation" | "pays";
 
 // Colonne des étapes, à gauche de la scène ; au téléphone, une rangée qui
 // défile au-dessus.
@@ -635,6 +715,8 @@ type DocCtx = {
   openSlugs: string[];
   requests: Record<string, RequestState>;
   requestDoc: (id: string) => void;
+  /** Souscripteurs : toute demande part par email prérempli. */
+  client: boolean;
 };
 
 function DetailPanel({
@@ -807,13 +889,24 @@ function IconButton({
 
 // Un document : ouvert dans la data room, verrouillé, ou à demander.
 function DocRow({ id, ctx, compact = false }: { id: string; ctx: DocCtx; compact?: boolean }) {
-  const { locale, c, openSlugs, requests, requestDoc } = ctx;
+  const { locale, c, openSlugs, requests, requestDoc, client } = ctx;
   const doc = DD_DOCS.find((d) => d.id === id);
   if (!doc) return null;
   const state = requests[id];
 
   let action: React.ReactNode;
-  if (doc.kind.type === "dataroom") {
+  if (client) {
+    const title = doc.title[locale];
+    const href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(c.requestSubject(title))}&body=${encodeURIComponent(c.requestBody(title))}`;
+    action = (
+      <a
+        href={href}
+        className="whitespace-nowrap rounded-lg border border-foreground/15 bg-white/70 px-2.5 py-1 text-sm font-medium text-foreground transition-colors hover:border-foreground/35"
+      >
+        {c.request}
+      </a>
+    );
+  } else if (doc.kind.type === "dataroom") {
     action = openSlugs.includes(doc.kind.slug) ? (
       <a
         href={`/investors/docs/${doc.kind.slug}`}
