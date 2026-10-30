@@ -15,12 +15,11 @@ import {
 import { RISK_LEVELS } from "@/lib/risk-levels";
 import type { Locale } from "@/lib/i18n";
 import { SectionTitle } from "../section-title";
-import { CONTACT_EMAIL, SCENARIOS } from "@/lib/kupanda-client";
+import { CLIENT_DOCS, CONTACT_EMAIL, SCENARIOS } from "@/lib/kupanda-client";
 import { FlowScene, type Layout } from "./FlowScene";
 import { RiskScene } from "./RiskScene";
 import { Simulator } from "./Simulator";
 import { Markets } from "./Markets";
-import { Qa } from "./Qa";
 
 // Fiche « Due diligence Kupanda » (brouillon) : de quoi instruire l'opération,
 // des souscripteurs aux PME zambiennes. Deux schémas cliquables, le chemin du
@@ -37,10 +36,10 @@ import { Qa } from "./Qa";
 // questions. `audience="client"` (la page souscripteurs, /kupanda) : mêmes
 // schémas, mêmes panneaux et même volet documents, mais tout est sur demande,
 // par un email prérempli à l'équipe : un souscripteur n'a pas de compte. En
-// plus, trois onglets, la simulation, « où va l'argent » et le Q&A d'un
-// family office, et sous la cascade de risque les scénarios « que se
-// passe-t-il si… » du mémorandum. Rien n'y est dit deux fois : ce que les
-// panneaux détaillent n'est pas repris ailleurs.
+// plus, deux onglets, la simulation et « où va l'argent », sous la cascade de
+// risque les scénarios « que se passe-t-il si… » du mémorandum, et dans la
+// liste des documents le Q&A d'un family office (CLIENT_DOCS). Rien n'y est
+// dit deux fois : ce que les panneaux détaillent n'est pas repris ailleurs.
 
 const copy = {
   fr: {
@@ -52,7 +51,7 @@ const copy = {
       { value: "3 à 5 mois", label: "Par cycle de financement" },
       { value: "0 défaut", label: "Sur 10 M€ déployés" },
     ],
-    leadClient: "Kupanda finance le besoin en fonds de roulement de PME zambiennes titulaires de marchés publics signés, dans l'infrastructure et l'énergie. Vous souscrivez une obligation de droit français émise par Minah SAS, à Paris. L'argent est déployé en Zambie par Africa Rise, notre partenaire local, puis revient avec le coupon. Cinq vues : le chemin du capital, acteur par acteur ; les protections et ce qui se passe si l'une d'elles est sollicitée ; une simulation sur le montant de votre choix ; les deux pays où l'argent travaille ; les questions d'un family office et nos réponses.",
+    leadClient: "Kupanda finance le besoin en fonds de roulement de PME zambiennes titulaires de marchés publics signés, dans l'infrastructure et l'énergie. Vous souscrivez une obligation de droit français émise par Minah SAS, à Paris. L'argent est déployé en Zambie par Africa Rise, notre partenaire local, puis revient avec le coupon. Quatre vues : le chemin du capital, acteur par acteur ; les protections et ce qui se passe si l'une d'elles est sollicitée ; une simulation sur le montant de votre choix ; les deux pays où l'argent travaille.",
     s3LeadClient: "Les documents sont envoyés sur demande : votre email prérempli part à l'équipe, qui revient vers vous.",
     requestSubject: (title: string) => `Demande de document Kupanda : ${title}`,
     requestBody: (title: string) => `Bonjour,\n\nJe souhaite recevoir le document suivant : ${title}.\n\nNom et entité :\n`,
@@ -60,8 +59,6 @@ const copy = {
     tabSimShort: "Simulation",
     tabMarkets: "Où va l'argent",
     tabMarketsShort: "Les pays",
-    tabQa: "Q&A",
-    tabQaShort: "Q&A",
     scenarios: "Que se passe-t-il si…",
     headline: [
       { value: "20 %", label: "Rendement brut par an" },
@@ -128,7 +125,7 @@ const copy = {
       { value: "3 to 5 months", label: "Per financing cycle" },
       { value: "0 default", label: "On €10M deployed" },
     ],
-    leadClient: "Kupanda finances the working capital of Zambian SMEs holding signed public contracts, in infrastructure and energy. You subscribe to a French-law bond issued by Minah SAS, in Paris. The money is deployed in Zambia by Africa Rise, our local partner, then comes back with the coupon. Five views: the path of the capital, actor by actor; the protections and what happens if one of them is called on; a simulation on the amount of your choice; the two countries where the money works; a family office's questions and our answers.",
+    leadClient: "Kupanda finances the working capital of Zambian SMEs holding signed public contracts, in infrastructure and energy. You subscribe to a French-law bond issued by Minah SAS, in Paris. The money is deployed in Zambia by Africa Rise, our local partner, then comes back with the coupon. Four views: the path of the capital, actor by actor; the protections and what happens if one of them is called on; a simulation on the amount of your choice; the two countries where the money works.",
     s3LeadClient: "Documents are sent on request: your prefilled email goes to the team, who gets back to you.",
     requestSubject: (title: string) => `Kupanda document request: ${title}`,
     requestBody: (title: string) => `Hello,\n\nI would like to receive the following document: ${title}.\n\nName and entity:\n`,
@@ -136,8 +133,6 @@ const copy = {
     tabSimShort: "Simulation",
     tabMarkets: "Where the money goes",
     tabMarketsShort: "Countries",
-    tabQa: "Q&A",
-    tabQaShort: "Q&A",
     scenarios: "What happens if…",
     headline: [
       { value: "20%", label: "Gross annual return" },
@@ -277,8 +272,10 @@ export function KupandaDueDiligence({
   const lead = client ? c.leadClient : c.lead;
   const hintRisk = c.hintRisk;
   const coverNote = client ? PORTFOLIO_COVER_NOTE_CLIENT : PORTFOLIO_COVER_NOTE;
-  // Les onglets simulation, pays et Q&A n'existent que pour les souscripteurs.
-  const tabs: Tab[] = client ? ["flux", "risque", "simulation", "pays", "qa"] : ["flux", "risque"];
+  // Les onglets simulation et pays n'existent que pour les souscripteurs.
+  const tabs: Tab[] = client ? ["flux", "risque", "simulation", "pays"] : ["flux", "risque"];
+  // Les documents listés : ceux de la fiche, plus ceux des souscripteurs.
+  const allDocs = client ? [...DD_DOCS, ...CLIENT_DOCS] : DD_DOCS;
   const tabLabel = (t: Tab, short: boolean) =>
     t === "flux"
       ? short ? c.tabFlowShort : c.tabFlow
@@ -286,9 +283,7 @@ export function KupandaDueDiligence({
         ? short ? c.tabRiskShort : c.tabRisk
         : t === "simulation"
           ? short ? c.tabSimShort : c.tabSim
-          : t === "pays"
-            ? short ? c.tabMarketsShort : c.tabMarkets
-            : short ? c.tabQaShort : c.tabQa;
+          : short ? c.tabMarketsShort : c.tabMarkets;
   const [tab, setTab] = useState<Tab>("flux");
   const [selected, setSelectedState] = useState<string | null>(null);
   // Le dernier élément ouvert reste affiché pendant que le panneau se referme.
@@ -468,14 +463,14 @@ export function KupandaDueDiligence({
         ))}
       </div>
 
-      {tab === "simulation" || tab === "pays" || tab === "qa" ? (
-        // Les onglets simulation, pays et Q&A (souscripteurs) : pas de scène
-        // ni de panneau, le contenu prend le cadre.
+      {tab === "simulation" || tab === "pays" ? (
+        // Les onglets simulation et pays (souscripteurs) : pas de scène ni de
+        // panneau, le contenu prend le cadre.
         <div
           role="tabpanel"
           className="mt-4 rounded-xl border border-foreground/10 bg-[radial-gradient(ellipse_at_60%_35%,#fffdfa_0%,#f7f3ec_70%)] px-5 py-6 sm:px-8 sm:py-8"
         >
-          {tab === "simulation" ? <Simulator locale={locale} /> : tab === "pays" ? <Markets locale={locale} /> : <Qa locale={locale} />}
+          {tab === "simulation" ? <Simulator locale={locale} /> : <Markets locale={locale} />}
         </div>
       ) : (
       <>
@@ -602,8 +597,8 @@ export function KupandaDueDiligence({
         <div className="mt-6 grid gap-x-10 gap-y-8 lg:grid-cols-2">
           {(client
             ? [
-                { title: c.onRequest, docs: DD_DOCS.slice(0, Math.ceil(DD_DOCS.length / 2)) },
-                { title: "\u00a0", docs: DD_DOCS.slice(Math.ceil(DD_DOCS.length / 2)) },
+                { title: c.onRequest, docs: allDocs.slice(0, Math.ceil(allDocs.length / 2)) },
+                { title: "\u00a0", docs: allDocs.slice(Math.ceil(allDocs.length / 2)) },
               ]
             : [
                 { title: c.inDataroom, docs: DD_DOCS.filter((d) => d.kind.type === "dataroom") },
@@ -625,7 +620,7 @@ export function KupandaDueDiligence({
   );
 }
 
-type Tab = "flux" | "risque" | "simulation" | "pays" | "qa";
+type Tab = "flux" | "risque" | "simulation" | "pays";
 
 // Colonne des étapes, à gauche de la scène ; au téléphone, une rangée qui
 // défile au-dessus.
@@ -898,7 +893,7 @@ function IconButton({
 // Un document : ouvert dans la data room, verrouillé, ou à demander.
 function DocRow({ id, ctx, compact = false }: { id: string; ctx: DocCtx; compact?: boolean }) {
   const { locale, c, openSlugs, requests, requestDoc, client } = ctx;
-  const doc = DD_DOCS.find((d) => d.id === id);
+  const doc = (client ? [...DD_DOCS, ...CLIENT_DOCS] : DD_DOCS).find((d) => d.id === id);
   if (!doc) return null;
   const state = requests[id];
 
