@@ -588,7 +588,7 @@ export function KupandaDueDiligence({
           {/* Le Q&A du family office, en lecture seule (DocSend). */}
           <div
             className={`mt-4 flex items-center justify-between gap-4 rounded-xl border px-5 py-3.5 ${
-              QA_LINK.url ? "border-foreground/10 bg-white/50" : "border-neutral-300/70 bg-neutral-200/40"
+              QA_LINK.url[locale] ? "border-foreground/10 bg-white/50" : "border-neutral-300/70 bg-neutral-200/40"
             }`}
           >
             <span className="flex min-w-0 items-center gap-3">
@@ -601,9 +601,9 @@ export function KupandaDueDiligence({
                 <span className="block text-sm leading-5 text-neutral-600">{c.readOnly}</span>
               </span>
             </span>
-            {QA_LINK.url ? (
+            {QA_LINK.url[locale] ? (
               <a
-                href={QA_LINK.url}
+                href={QA_LINK.url[locale]}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="whitespace-nowrap rounded-lg px-2 py-1 text-sm font-medium text-marsala underline decoration-marsala/30 underline-offset-4 hover:decoration-marsala"

@@ -10,14 +10,18 @@ import type { Bi } from "@/lib/kupanda-dd";
 
 // Le Q&A préparé pour un family office le 15 octobre 2026 (Dropbox, Seed
 // Round/Team_Gautier, Q A_TeamG_x_Minah_vf.xlsx), en lecture seule sous les
-// scénarios de l'onglet risque. L'URL est celle du DocSend que Coralie crée ;
-// tant qu'elle est vide, la ligne s'affiche grisée, « lien à venir ».
-export const QA_LINK: { title: Bi; url: string } = {
+// scénarios de l'onglet risque. Un DocSend par langue (Coralie, 30/10/2026) ;
+// tant que l'URL d'une langue est vide, la ligne s'affiche grisée dans cette
+// langue, « lien à venir ».
+export const QA_LINK: { title: Bi; url: Bi } = {
   title: {
     fr: "Q&A risque de crédit et risque souverain, questions d'un family office (octobre 2026)",
     en: "Credit and sovereign risk Q&A, a family office's questions (October 2026)",
   },
-  url: "",
+  url: {
+    fr: "https://docsend.com/view/8ssmy3zp8ths5unb",
+    en: "",
+  },
 };
 
 /** Formulaire d'intention de souscription, celui du mémo (page « What's next »). */
