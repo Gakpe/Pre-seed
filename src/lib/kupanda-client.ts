@@ -1,10 +1,12 @@
-// Contenu propre à la page souscripteurs « Due diligence Kupanda » (/kupanda),
-// repris du mémorandum d'investissement Kupanda (avril 2026, version du
-// 14/09/2026). Rien ici ne répète les panneaux de la fiche (src/lib/kupanda-dd.ts)
-// ni la cascade de risque (src/lib/risk-levels.ts) : la page ne dit rien deux
-// fois. Deux points du mémo sont alignés sur la fiche : le déploiement passe
-// par le dollar et un swap avec Zanaco (pas le franc CFA), et les juridictions
-// sont la Zambie puis le Kenya (plus de Rwanda).
+// Contenu ajouté à la fiche « Due diligence Kupanda » le 30/10/2026, repris du
+// mémorandum d'investissement Kupanda (avril 2026, version du 14/09/2026) et
+// fusionné dans la fiche de Julien à la demande de Coralie : la simulation,
+// les deux pays, les scénarios « que se passe-t-il si… » et le lien vers le
+// Q&A d'un family office. Rien ici ne répète les panneaux de la fiche
+// (src/lib/kupanda-dd.ts) ni la cascade de risque (src/lib/risk-levels.ts).
+// Deux points du mémo sont alignés sur la fiche : le déploiement passe par le
+// dollar et un swap avec Zanaco (pas le franc CFA), et les juridictions sont
+// la Zambie puis le Kenya (plus de Rwanda).
 
 import type { Bi } from "@/lib/kupanda-dd";
 
@@ -23,10 +25,6 @@ export const QA_LINK: { title: Bi; url: Bi } = {
     en: "https://docsend.com/view/mfgqwf625uejhpmr",
   },
 };
-
-/** Formulaire d'intention de souscription, celui du mémo (page « What's next »). */
-export const INTEREST_FORM_URL = "https://tally.so/r/0QjrQP";
-export const CONTACT_EMAIL = "contact@minah.io";
 
 // --- La simulation (onglet) ----------------------------------------------------
 // Hypothèses de la term sheet : nominal 10 000 €, coupon 20 % versé en deux
@@ -195,10 +193,3 @@ export const MARKETS: Market[] = [
     },
   },
 ];
-
-// --- Avertissement ------------------------------------------------------------------
-
-export const DISCLAIMER: Bi = {
-  fr: "Cette page est une présentation sommaire, fournie à titre d'information. Elle ne constitue ni une offre de souscription ni un conseil en investissement. Les termes financiers présentés sont indicatifs et susceptibles d'être modifiés : seules les conditions générales définitives, remises avant l'ouverture de la période de souscription, ont valeur contractuelle. L'investissement en obligations comporte un risque de perte en capital. Les rendements sont présentés avant impôts. L'offre est réservée aux investisseurs avertis. Les paramètres de la stratégie et les opérations sous-jacentes peuvent être ajustés pour tenir compte des réalités opérationnelles sur le terrain.",
-  en: "This page is a summary presentation, provided for information. It is neither an offer to subscribe nor investment advice. The financial terms shown are indicative and may change: only the final terms and conditions, provided before the subscription period opens, are contractually binding. Investing in bonds carries a risk of capital loss. Returns are shown before tax. The offer is reserved for qualified investors. The strategy's parameters and the underlying operations may be adjusted to reflect operational realities on the ground.",
-};

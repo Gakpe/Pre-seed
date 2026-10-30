@@ -36,7 +36,6 @@ import { ExitScenarios } from "./exit-scenarios";
 import { BusinessPlan } from "./business-plan/BusinessPlan";
 import { Impact } from "./impact";
 import { KupandaDueDiligence } from "./kupanda-dd/KupandaDueDiligence";
-import { ClientSections } from "./kupanda-dd/ClientSections";
 import { DD_DOCS } from "@/lib/kupanda-dd";
 import { getBusinessPlan } from "@/lib/business-plan/data";
 
@@ -163,10 +162,7 @@ export default async function DocPage({
   // large encore, avec des marges un peu plus généreuses.
   const comparables = doc.slug === "comparables";
   // La due diligence Kupanda : un schéma et son panneau de détail côte à côte.
-  // La version souscripteurs reprend la même largeur et les mêmes composants,
-  // en mode client (documents sur demande, simulation, pays).
-  const kupandaClient = doc.slug === "kupanda-due-diligence-souscripteurs";
-  const kupandaDd = doc.slug === "kupanda-due-diligence" || kupandaClient;
+  const kupandaDd = doc.slug === "kupanda-due-diligence";
   // L'aperçu du go-to-market (niveau 1) porte la machine à réseau de la slide :
   // deux côtés et un centre, aussi large que l'équipe. Son chapô vit dans le
   // composant, celui de la base n'est plus affiché.
@@ -350,18 +346,12 @@ export default async function DocPage({
           code : la page ne s'affiche qu'aux sessions autorisées. */}
       {businessPlan && <BusinessPlan data={businessPlan} locale={locale} />}
       {doc.slug === "impact" && <Impact locale={locale} />}
-      {kupandaDd && !kupandaClient && (
+      {kupandaDd && (
         <KupandaDueDiligence
           locale={locale}
           openSlugs={ddOpenSlugs}
           demo={Boolean(demo)}
         />
-      )}
-      {kupandaClient && (
-        <>
-          <KupandaDueDiligence locale={locale} openSlugs={[]} audience="client" />
-          <ClientSections locale={locale} />
-        </>
       )}
       {doc.slug === "cap-table" && (
         <CapTableInteractive title={t(locale, "docs.captable")} locale={locale} />
