@@ -15,7 +15,7 @@ import {
 import { RISK_LEVELS } from "@/lib/risk-levels";
 import type { Locale } from "@/lib/i18n";
 import { SectionTitle } from "../section-title";
-import { CLIENT_DOCS, CONTACT_EMAIL, SCENARIOS } from "@/lib/kupanda-client";
+import { CONTACT_EMAIL, QA_LINK, SCENARIOS } from "@/lib/kupanda-client";
 import { FlowScene, type Layout } from "./FlowScene";
 import { RiskScene } from "./RiskScene";
 import { Simulator } from "./Simulator";
@@ -37,9 +37,9 @@ import { Markets } from "./Markets";
 // schémas, mêmes panneaux et même volet documents, mais tout est sur demande,
 // par un email prérempli à l'équipe : un souscripteur n'a pas de compte. En
 // plus, deux onglets, la simulation et « où va l'argent », sous la cascade de
-// risque les scénarios « que se passe-t-il si… » du mémorandum, et dans la
-// liste des documents le Q&A d'un family office (CLIENT_DOCS). Rien n'y est
-// dit deux fois : ce que les panneaux détaillent n'est pas repris ailleurs.
+// risque les scénarios « que se passe-t-il si… » du mémorandum, suivis du
+// Q&A d'un family office en lecture seule (QA_LINK, un DocSend). Rien n'y
+// est dit deux fois : ce que les panneaux détaillent n'est pas repris ailleurs.
 
 const copy = {
   fr: {
@@ -53,6 +53,9 @@ const copy = {
     ],
     leadClient: "Kupanda finance le besoin en fonds de roulement de PME zambiennes titulaires de marchés publics signés, dans l'infrastructure et l'énergie. Vous souscrivez une obligation de droit français émise par Minah SAS, à Paris. L'argent est déployé en Zambie par Africa Rise, notre partenaire local, puis revient avec le coupon. Quatre vues : le chemin du capital, acteur par acteur ; les protections et ce qui se passe si l'une d'elles est sollicitée ; une simulation sur le montant de votre choix ; les deux pays où l'argent travaille.",
     s3LeadClient: "Les documents sont envoyés sur demande : votre email prérempli part à l'équipe, qui revient vers vous.",
+    readOnly: "Lecture seule",
+    read: "Lire",
+    linkSoon: "Lien à venir",
     requestSubject: (title: string) => `Demande de document Kupanda : ${title}`,
     requestBody: (title: string) => `Bonjour,\n\nJe souhaite recevoir le document suivant : ${title}.\n\nNom et entité :\n`,
     tabSim: "La simulation",
@@ -127,6 +130,9 @@ const copy = {
     ],
     leadClient: "Kupanda finances the working capital of Zambian SMEs holding signed public contracts, in infrastructure and energy. You subscribe to a French-law bond issued by Minah SAS, in Paris. The money is deployed in Zambia by Africa Rise, our local partner, then comes back with the coupon. Four views: the path of the capital, actor by actor; the protections and what happens if one of them is called on; a simulation on the amount of your choice; the two countries where the money works.",
     s3LeadClient: "Documents are sent on request: your prefilled email goes to the team, who gets back to you.",
+    readOnly: "Read only",
+    read: "Read",
+    linkSoon: "Link coming",
     requestSubject: (title: string) => `Kupanda document request: ${title}`,
     requestBody: (title: string) => `Hello,\n\nI would like to receive the following document: ${title}.\n\nName and entity:\n`,
     tabSim: "Simulation",
@@ -274,8 +280,7 @@ export function KupandaDueDiligence({
   const coverNote = client ? PORTFOLIO_COVER_NOTE_CLIENT : PORTFOLIO_COVER_NOTE;
   // Les onglets simulation et pays n'existent que pour les souscripteurs.
   const tabs: Tab[] = client ? ["flux", "risque", "simulation", "pays"] : ["flux", "risque"];
-  // Les documents listés : ceux de la fiche, plus ceux des souscripteurs.
-  const allDocs = client ? [...DD_DOCS, ...CLIENT_DOCS] : DD_DOCS;
+  const allDocs = DD_DOCS;
   const tabLabel = (t: Tab, short: boolean) =>
     t === "flux"
       ? short ? c.tabFlowShort : c.tabFlow
@@ -579,6 +584,35 @@ export function KupandaDueDiligence({
                 <p className="mt-1.5 text-sm leading-6 text-neutral-700">{sc.a[locale]}</p>
               </article>
             ))}
+          </div>
+          {/* Le Q&A du family office, en lecture seule (DocSend). */}
+          <div
+            className={`mt-4 flex items-center justify-between gap-4 rounded-xl border px-5 py-3.5 ${
+              QA_LINK.url ? "border-foreground/10 bg-white/50" : "border-neutral-300/70 bg-neutral-200/40"
+            }`}
+          >
+            <span className="flex min-w-0 items-center gap-3">
+              <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-neutral-500" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+                <path d="M14 3v5h5" />
+              </svg>
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold leading-5 text-foreground">{QA_LINK.title[locale]}</span>
+                <span className="block text-sm leading-5 text-neutral-600">{c.readOnly}</span>
+              </span>
+            </span>
+            {QA_LINK.url ? (
+              <a
+                href={QA_LINK.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="whitespace-nowrap rounded-lg px-2 py-1 text-sm font-medium text-marsala underline decoration-marsala/30 underline-offset-4 hover:decoration-marsala"
+              >
+                {c.read} →
+              </a>
+            ) : (
+              <span className="whitespace-nowrap text-xs text-neutral-600">{c.linkSoon}</span>
+            )}
           </div>
         </section>
       ) : (
@@ -893,7 +927,7 @@ function IconButton({
 // Un document : ouvert dans la data room, verrouillé, ou à demander.
 function DocRow({ id, ctx, compact = false }: { id: string; ctx: DocCtx; compact?: boolean }) {
   const { locale, c, openSlugs, requests, requestDoc, client } = ctx;
-  const doc = (client ? [...DD_DOCS, ...CLIENT_DOCS] : DD_DOCS).find((d) => d.id === id);
+  const doc = DD_DOCS.find((d) => d.id === id);
   if (!doc) return null;
   const state = requests[id];
 

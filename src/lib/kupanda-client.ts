@@ -6,21 +6,19 @@
 // par le dollar et un swap avec Zanaco (pas le franc CFA), et les juridictions
 // sont la Zambie puis le Kenya (plus de Rwanda).
 
-import type { Bi, DdDoc } from "@/lib/kupanda-dd";
+import type { Bi } from "@/lib/kupanda-dd";
 
-// Documents sur demande propres aux souscripteurs, en plus de ceux de la
-// fiche (DD_DOCS). Le Q&A est celui préparé pour un family office le
-// 15 octobre 2026 (Dropbox, Seed Round/Team_Gautier, Q A_TeamG_x_Minah_vf.xlsx).
-export const CLIENT_DOCS: DdDoc[] = [
-  {
-    id: "qa-family-office",
-    title: {
-      fr: "Q&A risque de crédit et risque souverain, questions d'un family office (octobre 2026)",
-      en: "Credit and sovereign risk Q&A, a family office's questions (October 2026)",
-    },
-    kind: { type: "request" },
+// Le Q&A préparé pour un family office le 15 octobre 2026 (Dropbox, Seed
+// Round/Team_Gautier, Q A_TeamG_x_Minah_vf.xlsx), en lecture seule sous les
+// scénarios de l'onglet risque. L'URL est celle du DocSend que Coralie crée ;
+// tant qu'elle est vide, la ligne s'affiche grisée, « lien à venir ».
+export const QA_LINK: { title: Bi; url: string } = {
+  title: {
+    fr: "Q&A risque de crédit et risque souverain, questions d'un family office (octobre 2026)",
+    en: "Credit and sovereign risk Q&A, a family office's questions (October 2026)",
   },
-];
+  url: "",
+};
 
 /** Formulaire d'intention de souscription, celui du mémo (page « What's next »). */
 export const INTEREST_FORM_URL = "https://tally.so/r/0QjrQP";
