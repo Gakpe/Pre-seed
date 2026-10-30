@@ -21,7 +21,7 @@ import { SectionTitle } from "./section-title";
 // restent anonymes, comme sur la slide. Atlantic Financials n'a pas de lien :
 // atlanticfinancials.com est un domaine parqué, à vérifier avec l'équipe.
 
-type Logo = { src: string; alt: string; name?: string; href?: string };
+type Logo = { src: string; alt: string; name?: string; href?: string; contain?: boolean };
 type Row = {
   id: string;
   title: string;
@@ -49,11 +49,23 @@ const L = (file: string, alt: string, href?: string, name = alt): Logo => ({
   href,
 });
 
+// Logos hors slide (partenaires) : fond transparent, rendus en object-contain
+// sur une vignette blanche plutôt qu'en object-cover comme les découpes de slide.
+const P = (file: string, name: string, href?: string): Logo => ({
+  src: `/partners/${file}.png`,
+  alt: name,
+  name,
+  href,
+  contain: true,
+});
+
 const PORTRAITS = [1, 2, 3].map((i) => L(`nb${i}`, ""));
 const INSTITUTIONS = [
   L("atlantic", "Atlantic Financials"),
   L("wef", "World Economic Forum", "https://www.weforum.org"),
   L("worldbank", "The World Bank", "https://www.worldbank.org"),
+  P("marex", "Marex", "https://www.marex.com"),
+  P("silver-birch", "Silver Birch"),
 ];
 const CHAIN = [
   L("stellar", "Stellar", "https://stellar.org"),
@@ -85,7 +97,10 @@ const copy: Record<
     loop: string;
     capital: Side;
     assets: Side;
-    level2: string;
+    summary: {
+      title: string;
+      steps: { n: string; status: string; title: string; body: string }[];
+    };
   }
 > = {
   fr: {
@@ -135,7 +150,7 @@ const copy: Record<
           id: "institutions",
           title: "Institutions & brokers",
           logos: INSTITUTIONS,
-          fig: "+5 M€",
+          fig: "+10 M€",
           figLabel: "en discussion",
           detail:
             "Nous sommes invités là où se concentre le capital : World Economic Forum à Davos, Africa CEO Forum, Africa Financial Industry Summit. C'est à l'une de ces tables, au Qatar, qu'un fonds américain nous a rejoints pour co-structurer Kupanda. Des discussions sont aussi en cours avec des brokers, pour placer nos stratégies auprès de leurs clients institutionnels.",
@@ -193,8 +208,23 @@ const copy: Record<
         },
       ],
     },
-    level2:
-      "Une fois votre intérêt manifesté, le niveau 2 ouvre notre roadmap écosystème : l'ordre dans lequel nous activons ce réseau, et la structure qui le transforme en volume, étape par étape. Le réseau, nous l'avons déjà ; la roadmap montre comment nous l'adressons pour atteindre 100 M€ de capital-in d'ici 2028.",
+    summary: {
+      title: "Le parcours en deux étapes",
+      steps: [
+        {
+          n: "1",
+          status: "Cette fiche",
+          title: "Le réseau, aujourd'hui",
+          body: "Les deux côtés du deal sont déjà en place : trois canaux qui amènent le capital, trois sources qui amènent les deals, et une fintech de structuration au centre. 80 M€ de pipeline actif, 100 M€ de capital-in visés.",
+        },
+        {
+          n: "2",
+          status: "Niveau 2, une fois votre intérêt manifesté",
+          title: "La roadmap écosystème",
+          body: "L'ordre dans lequel nous activons ce réseau, période par période : 100 M€ de capital-in en 2028, puis la route vers 1 Md€ en 2029, quand le Minah Forum devient le marché de la dette privée africaine.",
+        },
+      ],
+    },
   },
   en: {
     lead: [
@@ -243,7 +273,7 @@ const copy: Record<
           id: "institutions",
           title: "Institutions & brokers",
           logos: INSTITUTIONS,
-          fig: "+€5M",
+          fig: "+€10M",
           figLabel: "in discussion",
           detail:
             "We are invited where capital concentrates: the World Economic Forum in Davos, the Africa CEO Forum, the Africa Financial Industry Summit. It was at one of these tables, in Qatar, that an American fund joined us to co-structure Kupanda. Discussions are also underway with brokers, to place our strategies with their institutional clients.",
@@ -301,8 +331,23 @@ const copy: Record<
         },
       ],
     },
-    level2:
-      "Once you have expressed interest, level 2 opens our ecosystem roadmap: the order in which we activate this network, and the structure that turns it into volume, step by step. The network is already there; the roadmap shows how we work it to reach €100M of capital-in by 2028.",
+    summary: {
+      title: "The path in two steps",
+      steps: [
+        {
+          n: "1",
+          status: "This page",
+          title: "The network, today",
+          body: "Both sides of the deal are already in place: three channels that bring in capital, three sources that bring in deals, and a structuring fintech at the centre. €80M of live pipeline, €100M of capital-in targeted.",
+        },
+        {
+          n: "2",
+          status: "Level 2, once you have expressed interest",
+          title: "The ecosystem roadmap",
+          body: "The order in which we activate this network, period by period: €100M of capital-in in 2028, then the road to €1B in 2029, when the Minah Forum becomes the market for African private debt.",
+        },
+      ],
+    },
   },
 };
 
@@ -518,7 +563,7 @@ export function GtmMachine({ locale }: { locale: Locale }) {
                             {row.title}
                           </span>
                           <span
-                            className={`mt-3 flex gap-1.5 ${right ? "lg:justify-end" : ""} ${
+                            className={`mt-3 flex flex-wrap gap-1.5 ${right ? "lg:justify-end" : ""} ${
                               row.portraits ? "gap-2" : ""
                             }`}
                           >
@@ -616,9 +661,36 @@ export function GtmMachine({ locale }: { locale: Locale }) {
           </p>
         </div>
 
-        <p className={`mt-12 rounded-xl border border-neutral-300/70 bg-neutral-200/40 px-6 py-5 ${BODY}`}>
-          {c.level2}
-        </p>
+        {/* Sommaire en deux étapes : où nous en sommes (accessible, carte
+            blanche), et la vision qui s'ouvre au niveau 2 (verrouillée, carte
+            grise), pour donner envie d'y accéder. */}
+        <div className="mt-16">
+          <SectionTitle icon="route">{c.summary.title}</SectionTitle>
+          <ol className="mt-8 grid gap-4 md:grid-cols-2">
+            {c.summary.steps.map((step, i) => {
+              const locked = i === 1;
+              return (
+                <li
+                  key={step.n}
+                  className={`flex flex-col rounded-xl border px-6 py-6 ${
+                    locked
+                      ? "border-neutral-300/70 bg-neutral-200/40"
+                      : "border-foreground/10 bg-white/50"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand/10 font-mono text-sm font-semibold text-marsala">
+                      {step.n}
+                    </span>
+                    <span className="text-sm text-neutral-600">{step.status}</span>
+                  </div>
+                  <h3 className="mt-4 text-sm font-semibold text-foreground">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-neutral-700">{step.body}</p>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
       </section>
     </div>
   );
@@ -633,7 +705,9 @@ function LogoTile({ logo, portrait }: { logo: Logo; portrait?: boolean }) {
       className={
         portrait
           ? "h-9 w-9 shrink-0 rounded-full object-cover ring-2 ring-brand/40"
-          : "h-9 w-[53px] shrink-0 rounded-md object-cover"
+          : logo.contain
+            ? "h-9 w-[53px] shrink-0 rounded-md object-contain bg-white p-1 ring-1 ring-foreground/10"
+            : "h-9 w-[53px] shrink-0 rounded-md object-cover"
       }
     />
   );
