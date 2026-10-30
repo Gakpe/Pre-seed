@@ -7,15 +7,13 @@ import {
   USE_CASES,
   DD_DOCS,
   FLOWS,
-  PORTFOLIO_COVER_NOTE,
-  PORTFOLIO_COVER_NOTE_CLIENT,
   PROTECTION_EXTRA,
   type DdItem,
 } from "@/lib/kupanda-dd";
 import { RISK_LEVELS } from "@/lib/risk-levels";
 import type { Locale } from "@/lib/i18n";
 import { SectionTitle } from "../section-title";
-import { CONTACT_EMAIL, QA_LINK, SCENARIOS } from "@/lib/kupanda-client";
+import { QA_LINK, SCENARIOS } from "@/lib/kupanda-client";
 import { FlowScene, type Layout } from "./FlowScene";
 import { RiskScene } from "./RiskScene";
 import { Simulator } from "./Simulator";
@@ -25,21 +23,15 @@ import { Markets } from "./Markets";
 // des souscripteurs aux PME zambiennes. Deux schémas cliquables, le chemin du
 // capital et la cascade de protections, ouvrent chacun leur panneau de détail :
 // colonne collante à droite au large, feuille montant du bas au téléphone
-// (classes dd-* dans globals.css). Puis les documents, consultables ou à
-// demander, et les questions fréquentes selon le profil.
+// (classes dd-* dans globals.css). Deux autres onglets, ajoutés le 30/10/2026
+// depuis le mémorandum : la simulation et « où va l'argent ». Sous la cascade
+// de risque, les scénarios « que se passe-t-il si… », suivis du Q&A d'un
+// family office en lecture seule (QA_LINK, un DocSend). Puis les documents,
+// consultables ou à demander. Rien n'est dit deux fois : ce que les panneaux
+// détaillent n'est pas repris ailleurs.
 //
-// Le contenu vit dans src/lib/kupanda-dd.ts ; les protections reprennent la
-// cascade validée de src/lib/risk-levels.ts.
-//
-// Deux publics. `audience="investor"` (la data room) : les documents sont
-// ouvrables dans la data room ou à demander, la demande part par l'API des
-// questions. `audience="client"` (la page souscripteurs, /kupanda) : mêmes
-// schémas, mêmes panneaux et même volet documents, mais tout est sur demande,
-// par un email prérempli à l'équipe : un souscripteur n'a pas de compte. En
-// plus, deux onglets, la simulation et « où va l'argent », sous la cascade de
-// risque les scénarios « que se passe-t-il si… » du mémorandum, suivis du
-// Q&A d'un family office en lecture seule (QA_LINK, un DocSend). Rien n'y
-// est dit deux fois : ce que les panneaux détaillent n'est pas repris ailleurs.
+// Le contenu vit dans src/lib/kupanda-dd.ts et src/lib/kupanda-client.ts ;
+// les protections reprennent la cascade validée de src/lib/risk-levels.ts.
 
 const copy = {
   fr: {
@@ -51,13 +43,9 @@ const copy = {
       { value: "3 à 5 mois", label: "Par cycle de financement" },
       { value: "0 défaut", label: "Sur 10 M€ déployés" },
     ],
-    leadClient: "Kupanda finance le besoin en fonds de roulement de PME zambiennes titulaires de marchés publics signés, dans l'infrastructure et l'énergie. Vous souscrivez une obligation de droit français émise par Minah SAS, à Paris. L'argent est déployé en Zambie par Africa Rise, notre partenaire local, puis revient avec le coupon. Quatre vues : le chemin du capital, acteur par acteur ; les protections et ce qui se passe si l'une d'elles est sollicitée ; une simulation sur le montant de votre choix ; les deux pays où l'argent travaille.",
-    s3LeadClient: "Les documents sont envoyés sur demande : votre email prérempli part à l'équipe, qui revient vers vous.",
     readOnly: "Lecture seule",
     read: "Lire",
     linkSoon: "Lien à venir",
-    requestSubject: (title: string) => `Demande de document Kupanda : ${title}`,
-    requestBody: (title: string) => `Bonjour,\n\nJe souhaite recevoir le document suivant : ${title}.\n\nNom et entité :\n`,
     tabSim: "La simulation",
     tabSimShort: "Simulation",
     tabMarkets: "Où va l'argent",
@@ -128,13 +116,9 @@ const copy = {
       { value: "3 to 5 months", label: "Per financing cycle" },
       { value: "0 default", label: "On €10M deployed" },
     ],
-    leadClient: "Kupanda finances the working capital of Zambian SMEs holding signed public contracts, in infrastructure and energy. You subscribe to a French-law bond issued by Minah SAS, in Paris. The money is deployed in Zambia by Africa Rise, our local partner, then comes back with the coupon. Four views: the path of the capital, actor by actor; the protections and what happens if one of them is called on; a simulation on the amount of your choice; the two countries where the money works.",
-    s3LeadClient: "Documents are sent on request: your prefilled email goes to the team, who gets back to you.",
     readOnly: "Read only",
     read: "Read",
     linkSoon: "Link coming",
-    requestSubject: (title: string) => `Kupanda document request: ${title}`,
-    requestBody: (title: string) => `Hello,\n\nI would like to receive the following document: ${title}.\n\nName and entity:\n`,
     tabSim: "Simulation",
     tabSimShort: "Simulation",
     tabMarkets: "Where the money goes",
@@ -264,23 +248,16 @@ export function KupandaDueDiligence({
   locale,
   openSlugs,
   demo = false,
-  audience = "investor",
 }: {
   locale: Locale;
   /** Fiches de la data room que la personne peut ouvrir. */
   openSlugs: string[];
   demo?: boolean;
-  /** Souscripteurs : sans documents, voir l'en-tête du fichier. */
-  audience?: "investor" | "client";
 }) {
   const c = copy[locale];
-  const client = audience === "client";
-  const lead = client ? c.leadClient : c.lead;
+  const lead = c.lead;
   const hintRisk = c.hintRisk;
-  const coverNote = client ? PORTFOLIO_COVER_NOTE_CLIENT : PORTFOLIO_COVER_NOTE;
-  // Les onglets simulation et pays n'existent que pour les souscripteurs.
-  const tabs: Tab[] = client ? ["flux", "risque", "simulation", "pays"] : ["flux", "risque"];
-  const allDocs = DD_DOCS;
+  const tabs: Tab[] = ["flux", "risque", "simulation", "pays"];
   const tabLabel = (t: Tab, short: boolean) =>
     t === "flux"
       ? short ? c.tabFlowShort : c.tabFlow
@@ -334,7 +311,7 @@ export function KupandaDueDiligence({
           points: [
             `${l.trigger.lead[locale]} ${l.trigger.body[locale]}`,
             l.protection.body[locale],
-            ...(extra?.notes ?? []).map((n) => (n === PORTFOLIO_COVER_NOTE ? coverNote : n)[locale]),
+            ...(extra?.notes ?? []).map((n) => n[locale]),
           ],
           docs: extra?.docs ?? [],
         },
@@ -402,7 +379,7 @@ export function KupandaDueDiligence({
     [demo]
   );
 
-  const docCtx = { locale, c, openSlugs, requests, requestDoc, client };
+  const docCtx = { locale, c, openSlugs, requests, requestDoc };
   const toggle = (id: string) => setSelected(selected === id ? null : id);
 
   return (
@@ -571,10 +548,10 @@ export function KupandaDueDiligence({
             </div>
           ))}
         </dl>
-      ) : client ? (
-        // Souscripteurs : les scénarios du mémo, chacun renvoyé vers l'étage
-        // de la cascade qui joue. La note « à l'étude » reste dans les
-        // panneaux des niveaux 1 et 2, elle n'est pas répétée ici.
+      ) : (
+        // Les scénarios du mémo, chacun renvoyé vers l'étage de la cascade
+        // qui joue. La note « à l'étude » reste dans les panneaux des niveaux
+        // 1 et 2, elle n'est pas répétée ici.
         <section className="mt-6">
           <h3 className="text-sm font-semibold text-foreground">{c.scenarios}</h3>
           <div className="mt-2 grid gap-4 lg:grid-cols-2">
@@ -615,31 +592,20 @@ export function KupandaDueDiligence({
             )}
           </div>
         </section>
-      ) : (
-        <p className="mt-6 max-w-4xl rounded-xl border border-foreground/10 bg-white/60 px-5 py-4 text-sm leading-6 text-neutral-700">
-          {coverNote[locale]}
-        </p>
       )}
       </>
       )}
 
-      {/* 01, les documents. Souscripteurs : tout est sur demande, en deux
-          colonnes pour la lecture. */}
+      {/* 01, les documents */}
       <section className="mt-16">
         <SectionTitle n="01">{c.s3}</SectionTitle>
-        <p className="mt-4 max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{client ? c.s3LeadClient : c.s3Lead}</p>
+        <p className="mt-4 max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{c.s3Lead}</p>
         <div className="mt-6 grid gap-x-10 gap-y-8 lg:grid-cols-2">
-          {(client
-            ? [
-                { title: c.onRequest, docs: allDocs.slice(0, Math.ceil(allDocs.length / 2)) },
-                { title: "\u00a0", docs: allDocs.slice(Math.ceil(allDocs.length / 2)) },
-              ]
-            : [
-                { title: c.inDataroom, docs: DD_DOCS.filter((d) => d.kind.type === "dataroom") },
-                { title: c.onRequest, docs: DD_DOCS.filter((d) => d.kind.type === "request") },
-              ]
-          ).map((group, gi) => (
-            <div key={gi}>
+          {[
+            { title: c.inDataroom, docs: DD_DOCS.filter((d) => d.kind.type === "dataroom") },
+            { title: c.onRequest, docs: DD_DOCS.filter((d) => d.kind.type === "request") },
+          ].map((group) => (
+            <div key={group.title}>
               <h3 className="text-sm font-semibold text-foreground">{group.title}</h3>
               <ul className="mt-2 divide-y divide-foreground/10 border-y border-foreground/10">
                 {group.docs.map((d) => (
@@ -752,8 +718,6 @@ type DocCtx = {
   openSlugs: string[];
   requests: Record<string, RequestState>;
   requestDoc: (id: string) => void;
-  /** Souscripteurs : toute demande part par email prérempli. */
-  client: boolean;
 };
 
 function DetailPanel({
@@ -926,24 +890,13 @@ function IconButton({
 
 // Un document : ouvert dans la data room, verrouillé, ou à demander.
 function DocRow({ id, ctx, compact = false }: { id: string; ctx: DocCtx; compact?: boolean }) {
-  const { locale, c, openSlugs, requests, requestDoc, client } = ctx;
+  const { locale, c, openSlugs, requests, requestDoc } = ctx;
   const doc = DD_DOCS.find((d) => d.id === id);
   if (!doc) return null;
   const state = requests[id];
 
   let action: React.ReactNode;
-  if (client) {
-    const title = doc.title[locale];
-    const href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(c.requestSubject(title))}&body=${encodeURIComponent(c.requestBody(title))}`;
-    action = (
-      <a
-        href={href}
-        className="whitespace-nowrap rounded-lg border border-foreground/15 bg-white/70 px-2.5 py-1 text-sm font-medium text-foreground transition-colors hover:border-foreground/35"
-      >
-        {c.request}
-      </a>
-    );
-  } else if (doc.kind.type === "dataroom") {
+  if (doc.kind.type === "dataroom") {
     action = openSlugs.includes(doc.kind.slug) ? (
       <a
         href={`/investors/docs/${doc.kind.slug}`}

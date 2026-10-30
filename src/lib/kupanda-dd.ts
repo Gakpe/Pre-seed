@@ -314,13 +314,6 @@ export const PORTFOLIO_COVER_NOTE: Bi = {
   en: "Under review: a performance bond and credit default insurance at portfolio level. Possibly from Kupanda 2, in 2027 at the latest. It costs more, but it will speed up our institutional distribution.",
 };
 
-// Même note, pour la version destinée aux souscripteurs (/kupanda) : sans
-// l'argument de distribution, qui s'adresse aux investisseurs du tour.
-export const PORTFOLIO_COVER_NOTE_CLIENT: Bi = {
-  fr: "À l'étude : un performance bond et une assurance défaut de crédit au niveau du portefeuille, possiblement dès Kupanda 2, en 2027 au plus tard.",
-  en: "Under review: a performance bond and credit default insurance at portfolio level, possibly from Kupanda 2, in 2027 at the latest.",
-};
-
 const ASSET: Bi = { fr: "Par actif sous-jacent", en: "Per underlying asset" };
 const PORTFOLIO: Bi = { fr: "Au niveau du portefeuille", en: "At portfolio level" };
 

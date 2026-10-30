@@ -77,19 +77,6 @@ export const DRAFT_DOCS: DraftDoc[] = [
     access_level: 2,
     sort_order: 73,
   },
-  // 30/10/2026 (Coralie) : la même due diligence pour les souscripteurs de
-  // l'obligation, sans documents internes ouvrables (tout est sur demande),
-  // avec la simulation, les pays et le Q&A. Aussi servie hors data room sur
-  // /kupanda.
-  {
-    slug: "kupanda-due-diligence-souscripteurs",
-    title: "Kupanda Due Diligence pour les souscripteurs",
-    title_en: "Kupanda Due Diligence for subscribers",
-    category: "Kupanda",
-    category_en: "Kupanda",
-    access_level: 2,
-    sort_order: 74,
-  },
 ];
 
 export const DRAFT_SLUGS = new Set(DRAFT_DOCS.map((d) => d.slug));
