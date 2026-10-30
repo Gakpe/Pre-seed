@@ -1,8 +1,10 @@
 import type { Locale } from "@/lib/i18n";
 import { CONTACT_EMAIL, DISCLAIMER, INTEREST_FORM_URL } from "@/lib/kupanda-client";
 
-// Sous les onglets de la due diligence : l'intention de souscription et
-// l'avertissement, rien d'autre. Le contenu vit dans src/lib/kupanda-client.ts.
+// Sous les onglets de la due diligence, version souscripteurs : l'intention
+// de souscription et l'avertissement, rien d'autre. Rendu par la page
+// /kupanda et par la fiche brouillon de la data room. Le contenu vit dans
+// src/lib/kupanda-client.ts.
 
 const copy = {
   fr: {

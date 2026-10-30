@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getAdminEmail } from "@/lib/admin";
 import { getLocale } from "@/lib/i18n-server";
 import { KupandaDueDiligence } from "../investors/docs/[slug]/kupanda-dd/KupandaDueDiligence";
-import { ClientSections } from "./sections";
+import { ClientSections } from "../investors/docs/[slug]/kupanda-dd/ClientSections";
 
 // « Due diligence Kupanda », version souscripteurs. La fiche de la data room
 // (kupanda-due-diligence) s'adresse aux investisseurs du tour et liste les
