@@ -20,7 +20,7 @@ export const QA_LINK: { title: Bi; url: Bi } = {
   },
   url: {
     fr: "https://docsend.com/view/8ssmy3zp8ths5unb",
-    en: "",
+    en: "https://docsend.com/view/mfgqwf625uejhpmr",
   },
 };
 
