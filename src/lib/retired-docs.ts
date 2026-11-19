@@ -65,18 +65,8 @@ export const DRAFT_DOCS: DraftDoc[] = [
     access_level: 1,
     sort_order: 52,
   },
-  // 24/10/2026 (Julien) : la due diligence de l'opération Kupanda, des
-  // souscripteurs aux PME, protections, documents et questions par profil.
-  {
-    slug: "kupanda-due-diligence",
-    // Titre du 27/10/2026 (Julien), ouvert à Newform pour leurs Q&A.
-    title: "Kupanda Due Diligence « Virtual Strategic Dataroom »",
-    title_en: "Kupanda Due Diligence “Virtual Strategic Dataroom”",
-    category: "Kupanda",
-    category_en: "Kupanda",
-    access_level: 2,
-    sort_order: 73,
-  },
+  // La due diligence Kupanda (« Virtual Strategic Dataroom ») a été publiée le
+  // 19/11/2026 (Julien) : sa ligne est en base, au niveau 2.
 ];
 
 export const DRAFT_SLUGS = new Set(DRAFT_DOCS.map((d) => d.slug));

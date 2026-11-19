@@ -1,66 +1,78 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   ACTORS,
   USE_CASES,
-  DD_DOCS,
   FLOWS,
   PROTECTION_EXTRA,
   type DdItem,
 } from "@/lib/kupanda-dd";
+import type { KupandaDoc } from "@/lib/kupanda-documents";
 import { RISK_LEVELS } from "@/lib/risk-levels";
 import type { Locale } from "@/lib/i18n";
 import { SectionTitle } from "../section-title";
-import { QA_LINK, SCENARIOS } from "@/lib/kupanda-client";
+import { K1_CLOSURE, SCENARIOS } from "@/lib/kupanda-client";
 import { FlowScene, type Layout } from "./FlowScene";
 import { RiskScene } from "./RiskScene";
 import { Simulator } from "./Simulator";
 import { Markets } from "./Markets";
+import { RotationChart } from "./RotationChart";
 
-// Fiche « Due diligence Kupanda » (brouillon) : de quoi instruire l'opération,
-// des souscripteurs aux PME zambiennes. Deux schémas cliquables, le chemin du
-// capital et la cascade de protections, ouvrent chacun leur panneau de détail :
-// colonne collante à droite au large, feuille montant du bas au téléphone
-// (classes dd-* dans globals.css). Deux autres onglets, ajoutés le 30/10/2026
-// depuis le mémorandum : la simulation et « où va l'argent ». Sous la cascade
-// de risque, les scénarios « que se passe-t-il si… », suivis du Q&A d'un
-// family office en lecture seule (QA_LINK, un DocSend). Puis les documents,
-// consultables ou à demander. Rien n'est dit deux fois : ce que les panneaux
-// détaillent n'est pas repris ailleurs.
+// Fiche « Due diligence Kupanda » (niveau 2 de la data room, publiée le
+// 19/11/2026) : de quoi instruire l'opération,
+// des souscripteurs aux PME zambiennes, pour Kupanda 1 et Kupanda 2. Deux
+// schémas cliquables, le chemin du capital et la cascade de protections,
+// ouvrent chacun leur panneau de détail : tiroir à droite au large, feuille
+// montant du bas en dessous (classes dd-* dans globals.css). Deux autres
+// onglets : la simulation, sur les deux émissions, et « où va l'argent ». Sous
+// la cascade de risque, la rotation du capital sur 12 mois puis les scénarios
+// « que se passe-t-il si… ». Enfin les documents, par niveau, sur DocSend.
 //
-// Le contenu vit dans src/lib/kupanda-dd.ts et src/lib/kupanda-client.ts ;
-// les protections reprennent la cascade validée de src/lib/risk-levels.ts.
+// Mise à jour du 19/11/2026 : la fiche rattrape la dataroom Kupanda du front
+// (minah.io/dataroom/kupanda), texte pour texte. Le portail garde son modèle
+// d'accès : pas de visite guidée, d'onglet d'intérêt ni de rendez-vous ici.
+// Retirés à la demande de Julien, à ne pas remettre : la jauge des pertes, le
+// Q&A par profil et celui du family office, la mention « document de
+// synthèse », la ligne « rotation sur 12 mois » de l'ancienne présentation, le
+// logo ZESCO sur la carte, les bandes orange des groupes d'étapes, le BTC.
+//
+// Le contenu vit dans src/lib/kupanda-dd.ts et src/lib/kupanda-client.ts ; les
+// protections reprennent la cascade validée de src/lib/risk-levels.ts ; les
+// documents arrivent du serveur (src/lib/kupanda-documents.ts), déjà filtrés
+// selon le niveau de la personne.
 
+// Textes du front. Trois écarts : le coupon de Kupanda 2 à 18 % (premier grand
+// chiffre et deuxième repère, dans les mots de la salle Silver Birch), et les
+// libellés de la section documents, le portail n'ayant pas d'accord de
+// confidentialité à signer en ligne.
 const copy = {
   fr: {
-    lead: "Kupanda est une stratégie qui se décline en émissions successives, sur les mêmes termes : Kupanda 1, 2 M€, est en cours, et Kupanda 2, 10 M€, arrive. Des investisseurs du monde entier souscrivent une obligation émise à Paris ; l'argent part principalement en Zambie, et pour une partie au Kenya, où Africa Rise finance des PME titulaires de marchés publics signés, puis revient avec le coupon.",
+    lead: "Kupanda est une stratégie qui se décline en émissions successives, sur les mêmes termes : Kupanda 1, 2 M€, est ouverte jusqu'au 1er décembre 2026, et Kupanda 2, 10 M€, recueille ses premiers engagements. Des investisseurs du monde entier souscrivent une obligation émise à Paris ; l'argent part principalement en Zambie, et pour une partie au Kenya, où Africa Rise finance des PME titulaires de marchés publics signés, puis revient avec le coupon.",
     facts: [
-      { value: "2 M€", label: "Kupanda 1, l'émission en cours" },
-      { value: "20 %", label: "Coupon annuel" },
+      { value: "10 M€", label: "Kupanda 2, à souscrire" },
+      { value: "18 %", label: "Coupon annuel de Kupanda 2" },
       { value: "12 mois", label: "In fine, sans remboursement anticipé" },
       { value: "3 à 5 mois", label: "Par cycle de financement" },
       { value: "0 défaut", label: "Sur 10 M€ déployés" },
     ],
-    readOnly: "Lecture seule",
-    read: "Lire",
     linkSoon: "Lien à venir",
     tabSim: "La simulation",
     tabSimShort: "Simulation",
     tabMarkets: "Où va l'argent",
-    tabMarketsShort: "Les pays",
+    tabMarketsShort: "Pays",
     scenarios: "Que se passe-t-il si…",
     headline: [
-      { value: "20 %", label: "Rendement brut par an" },
-      { value: "16,5 %", label: "Rendement net par an" },
-      { value: "12 mois", label: "Maturité, in fine" },
+      { value: "18 %", label: "Rendement brut par an, Kupanda 2", hint: "20 % pour Kupanda 1" },
+      { value: "14,5 %", label: "Rendement net par an, Kupanda 2", hint: "16,5 % pour Kupanda 1" },
+      { value: "12 mois", label: "Maturité, in fine", hint: "Coupon semestriel : la moitié à 6 mois" },
     ],
     tabsLabel: "Vues de l'opération",
     tabFlow: "Le flux de l'opération",
     tabRisk: "La gestion du risque",
-    tabFlowShort: "Le flux",
-    tabRiskShort: "Le risque",
+    tabFlowShort: "Flux",
+    tabRiskShort: "Risque",
     hintFlow: "Cliquez sur une étape, un acteur ou un flux pour en ouvrir le détail.",
     steps: "Les étapes",
     hintRisk: "Cliquez sur une protection pour voir ce qu'elle couvre, à quelle hauteur, et sur quel document.",
@@ -69,55 +81,44 @@ const copy = {
     scopeLabel: "Niveau de protection",
     socleTitle: "Le socle juridique",
     socleTag: "Ce qui protège les obligataires quoi qu'il arrive",
-    s2: "La sécurité, étage par étage",
-    s2Lead: "Chaque niveau de risque a sa protection. Ce qu'une protection n'absorbe pas descend à la suivante : le rendement des investisseurs n'est touché qu'une fois les quatre épuisées.",
-    s2Hint: "Cliquez sur un niveau pour voir ce qu'il couvre, à quelle hauteur, et sur quel document.",
     socle: [
       { title: "Une obligation directe", body: "Minah SAS doit intérêts et principal, quelle que soit la performance des actifs sous-jacents." },
       { title: "La masse des obligataires", body: "Représentée par Julca, elle agit au nom de tous les porteurs, sans action individuelle." },
     ],
-    s3: "Les documents",
-    s3Lead: "Les fiches de la data room s'ouvrent directement. Les autres documents sont envoyés sur demande : l'équipe la reçoit et revient vers vous.",
-    inDataroom: "Dans la data room",
-    onRequest: "Sur demande",
-    // Panneau
-    kicker: { actor: "Acteur", flow: "Flux", protection: "Protection", usecase: "Cas d'usage" },
-    cases: "Les cas d'usage",
+    kicker: { actor: "Acteur", flow: "Flux", protection: "Protection", usecase: "Exemple" },
+    cases: "Deux exemples parmi d'autres",
+    moreCases: "Deux exemples parmi d'autres : Africa Rise finance de nombreuses PME du même type. Pour chacune, le fonds de roulement d'un contrat public de plusieurs années, par cycles assurés de 3 à 5 mois.",
     series: [
-      { name: "Kupanda 1", amount: "2 M€", status: "En cours", body: "L'émission en cours, détaillée sur cette page." },
-      { name: "Kupanda 2", amount: "10 M€", status: "En préparation", body: "Mêmes termes, même structure, même partenaire. Premier closing prévu en janvier 2027." },
+      { name: "Kupanda 1", amount: "2 M€", status: "En cours", body: "Ouverte jusqu'au 1er décembre 2026" },
+      { name: "Kupanda 2", amount: "10 M€", status: "Engagements ouverts", body: "Premier closing en janvier 2027" },
     ],
-    seriesLabel: "Une stratégie, des émissions successives",
+    seriesLabel: "Une stratégie, deux émissions",
+    dealTitle: "Au cœur de l'opération",
     level: "Niveau",
-    trigger: "Déclencheur",
     docs: "Documents",
     keyFacts: "Repères",
     issues: "Les enjeux",
-    empty: "Cliquez sur un bloc ou sur une flèche : son détail s'affiche ici.",
-    emptyRisk: "Cliquez sur un niveau : sa protection et sa hauteur s'affichent ici.",
     prev: "Précédent",
     next: "Suivant",
     close: "Fermer",
     open: "Ouvrir",
     locked: "Niveau 2",
-    request: "Demander",
-    sending: "Envoi…",
-    requested: "Demandé",
-    retry: "Réessayer",
     toFill: "à renseigner",
-    returnRail: "Retour aux souscripteurs",
+    s3: "Documents",
+    docsLead: "Les documents s'ouvrent sur DocSend, dans un nouvel onglet. Les documents confidentiels s'ouvrent au niveau 2 de la data room.",
+    level1: "Dès l'invitation",
+    level2: "Confidentiels",
+    level2Note: "Ces documents sont réservés au niveau 2 de la data room.",
   },
   en: {
-    lead: "Kupanda is a strategy rolled out in successive issuances, on the same terms: Kupanda 1, €2M, is live, and Kupanda 2, €10M, is coming. Investors from around the world subscribe to a bond issued in Paris; the money goes mainly to Zambia, with part going to Kenya, where Africa Rise finances SMEs holding signed public contracts, then comes back with the coupon.",
+    lead: "Kupanda is a strategy rolled out in successive issuances, on the same terms: Kupanda 1, €2M, is open until 1 December 2026, and Kupanda 2, €10M, is gathering its first commitments. Investors from around the world subscribe to a bond issued in Paris; the money goes mainly to Zambia, with part going to Kenya, where Africa Rise finances SMEs holding signed public contracts, then comes back with the coupon.",
     facts: [
-      { value: "€2M", label: "Kupanda 1, the live issuance" },
-      { value: "20%", label: "Annual coupon" },
+      { value: "€10M", label: "Kupanda 2, open to subscribe" },
+      { value: "18%", label: "Kupanda 2's annual coupon" },
       { value: "12 months", label: "Bullet, no early redemption" },
       { value: "3 to 5 months", label: "Per financing cycle" },
       { value: "0 default", label: "On €10M deployed" },
     ],
-    readOnly: "Read only",
-    read: "Read",
     linkSoon: "Link coming",
     tabSim: "Simulation",
     tabSimShort: "Simulation",
@@ -125,15 +126,15 @@ const copy = {
     tabMarketsShort: "Countries",
     scenarios: "What happens if…",
     headline: [
-      { value: "20%", label: "Gross annual return" },
-      { value: "16.5%", label: "Net annual return" },
-      { value: "12 months", label: "Bullet maturity" },
+      { value: "18%", label: "Gross annual return, Kupanda 2", hint: "20% for Kupanda 1" },
+      { value: "14.5%", label: "Net annual return, Kupanda 2", hint: "16.5% for Kupanda 1" },
+      { value: "12 months", label: "Bullet maturity", hint: "Semi-annual coupon: half at month 6" },
     ],
     tabsLabel: "Views of the deal",
     tabFlow: "How the deal flows",
     tabRisk: "Risk management",
-    tabFlowShort: "The flow",
-    tabRiskShort: "The risk",
+    tabFlowShort: "Flow",
+    tabRiskShort: "Risk",
     hintFlow: "Click a step, an actor or a flow to open its detail.",
     steps: "Steps",
     hintRisk: "Click a protection to see what it covers, up to what amount, and on which document.",
@@ -142,42 +143,34 @@ const copy = {
     scopeLabel: "Protection level",
     socleTitle: "The legal foundation",
     socleTag: "What protects bondholders whatever happens",
-    s2: "Security, layer by layer",
-    s2Lead: "Each level of risk has its protection. What one protection does not absorb passes to the next: investors' return is only affected once all four are exhausted.",
-    s2Hint: "Click a level to see what it covers, up to what amount, and on which document.",
     socle: [
       { title: "A direct obligation", body: "Minah SAS owes interest and principal, whatever the performance of the underlying assets." },
       { title: "The bondholder body", body: "Represented by Julca, it acts on behalf of all holders, with no individual action." },
     ],
-    s3: "Documents",
-    s3Lead: "Data room pages open directly. Other documents are sent on request: the team receives it and gets back to you.",
-    inDataroom: "In the data room",
-    onRequest: "On request",
-    kicker: { actor: "Actor", flow: "Flow", protection: "Protection", usecase: "Use case" },
-    cases: "Use cases",
+    kicker: { actor: "Actor", flow: "Flow", protection: "Protection", usecase: "Example" },
+    cases: "Two examples among many",
+    moreCases: "Two examples among many: Africa Rise finances many SMEs of the same kind. For each, the working capital of a multi-year public contract, in insured 3 to 5 month cycles.",
     series: [
-      { name: "Kupanda 1", amount: "€2M", status: "Live", body: "The live issuance, detailed on this page." },
-      { name: "Kupanda 2", amount: "€10M", status: "In preparation", body: "Same terms, same structure, same partner. First closing planned for January 2027." },
+      { name: "Kupanda 1", amount: "€2M", status: "Live", body: "Open until 1 December 2026" },
+      { name: "Kupanda 2", amount: "€10M", status: "Commitments open", body: "First closing in January 2027" },
     ],
-    seriesLabel: "One strategy, successive issuances",
+    seriesLabel: "One strategy, two issuances",
+    dealTitle: "Inside the deal",
     level: "Level",
-    trigger: "Trigger",
     docs: "Documents",
     keyFacts: "Key facts",
     issues: "What matters",
-    empty: "Click a block or an arrow: its detail shows here.",
-    emptyRisk: "Click a level: its protection and how far it covers show here.",
     prev: "Previous",
     next: "Next",
     close: "Close",
     open: "Open",
     locked: "Level 2",
-    request: "Request",
-    sending: "Sending…",
-    requested: "Requested",
-    retry: "Retry",
     toFill: "to be filled in",
-    returnRail: "Back to subscribers",
+    s3: "Documents",
+    docsLead: "Documents open on DocSend, in a new tab. Confidential documents open at level 2 of the data room.",
+    level1: "From your invitation",
+    level2: "Confidential",
+    level2Note: "These documents are reserved for level 2 of the data room.",
   },
 } as const;
 
@@ -196,13 +189,15 @@ type Detail = {
   cases?: { id: string; title: string; tag: string }[];
 };
 
-function fromItem(item: DdItem, locale: Locale, c: Copy): Detail {
+function fromItem(item: DdItem, locale: Locale, c: Copy, k1Closed: boolean): Detail {
+  // Kupanda 1 close : le panneau de Minah SAS le dit à la place de la date limite.
+  const label = (l: string) => (k1Closed && l === K1_CLOSURE.minahLabel.open[locale] ? K1_CLOSURE.minahLabel.closed[locale] : l);
   return {
     id: item.id,
     kicker: c.kicker[item.kind],
     title: item.title[locale],
     tag: item.tag[locale],
-    facts: item.facts.map((f) => ({ label: f.label[locale], value: f.value?.[locale] ?? null })),
+    facts: item.facts.map((f) => ({ label: label(f.label[locale]), value: f.value?.[locale] ?? null })),
     points: item.points.map((p) => p[locale]),
     docs: item.docs,
   };
@@ -210,7 +205,7 @@ function fromItem(item: DdItem, locale: Locale, c: Copy): Detail {
 
 // Ordre de lecture du schéma, pour Précédent / Suivant : chaque acteur suivi
 // du flux qui en part.
-// Les cas d'usage se glissent après les PME dans la navigation, sans numéro.
+// Les deux exemples de PME se glissent après elles dans la navigation, sans numéro.
 const CASE_IDS = USE_CASES.map((u) => u.id);
 
 const FLOW_ORDER = [
@@ -226,11 +221,15 @@ const FLOW_ORDER = [
   "retour",
 ];
 
+// « […] » entre les deux exemples de PME : il y en a beaucoup d'autres du même
+// type. Ni étape ni panneau, une bulle au survol.
+const MORE = "more-cases";
+
 // Les étapes du flux, en quatre groupes ; un clic zoome sur le groupe.
 const FLOW_GROUPS: { id: string; label: { fr: string; en: string }; steps: string[] }[] = [
   { id: "emission", label: { fr: "L'émission", en: "The issuance" }, steps: ["souscripteurs", "souscription", "minah"] },
   { id: "partenaire", label: { fr: "La stratégie partenaire", en: "The partner strategy" }, steps: ["deploiement", "africa-rise"] },
-  { id: "sous-jacents", label: { fr: "Les sous-jacents", en: "The underlyings" }, steps: ["financement", "pme", "uc-infrastructure", "uc-energie", "reglement", "etat"] },
+  { id: "sous-jacents", label: { fr: "Les sous-jacents", en: "The underlyings" }, steps: ["financement", "pme", "uc-infrastructure", MORE, "uc-energie", "reglement", "etat"] },
   { id: "retour", label: { fr: "Le retour", en: "The return" }, steps: ["retour"] },
 ];
 
@@ -242,20 +241,29 @@ const RISK_GROUPS: typeof FLOW_GROUPS = [
 /** Largeur du panneau de détail au large, en pixels (voir .dd-drawer). */
 const DRAWER_W = 460;
 
-type RequestState = "sending" | "sent" | "error";
-
 export function KupandaDueDiligence({
   locale,
-  openSlugs,
-  demo = false,
+  documents,
+  level2,
+  k1Closed,
 }: {
   locale: Locale;
-  /** Fiches de la data room que la personne peut ouvrir. */
-  openSlugs: string[];
-  demo?: boolean;
+  /** Les documents, liens de niveau 2 déjà retirés pour qui n'y a pas droit. */
+  documents: KupandaDoc[];
+  /** La personne a le niveau 2 de la data room. */
+  level2: boolean;
+  /** Kupanda 1 est close (à partir du 2 décembre 2026) : calculé côté serveur. */
+  k1Closed: boolean;
 }) {
   const c = copy[locale];
-  const lead = c.lead;
+  const lead = k1Closed ? c.lead.replace(K1_CLOSURE.lead.open[locale], K1_CLOSURE.lead.closed[locale]) : c.lead;
+  const series = c.series.map((it, i) => ({
+    ...it,
+    // la première carte est Kupanda 1 : en cours (pastille verte), puis close
+    tone: i === 0 ? (k1Closed ? "closed" : "live") : "open",
+    status: i === 0 && k1Closed ? K1_CLOSURE.seriesStatus.closed[locale] : it.status,
+    body: i === 0 && k1Closed ? K1_CLOSURE.seriesBody.closed[locale] : it.body,
+  }));
   const hintRisk = c.hintRisk;
   const tabs: Tab[] = ["flux", "risque", "simulation", "pays"];
   const tabLabel = (t: Tab, short: boolean) =>
@@ -274,7 +282,6 @@ export function KupandaDueDiligence({
     setSelectedState(id);
     if (id) setLastSel(id);
   };
-  const [requests, setRequests] = useState<Record<string, RequestState>>({});
   // Portrait au téléphone, paysage au-delà ; le panneau devient une feuille
   // sous 1024 px.
   const tall = useMedia("(max-width: 1023px)");
@@ -287,7 +294,7 @@ export function KupandaDueDiligence({
   const caseRefs = USE_CASES.map((u) => ({ id: u.id, title: u.title[locale], tag: u.tag[locale] }));
   const flowDetails = new Map<string, Detail>(
     [...ACTORS, ...FLOWS, ...USE_CASES].map((it) => {
-      const d = fromItem(it, locale, c);
+      const d = fromItem(it, locale, c, k1Closed);
       return [it.id, it.id === "pme" ? { ...d, cases: caseRefs } : d];
     })
   );
@@ -305,12 +312,13 @@ export function KupandaDueDiligence({
             ...(extra ? [{ label: c.scopeLabel, value: extra.scope[locale] }] : []),
             ...(extra?.cover ?? []).map((f) => ({
               label: f.label[locale],
-              value: f.value?.[locale] ?? null,
+              // la garantie d'Africa Rise : le montant de chaque émission, entre parenthèses
+              value: f.value ? (f.detail ? `${f.value[locale]} (${f.detail[locale]})` : f.value[locale]) : null,
             })),
           ],
           points: [
             `${l.trigger.lead[locale]} ${l.trigger.body[locale]}`,
-            l.protection.body[locale],
+            (extra?.body ?? l.protection.body)[locale],
             ...(extra?.notes ?? []).map((n) => n[locale]),
           ],
           docs: extra?.docs ?? [],
@@ -325,7 +333,7 @@ export function KupandaDueDiligence({
     tag: c.socleTag,
     facts: [],
     points: c.socle.map((s) => `${s.title} : ${s.body}`),
-    docs: ["notice", "masse", "kbis"],
+    docs: ["notice"],
   });
   const riskOrder = [...RISK_LEVELS.map((l) => l.id), "socle"];
 
@@ -356,62 +364,51 @@ export function KupandaDueDiligence({
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // Une demande de document part comme une question : elle alerte l'équipe
-  // (Yao et email). En démo, rien ne part.
-  const requestDoc = useCallback(
-    async (id: string) => {
-      const doc = DD_DOCS.find((d) => d.id === id);
-      if (!doc) return;
-      setRequests((r) => ({ ...r, [id]: "sending" }));
-      if (demo) {
-        setRequests((r) => ({ ...r, [id]: "sent" }));
-        return;
-      }
-      const res = await fetch("/api/questions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          questions: [`Demande de document (due diligence Kupanda) : ${doc.title.fr}`],
-        }),
-      }).catch(() => null);
-      setRequests((r) => ({ ...r, [id]: res?.ok ? "sent" : "error" }));
-    },
-    [demo]
-  );
-
-  const docCtx = { locale, c, openSlugs, requests, requestDoc };
+  const docCtx: DocCtx = { locale, c, documents };
   const toggle = (id: string) => setSelected(selected === id ? null : id);
 
   return (
     <div className="mt-6">
-      {/* Le chapô à gauche, les trois chiffres de l'obligation à droite. */}
+      {/* Le chapô à gauche, les trois grands chiffres à droite : deux sur une
+          ligne et le troisième dessous au téléphone. */}
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-12">
         <p className="max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{lead}</p>
-        <dl className="grid grid-cols-3 border-y border-foreground/10 lg:min-w-[30rem]">
+        <dl className="grid grid-cols-2 border-y border-foreground/10 sm:grid-cols-3 lg:w-[35rem]">
           {c.headline.map((f, i) => (
-            <div key={f.label} className={`py-4 ${i ? "border-l border-foreground/10 pl-5" : ""}`}>
+            <div
+              key={f.label}
+              className={`py-4 ${i === 1 ? "border-l border-foreground/10 pl-5" : ""} ${
+                i === 2 ? "border-foreground/10 max-sm:col-span-2 max-sm:border-t sm:border-l sm:pl-5" : ""
+              } ${i < 2 ? "pr-4" : ""}`}
+            >
               <dd className="whitespace-nowrap text-3xl font-semibold tracking-tight tabular-nums text-marsala">{f.value}</dd>
-              <dt className="mt-1 text-sm leading-5 text-neutral-600">{f.label}</dt>
+              <dt className="mt-1 text-sm leading-5 text-neutral-700">{f.label}</dt>
+              <dd className="mt-1 text-xs leading-4 text-neutral-600">{f.hint}</dd>
             </div>
           ))}
         </dl>
       </div>
 
-      {/* Kupanda 1, puis Kupanda 2 : la même stratégie, émission après émission. */}
-      <div className="mt-6">
+      {/* Kupanda 1 et Kupanda 2 : la même stratégie, chaque émission dans sa carte. */}
+      <div className="mt-8">
         <p className="text-sm font-semibold text-foreground">{c.seriesLabel}</p>
-        <div className="mt-2 grid border-y border-foreground/10 sm:grid-cols-2 sm:divide-x sm:divide-foreground/10">
-          {c.series.map((it, i) => (
-            <div key={it.name} className="flex items-baseline gap-4 py-4 max-sm:border-t max-sm:border-foreground/10 max-sm:first:border-t-0 sm:px-5 sm:first:pl-0">
-              <span className="text-2xl font-semibold tracking-tight tabular-nums text-marsala">{it.amount}</span>
+        <div className="mt-2 grid gap-3 sm:grid-cols-2">
+          {series.map((it) => (
+            <div key={it.name} className="flex items-baseline gap-4 rounded-xl border border-foreground/10 bg-white/50 px-5 py-4">
+              <span className="whitespace-nowrap text-2xl font-semibold tracking-tight tabular-nums text-marsala">{it.amount}</span>
               <span className="min-w-0">
                 <span className="flex flex-wrap items-center gap-2">
                   <span className="text-sm font-semibold text-foreground">{it.name}</span>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                      i === 0 ? "bg-brand/10 text-marsala" : "bg-neutral-200/70 text-neutral-700"
+                    className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium ${
+                      it.tone === "live"
+                        ? "bg-emerald-100 text-emerald-800"
+                        : it.tone === "open"
+                          ? "bg-brand/10 text-marsala"
+                          : "bg-neutral-200/70 text-neutral-700"
                     }`}
                   >
+                    {it.tone === "live" && <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-emerald-600" />}
                     {it.status}
                   </span>
                 </span>
@@ -422,8 +419,10 @@ export function KupandaDueDiligence({
         </div>
       </div>
 
-      {/* Les deux onglets de la scène */}
-      <div role="tablist" aria-label={c.tabsLabel} className="mt-6 flex gap-1 border-b border-foreground/10">
+      {/* 01, au cœur de l'opération : les onglets, puis la scène */}
+      <section className="mt-14">
+        <SectionTitle n="01">{c.dealTitle}</SectionTitle>
+      <div role="tablist" aria-label={c.tabsLabel} className="mt-5 flex gap-1 overflow-x-auto border-b border-foreground/10">
         {tabs.map((t) => (
           <button
             key={t}
@@ -435,7 +434,7 @@ export function KupandaDueDiligence({
               setSelectedState(null);
               setLastSel(null);
             }}
-            className={`-mb-px cursor-pointer rounded-t-lg border-b-2 px-4 py-2.5 text-sm font-semibold transition-colors ${
+            className={`-mb-px shrink-0 cursor-pointer whitespace-nowrap rounded-t-lg border-b-2 px-4 py-2.5 text-sm font-semibold transition-colors ${
               tab === t ? "border-brand text-foreground" : "border-transparent text-neutral-600 hover:text-foreground"
             }`}
           >
@@ -452,7 +451,7 @@ export function KupandaDueDiligence({
           role="tabpanel"
           className="mt-4 rounded-xl border border-foreground/10 bg-[radial-gradient(ellipse_at_60%_35%,#fffdfa_0%,#f7f3ec_70%)] px-5 py-6 sm:px-8 sm:py-8"
         >
-          {tab === "simulation" ? <Simulator locale={locale} /> : <Markets locale={locale} />}
+          {tab === "simulation" ? <Simulator locale={locale} k1Closed={k1Closed} /> : <Markets locale={locale} />}
         </div>
       ) : (
       <>
@@ -470,12 +469,16 @@ export function KupandaDueDiligence({
           groups={groups.map((g) => ({
             id: g.id,
             label: g.label[locale],
-            items: g.steps.map((id) => ({
-              id,
-              n: order.indexOf(id) + 1,
-              label:
-                tab === "flux" || id === "socle" ? (details.get(id)?.title ?? id) : (details.get(id)?.tag ?? id),
-            })),
+            items: g.steps.map((id) =>
+              id === MORE
+                ? { id, n: 0, label: "[…]", more: c.moreCases }
+                : {
+                    id,
+                    n: order.indexOf(id) + 1,
+                    label:
+                      tab === "flux" || id === "socle" ? (details.get(id)?.title ?? id) : (details.get(id)?.tag ?? id),
+                  }
+            ),
           }))}
           selected={selected}
           onSelect={toggle}
@@ -533,7 +536,8 @@ export function KupandaDueDiligence({
         />
       </div>
 
-      {/* Sous la scène : les chiffres clés, ou la jauge des pertes. */}
+      {/* Sous le flux : les repères. Sous le risque : la rotation du capital,
+          puis les scénarios. */}
       {tab === "flux" ? (
         <dl className="mt-6 grid grid-cols-2 border-y border-foreground/10 lg:grid-cols-5 lg:divide-x lg:divide-foreground/10">
           {c.facts.map((f, i) => (
@@ -549,73 +553,63 @@ export function KupandaDueDiligence({
           ))}
         </dl>
       ) : (
-        // Les scénarios du mémo, chacun renvoyé vers l'étage de la cascade
-        // qui joue. La note « à l'étude » reste dans les panneaux des niveaux
-        // 1 et 2, elle n'est pas répétée ici.
-        <section className="mt-6">
-          <h3 className="text-sm font-semibold text-foreground">{c.scenarios}</h3>
-          <div className="mt-2 grid gap-4 lg:grid-cols-2">
-            {SCENARIOS.map((sc) => (
-              <article key={sc.q.fr} className="rounded-xl border border-foreground/10 bg-white/50 px-5 py-4">
-                <h4 className="text-sm font-semibold text-foreground">{sc.q[locale]}</h4>
-                <p className="mt-1.5 text-sm leading-6 text-neutral-700">{sc.a[locale]}</p>
-              </article>
-            ))}
-          </div>
-          {/* Le Q&A du family office, en lecture seule (DocSend). */}
-          <div
-            className={`mt-4 flex items-center justify-between gap-4 rounded-xl border px-5 py-3.5 ${
-              QA_LINK.url[locale] ? "border-foreground/10 bg-white/50" : "border-neutral-300/70 bg-neutral-200/40"
-            }`}
-          >
-            <span className="flex min-w-0 items-center gap-3">
-              <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-neutral-500" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
-                <path d="M14 3v5h5" />
-              </svg>
-              <span className="min-w-0">
-                <span className="block text-sm font-semibold leading-5 text-foreground">{QA_LINK.title[locale]}</span>
-                <span className="block text-sm leading-5 text-neutral-600">{c.readOnly}</span>
-              </span>
-            </span>
-            {QA_LINK.url[locale] ? (
-              <a
-                href={QA_LINK.url[locale]}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="whitespace-nowrap rounded-lg px-2 py-1 text-sm font-medium text-marsala underline decoration-marsala/30 underline-offset-4 hover:decoration-marsala"
-              >
-                {c.read} →
-              </a>
-            ) : (
-              <span className="whitespace-nowrap text-xs text-neutral-600">{c.linkSoon}</span>
-            )}
-          </div>
-        </section>
+        <div className="mt-8 space-y-8">
+          <RotationChart locale={locale} />
+          {/* Les scénarios du mémo, chacun renvoyé vers l'étage de la cascade
+              qui joue. La note « à l'étude » reste dans les panneaux des
+              niveaux 1 et 2, elle n'est pas répétée ici. */}
+          <section>
+            <h3 className="text-sm font-semibold text-foreground">{c.scenarios}</h3>
+            <div className="mt-2 grid gap-4 lg:grid-cols-2">
+              {SCENARIOS.map((sc) => (
+                <article key={sc.q.fr} className="rounded-xl border border-foreground/10 bg-white/50 px-5 py-4">
+                  <h4 className="text-sm font-semibold text-foreground">{sc.q[locale]}</h4>
+                  <p className="mt-1.5 text-sm leading-6 text-neutral-700">{sc.a[locale]}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
       )}
       </>
       )}
+      </section>
 
-      {/* 01, les documents */}
-      <section className="mt-16">
-        <SectionTitle n="01">{c.s3}</SectionTitle>
-        <p className="mt-4 max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{c.s3Lead}</p>
-        <div className="mt-6 grid gap-x-10 gap-y-8 lg:grid-cols-2">
-          {[
-            { title: c.inDataroom, docs: DD_DOCS.filter((d) => d.kind.type === "dataroom") },
-            { title: c.onRequest, docs: DD_DOCS.filter((d) => d.kind.type === "request") },
-          ].map((group) => (
-            <div key={group.title}>
-              <h3 className="text-sm font-semibold text-foreground">{group.title}</h3>
+      {/* 02, les documents, par niveau d'accès */}
+      {documents.length > 0 && (
+        <section className="mt-16">
+          <SectionTitle n="02">{c.s3}</SectionTitle>
+          <p className="mt-4 max-w-3xl text-[15px] leading-[1.8] text-neutral-700">{c.docsLead}</p>
+          <div className="mt-6 grid gap-x-10 gap-y-8 lg:grid-cols-2">
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">{c.level1}</h3>
               <ul className="mt-2 divide-y divide-foreground/10 border-y border-foreground/10">
-                {group.docs.map((d) => (
-                  <DocRow key={d.id} id={d.id} ctx={docCtx} />
-                ))}
+                <DocList ids={documents.filter((d) => d.level === 1).map((d) => d.id)} ctx={docCtx} />
               </ul>
             </div>
-          ))}
-        </div>
-      </section>
+            <div>
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-sm font-semibold text-foreground">{c.level2}</h3>
+                {!level2 && <LockChip label={c.locked} />}
+              </div>
+              {level2 ? (
+                <ul className="mt-2 divide-y divide-foreground/10 border-y border-foreground/10">
+                  <DocList ids={documents.filter((d) => d.level === 2).map((d) => d.id)} ctx={docCtx} />
+                </ul>
+              ) : (
+                // Verrouillé : cadre gris, titres sans lien (les liens ne
+                // quittent pas le serveur).
+                <>
+                  <p className="mt-1 text-sm leading-6 text-neutral-600">{c.level2Note}</p>
+                  <ul className="mt-2 divide-y divide-neutral-300/70 rounded-xl border border-neutral-300/70 bg-neutral-200/40 px-4">
+                    <DocList ids={documents.filter((d) => d.level === 2).map((d) => d.id)} ctx={docCtx} quiet />
+                  </ul>
+                </>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
@@ -631,7 +625,7 @@ function Steps({
   onSelect,
 }: {
   title: string;
-  groups: { id: string; label: string; items: { id: string; n: number; label: string }[] }[];
+  groups: { id: string; label: string; items: { id: string; n: number; label: string; more?: string }[] }[];
   selected: string | null;
   onSelect: (id: string) => void;
 }) {
@@ -654,6 +648,12 @@ function Steps({
                 className="relative flex gap-1.5 lg:block lg:space-y-0.5"
               >
                 {g.items.map((it) => {
+                  if (it.more)
+                    return (
+                      <li key={it.id} className="shrink-0">
+                        <MoreCases text={it.more} />
+                      </li>
+                    );
                   const on = selected === it.id;
                   return (
                     <li key={it.id} className="shrink-0">
@@ -676,7 +676,7 @@ function Steps({
                             {it.n}
                           </span>
                         ) : (
-                          // Sous-étape sans numéro : un cas d'usage des PME.
+                          // Sous-étape sans numéro : un exemple de PME.
                           <span aria-hidden className="ml-4 grid h-6 w-3 shrink-0 place-items-center">
                             <span className={`h-1.5 w-1.5 rounded-full ${on ? "bg-marsala" : "bg-brand/40"}`} />
                           </span>
@@ -692,6 +692,46 @@ function Steps({
         })}
       </div>
     </nav>
+  );
+}
+
+// « […] » entre les deux exemples : au survol, au focus ou au toucher, une
+// bulle dit qu'il y en a beaucoup d'autres. Posée à la racine de la page, en
+// position fixe : la colonne des étapes défile et la rognerait.
+function MoreCases({ text }: { text: string }) {
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const show = (el: HTMLElement) => {
+    const r = el.getBoundingClientRect();
+    setPos({ x: Math.max(8, Math.min(r.left, window.innerWidth - 296)), y: r.bottom + 6 });
+  };
+  const hide = () => setPos(null);
+  return (
+    <>
+      <button
+        type="button"
+        aria-label={text}
+        onMouseEnter={(e) => show(e.currentTarget)}
+        onMouseLeave={hide}
+        onFocus={(e) => show(e.currentTarget)}
+        onBlur={hide}
+        onClick={(e) => show(e.currentTarget)}
+        className="flex w-full cursor-help items-center gap-2.5 rounded-lg px-2 py-1 text-left text-sm text-neutral-600 max-lg:border max-lg:border-foreground/10 max-lg:bg-white/60 max-lg:py-1.5"
+      >
+        <span aria-hidden className="ml-4 h-6 w-3 shrink-0 max-lg:hidden" />
+        <span aria-hidden className="leading-snug">[…]</span>
+      </button>
+      {pos &&
+        createPortal(
+          <p
+            role="tooltip"
+            style={{ left: pos.x, top: pos.y }}
+            className="pointer-events-none fixed z-[70] w-72 rounded-lg border border-foreground/10 bg-white px-3 py-2 text-sm leading-5 text-neutral-700 shadow-lg"
+          >
+            {text}
+          </p>,
+          document.body
+        )}
+    </>
   );
 }
 
@@ -715,9 +755,7 @@ function useMedia(query: string): boolean {
 type DocCtx = {
   locale: Locale;
   c: Copy;
-  openSlugs: string[];
-  requests: Record<string, RequestState>;
-  requestDoc: (id: string) => void;
+  documents: KupandaDoc[];
 };
 
 function DetailPanel({
@@ -801,7 +839,7 @@ function DetailPanel({
                   {shown.facts.map((f) => (
                     <div key={f.label} className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] items-baseline gap-4 py-2.5">
                       <dt className="text-sm leading-5 text-neutral-600">{f.label}</dt>
-                      <dd className="text-sm font-semibold leading-5 tabular-nums text-foreground">
+                      <dd className="whitespace-pre-line text-sm font-semibold leading-5 tabular-nums text-foreground">
                         {f.value ?? <Placeholder>{c.toFill}</Placeholder>}
                       </dd>
                     </div>
@@ -845,13 +883,11 @@ function DetailPanel({
                   </ul>
                 </div>
               )}
-              {shown.docs.length > 0 && (
+              {shown.docs.some((id) => docCtx.documents.some((d) => d.id === id)) && (
                 <div>
                   <h4 className="text-sm font-semibold text-foreground">{c.docs}</h4>
                   <ul className="mt-2 divide-y divide-foreground/10 border-y border-foreground/10">
-                    {shown.docs.map((id) => (
-                      <DocRow key={id} id={id} ctx={docCtx} compact />
-                    ))}
+                    <DocList ids={shown.docs} ctx={docCtx} compact />
                   </ul>
                 </div>
               )}
@@ -888,62 +924,127 @@ function IconButton({
   );
 }
 
-// Un document : ouvert dans la data room, verrouillé, ou à demander.
-function DocRow({ id, ctx, compact = false }: { id: string; ctx: DocCtx; compact?: boolean }) {
-  const { locale, c, openSlugs, requests, requestDoc } = ctx;
-  const doc = DD_DOCS.find((d) => d.id === id);
-  if (!doc) return null;
-  const state = requests[id];
-
-  let action: React.ReactNode;
-  if (doc.kind.type === "dataroom") {
-    action = openSlugs.includes(doc.kind.slug) ? (
-      <a
-        href={`/investors/docs/${doc.kind.slug}`}
-        className="whitespace-nowrap rounded-lg px-2 py-1 text-sm font-medium text-marsala underline decoration-marsala/30 underline-offset-4 hover:decoration-marsala"
-      >
-        {c.open} →
-      </a>
-    ) : (
-      <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-neutral-200/70 px-2.5 py-0.5 text-xs font-medium text-neutral-600">
-        <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden>
-          <rect x="5" y="11" width="14" height="10" rx="2" />
-          <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-        </svg>
-        {c.locked}
-      </span>
-    );
-  } else if (state === "sent") {
-    action = (
-      <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-brand/10 px-2.5 py-0.5 text-xs font-semibold text-marsala">
-        <span aria-hidden>✓</span> {c.requested}
-      </span>
-    );
-  } else {
-    action = (
-      <button
-        type="button"
-        disabled={state === "sending"}
-        onClick={() => requestDoc(id)}
-        className="cursor-pointer whitespace-nowrap rounded-lg border border-foreground/15 bg-white/70 px-2.5 py-1 text-sm font-medium text-foreground transition-colors hover:border-foreground/35 disabled:cursor-wait disabled:opacity-60"
-      >
-        {state === "sending" ? c.sending : state === "error" ? c.retry : c.request}
-      </button>
-    );
-  }
-
+function LockChip({ label }: { label: string }) {
   return (
-    <li className={`flex items-center justify-between gap-4 ${compact ? "py-2.5" : "py-3"}`}>
+    <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-neutral-200/70 px-2.5 py-0.5 text-xs font-medium text-neutral-600">
+      <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden>
+        <rect x="5" y="11" width="14" height="10" rx="2" />
+        <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+      </svg>
+      {label}
+    </span>
+  );
+}
+
+function FileIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-neutral-500" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+      <path d="M14 3v5h5" />
+    </svg>
+  );
+}
+
+// L'action d'un document : l'ouvrir sur DocSend (nouvel onglet), lien à venir,
+// ou verrouillé (niveau 2). Le lien est celui de la langue de la page ; sinon
+// celui de l'autre langue, signalée par un badge (« EN » sur la page française).
+function DocAction({ doc, ctx, quiet }: { doc: KupandaDoc; ctx: DocCtx; quiet: boolean }) {
+  const { locale, c } = ctx;
+  if (doc.state === "locked") return quiet ? null : <LockChip label={c.locked} />;
+  const other = locale === "fr" ? "en" : "fr";
+  const lang = doc.links[locale] ? locale : doc.links[other] ? other : null;
+  if (doc.state === "soon" || !lang) {
+    return <span className="shrink-0 whitespace-nowrap text-xs text-neutral-600">{c.linkSoon}</span>;
+  }
+  return (
+    <a
+      href={doc.links[lang]}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-2 py-1 text-sm font-medium text-marsala underline decoration-marsala/30 underline-offset-4 hover:decoration-marsala"
+    >
+      {c.open}
+      {lang !== locale && (
+        <span className="rounded border border-marsala/30 px-1 text-[11px] font-semibold leading-4 no-underline">
+          {lang.toUpperCase()}
+        </span>
+      )}
+      <span aria-hidden>→</span>
+    </a>
+  );
+}
+
+function DocRow({
+  doc,
+  ctx,
+  compact,
+  grouped,
+  quiet,
+}: {
+  doc: KupandaDoc;
+  ctx: DocCtx;
+  compact: boolean;
+  /** Pièce d'un document à plusieurs pièces : sous l'intitulé commun, sans
+      icône ; `"joined"` quand une autre pièce suit, sans filet entre les deux. */
+  grouped: false | "joined" | "last";
+  quiet: boolean;
+}) {
+  const { locale } = ctx;
+  const locked = doc.state === "locked";
+  return (
+    <li
+      className={`flex items-center justify-between gap-4 ${
+        grouped ? `pb-2 pl-7 pt-1 ${grouped === "joined" ? "!border-b-0" : ""}` : compact ? "py-2.5" : "py-3"
+      }`}
+    >
       <span className="flex min-w-0 items-center gap-3">
-        <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-neutral-500" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
-          <path d="M14 3v5h5" />
-        </svg>
-        <span className="text-sm leading-5 text-neutral-800">{doc.title[locale]}</span>
+        {!grouped && <FileIcon />}
+        <span className={`min-w-0 text-sm leading-5 ${locked ? "text-neutral-600" : "text-neutral-800"}`}>
+          {doc.title[locale]}
+          {doc.detail && <span className="block text-neutral-600">{doc.detail[locale]}</span>}
+        </span>
       </span>
-      {action}
+      <DocAction doc={doc} ctx={ctx} quiet={quiet} />
     </li>
   );
+}
+
+// La liste des documents : les pièces d'un même document (`group`) se suivent
+// sous un seul intitulé, un lien par pièce.
+function DocList({
+  ids,
+  ctx,
+  compact = false,
+  quiet = false,
+}: {
+  ids: string[];
+  ctx: DocCtx;
+  compact?: boolean;
+  /** Liste déjà présentée comme verrouillée : pas de pastille à chaque ligne. */
+  quiet?: boolean;
+}) {
+  const { locale, documents } = ctx;
+  const docs = ids.flatMap((id) => documents.find((d) => d.id === id) ?? []);
+  const rows: React.ReactNode[] = [];
+  docs.forEach((doc, i) => {
+    const group = doc.group?.[locale] ?? null;
+    const prev = docs[i - 1]?.group?.[locale] ?? null;
+    if (group && group !== prev) {
+      rows.push(
+        // Tailwind 4 pose le filet de divide-y sous chaque ligne : on le
+        // retire sous l'intitulé et entre les pièces.
+        <li key={`g:${doc.id}`} className={`flex items-center gap-3 !border-b-0 pb-1 ${compact ? "pt-2.5" : "pt-3"}`}>
+          <FileIcon />
+          <span className={`text-sm leading-5 ${doc.state === "locked" ? "text-neutral-600" : "text-neutral-800"}`}>{group}</span>
+        </li>
+      );
+    }
+    const next = docs[i + 1]?.group?.[locale] ?? null;
+    rows.push(
+      <DocRow key={doc.id} doc={doc} ctx={ctx} compact={compact} grouped={group ? (next === group ? "joined" : "last") : false} quiet={quiet} />
+    );
+  });
+  return rows;
 }
 
 // Montant ou précision à renseigner, absent de nos données : surligné.

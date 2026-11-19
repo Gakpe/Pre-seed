@@ -1,46 +1,116 @@
-// Contenu ajouté à la fiche « Due diligence Kupanda » le 30/10/2026, repris du
-// mémorandum d'investissement Kupanda (avril 2026, version du 14/09/2026) et
-// fusionné dans la fiche de Julien à la demande de Coralie : la simulation,
-// les deux pays, les scénarios « que se passe-t-il si… » et le lien vers le
-// Q&A d'un family office. Rien ici ne répète les panneaux de la fiche
-// (src/lib/kupanda-dd.ts) ni la cascade de risque (src/lib/risk-levels.ts).
-// Deux points du mémo sont alignés sur la fiche : le déploiement passe par le
-// dollar et un swap avec Zanaco (pas le franc CFA), et les juridictions sont
-// la Zambie puis le Kenya (plus de Rwanda).
+// Contenu de la fiche « Due diligence Kupanda » hors panneaux : la simulation
+// sur les deux émissions, la rotation du capital, les scénarios « que se
+// passe-t-il si… » et les deux pays. Ajouté le 30/10/2026 depuis le mémorandum
+// d'investissement (Coralie), aligné le 19/11/2026 sur la dataroom Kupanda du
+// front (minah-front-v0.1, src/server/dataroom/kupanda/content.js). Rien ici ne
+// répète les panneaux de la fiche (src/lib/kupanda-dd.ts) ni la cascade de
+// risque (src/lib/risk-levels.ts).
+//
+// Le Q&A d'un family office (un lien DocSend par langue) a été retiré de la
+// fiche à la demande de Julien : ne pas le remettre.
 
 import type { Bi } from "@/lib/kupanda-dd";
 
-// Le Q&A préparé pour un family office le 15 octobre 2026 (Dropbox, Seed
-// Round/Team_Gautier, Q A_TeamG_x_Minah_vf.xlsx), en lecture seule sous les
-// scénarios de l'onglet risque. Un DocSend par langue (Coralie, 30/10/2026) ;
-// tant que l'URL d'une langue est vide, la ligne s'affiche grisée dans cette
-// langue, « lien à venir ».
-export const QA_LINK: { title: Bi; url: Bi } = {
-  title: {
-    fr: "Q&A risque de crédit et risque souverain, questions d'un family office (octobre 2026)",
-    en: "Credit and sovereign risk Q&A, a family office's questions (October 2026)",
+// --- Kupanda 1 ferme le 1er décembre 2026 ---------------------------------------
+// Bascule automatique (Julien, 19/11/2026) : à partir du 2 décembre, heure de
+// Paris, la fiche dit que Kupanda 1 est close et la simulation ne porte plus
+// que sur Kupanda 2. Les formulations « close » sont de la rédaction du
+// portail, pas du front : à relire par Julien.
+
+/** Le 2 décembre 2026 à 00:00, heure de Paris (UTC+1 en hiver). */
+export const K1_CLOSES_AT = Date.UTC(2026, 11, 1, 23, 0);
+
+export const isK1Closed = (now: number = Date.now()): boolean => now >= K1_CLOSES_AT;
+
+/** Ce que la fiche dit avant et après la clôture : `open` est le texte du front. */
+export const K1_CLOSURE: Record<"lead" | "minahLabel" | "seriesStatus" | "seriesBody", { open: Bi; closed: Bi }> = {
+  lead: {
+    open: { fr: "est ouverte jusqu'au 1er décembre 2026", en: "is open until 1 December 2026" },
+    closed: { fr: "est close depuis le 1er décembre 2026", en: "closed on 1 December 2026" },
   },
-  url: {
-    fr: "https://docsend.com/view/8ssmy3zp8ths5unb",
-    en: "https://docsend.com/view/mfgqwf625uejhpmr",
+  minahLabel: {
+    open: { fr: "Kupanda 1, jusqu'au 1er décembre 2026", en: "Kupanda 1, until 1 December 2026" },
+    closed: { fr: "Kupanda 1, close le 1er décembre 2026", en: "Kupanda 1, closed on 1 December 2026" },
+  },
+  seriesStatus: {
+    open: { fr: "En cours", en: "Live" },
+    closed: { fr: "Close", en: "Closed" },
+  },
+  seriesBody: {
+    open: { fr: "Ouverte jusqu'au 1er décembre 2026", en: "Open until 1 December 2026" },
+    closed: { fr: "Close depuis le 1er décembre 2026", en: "Closed on 1 December 2026" },
   },
 };
 
 // --- La simulation (onglet) ----------------------------------------------------
-// Hypothèses de la term sheet : nominal 10 000 €, coupon 20 % versé en deux
-// fois (6 mois, échéance), frais de transaction 3,5 % prélevés à la
-// souscription. Le rendement net du mémo, 16,5 %, rapporte le gain après
-// frais au capital déployé.
+// Deux émissions : la taille, le nominal, le minimum, le seuil d'appel et le
+// coupon changent. Termes tranchés par Julien le 19/11/2026, ceux qu'il avait
+// donnés le 11/11 pour la salle Silver Birch : Kupanda 2 à 18 % brut, 3,5 % de
+// frais, 14,5 % net ; Kupanda 1 à 20 % brut, 3,5 % de frais, 16,5 % net. (La
+// salle Kupanda du front calcule encore Kupanda 2 à 20 % et 5,5 % de frais.)
+// Coupon versé en deux fois (6 mois, échéance), frais prélevés à la
+// souscription ; le rendement net rapporte le gain après frais au capital
+// déployé.
+// `committed` : déjà engagé, confirmé par Julien le 19/11/2026 (1 M€ sur
+// Kupanda 1, 3 M€ sur Kupanda 2). La simulation s'arrête à ce qui reste : pour
+// Kupanda 2, 233 obligations de 30 000 € (6 990 000 €), on ne vend pas le tiers
+// d'obligation qui manque pour faire le compte rond.
 
-export const SIM = {
-  faceValue: 10_000,
-  minBonds: 3,
-  /** Toute l'émission : 2 M€. */
-  maxBonds: 200,
-  couponRate: 0.2,
-  feeRate: 0.035,
-  presets: [3, 5, 10, 30, 100],
-} as const;
+export type Issue = {
+  id: "k1" | "k2";
+  name: string;
+  faceValue: number;
+  size: number;
+  committed: number;
+  /** Seuil d'appel du capital. */
+  threshold: number;
+  couponRate: number;
+  feeRate: number;
+  minBonds: number;
+  defaultBonds: number;
+  /** Paliers ronds ; le curseur monte quand même jusqu'au maximum réel. */
+  presets: number[];
+  note: Bi;
+  /** Mention sous le choix de l'émission, quand elle est sélectionnée. */
+  hint?: Bi;
+};
+
+// Dans l'ordre de l'affichage : Kupanda 2, celle qui recueille les engagements,
+// s'ouvre par défaut.
+export const ISSUES: Issue[] = [
+  {
+    id: "k2",
+    name: "Kupanda 2",
+    faceValue: 30_000,
+    size: 10_000_000,
+    committed: 3_000_000,
+    threshold: 500_000,
+    couponRate: 0.18,
+    feeRate: 0.035,
+    minBonds: 1,
+    defaultBonds: 4,
+    presets: [4, 10, 50, 100, 200],
+    note: { fr: "10 M€, dont 3 M€ déjà engagés, premier closing en janvier 2027", en: "€10M, €3M already committed, first closing in January 2027" },
+  },
+  {
+    id: "k1",
+    name: "Kupanda 1",
+    faceValue: 10_000,
+    size: 2_000_000,
+    committed: 1_000_000,
+    threshold: 200_000,
+    couponRate: 0.2,
+    feeRate: 0.035,
+    minBonds: 3,
+    defaultBonds: 3,
+    presets: [3, 5, 10, 30, 100],
+    note: { fr: "Il reste 1 M€ sur 2 M€, jusqu'au 1er décembre 2026", en: "€1M left of €2M, until 1 December 2026" },
+    hint: { fr: "Il ne reste que 1 M€ sur Kupanda 1 : pour vous y positionner, avancez avant le 1er décembre 2026.", en: "Only €1M is left on Kupanda 1: to secure a position, move ahead before 1 December 2026." },
+  },
+];
+
+/** Les obligations encore disponibles : ce qui reste une fois retiré le déjà engagé. */
+export const maxBondsOf = (issue: Issue): number => Math.floor((issue.size - issue.committed) / issue.faceValue);
 
 export type Simulation = {
   bonds: number;
@@ -51,13 +121,14 @@ export type Simulation = {
   couponEnd: number;
   received: number;
   gain: number;
+  grossYield: number;
   netYield: number;
 };
 
-export function simulate(bonds: number): Simulation {
-  const capital = bonds * SIM.faceValue;
-  const fees = Math.round(capital * SIM.feeRate);
-  const coupon = Math.round(capital * SIM.couponRate);
+export function simulate(issue: Issue, bonds: number): Simulation {
+  const capital = bonds * issue.faceValue;
+  const fees = Math.round(capital * issue.feeRate);
+  const coupon = Math.round(capital * issue.couponRate);
   const couponMid = coupon / 2;
   const couponEnd = coupon - couponMid;
   return {
@@ -69,9 +140,21 @@ export function simulate(bonds: number): Simulation {
     couponEnd,
     received: capital + coupon,
     gain: coupon - fees,
-    netYield: SIM.couponRate - SIM.feeRate,
+    grossYield: issue.couponRate,
+    netYield: issue.couponRate - issue.feeRate,
   };
 }
+
+// --- La rotation du capital sur 12 mois (sous la cascade de risque) ------------
+// Les contrats publics courent sur cinq ans et plus ; Kupanda n'en finance que
+// le fonds de roulement, par cycles de 3 à 5 mois, l'un après l'autre, et
+// chaque financement est assuré (Julien, 01/11/2026). Cycles indicatifs, en
+// mois ; les textes sont dans RotationChart.tsx.
+export const ROTATION_CYCLES = [
+  { from: 0, to: 4 },
+  { from: 4, to: 8.5 },
+  { from: 8.5, to: 12 },
+] as const;
 
 // --- Que se passe-t-il si… (sous la cascade de risque) ---------------------------
 // Quatre situations du mémo, chacune renvoyée vers la protection qui joue.

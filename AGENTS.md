@@ -204,6 +204,16 @@ compte en généralisant l'en-tête à toutes les fiches.
   `minah_preview_paused=1` les ouvre dans une session démo pour les relire.
 - Roadmap technique en vue d'ensemble : six colonnes de période, 126 px
   minimum chacune pour tenir dans `max-w-5xl` sans défilement horizontal.
+- Due diligence Kupanda : ses textes suivent la dataroom Kupanda du front
+  (`minah-front-v0.1`), un chiffre qui change se change aux deux endroits. Ses
+  documents (titres, niveaux, liens DocSend) vivent dans `app_settings`, clé
+  `kupanda_documents`, jamais dans le code : le dépôt est public et un lien de
+  niveau 2 ne doit pas partir vers une personne de niveau 1.
+- Kupanda 1 ferme le 1er décembre 2026 : la fiche bascule seule le 2
+  (`isK1Closed`). En local, `/api/dev-preview?...&k1=closed` montre cet état,
+  `&level=1&onboarding=<adresse>` la vue d'une personne de niveau 1.
+- `divide-y` de Tailwind 4 pose le filet **sous** chaque ligne, plus au-dessus :
+  pour le retirer entre deux lignes, c'est `!border-b-0` sur la première.
 
 ## Voix éditoriale
 

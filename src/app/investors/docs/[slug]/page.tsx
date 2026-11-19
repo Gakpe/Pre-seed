@@ -36,7 +36,8 @@ import { ExitScenarios } from "./exit-scenarios";
 import { BusinessPlan } from "./business-plan/BusinessPlan";
 import { Impact } from "./impact";
 import { KupandaDueDiligence } from "./kupanda-dd/KupandaDueDiligence";
-import { DD_DOCS } from "@/lib/kupanda-dd";
+import { getKupandaDocuments } from "@/lib/kupanda-documents";
+import { isK1Closed } from "@/lib/kupanda-client";
 import { getBusinessPlan } from "@/lib/business-plan/data";
 
 export default async function DocPage({
@@ -49,11 +50,11 @@ export default async function DocPage({
   let doc: DocumentRow | null;
   // Dernier intérêt Kupanda de la personne, pour le bas de la term sheet.
   let kupandaInterest: { tranche: string; created_at: string } | null = null;
-  // Due diligence Kupanda : les fiches liées que la personne peut ouvrir.
-  let ddOpenSlugs: string[] = [];
+  // Due diligence Kupanda : la personne a-t-elle le niveau 2 de la data room ?
+  // Ses documents confidentiels en dépendent.
+  let ddLevel2 = false;
   // Brouillon ouvert à la personne connectée par son onboarding.
   let privateDraft = false;
-  const ddSlugs = DD_DOCS.flatMap((d) => (d.kind.type === "dataroom" ? [d.kind.slug] : []));
   if (demo) {
     // Pas de session Supabase en démo : service role + filtrage de niveau à la
     // main, ouvertures de l'onboarding rejoué comprises.
@@ -70,19 +71,7 @@ export default async function DocPage({
         onboarding?.unlocked_slugs.includes(slug))
         ? row
         : null;
-    if (slug === "kupanda-due-diligence") {
-      const { data: rows } = await createAdminClient()
-        .from("documents")
-        .select("slug, access_level")
-        .in("slug", ddSlugs);
-      ddOpenSlugs = (rows ?? [])
-        .filter(
-          (r) =>
-            r.access_level <= (demo.level2 ? 2 : 1) ||
-            onboarding?.unlocked_slugs.includes(r.slug)
-        )
-        .map((r) => r.slug);
-    }
+    ddLevel2 = demo.level2;
   } else {
     const supabase = await createClient();
     const {
@@ -121,13 +110,18 @@ export default async function DocPage({
     }
 
     if (slug === "kupanda-due-diligence") {
-      // RLS : seules reviennent les fiches visibles pour cette personne.
-      const { data: rows } = await supabase.from("documents").select("slug").in("slug", ddSlugs);
-      ddOpenSlugs = (rows ?? []).map((r) => r.slug);
+      // RLS : la personne ne lit que sa propre ligne. Une fiche ouverte « rien
+      // que pour vous » ne donne pas le niveau 2 : ses documents confidentiels
+      // restent fermés tant que le niveau 2 ne l'est pas.
+      const { data: me } = await supabase
+        .from("investors")
+        .select("level2_access")
+        .eq("id", user.id)
+        .maybeSingle();
+      ddLevel2 = me?.level2_access === true;
     }
   }
   if (!doc || RETIRED_SLUGS.has(doc.slug)) notFound();
-  ddOpenSlugs = ddOpenSlugs.filter((s) => !RETIRED_SLUGS.has(s) && !UNAVAILABLE_SLUGS.has(s));
   // Brouillon : ouvert dans une session démo (ouverte par un admin), jamais
   // ailleurs, même si sa ligne existe déjà en base.
   if (DRAFT_SLUGS.has(doc.slug) && !demo && !privateDraft) notFound();
@@ -163,6 +157,18 @@ export default async function DocPage({
   const comparables = doc.slug === "comparables";
   // La due diligence Kupanda : un schéma et son panneau de détail côte à côte.
   const kupandaDd = doc.slug === "kupanda-due-diligence";
+  // Ses documents sont lus côté serveur dans app_settings, liens de niveau 2
+  // retirés pour qui n'y a pas droit. Son titre tient sur deux lignes : ce qui
+  // est entre guillemets en base passe dessous.
+  const kupandaDocuments = kupandaDd ? await getKupandaDocuments(ddLevel2) : [];
+  // Kupanda 1 ferme le 1er décembre 2026 : la fiche bascule seule le 2. En
+  // local seulement, le cookie minah_preview_k1_closed=1 montre déjà cet état
+  // pour le relire (voir /api/dev-preview). Sans effet en production.
+  const k1Closed =
+    isK1Closed() ||
+    (process.env.NODE_ENV === "development" &&
+      (await cookies()).get("minah_preview_k1_closed")?.value === "1");
+  const titleLines = kupandaDd ? title.match(/^(.+?)\s*[«“]\s*(.+?)\s*[»”]$/)?.slice(1) : undefined;
   // L'aperçu du go-to-market (niveau 1) porte la machine à réseau de la slide :
   // deux côtés et un centre, aussi large que l'équipe. Son chapô vit dans le
   // composant, celui de la base n'est plus affiché.
@@ -286,7 +292,17 @@ export default async function DocPage({
       </div>
       {framedHeader && (
         <header className="mt-6 rounded-xl border border-foreground/10 bg-white/60 px-6 py-9 text-center">
-          <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
+          {/* Sur deux lignes, le titre de la due diligence Kupanda se réduit au
+              téléphone : chaque ligne y tient d'un seul tenant. */}
+          <h1 className={`font-semibold tracking-tight ${titleLines ? "text-[21px] sm:text-3xl" : "text-3xl"}`}>
+            {titleLines
+              ? titleLines.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))
+              : title}
+          </h1>
           {headerCategory && category && (
             <p className="mt-1.5 text-[15px] text-neutral-500">{category}</p>
           )}
@@ -349,8 +365,9 @@ export default async function DocPage({
       {kupandaDd && (
         <KupandaDueDiligence
           locale={locale}
-          openSlugs={ddOpenSlugs}
-          demo={Boolean(demo)}
+          documents={kupandaDocuments}
+          level2={ddLevel2}
+          k1Closed={k1Closed}
         />
       )}
       {doc.slug === "cap-table" && (

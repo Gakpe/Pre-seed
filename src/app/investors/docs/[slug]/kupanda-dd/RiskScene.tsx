@@ -220,8 +220,10 @@ export function RiskScene({
                 ) : (
                   <Mark x={g.x + g.w + g.dx + 66} y={midY - g.dy / 2 + 14} text={c.toFill} fs={1.1} />
                 )}
+                {/* La garantie d'Africa Rise : le montant de chaque émission,
+                    plutôt que le seul niveau de protection. */}
                 <text x={g.x + g.w + g.dx + 66} y={midY - g.dy / 2 + 32} fontSize={11} fontWeight={600} fill="#7a2e1f">
-                  {extra?.scope[locale]}
+                  {cover.detail?.[locale] ?? extra?.scope[locale]}
                 </text>
               </g>
             )}
