@@ -20,21 +20,16 @@ export const RETIRED_SLUGS = new Set([
 ]);
 
 // En pause : toujours listées, mais grisées et non cliquables, avec la mention
-// « en cours de mise à jour ». Leur page n'est ouverte qu'aux admins (hors
-// démo), le temps de les retravailler.
-export const UNAVAILABLE_SLUGS = new Set([
-  // 08/10/2026 (Julien).
-  "cap-table",
-]);
+// « en cours de mise à jour ». Leur page n'est ouverte qu'aux admins, le temps
+// de les retravailler. Aucune fiche en pause aujourd'hui : la cap table, en
+// pause du 08/10 au 25/11/2026, a été rouverte au niveau 2 (Julien).
+export const UNAVAILABLE_SLUGS = new Set<string>([]);
 
 // En pause pour les investisseurs, mais ouvertes dans une session démo : la
 // fiche est prête, l'équipe la montre et la relit avant de l'ouvrir. La démo
 // la liste comme un brouillon (« visible en démo »), les investisseurs la
 // voient toujours grisée.
-export const DEMO_OPEN_SLUGS = new Set([
-  // 25/11/2026 (Julien) : la cap table refaite, à montrer à l'équipe.
-  "cap-table",
-]);
+export const DEMO_OPEN_SLUGS = new Set<string>([]);
 
 // Brouillons : fiches en cours de réalisation, définies ici et pas encore en
 // base. Invisibles pour les investisseurs ; une session démo (ouverte par un

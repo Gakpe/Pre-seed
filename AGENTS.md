@@ -201,11 +201,13 @@ compte en généralisant l'en-tête à toutes les fiches.
 - Une pastille posée sur une ligne de frise : `bg-brand/10` est translucide,
   la ligne se voit à travers le numéro. Mettre la pastille sur un fond opaque
   (`bg-background`), comme sur la frise des sorties financières.
-- Fiches en pause : elles répondent 404 en démo et aux investisseurs, mais
-  s'ouvrent aux admins (Julien, Hervé, Coralie), même sans compte investisseur :
-  c'est ainsi que l'équipe les relit avant ouverture. `/api/captable` suit la
-  même règle. Une fiche en pause listée dans `DEMO_OPEN_SLUGS` (la cap table)
-  s'ouvre en plus à toute session démo, marquée « Brouillon, visible en démo ». En local seulement, `/api/dev-preview?...&paused=1` (cookie
+- Fiches en pause (`UNAVAILABLE_SLUGS`, aucune depuis la réouverture de la cap
+  table au niveau 2 le 25/11/2026) : elles répondent 404 en démo et aux
+  investisseurs, mais s'ouvrent aux admins (Julien, Hervé, Coralie), même sans
+  compte investisseur : c'est ainsi que l'équipe les relit avant ouverture.
+  `/api/captable` suit la même règle. Une fiche en pause listée dans
+  `DEMO_OPEN_SLUGS` s'ouvre en plus à toute session démo, marquée « Brouillon,
+  visible en démo ». En local seulement, `/api/dev-preview?...&paused=1` (cookie
   `minah_preview_paused=1`) les ouvre dans une session démo.
 - Roadmap technique en vue d'ensemble : six colonnes de période, 126 px
   minimum chacune pour tenir dans `max-w-5xl` sans défilement horizontal.
@@ -236,10 +238,11 @@ compte en généralisant l'en-tête à toutes les fiches.
   explications dans ces balises.
 - Sa mise en page (Julien, 25/11/2026, après un essai d'Hervé le même jour
   avec les étapes dans la marge de la page et le détail à côté du graphique) :
-  une colonne centrée ; tout en haut les étapes, puis le graphique, seul, sans
-  texte au-dessus ; dessous l'explication de l'étape choisie (son titre, son
-  détail, la barre entre fondateurs et la cap table fully diluted), le
-  simulateur au Seed seulement, et le mode d'emploi de la page en dernier. Les étapes sont dans la fiche, plus dans la page : `captable.tsx`
+  une colonne centrée ; le chapô en tête, puis le graphique, seul, et les étapes
+  juste dessous ; ensuite l'explication de l'étape choisie (son titre, sans
+  fond ; au Seed, le curseur de valorisation à sa droite ; puis son détail, la
+  barre entre fondateurs et la cap table fully diluted) ; la simulation de
+  ticket en dernier, seule et centrée, au Seed seulement. Les étapes sont dans la fiche, plus dans la page : `captable.tsx`
   ne rend que le cadre. La fiche fige encore la hauteur de l'en-tête d'étape et
   de la légende du graphique sur l'étape la plus longue, pour que le graphique
   ne bouge pas d'une étape à l'autre.
