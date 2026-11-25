@@ -234,20 +234,15 @@ compte en généralisant l'en-tête à toutes les fiches.
   notes de travail) est balisé `interne:début` / `interne:fin`, et la route le
   retire du HTML servi aux investisseurs : écrire la fiche pour eux, garder nos
   explications dans ces balises.
-- Sa mise en page depuis le 25/11/2026 (Hervé) : les étapes dans la marge
-  gauche de la page, hors du cadre du contenu, sticky au milieu de l'écran ;
-  à droite, l'en-tête et le détail de l'étape, teintés car ils changent ; le
-  graphique et le détail à la même hauteur, figée sur l'étape la plus longue,
-  pour que rien ne bouge d'une étape à l'autre ; le simulateur dessous, au Seed
-  seulement, sur les mêmes colonnes. Les étapes sont rendues par
-  `captable.tsx`, dans la page et non dans la fiche : la fiche est dans un
-  cadre à hauteur de contenu, c'est la page qui défile, et un sticky n'y
-  colle que s'il est dans la page (un sticky simulé en JavaScript saccade). La
-  fiche envoie ses étapes et l'étape choisie (`postMessage`, type
-  `minah-captable` : des noms et des dates, aucun chiffre), la page lui
-  renvoie le clic (`__cap.go(i)`) et lui pose la classe `ext` quand elle
-  affiche les étapes. Sans marge (téléphone), la fiche garde sa propre barre
-  d'étapes au-dessus du graphique.
+- Sa mise en page (Julien, 25/11/2026, après un essai d'Hervé le même jour
+  avec les étapes dans la marge de la page et le détail à côté du graphique) :
+  une colonne centrée ; en haut les étapes, puis le graphique, seul ; dessous
+  l'explication de l'étape choisie (son titre, son détail, la barre entre
+  fondateurs et la cap table fully diluted) ; le simulateur en dernier, au Seed
+  seulement. Les étapes sont dans la fiche, plus dans la page : `captable.tsx`
+  ne rend que le cadre. La fiche fige encore la hauteur de l'en-tête d'étape et
+  de la légende du graphique sur l'étape la plus longue, pour que le graphique
+  ne bouge pas d'une étape à l'autre.
 - `divide-y` de Tailwind 4 pose le filet **sous** chaque ligne, plus au-dessus :
   pour le retirer entre deux lignes, c'est `!border-b-0` sur la première.
 
