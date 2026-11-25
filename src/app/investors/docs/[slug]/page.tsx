@@ -393,7 +393,7 @@ export default async function DocPage({
         />
       )}
       {doc.slug === "cap-table" && (
-        <CapTableInteractive title={t(locale, "docs.captable")} />
+        <CapTableInteractive title={t(locale, "docs.captable")} locale={locale} />
       )}
       {comparables && <Comparables locale={locale} />}
       {/* Publiée le 09/10/2026 après la fusion du go-to-market : la fiche

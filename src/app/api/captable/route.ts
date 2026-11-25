@@ -40,8 +40,9 @@ async function loadSource(): Promise<string | null> {
 // Sinon : vue investisseur (niveau 2 requis), hypothèses et notes de travail
 // retirées du HTML servi.
 export async function GET(request: Request) {
+  const query = new URL(request.url).searchParams;
   const embed =
-    new URL(request.url).searchParams.get("embed") === "admin"
+    query.get("embed") === "admin"
       ? "admin"
       : "investor";
 
@@ -100,8 +101,12 @@ export async function GET(request: Request) {
     .maybeSingle();
   const params = setting?.value ?? {};
 
-  // La fiche suit la langue du portail ; la vue interne reste en français.
-  const locale = embed === "admin" ? "fr" : await getLocale();
+  // La fiche suit la langue du portail, que la page passe dans l'adresse du
+  // cadre (`lang`) ; ouverte seule, elle retombe sur la langue de la personne.
+  // La vue interne reste en français.
+  const lang = query.get("lang");
+  const locale =
+    embed === "admin" ? "fr" : lang === "en" || lang === "fr" ? lang : await getLocale();
 
   let source = await loadSource();
   if (source === null) {

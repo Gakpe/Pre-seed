@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { Locale } from "@/lib/i18n";
 
 // Cap table interactive (vue investisseur) : HTML autonome servi par
 // /api/captable avec les paramètres officiels enregistrés depuis /admin/captable.
@@ -12,7 +13,11 @@ import { useEffect, useRef, useState } from "react";
 // seul défilement, celui de la page. Les boutons « Ouvrir dans un onglet » et
 // « Plein écran » ont été retirés le 25/11/2026 (Julien) : la fiche tient
 // dans la page.
-export function CapTableInteractive({ title }: { title: string }) {
+//
+// La langue passe dans l'adresse du cadre, et le cadre est recréé quand elle
+// change (`key`) : le sélecteur FR / EN rafraîchit la page sans la recharger,
+// un cadre à l'adresse inchangée gardait donc l'ancienne langue.
+export function CapTableInteractive({ title, locale }: { title: string; locale: Locale }) {
   const frame = useRef<HTMLIFrameElement>(null);
   const [height, setHeight] = useState<number | null>(null);
 
@@ -38,12 +43,13 @@ export function CapTableInteractive({ title }: { title: string }) {
       el.removeEventListener("load", watch);
       observer?.disconnect();
     };
-  }, []);
+  }, [locale]);
 
   return (
     <iframe
+      key={locale}
       ref={frame}
-      src="/api/captable"
+      src={`/api/captable?lang=${locale}`}
       title={title}
       className="mt-6 min-h-[640px] w-full"
       style={height === null ? undefined : { height }}
