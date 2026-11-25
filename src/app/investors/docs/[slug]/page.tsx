@@ -7,7 +7,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getDemoSession } from "@/lib/demo";
 import { getOnboarding } from "@/lib/onboarding";
 import { OWN_PAGE_SLUGS } from "@/lib/own-pages";
-import { DRAFT_DOCS, DRAFT_SLUGS, RETIRED_SLUGS, UNAVAILABLE_SLUGS, draftRow } from "@/lib/retired-docs";
+import { DEMO_OPEN_SLUGS, DRAFT_DOCS, DRAFT_SLUGS, RETIRED_SLUGS, UNAVAILABLE_SLUGS, draftRow } from "@/lib/retired-docs";
 import { getLocale } from "@/lib/i18n-server";
 import { docFields, t } from "@/lib/i18n";
 import type { DocumentRow } from "@/lib/types";
@@ -55,7 +55,17 @@ export default async function DocPage({
   let ddLevel2 = false;
   // Brouillon ouvert à la personne connectée par son onboarding.
   let privateDraft = false;
-  if (demo) {
+  // Fiche en pause : l'équipe (les admins) la relit avant son ouverture, sans
+  // compte investisseur ni niveau 2, session démo en cours ou non. Certaines
+  // fiches en pause sont en plus ouvertes à toute session démo, à son niveau
+  // (DEMO_OPEN_SLUGS).
+  const teamPreview = UNAVAILABLE_SLUGS.has(slug) && Boolean(await getAdminEmail());
+  const teamDoc = async () =>
+    (await createAdminClient().from("documents").select("*").eq("slug", slug).maybeSingle())
+      .data as DocumentRow | null;
+  if (teamPreview) {
+    doc = await teamDoc();
+  } else if (demo) {
     // Pas de session Supabase en démo : service role + filtrage de niveau à la
     // main, ouvertures de l'onboarding rejoué comprises.
     const [{ data }, onboarding] = await Promise.all([
@@ -77,17 +87,7 @@ export default async function DocPage({
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    // Fiche en pause : l'équipe (les admins) la relit avant son ouverture, sans
-    // compte investisseur ni niveau 2. La ligne est lue avec la clé service,
-    // la garde plus bas vérifie de nouveau qu'il s'agit bien d'un admin.
-    if (UNAVAILABLE_SLUGS.has(slug) && (await getAdminEmail())) {
-      const { data } = await createAdminClient()
-        .from("documents")
-        .select("*")
-        .eq("slug", slug)
-        .maybeSingle();
-      doc = data as DocumentRow | null;
-    } else {
+    {
       if (!user) redirect("/investors");
 
       // RLS : renvoie null si le document n'est pas visible pour ce statut/niveau.
@@ -137,8 +137,8 @@ export default async function DocPage({
   // Brouillon : ouvert dans une session démo (ouverte par un admin), jamais
   // ailleurs, même si sa ligne existe déjà en base.
   if (DRAFT_SLUGS.has(doc.slug) && !demo && !privateDraft) notFound();
-  // Fiche en pause : fermée aux investisseurs, ouverte aux admins pour la
-  // retravailler, sauf en démo où l'on montre ce que voit un investisseur.
+  // Fiche en pause : fermée aux investisseurs et aux démos, ouverte aux admins
+  // pour la retravailler (voir teamPreview plus haut).
   // En local seulement, le cookie minah_preview_paused=1 les ouvre aussi dans
   // une session démo : relire une fiche en pause sans compte investisseur.
   // Sans effet en production.
@@ -148,7 +148,8 @@ export default async function DocPage({
   if (
     UNAVAILABLE_SLUGS.has(doc.slug) &&
     !localPreview &&
-    (demo || !(await getAdminEmail()))
+    !teamPreview &&
+    !(demo && DEMO_OPEN_SLUGS.has(doc.slug))
   )
     notFound();
 

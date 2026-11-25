@@ -7,7 +7,7 @@ import { getDemoSession } from "@/lib/demo";
 import { dataRoomBlocked } from "@/lib/dataroom";
 import { cookies } from "next/headers";
 import { getLocale } from "@/lib/i18n-server";
-import { UNAVAILABLE_SLUGS } from "@/lib/retired-docs";
+import { DEMO_OPEN_SLUGS, UNAVAILABLE_SLUGS } from "@/lib/retired-docs";
 import type { Investor } from "@/lib/types";
 
 // Le HTML de la cap table (moteur, textes, hypothèses, notes de travail) n'est
@@ -58,12 +58,15 @@ export async function GET(request: Request) {
     // comprise : c'est ainsi qu'elle la relit avant de l'ouvrir. Tant que la
     // fiche est en pause, personne d'autre ne la reçoit, même au niveau 2 ;
     // en local seulement, le cookie d'aperçu l'ouvre à une session démo.
-    const team = !demo && Boolean(await getAdminEmail());
+    // Session démo en cours ou non : un admin garde son cookie de démo des heures.
+    const team = Boolean(await getAdminEmail());
     const paused = UNAVAILABLE_SLUGS.has("cap-table");
     const localPreview =
       process.env.NODE_ENV === "development" &&
       (await cookies()).get("minah_preview_paused")?.value === "1";
-    if (paused && !team && !(demo && localPreview)) {
+    // Une session démo la reçoit aussi quand la fiche est ouverte en démo.
+    const demoOpen = Boolean(demo) && (localPreview || DEMO_OPEN_SLUGS.has("cap-table"));
+    if (paused && !team && !demoOpen) {
       return new Response("Fiche en cours de mise à jour", { status: 403 });
     }
     if (team) {

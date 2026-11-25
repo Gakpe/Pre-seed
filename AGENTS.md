@@ -204,7 +204,8 @@ compte en généralisant l'en-tête à toutes les fiches.
 - Fiches en pause : elles répondent 404 en démo et aux investisseurs, mais
   s'ouvrent aux admins (Julien, Hervé, Coralie), même sans compte investisseur :
   c'est ainsi que l'équipe les relit avant ouverture. `/api/captable` suit la
-  même règle. En local seulement, `/api/dev-preview?...&paused=1` (cookie
+  même règle. Une fiche en pause listée dans `DEMO_OPEN_SLUGS` (la cap table)
+  s'ouvre en plus à toute session démo, marquée « Brouillon, visible en démo ». En local seulement, `/api/dev-preview?...&paused=1` (cookie
   `minah_preview_paused=1`) les ouvre dans une session démo.
 - Roadmap technique en vue d'ensemble : six colonnes de période, 126 px
   minimum chacune pour tenir dans `max-w-5xl` sans défilement horizontal.

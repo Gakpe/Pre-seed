@@ -6,7 +6,7 @@ import { track } from "@/lib/tracking";
 import { docFields, t, type Locale } from "@/lib/i18n";
 import type { DocumentRow } from "@/lib/types";
 import { OWN_PAGE_SLUGS } from "@/lib/own-pages";
-import { DRAFT_SLUGS, UNAVAILABLE_SLUGS } from "@/lib/retired-docs";
+import { DEMO_OPEN_SLUGS, DRAFT_SLUGS, UNAVAILABLE_SLUGS } from "@/lib/retired-docs";
 
 // Regroupe par catégorie (ordre dicté par sort_order) et numérote 01, 02, …
 export function DataRoom({
@@ -16,6 +16,7 @@ export function DataRoom({
   columns = 1,
   opened = [],
   justForYou = [],
+  demo = false,
 }: {
   docs: DocumentRow[];
   locale: Locale;
@@ -27,6 +28,8 @@ export function DataRoom({
   opened?: string[];
   /** Brouillons ouverts à cette seule personne par son onboarding. */
   justForYou?: string[];
+  /** Session démo : les fiches en pause mais prêtes y sont ouvertes. */
+  demo?: boolean;
 }) {
   const pathname = usePathname();
 
@@ -66,8 +69,10 @@ export function DataRoom({
               const docsendUrl = OWN_PAGE_SLUGS.has(doc.slug)
                 ? null
                 : fields.docsendUrl;
+              // Fiche en pause mais ouverte en démo : listée comme un brouillon.
+              const demoOpen = demo && DEMO_OPEN_SLUGS.has(doc.slug);
               // Fiche en pause : grisée, sans lien, avec sa mention.
-              if (UNAVAILABLE_SLUGS.has(doc.slug)) {
+              if (UNAVAILABLE_SLUGS.has(doc.slug) && !demoOpen) {
                 return (
                   <li key={doc.slug} data-tour={`doc-${doc.slug}`}>
                     <div
@@ -122,7 +127,7 @@ export function DataRoom({
                         </span>
                       )}
                       {/* Brouillon : seule une démo le liste, la mention le rappelle. */}
-                      {DRAFT_SLUGS.has(doc.slug) && !justForYou.includes(doc.slug) && (
+                      {(DRAFT_SLUGS.has(doc.slug) || demoOpen) && !justForYou.includes(doc.slug) && (
                         <span className="rounded-full border border-dashed border-neutral-400 px-2 py-0.5 text-[11px] text-neutral-600">
                           {t(locale, "home.docs.draft")}
                         </span>

@@ -478,6 +478,7 @@ export default async function InvestorHomePage() {
           </h2>
           <div className="mt-4">
             <DataRoom
+              demo={Boolean(demo)}
               docs={level1}
               locale={locale}
               columns={2}
@@ -511,6 +512,7 @@ export default async function InvestorHomePage() {
               <div className="mt-4">
                 {level2.length > 0 ? (
                   <DataRoom
+              demo={Boolean(demo)}
                     docs={level2}
                     locale={locale}
                     // Le niveau 2 reprend la numérotation là où s'arrête le

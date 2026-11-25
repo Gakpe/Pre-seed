@@ -27,6 +27,15 @@ export const UNAVAILABLE_SLUGS = new Set([
   "cap-table",
 ]);
 
+// En pause pour les investisseurs, mais ouvertes dans une session démo : la
+// fiche est prête, l'équipe la montre et la relit avant de l'ouvrir. La démo
+// la liste comme un brouillon (« visible en démo »), les investisseurs la
+// voient toujours grisée.
+export const DEMO_OPEN_SLUGS = new Set([
+  // 25/11/2026 (Julien) : la cap table refaite, à montrer à l'équipe.
+  "cap-table",
+]);
+
 // Brouillons : fiches en cours de réalisation, définies ici et pas encore en
 // base. Invisibles pour les investisseurs ; une session démo (ouverte par un
 // admin) les liste et les ouvre, en local comme en ligne. Exception : un
