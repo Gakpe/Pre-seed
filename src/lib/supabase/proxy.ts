@@ -41,7 +41,13 @@ export async function updateSession(request: NextRequest) {
   // n'ouvre rien et retombe sur la redirection côté page.
   const hasDemoCookie = request.cookies.has("minah_demo");
 
-  if (!user && !hasDemoCookie && needsAuth) {
+  // De même pour le cookie admin (posé par /admin/login) : un admin sans
+  // compte investisseur relit ainsi une fiche en pause. Chaque page vérifie la
+  // signature et la whitelist (getAdminEmail) ; hors fiche en pause, elle
+  // renvoie comme avant vers la connexion investisseur.
+  const hasAdminCookie = request.cookies.has("minah_admin");
+
+  if (!user && !hasDemoCookie && !hasAdminCookie && needsAuth) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/investors";
     // Mémorise la destination pour y revenir après la saisie du code.

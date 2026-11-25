@@ -42,3 +42,6 @@ next-env.d.ts
 
 # conductor
 .context/
+
+# copies de travail de contenus confidentiels (cap table) : jamais dans le dépôt, qui est public
+/.private/

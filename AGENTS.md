@@ -50,8 +50,9 @@ go-to-market et à l'équipe (PR 48). Le 08/10/2026, la data room de niveau 2 a
 suivi : la roadmap technique (largeur `max-w-5xl`, sections numérotées, plus de
 police à empattements), la gestion du risque (section « La cascade de
 protection » à picto, intitulés en casse normale) et les scénarios de sortie.
-Les fiches en pause (go-to-market de niveau 2, roadmap écosystème, cap table)
-ne sont pas alignées. Pour toute fiche nouvelle, s'y conformer plutôt que
+La cap table interactive a suivi le 25/11/2026 (HTML autonome servi en
+iframe, voir plus bas où il vit). Les fiches en pause (go-to-market
+de niveau 2, roadmap écosystème) ne sont pas alignées. Pour toute fiche nouvelle, s'y conformer plutôt que
 d'inventer un traitement de plus.
 
 ## Titres
@@ -200,8 +201,11 @@ compte en généralisant l'en-tête à toutes les fiches.
 - Une pastille posée sur une ligne de frise : `bg-brand/10` est translucide,
   la ligne se voit à travers le numéro. Mettre la pastille sur un fond opaque
   (`bg-background`), comme sur la frise des sorties financières.
-- Fiches en pause : elles répondent 404 en démo. En local seulement, le cookie
-  `minah_preview_paused=1` les ouvre dans une session démo pour les relire.
+- Fiches en pause : elles répondent 404 en démo et aux investisseurs, mais
+  s'ouvrent aux admins (Julien, Hervé, Coralie), même sans compte investisseur :
+  c'est ainsi que l'équipe les relit avant ouverture. `/api/captable` suit la
+  même règle. En local seulement, `/api/dev-preview?...&paused=1` (cookie
+  `minah_preview_paused=1`) les ouvre dans une session démo.
 - Roadmap technique en vue d'ensemble : six colonnes de période, 126 px
   minimum chacune pour tenir dans `max-w-5xl` sans défilement horizontal.
 - Due diligence Kupanda : ses textes suivent la dataroom Kupanda du front
@@ -212,6 +216,23 @@ compte en généralisant l'en-tête à toutes les fiches.
 - Kupanda 1 ferme le 1er décembre 2026 : la fiche bascule seule le 2
   (`isK1Closed`). En local, `/api/dev-preview?...&k1=closed` montre cet état,
   `&level=1&onboarding=<adresse>` la vue d'une personne de niveau 1.
+- Cap table interactive (« Equity story ») : son HTML, son moteur et ses
+  textes ne sont **pas dans le dépôt**, qui est public ; c'est la table de
+  capitalisation de la société. Ils vivent dans `app_settings`, clé
+  `captable_html`, et `/api/captable` les sert. Copie de travail :
+  `.private/captable.html` (ignorée par git, servie en priorité par
+  `next dev`), synchronisée par `node scripts/captable.mjs pull | push |
+  status` ; `push` met la fiche en ligne aussitôt. Ne pas recopier ses
+  chiffres, ses termes ni ses noms dans le code, les commits ou ce fichier.
+  L'ancienne version du fichier reste dans l'historique git.
+- La même fiche, côté forme : Julien a demandé une page courte, la frise puis
+  une seule section qui détaille l'étape cliquée, la barre entre fondateurs et
+  la cap table fully diluted. Elle est bilingue (`tr(fr, en)` dans le fichier,
+  langue injectée par la route) : tout texte ajouté pour les investisseurs
+  s'écrit dans les deux langues. Ce qui est interne (panneau des hypothèses,
+  notes de travail) est balisé `interne:début` / `interne:fin`, et la route le
+  retire du HTML servi aux investisseurs : écrire la fiche pour eux, garder nos
+  explications dans ces balises.
 - `divide-y` de Tailwind 4 pose le filet **sous** chaque ligne, plus au-dessus :
   pour le retirer entre deux lignes, c'est `!border-b-0` sur la première.
 

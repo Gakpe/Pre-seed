@@ -34,6 +34,12 @@ export async function GET(request: NextRequest) {
     }),
     { httpOnly: true, sameSite: "lax", maxAge: 60 * 60 * 4, path: "/" }
   );
+  // `paused=1` : ouvre aussi les fiches en pause (cap table) dans cette session.
+  if (params.get("paused") === "1") {
+    res.cookies.set("minah_preview_paused", "1", { httpOnly: true, sameSite: "lax", maxAge: 60 * 60 * 4, path: "/" });
+  } else if (params.get("paused") === "0") {
+    res.cookies.delete("minah_preview_paused");
+  }
   const k1 = params.get("k1");
   if (k1 === "closed") {
     res.cookies.set("minah_preview_k1_closed", "1", { httpOnly: true, sameSite: "lax", maxAge: 60 * 60 * 4, path: "/" });

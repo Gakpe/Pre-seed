@@ -77,48 +77,60 @@ export default async function DocPage({
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user) redirect("/investors");
+    // Fiche en pause : l'équipe (les admins) la relit avant son ouverture, sans
+    // compte investisseur ni niveau 2. La ligne est lue avec la clé service,
+    // la garde plus bas vérifie de nouveau qu'il s'agit bien d'un admin.
+    if (UNAVAILABLE_SLUGS.has(slug) && (await getAdminEmail())) {
+      const { data } = await createAdminClient()
+        .from("documents")
+        .select("*")
+        .eq("slug", slug)
+        .maybeSingle();
+      doc = data as DocumentRow | null;
+    } else {
+      if (!user) redirect("/investors");
 
-    // RLS : renvoie null si le document n'est pas visible pour ce statut/niveau.
-    const { data } = await supabase
-      .from("documents")
-      .select("*")
-      .eq("slug", slug)
-      .maybeSingle();
-    doc = data as DocumentRow | null;
-    // Brouillon ouvert à cette personne par son onboarding (« rien que pour
-    // vous ») : il n'est pas en base, la RLS ne le renvoie donc pas.
-    const draft = DRAFT_DOCS.find((d) => d.slug === slug);
-    if (!doc && draft && user.email) {
-      const mine = await getOnboarding(user.email);
-      if (mine?.unlocked_slugs.includes(slug)) {
-        doc = draftRow(draft) as DocumentRow;
-        privateDraft = true;
+      // RLS : renvoie null si le document n'est pas visible pour ce statut/niveau.
+      const { data } = await supabase
+        .from("documents")
+        .select("*")
+        .eq("slug", slug)
+        .maybeSingle();
+      doc = data as DocumentRow | null;
+      // Brouillon ouvert à cette personne par son onboarding (« rien que pour
+      // vous ») : il n'est pas en base, la RLS ne le renvoie donc pas.
+      const draft = DRAFT_DOCS.find((d) => d.slug === slug);
+      if (!doc && draft && user.email) {
+        const mine = await getOnboarding(user.email);
+        if (mine?.unlocked_slugs.includes(slug)) {
+          doc = draftRow(draft) as DocumentRow;
+          privateDraft = true;
+        }
       }
-    }
 
-    if (slug === "term-sheet-kupanda") {
-      // Table sans policy : lecture avec la clé service, filtrée sur la personne.
-      const { data: last } = await createAdminClient()
-        .from("kupanda_interests")
-        .select("tranche, created_at")
-        .eq("investor_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      kupandaInterest = last;
-    }
+      if (slug === "term-sheet-kupanda") {
+        // Table sans policy : lecture avec la clé service, filtrée sur la personne.
+        const { data: last } = await createAdminClient()
+          .from("kupanda_interests")
+          .select("tranche, created_at")
+          .eq("investor_id", user.id)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        kupandaInterest = last;
+      }
 
-    if (slug === "kupanda-due-diligence") {
-      // RLS : la personne ne lit que sa propre ligne. Une fiche ouverte « rien
-      // que pour vous » ne donne pas le niveau 2 : ses documents confidentiels
-      // restent fermés tant que le niveau 2 ne l'est pas.
-      const { data: me } = await supabase
-        .from("investors")
-        .select("level2_access")
-        .eq("id", user.id)
-        .maybeSingle();
-      ddLevel2 = me?.level2_access === true;
+      if (slug === "kupanda-due-diligence") {
+        // RLS : la personne ne lit que sa propre ligne. Une fiche ouverte « rien
+        // que pour vous » ne donne pas le niveau 2 : ses documents confidentiels
+        // restent fermés tant que le niveau 2 ne l'est pas.
+        const { data: me } = await supabase
+          .from("investors")
+          .select("level2_access")
+          .eq("id", user.id)
+          .maybeSingle();
+        ddLevel2 = me?.level2_access === true;
+      }
     }
   }
   if (!doc || RETIRED_SLUGS.has(doc.slug)) notFound();
@@ -168,7 +180,14 @@ export default async function DocPage({
     isK1Closed() ||
     (process.env.NODE_ENV === "development" &&
       (await cookies()).get("minah_preview_k1_closed")?.value === "1");
-  const titleLines = kupandaDd ? title.match(/^(.+?)\s*[«“]\s*(.+?)\s*[»”]$/)?.slice(1) : undefined;
+  // De même pour la cap table, « Equity story / Interactive cap table » : la
+  // barre oblique sépare les deux lignes.
+  const capTable = doc.slug === "cap-table";
+  const titleLines = kupandaDd
+    ? title.match(/^(.+?)\s*[«“]\s*(.+?)\s*[»”]$/)?.slice(1)
+    : capTable && title.includes(" / ")
+      ? title.split(" / ")
+      : undefined;
   // L'aperçu du go-to-market (niveau 1) porte la machine à réseau de la slide :
   // deux côtés et un centre, aussi large que l'équipe. Son chapô vit dans le
   // composant, celui de la base n'est plus affiché.
@@ -218,6 +237,7 @@ export default async function DocPage({
     doc.slug === "impact" ||
     doc.slug === "gestion-du-risque" ||
     doc.slug === "roadmap-ecosysteme" ||
+    doc.slug === "cap-table" ||
     kupandaDd ||
     gtmApercu ||
     note;
@@ -237,6 +257,7 @@ export default async function DocPage({
     doc.slug === "business-plan" ||
     doc.slug === "impact" ||
     doc.slug === "gestion-du-risque" ||
+    doc.slug === "cap-table" ||
     kupandaDd ||
     team ||
     roadmap ||
@@ -258,10 +279,10 @@ export default async function DocPage({
 
   return (
     <main
-      className={`mx-auto w-full flex-1 py-12 ${comparables ? "max-w-[84rem] px-10" : kupandaDd ? "max-w-[92rem] px-4 sm:px-6" : "px-6"} ${
+      className={`mx-auto w-full flex-1 py-12 ${comparables ? "max-w-[84rem] px-10" : kupandaDd || capTable ? "max-w-[92rem] px-4 sm:px-6" : "px-6"} ${
         // La roadmap technique a rejoint la largeur des fiches du niveau 1
         // le 08/10/2026 : sa frise et sa vue d'ensemble y tiennent.
-        kupandaDd
+        kupandaDd || capTable
           ? ""
           : team || doc.slug === "roadmap-ecosysteme" || gtmApercu
             ? "max-w-6xl"
@@ -371,7 +392,7 @@ export default async function DocPage({
         />
       )}
       {doc.slug === "cap-table" && (
-        <CapTableInteractive title={t(locale, "docs.captable")} locale={locale} />
+        <CapTableInteractive title={t(locale, "docs.captable")} />
       )}
       {comparables && <Comparables locale={locale} />}
       {/* Publiée le 09/10/2026 après la fusion du go-to-market : la fiche
