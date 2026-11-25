@@ -236,10 +236,10 @@ compte en généralisant l'en-tête à toutes les fiches.
   explications dans ces balises.
 - Sa mise en page (Julien, 25/11/2026, après un essai d'Hervé le même jour
   avec les étapes dans la marge de la page et le détail à côté du graphique) :
-  une colonne centrée ; en haut les étapes, puis le graphique, seul ; dessous
-  l'explication de l'étape choisie (son titre, son détail, la barre entre
-  fondateurs et la cap table fully diluted) ; le simulateur en dernier, au Seed
-  seulement. Les étapes sont dans la fiche, plus dans la page : `captable.tsx`
+  une colonne centrée ; tout en haut les étapes, puis le graphique, seul, sans
+  texte au-dessus ; dessous l'explication de l'étape choisie (son titre, son
+  détail, la barre entre fondateurs et la cap table fully diluted), le
+  simulateur au Seed seulement, et le mode d'emploi de la page en dernier. Les étapes sont dans la fiche, plus dans la page : `captable.tsx`
   ne rend que le cadre. La fiche fige encore la hauteur de l'en-tête d'étape et
   de la légende du graphique sur l'étape la plus longue, pour que le graphique
   ne bouge pas d'une étape à l'autre.
